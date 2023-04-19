@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package GUI.Comprador;
+package GUI.Jefe.Obras;
 
 /**
  *
@@ -10,6 +10,12 @@ package GUI.Comprador;
  */
 public class ConsultarObras extends javax.swing.JFrame {
 
+    /**
+     * ATENCIÓN
+     * Los más importantes es conocer por periodo de tiempo, tipo de obra,
+     * estado de la obra, obras pagadas y obras pendientes de pago.
+     */
+    
     /**
      * Creates new form ConsultarObras
      */

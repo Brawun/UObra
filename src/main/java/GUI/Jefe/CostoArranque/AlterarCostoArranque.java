@@ -2,18 +2,18 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package GUI.Comprador;
+package GUI.Jefe.CostoArranque;
 
 /**
  *
  * @author 52644
  */
-public class ConsultarObras extends javax.swing.JFrame {
+public class AlterarCostoArranque extends javax.swing.JFrame {
 
     /**
-     * Creates new form ConsultarObras
+     * Creates new form AlterarPresupuestos
      */
-    public ConsultarObras() {
+    public AlterarCostoArranque() {
         initComponents();
     }
 

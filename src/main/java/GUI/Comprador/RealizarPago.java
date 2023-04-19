@@ -8,12 +8,12 @@ package GUI.Comprador;
  *
  * @author 52644
  */
-public class ConsultarObras extends javax.swing.JFrame {
+public class RealizarPago extends javax.swing.JFrame {
 
     /**
-     * Creates new form ConsultarObras
+     * Creates new form RealizarPago
      */
-    public ConsultarObras() {
+    public RealizarPago() {
         initComponents();
     }
 
