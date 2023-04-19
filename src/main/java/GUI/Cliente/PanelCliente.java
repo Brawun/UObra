@@ -2,18 +2,18 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package GUI.Comprador;
+package GUI.Cliente;
 
 /**
  *
  * @author naely
  */
-public class PanelComprador extends javax.swing.JFrame {
+public class PanelCliente extends javax.swing.JFrame {
 
     /**
      * Creates new form Comprador
      */
-    public PanelComprador() {
+    public PanelCliente() {
         initComponents();
     }
 

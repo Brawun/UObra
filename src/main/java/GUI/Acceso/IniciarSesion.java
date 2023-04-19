@@ -4,7 +4,7 @@
  */
 package GUI.Acceso;
 
-import GUI.Comprador.PanelComprador;
+import GUI.Cliente.PanelCliente;
 import GUI.Jefe.PanelJefe;
 import GUI.Obrero.PanelObrero;
 
@@ -157,7 +157,7 @@ public class IniciarSesion extends javax.swing.JFrame {
             PanelJefe panelJefe = new PanelJefe();
             panelJefe.setVisible(true);
         } else if (this.jComboBox1.getSelectedItem() == "Comprador") {
-            PanelComprador panelComprador = new PanelComprador();
+            PanelCliente panelComprador = new PanelCliente();
             panelComprador.setVisible(true);
         }
     }//GEN-LAST:event_dtnAceptarActionPerformed
