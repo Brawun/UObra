@@ -9,89 +9,59 @@
 
 package Dominio;
 
-import Enumeradores.TipoPermiso;
-import java.util.Calendar;
-import java.util.Objects;
+import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 /**
  * Esta clase permite .
  *
- * @author Brandon Figueroa Ugalde ID: 00000233295
- * @author Guimel Naely Rubio Morillon ID: 00000229324
+ * @author Brandon Figueroa Ugalde
+ * ID: 00000233295
+ * 18 abr 2023 18:29:29
  */
-public class Permisos {
-    // Atributos
-    private Integer id; 
-    private Integer folio;
-    private TipoPermiso tipo;
-    private Calendar fechaConcesion;
+@Entity
+public class Permisos implements Serializable {
 
-    public Permisos() {
-    }
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-    public Permisos(Integer id, Integer folio, TipoPermiso tipo, Calendar fechaConcesion) {
-        this.id = id;
-        this.folio = folio;
-        this.tipo = tipo;
-        this.fechaConcesion = fechaConcesion;
-    }
-
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
-    }
-
-    public Integer getFolio() {
-        return folio;
-    }
-
-    public void setFolio(Integer folio) {
-        this.folio = folio;
-    }
-
-    public TipoPermiso getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(TipoPermiso tipo) {
-        this.tipo = tipo;
-    }
-
-    public Calendar getFechaConcesion() {
-        return fechaConcesion;
-    }
-
-    public void setFechaConcesion(Calendar fechaConcesion) {
-        this.fechaConcesion = fechaConcesion;
     }
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 79 * hash + Objects.hashCode(this.id);
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Permisos)) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
+        Permisos other = (Permisos) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
-        final Permisos other = (Permisos) obj;
-        return Objects.equals(this.id, other.id);
+        return true;
     }
 
     @Override
     public String toString() {
-        return "Permisos{" + "id=" + id + ", folio=" + folio + ", tipo=" + tipo + ", fechaConcesion=" + fechaConcesion + '}';
+        return "Dominio.Permisos[ id=" + id + " ]";
     }
+    // Atributos
+    
 }

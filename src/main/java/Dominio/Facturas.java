@@ -9,101 +9,59 @@
 
 package Dominio;
 
-import Enumeradores.EstadoFactura;
-import Enumeradores.MetodoPago;
-import java.util.Calendar;
-import java.util.Objects;
+import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 /**
  * Esta clase permite .
  *
  * @author Brandon Figueroa Ugalde
  * ID: 00000233295
- * 22 mar 2023 10:14:20
+ * 18 abr 2023 18:29:37
  */
-public class Facturas {
-    // Atributos
-    private Float monto; 
-    private String descripcion;
-    private Calendar fecha; 
-    private EstadoFactura estado; 
-    private MetodoPago metodoPago;
+@Entity
+public class Facturas implements Serializable {
 
-    public Facturas() {
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    public Long getId() {
+        return id;
     }
 
-    public Facturas(Float monto, String descripcion, Calendar fecha, EstadoFactura estado, MetodoPago metodoPago) {
-        this.monto = monto;
-        this.descripcion = descripcion;
-        this.fecha = fecha;
-        this.estado = estado;
-        this.metodoPago = metodoPago;
-    }
-
-    public Float getMonto() {
-        return monto;
-    }
-
-    public void setMonto(Float monto) {
-        this.monto = monto;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public Calendar getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(Calendar fecha) {
-        this.fecha = fecha;
-    }
-
-    public EstadoFactura getEstado() {
-        return estado;
-    }
-
-    public void setEstado(EstadoFactura estado) {
-        this.estado = estado;
-    }
-
-    public MetodoPago getMetodoPago() {
-        return metodoPago;
-    }
-
-    public void setMetodoPago(MetodoPago metodoPago) {
-        this.metodoPago = metodoPago;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 59 * hash + Objects.hashCode(this.monto);
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Facturas)) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
+        Facturas other = (Facturas) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
-        final Facturas other = (Facturas) obj;
-        return Objects.equals(this.monto, other.monto);
+        return true;
     }
 
     @Override
     public String toString() {
-        return "Facturas{" + "monto=" + monto + ", descripcion=" + descripcion + ", fecha=" + fecha + ", estado=" + estado + ", metodoPago=" + metodoPago + '}';
+        return "Dominio.Facturas[ id=" + id + " ]";
     }
+    // Atributos
+    
 }

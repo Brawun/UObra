@@ -1,5 +1,5 @@
 /**
- * Planos.java
+ * Pagos.java
  */
 
 /*
@@ -18,12 +18,11 @@ import javax.persistence.Id;
 /**
  * Esta clase permite .
  *
- * @author Brandon Figueroa Ugalde
- * ID: 00000233295
- * 18 abr 2023 18:29:23
+ * @author Brandon Figueroa Ugalde id: 00000233295
+ * @author Guimel Naely Rubio Morillon id: 00000229324
  */
 @Entity
-public class Planos implements Serializable {
+public class Pagos implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -48,10 +47,10 @@ public class Planos implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Planos)) {
+        if (!(object instanceof Pagos)) {
             return false;
         }
-        Planos other = (Planos) object;
+        Pagos other = (Pagos) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -60,7 +59,7 @@ public class Planos implements Serializable {
 
     @Override
     public String toString() {
-        return "Dominio.Planos[ id=" + id + " ]";
+        return "Dominio.Pagos[ id=" + id + " ]";
     }
     // Atributos
     

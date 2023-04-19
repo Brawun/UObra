@@ -9,97 +9,59 @@
 
 package Dominio;
 
-import java.util.Objects;
+import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 /**
  * Esta clase permite .
  *
- * @author Brandon Figueroa Ugalde id: 00000233295
- * @author Guimel Naely Rubio Morillon id: 00000229324
+ * @author Brandon Figueroa Ugalde
+ * ID: 00000233295
+ * 18 abr 2023 18:28:34
  */
-public class Compradores {
-    // Atributos
-    private Integer id;
-    private String nombre; 
-    private String apellidoPaterno; 
-    private String apellidoMaterno;
-    private String telefono;
+@Entity
+public class Compradores implements Serializable {
 
-    public Compradores() {
-    }
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-    public Compradores(Integer ID, String Nombre, String ApellidoPaterno, String ApellidoMaterno, String Telefono) {
-        this.id = ID;
-        this.nombre = Nombre;
-        this.apellidoPaterno = ApellidoPaterno;
-        this.apellidoMaterno = ApellidoMaterno;
-        this.telefono = Telefono;
-    }
-
-    public Integer getID() {
+    public Long getId() {
         return id;
     }
 
-    public void setID(Integer ID) {
-        this.id = ID;
-    }
-    
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String Nombre) {
-        this.nombre = Nombre;
-    }
-
-    public String getApellidoPaterno() {
-        return apellidoPaterno;
-    }
-
-    public void setApellidoPaterno(String ApellidoPaterno) {
-        this.apellidoPaterno = ApellidoPaterno;
-    }
-
-    public String getApellidoMaterno() {
-        return apellidoMaterno;
-    }
-
-    public void setApellidoMaterno(String ApellidoMaterno) {
-        this.apellidoMaterno = ApellidoMaterno;
-    }
-
-    public String getTelefono() {
-        return telefono;
-    }
-
-    public void setTelefono(String Telefono) {
-        this.telefono = Telefono;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 67 * hash + Objects.hashCode(this.id);
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Compradores)) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
+        Compradores other = (Compradores) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
-        final Compradores other = (Compradores) obj;
-        return Objects.equals(this.id, other.id);
+        return true;
     }
 
     @Override
     public String toString() {
-        return "Compradores{" + "ID=" + id + ", Nombre=" + nombre + ", ApellidoPaterno=" + apellidoPaterno + ", ApellidoMaterno=" + apellidoMaterno + ", Telefono=" + telefono + '}';
+        return "Dominio.Compradores[ id=" + id + " ]";
     }
+    // Atributos
+    
 }

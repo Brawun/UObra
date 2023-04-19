@@ -9,98 +9,59 @@
 
 package Dominio;
 
-import Enumeradores.TipoUbicacion;
-import java.util.Objects;
+import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 /**
  * Esta clase permite .
  *
- * @author Brandon Figueroa Ugalde ID: 00000233295
- * @author Guimel Naely Rubio Morillon ID: 00000229324
+ * @author Brandon Figueroa Ugalde
+ * ID: 00000233295
+ * 18 abr 2023 18:28:42
  */
-public class Ubicaciones {
-    // Atributos
-    private String direccion; 
-    private TipoUbicacion tipo;
-    private Float largo; 
-    private Float ancho;
-    private Float area;
+@Entity
+public class Ubicaciones implements Serializable {
 
-    public Ubicaciones() {
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    public Long getId() {
+        return id;
     }
 
-    public Ubicaciones(String direccion, TipoUbicacion tipo, Float largo, Float ancho, Float area) {
-        this.direccion = direccion;
-        this.tipo = tipo;
-        this.largo = largo;
-        this.ancho = ancho;
-        this.area = area;
-    }
-
-    public String getDireccion() {
-        return direccion;
-    }
-
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
-    }
-
-    public TipoUbicacion getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(TipoUbicacion tipo) {
-        this.tipo = tipo;
-    }
-
-    public Float getLargo() {
-        return largo;
-    }
-
-    public void setLargo(Float largo) {
-        this.largo = largo;
-    }
-
-    public Float getAncho() {
-        return ancho;
-    }
-
-    public void setAncho(Float ancho) {
-        this.ancho = ancho;
-    }
-
-    public Float getArea() {
-        return area;
-    }
-
-    public void setArea(Float area) {
-        this.area = area;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 31 * hash + Objects.hashCode(this.direccion);
+        int hash = 0;
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Ubicaciones)) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
+        Ubicaciones other = (Ubicaciones) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
-        final Ubicaciones other = (Ubicaciones) obj;
-        return Objects.equals(this.direccion, other.direccion);
+        return true;
     }
 
     @Override
     public String toString() {
-        return "Ubicaciones{" + "direccion=" + direccion + ", tipo=" + tipo + ", largo=" + largo + ", ancho=" + ancho + ", area=" + area + '}';
+        return "Dominio.Ubicaciones[ id=" + id + " ]";
     }
+    // Atributos
+    
 }
