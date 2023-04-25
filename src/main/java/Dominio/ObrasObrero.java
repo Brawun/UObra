@@ -1,15 +1,10 @@
 /**
  * ObrasObrero.java
  */
-
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 package Dominio;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,6 +12,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * Esta entidad permite mapear la relación entre Obras y Obreros con todos sus atributos.
@@ -42,13 +39,82 @@ public class ObrasObrero implements Serializable {
     @ManyToOne
     @JoinColumn(name = "idObra", referencedColumnName = "ID")
     private Obras obra;
+    
+    // AUTOGENERADA
+    @Column(name = "FechaInicio", nullable = false)
+    @Temporal(TemporalType.DATE)
+    private Calendar fechaInicio;
+    
+    @Column(name = "FechaFin", nullable = true)
+    @Temporal(TemporalType.DATE)
+    private Calendar fechaFin; 
+    
+    @Column(name = "Activo", nullable = false)
+    private Boolean activo = true; 
 
+    public ObrasObrero() {
+    }
+
+    public ObrasObrero(Long id, Obreros obrero, Obras obra, Calendar fechaInicio, Calendar fechaFin, Boolean activo) {
+        this.id = id;
+        this.obrero = obrero;
+        this.obra = obra;
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
+        this.activo = activo;
+    }
+
+    public ObrasObrero(Obreros obrero, Obras obra) {
+        this.obrero = obrero;
+        this.obra = obra;
+    }
+    
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Obreros getObrero() {
+        return obrero;
+    }
+
+    public void setObrero(Obreros obrero) {
+        this.obrero = obrero;
+    }
+
+    public Obras getObra() {
+        return obra;
+    }
+
+    public void setObra(Obras obra) {
+        this.obra = obra;
+    }
+
+    public Calendar getFechaInicio() {
+        return fechaInicio;
+    }
+
+    public void setFechaInicio(Calendar fechaInicio) {
+        this.fechaInicio = fechaInicio;
+    }
+
+    public Calendar getFechaFin() {
+        return fechaFin;
+    }
+
+    public void setFechaFin(Calendar fechaFin) {
+        this.fechaFin = fechaFin;
+    }
+
+    public Boolean getActivo() {
+        return activo;
+    }
+
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
     }
 
     @Override
@@ -73,8 +139,6 @@ public class ObrasObrero implements Serializable {
 
     @Override
     public String toString() {
-        return "Dominio.ObrasObrero[ id=" + id + " ]";
+        return "ObrasObrero{" + "id=" + id + ", obrero=" + obrero + ", obra=" + obra + ", fechaInicio=" + fechaInicio + ", fechaFin=" + fechaFin + ", activo=" + activo + '}';
     }
-    // Atributos
-    
 }

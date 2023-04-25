@@ -1,12 +1,6 @@
 /**
  * Permisos.java
  */
-
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 package Dominio;
 
 import Enumeradores.TipoPermiso;
@@ -28,7 +22,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 /**
- * Esta entidad permite mapear # con todos sus atributos.
+ * Esta entidad permite mapear un Permiso con todos sus atributos.
  *
  * @author Brandon Figueroa Ugalde - ID: 00000233295
  * @author Guimel Naely Rubio Morillon - ID: 00000229324
@@ -41,24 +35,24 @@ public class Permisos implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @Column(name = "Folio", unique = true, nullable = false)
     private String folio;
-    
+
     @Column(name = "Tipo", nullable = true)
     @Enumerated(EnumType.STRING)
     private TipoPermiso tipo;
-    
+
     @Column(name = "FechaConcesion", nullable = true)
     @Temporal(TemporalType.DATE)
     private Calendar fechaConcesion;
-    
+
     // Llave foránea
     // Muchos permisos pueden ser registrados por un jefe
     @ManyToOne()
     @JoinColumn(name = "idJefe", referencedColumnName = "ID", nullable = true)
     private Jefes jefe;
-    
+
     // Muchos permsios pueden pertenecer a muchas obras
     @ManyToMany(mappedBy = "permisos")
     List<Obras> obras;
@@ -86,7 +80,7 @@ public class Permisos implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-    
+
     public TipoPermiso getTipo() {
         return tipo;
     }
@@ -110,7 +104,7 @@ public class Permisos implements Serializable {
     public void setFolio(String folio) {
         this.folio = folio;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;

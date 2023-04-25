@@ -1,12 +1,6 @@
 /**
  * Facturas.java
  */
-
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 package Dominio;
 
 import Enumeradores.EstadoFactura;
@@ -27,7 +21,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 /**
- * Esta entidad permite mapear # con todos sus atributos.
+ * Esta entidad permite mapear una Facturas con todos sus atributos.
  *
  * @author Brandon Figueroa Ugalde - ID: 00000233295
  * @author Guimel Naely Rubio Morillon - ID: 00000229324
@@ -44,23 +38,23 @@ public class Facturas implements Serializable {
 
     @Column(name = "Monto", nullable = false)
     private Float monto;
-    
+
     @Column(name = "Descripcion", nullable = false)
     private String descripcion;
-    
+
     // AUTOGENERADA
     @Column(name = "Fecha", nullable = true)
     @Temporal(TemporalType.DATE)
     private Calendar fecha;
-    
+
     @Column(name = "Estado", nullable = false)
     @Enumerated(EnumType.STRING)
     private EstadoFactura estado = EstadoFactura.PENDIENTE;
-    
+
     @Column(name = "MetodoPago", nullable = false)
     @Enumerated(EnumType.STRING)
     private MetodoPago metodoPago = MetodoPago.NO_APLICA;
-    
+
     // Llave foránea
     // Muchas facturas pueden ser generadas por un jefe
     @ManyToOne()
@@ -92,7 +86,7 @@ public class Facturas implements Serializable {
         this.fecha = fecha;
         this.jefe = jefe;
     }
-    
+
     public Float getMonto() {
         return monto;
     }
@@ -132,7 +126,7 @@ public class Facturas implements Serializable {
     public void setMetodoPago(MetodoPago metodoPago) {
         this.metodoPago = metodoPago;
     }
-    
+
     public Long getId() {
         return id;
     }
@@ -161,5 +155,5 @@ public class Facturas implements Serializable {
     @Override
     public String toString() {
         return "Facturas{" + "id=" + id + ", monto=" + monto + ", descripcion=" + descripcion + ", fecha=" + fecha + ", estado=" + estado + ", metodoPago=" + metodoPago + ", jefe=" + jefe.getId() + '}';
-    }    
+    }
 }

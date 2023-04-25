@@ -1,12 +1,6 @@
 /**
  * Jefes.java
  */
-
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 package Dominio;
 
 import java.io.Serializable;
@@ -20,7 +14,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
- * Esta entidad permite mapear # con todos sus atributos.
+ * Esta entidad permite mapear un Jefe con todos sus atributos.
  *
  * @author Brandon Figueroa Ugalde - ID: 00000233295
  * @author Guimel Naely Rubio Morillon - ID: 00000229324
@@ -34,31 +28,31 @@ public class Jefes implements Serializable {
     @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @Column(name = "Nombre", nullable = true)
     private String nombre;
-    
+
     @Column(name = "ApellidoPaterno", nullable = true)
     private String apellidoPaterno;
-    
+
     @Column(name = "ApellidoMaterno", nullable = true)
     private String apellidoMaterno;
-    
+
     @Column(name = "Telefono", nullable = true)
     private String telefono;
-    
+
     // Un jefe puede registrar muchas facturas
     @OneToMany(mappedBy = "jefe")
     private List<Facturas> facturas;
-    
+
     // Un jefe puede aceptar muchas obras
     @OneToMany(mappedBy = "jefe")
     private List<Obras> obras;
-    
+
     // Un jefe puede registrar muchos permisos
     @OneToMany(mappedBy = "jefe")
     private List<Permisos> permisos;
-    
+
     // Un jefe puede registrar muchos planos
     @OneToMany(mappedBy = "jefe")
     private List<Planos> planos;
@@ -124,7 +118,7 @@ public class Jefes implements Serializable {
     public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;

@@ -1,12 +1,6 @@
 /**
  * Planos.java
  */
-
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 package Dominio;
 
 import Enumeradores.Escala;
@@ -29,7 +23,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 /**
- * Esta entidad permite mapear # con todos sus atributos.
+ * Esta entidad permite mapear un Plano con todos sus atributos.
  *
  * @author Brandon Figueroa Ugalde - ID: 00000233295
  * @author Guimel Naely Rubio Morillon - ID: 00000229324
@@ -41,29 +35,29 @@ public class Planos implements Serializable {
 
     @Id
     @Column(name = "ID")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @Column(name = "Folio", unique = true, nullable = false)
     private String folio;
 
     @Column(name = "Tipo", nullable = true)
     @Enumerated(EnumType.STRING)
     private TipoPlano tipo;
-    
+
     @Column(name = "Escala", nullable = true)
     @Enumerated(EnumType.STRING)
     private Escala escala;
-    
+
     @Column(name = "FechaRealización", nullable = true)
     @Temporal(TemporalType.DATE)
     private Calendar fechaRealización;
-    
+
     // Llave foránea
     @ManyToOne()
     @JoinColumn(name = "idJefe", referencedColumnName = "ID", nullable = true)
     private Jefes jefe;
-    
+
     @ManyToMany(mappedBy = "planos")
     List<Obras> obras;
 
@@ -79,7 +73,7 @@ public class Planos implements Serializable {
         this.escala = escala;
         this.fechaRealización = fechaRealización;
     }
-    
+
     public Long getId() {
         return id;
     }
@@ -95,7 +89,7 @@ public class Planos implements Serializable {
     public void setFolio(String folio) {
         this.folio = folio;
     }
-    
+
     public TipoPlano getTipo() {
         return tipo;
     }
@@ -127,7 +121,7 @@ public class Planos implements Serializable {
     public void setJefe(Jefes jefe) {
         this.jefe = jefe;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;

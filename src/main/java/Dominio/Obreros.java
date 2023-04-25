@@ -1,12 +1,6 @@
 /**
  * Obreros.java
  */
-
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 package Dominio;
 
 import java.io.Serializable;
@@ -16,14 +10,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
- * Esta entidad permite mapear # con todos sus atributos.
+ * Esta entidad permite mapear un Obrero con todos sus atributos.
  *
  * @author Brandon Figueroa Ugalde - ID: 00000233295
  * @author Guimel Naely Rubio Morillon - ID: 00000229324
@@ -37,47 +28,44 @@ public class Obreros implements Serializable {
     @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @Column(name = "Nombre", nullable = true)
     private String nombre;
-    
+
     @Column(name = "ApellidoPaterno", nullable = true)
     private String apellidoPaterno;
-    
+
     @Column(name = "ApellidoMaterno", nullable = true)
     private String apellidoMaterno;
-    
+
     @Column(name = "Telefono", nullable = true)
     private String telefono;
-    
+
     @Column(name = "DiasTrabajados", nullable = true)
     private Integer diasTrabajados = 0;
-    
+
     @Column(name = "SueldoDiario", nullable = true)
     private Float sueldoDiario = (float) 200;
-    
+
+    // Un obrero puede recibir muchos pagos
     @OneToMany(mappedBy = "obrero")
     private List<Pagos> pagos;
-    
-    @ManyToMany()
-    @JoinTable(
-        name = "obrasObrero",
-        joinColumns = @JoinColumn(name = "idObrero", referencedColumnName = "ID", nullable = false),
-        inverseJoinColumns = @JoinColumn(name = "idObra", referencedColumnName = "ID", nullable = false)
-    )
-    private List<Planos> planos;
+
+    // Una obrero puede pertenecer a muchas obras
+    @OneToMany(mappedBy = "obreror")
+    private List<ObrasObrero> obras;
 
     public Obreros() {
     }
 
-    public Obreros(Long id, String nombre, String apellidoPaterno, String apellidoMaterno, String telefono, Integer diasTrabajados, Float sueldoDiario) {
+    public Obreros(Long id, String nombre, String apellidoPaterno, String apellidoMaterno, String telefono, List<Pagos> pagos, List<ObrasObrero> obras) {
         this.id = id;
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
         this.telefono = telefono;
-        this.diasTrabajados = diasTrabajados;
-        this.sueldoDiario = sueldoDiario;
+        this.pagos = pagos;
+        this.obras = obras;
     }
 
     public Obreros(String nombre, String apellidoPaterno, String apellidoMaterno, String telefono, Integer diasTrabajados, Float sueldoDiario) {
@@ -103,7 +91,7 @@ public class Obreros implements Serializable {
         this.apellidoMaterno = apellidoMaterno;
         this.telefono = telefono;
     }
-    
+
     public Long getId() {
         return id;
     }
@@ -160,6 +148,22 @@ public class Obreros implements Serializable {
         this.sueldoDiario = sueldoDiario;
     }
 
+    public List<Pagos> getPagos() {
+        return pagos;
+    }
+
+    public void setPagos(List<Pagos> pagos) {
+        this.pagos = pagos;
+    }
+
+    public List<ObrasObrero> getObras() {
+        return obras;
+    }
+
+    public void setObras(List<ObrasObrero> obras) {
+        this.obras = obras;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -182,6 +186,6 @@ public class Obreros implements Serializable {
 
     @Override
     public String toString() {
-        return "Obreros{" + "id=" + id + ", nombre=" + nombre + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", telefono=" + telefono + ", diasTrabajados=" + diasTrabajados + ", sueldoDiario=" + sueldoDiario + '}';
+        return "Obreros{" + "id=" + id + ", nombre=" + nombre + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", telefono=" + telefono + ", diasTrabajados=" + diasTrabajados + ", sueldoDiario=" + sueldoDiario + ", pagos=" + pagos + ", obras=" + obras + '}';
     }
 }

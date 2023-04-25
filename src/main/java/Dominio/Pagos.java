@@ -1,12 +1,6 @@
 /**
  * Pagos.java
  */
-
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 package Dominio;
 
 import Enumeradores.MetodoPago;
@@ -26,7 +20,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 /**
- * Esta entidad permite mapear # con todos sus atributos.
+ * Esta entidad permite mapear un Pago con todos sus atributos.
  *
  * @author Brandon Figueroa Ugalde - ID: 00000233295
  * @author Guimel Naely Rubio Morillon - ID: 00000229324
@@ -40,23 +34,23 @@ public class Pagos implements Serializable {
     @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @Column(name = "Monto", nullable = true)
     private Float monto;
-    
+
     @Column(name = "Fecha", nullable = true)
     @Temporal(TemporalType.DATE)
     private Calendar fecha;
-    
+
     @Column(name = "MetodoPago", nullable = true)
     @Enumerated(EnumType.STRING)
     private MetodoPago metodoPago;
-    
+
     // Llave foránea
     @ManyToOne()
     @JoinColumn(name = "idObrero", referencedColumnName = "ID", nullable = true)
     private Obreros obrero;
-            
+
     // Llave foránea
     @ManyToOne()
     @JoinColumn(name = "idObra", referencedColumnName = "ID", nullable = true)

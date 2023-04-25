@@ -1,12 +1,6 @@
 /**
  * Obras.java
  */
-
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 package Dominio;
 
 import Enumeradores.EstadoObra;
@@ -30,7 +24,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 /**
- * Esta entidad permite mapear # con todos sus atributos.
+ * Esta entidad permite mapear una Obra con todos sus atributos.
  *
  * @author Brandon Figueroa Ugalde - ID: 00000233295
  * @author Guimel Naely Rubio Morillon - ID: 00000229324
@@ -48,83 +42,87 @@ public class Obras implements Serializable {
     @Column(name = "Estado", nullable = true)
     @Enumerated(EnumType.STRING)
     EstadoObra estado = EstadoObra.EN_ESPERA;
-    
+
     @Column(name = "CostoArranque", nullable = false)
     private Float costoArranque;
-    
+
     @Column(name = "Inversion", nullable = false)
     private Float inversion;
-    
+
     // AUTOGENERADA
     @Column(name = "Deuda", nullable = true)
     private Float deuda;
-    
+
     @Column(name = "Pagada", nullable = false)
     private Boolean estaPagada = false;
-    
+
     @Column(name = "Nombre", nullable = false)
     private String nombre;
-    
+
     // AUTOGENERADA
     @Column(name = "FechaSolicitada", nullable = true)
     @Temporal(TemporalType.DATE)
     private Calendar fechaSolicitada;
-    
+
     @Column(name = "FechaInicio", nullable = true)
     @Temporal(TemporalType.DATE)
     private Calendar fechaInicio;
-    
+
     @Column(name = "FechaFin", nullable = true)
     @Temporal(TemporalType.DATE)
     private Calendar fechaFin;
-    
+
     // Llave foránea
     // Muchas obras pueden ser aceptadas por un jefe
     @ManyToOne()
     @JoinColumn(name = "idJefe", referencedColumnName = "ID", nullable = true)
     private Jefes jefe;
-    
+
     // Llave foránea
     // Muchas obras pueden ser solictadas por un cliente
     @ManyToOne()
     @JoinColumn(name = "idCliente", referencedColumnName = "ID", nullable = true)
     private Clientes cliente;
-    
+
     // Una obra tiene muchos pagos
     @OneToMany(mappedBy = "obra")
     private List<Pagos> pagos;
 
+    // Una obra tiene muchos obreros
+    @OneToMany(mappedBy = "obra")
+    private List<ObrasObrero> obreros;
+
     // Muchas obras pueden tener muchos planos
     @ManyToMany()
     @JoinTable(
-        name = "planosObra",
-        joinColumns = @JoinColumn(name = "idObra", referencedColumnName = "ID", nullable = false),
-        inverseJoinColumns = @JoinColumn(name = "idPlano", referencedColumnName = "ID", nullable = false)
+            name = "planosObra",
+            joinColumns = @JoinColumn(name = "idObra", referencedColumnName = "ID", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "idPlano", referencedColumnName = "ID", nullable = false)
     )
     private List<Planos> planos;
-    
-    // Muchas obras pueden tener muchos planos
+
+    // Muchas obras pueden tener muchos permisos
     @ManyToMany()
     @JoinTable(
-        name = "permisosObra",
-        joinColumns = @JoinColumn(name = "idObra", referencedColumnName = "ID", nullable = false),
-        inverseJoinColumns = @JoinColumn(name = "idPermiso", referencedColumnName = "ID", nullable = false)
+            name = "permisosObra",
+            joinColumns = @JoinColumn(name = "idObra", referencedColumnName = "ID", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "idPermiso", referencedColumnName = "ID", nullable = false)
     )
     private List<Permisos> permisos;
-    
+
     // Muchas obras pueden tener muchas ubicaciones
     @ManyToMany()
     @JoinTable(
-        name = "ubicacionesObra",
-        joinColumns = @JoinColumn(name = "idObra", referencedColumnName = "ID", nullable = false),
-        inverseJoinColumns = @JoinColumn(name = "idUbicacion", referencedColumnName = "ID", nullable = false)
+            name = "ubicacionesObra",
+            joinColumns = @JoinColumn(name = "idObra", referencedColumnName = "ID", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "idUbicacion", referencedColumnName = "ID", nullable = false)
     )
     private List<Ubicaciones> ubicaciones;
 
     public Obras() {
     }
 
-    public Obras(Long id, Float costoArranque, Float inversion, Float deuda, String nombre, Calendar fechaSolicitada, Calendar fechaInicio, Calendar fechaFin, Jefes jefe, Clientes cliente, List<Pagos> pagos, List<Planos> planos, List<Permisos> permisos, List<Ubicaciones> ubicaciones) {
+    public Obras(Long id, Float costoArranque, Float inversion, Float deuda, String nombre, Calendar fechaSolicitada, Calendar fechaInicio, Calendar fechaFin, Jefes jefe, Clientes cliente, List<Pagos> pagos, List<ObrasObrero> obreros, List<Planos> planos, List<Permisos> permisos, List<Ubicaciones> ubicaciones) {
         this.id = id;
         this.costoArranque = costoArranque;
         this.inversion = inversion;
@@ -136,12 +134,13 @@ public class Obras implements Serializable {
         this.jefe = jefe;
         this.cliente = cliente;
         this.pagos = pagos;
+        this.obreros = obreros;
         this.planos = planos;
         this.permisos = permisos;
         this.ubicaciones = ubicaciones;
     }
 
-    public Obras(Float costoArranque, Float inversion, Float deuda, String nombre, Calendar fechaSolicitada, Calendar fechaInicio, Calendar fechaFin, Jefes jefe, Clientes cliente, List<Pagos> pagos, List<Planos> planos, List<Permisos> permisos, List<Ubicaciones> ubicaciones) {
+    public Obras(Float costoArranque, Float inversion, Float deuda, String nombre, Calendar fechaSolicitada, Calendar fechaInicio, Calendar fechaFin, Jefes jefe, Clientes cliente, List<Pagos> pagos, List<ObrasObrero> obreros, List<Planos> planos, List<Permisos> permisos, List<Ubicaciones> ubicaciones) {
         this.costoArranque = costoArranque;
         this.inversion = inversion;
         this.deuda = deuda;
@@ -152,6 +151,7 @@ public class Obras implements Serializable {
         this.jefe = jefe;
         this.cliente = cliente;
         this.pagos = pagos;
+        this.obreros = obreros;
         this.planos = planos;
         this.permisos = permisos;
         this.ubicaciones = ubicaciones;
@@ -164,7 +164,7 @@ public class Obras implements Serializable {
         this.jefe = jefe;
         this.cliente = cliente;
     }
-    
+
     public Obras(Float costoArranque, Float inversion, String nombre, Clientes cliente) {
         this.costoArranque = costoArranque;
         this.inversion = inversion;
@@ -177,7 +177,7 @@ public class Obras implements Serializable {
         this.inversion = inversion;
         this.nombre = nombre;
     }
-    
+
     public Long getId() {
         return id;
     }
@@ -241,7 +241,7 @@ public class Obras implements Serializable {
     public void setFechaSolicitada(Calendar fechaSolicitada) {
         this.fechaSolicitada = fechaSolicitada;
     }
-    
+
     public Calendar getFechaInicio() {
         return fechaInicio;
     }
@@ -305,7 +305,15 @@ public class Obras implements Serializable {
     public void setUbicaciones(List<Ubicaciones> ubicaciones) {
         this.ubicaciones = ubicaciones;
     }
-    
+
+    public List<ObrasObrero> getObreros() {
+        return obreros;
+    }
+
+    public void setObreros(List<ObrasObrero> obreros) {
+        this.obreros = obreros;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -325,6 +333,6 @@ public class Obras implements Serializable {
 
     @Override
     public String toString() {
-        return "Obras{" + "id=" + id + ", estado=" + estado + ", costoArranque=" + costoArranque + ", inversion=" + inversion + ", deuda=" + deuda + ", estaPagada=" + estaPagada + ", nombre=" + nombre + ", fechaSolicitada=" + fechaSolicitada + ", fechaInicio=" + fechaInicio + ", fechaFin=" + fechaFin + ", jefe=" + jefe + ", cliente=" + cliente + ", pagos=" + pagos + ", planos=" + planos + ", permisos=" + permisos + ", ubicaciones=" + ubicaciones + '}';
+        return "Obras{" + "id=" + id + ", estado=" + estado + ", costoArranque=" + costoArranque + ", inversion=" + inversion + ", deuda=" + deuda + ", estaPagada=" + estaPagada + ", nombre=" + nombre + ", fechaSolicitada=" + fechaSolicitada + ", fechaInicio=" + fechaInicio + ", fechaFin=" + fechaFin + ", jefe=" + jefe + ", cliente=" + cliente + ", pagos=" + pagos + ", obreros=" + obreros + ", planos=" + planos + ", permisos=" + permisos + ", ubicaciones=" + ubicaciones + '}';
     }
 }

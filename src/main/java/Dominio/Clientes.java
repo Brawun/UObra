@@ -1,12 +1,6 @@
 /**
  * Compradores.java
  */
-
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 package Dominio;
 
 import java.io.Serializable;
@@ -20,7 +14,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
- * Esta entidad permite mapear # con todos sus atributos.
+ * Esta entidad permite mapear un Cliente con todos sus atributos.
  *
  * @author Brandon Figueroa Ugalde - ID: 00000233295
  * @author Guimel Naely Rubio Morillon - ID: 00000229324
@@ -34,26 +28,26 @@ public class Clientes implements Serializable {
     @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     @Column(name = "Nombre", nullable = true)
     private String nombre;
-    
+
     @Column(name = "ApellidoPaterno", nullable = true)
     private String apellidoPaterno;
-    
+
     @Column(name = "ApellidoMaterno", nullable = true)
     private String apellidoMaterno;
-    
+
     @Column(name = "Telefono", nullable = true)
     private String telefono;
-            
+
     @Column(name = "DeudaTotal", nullable = true)
-    private Float deudaTotal = (float) 0; 
-    
+    private Float deudaTotal = (float) 0;
+
     // Un cliente puede solicitar muchas obras
     @OneToMany(mappedBy = "cliente")
     private List<Obras> obras;
-    
+
     // Un cliente puede registrar muchas ubicaciones
     @OneToMany(mappedBy = "cliente")
     private List<Ubicaciones> ubicaciones;
@@ -85,7 +79,7 @@ public class Clientes implements Serializable {
         this.apellidoMaterno = apellidoMaterno;
         this.telefono = telefono;
     }
-    
+
     public Long getId() {
         return id;
     }
@@ -149,7 +143,7 @@ public class Clientes implements Serializable {
     public void setUbicaciones(List<Ubicaciones> ubicaciones) {
         this.ubicaciones = ubicaciones;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;

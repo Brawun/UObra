@@ -1,42 +1,88 @@
 /**
  * Ubicaciones.java
  */
-
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 package Dominio;
 
+import Enumeradores.TipoUbicacion;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 
 /**
- * Esta clase permite .
+ * Esta entidad permite mapear una Ubicación con todos sus atributos.
  *
- * @author Brandon Figueroa Ugalde
- * ID: 00000233295
- * 18 abr 2023 18:28:42
+ * @author Brandon Figueroa Ugalde - ID: 00000233295
+ * @author Guimel Naely Rubio Morillon - ID: 00000229324
+ * @since Pruebas de Software Prof. María de los Ángeles Germán ITSON
  */
 @Entity
 public class Ubicaciones implements Serializable {
 
     @Id
     @Column(name = "ID")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
+    @Column(name = "EstaDisponible", nullable = false)
     private Boolean disponible;
+
+    @Column(name = "Direccion", nullable = false)
+    private String direccion;
+
+    @Column(name = "Tipo", nullable = true)
+    @Enumerated(EnumType.STRING)
+    private TipoUbicacion tipo;
+
+    @Column(name = "Largo", nullable = false)
+    private Float largo;
+
+    @Column(name = "Ancho", nullable = false)
+    private Float ancho;
+
+    // AUTOGENERADA
+    @Column(name = "Area", nullable = false)
+    private Float area;
+
+    public Ubicaciones() {
+    }
+
+    public Ubicaciones(Long id, Boolean disponible, String direccion, TipoUbicacion tipo, Float largo, Float ancho, Float area, Clientes cliente, List<Obras> obras) {
+        this.id = id;
+        this.disponible = disponible;
+        this.direccion = direccion;
+        this.tipo = tipo;
+        this.largo = largo;
+        this.ancho = ancho;
+        this.area = area;
+        this.cliente = cliente;
+        this.obras = obras;
+    }
+
+    public Ubicaciones(Boolean disponible, String direccion, TipoUbicacion tipo, Float largo, Float ancho, Clientes cliente) {
+        this.disponible = disponible;
+        this.direccion = direccion;
+        this.tipo = tipo;
+        this.largo = largo;
+        this.ancho = ancho;
+        this.cliente = cliente;
+    }
+
+    public Ubicaciones(String direccion, TipoUbicacion tipo, Float largo, Float ancho, Clientes cliente) {
+        this.direccion = direccion;
+        this.tipo = tipo;
+        this.largo = largo;
+        this.ancho = ancho;
+        this.cliente = cliente;
+    }
 
     public Long getId() {
         return id;
@@ -45,13 +91,77 @@ public class Ubicaciones implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-    
+
+    public Boolean getDisponible() {
+        return disponible;
+    }
+
+    public void setDisponible(Boolean disponible) {
+        this.disponible = disponible;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
+
+    public TipoUbicacion getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(TipoUbicacion tipo) {
+        this.tipo = tipo;
+    }
+
+    public Float getLargo() {
+        return largo;
+    }
+
+    public void setLargo(Float largo) {
+        this.largo = largo;
+    }
+
+    public Float getAncho() {
+        return ancho;
+    }
+
+    public void setAncho(Float ancho) {
+        this.ancho = ancho;
+    }
+
+    public Float getArea() {
+        return area;
+    }
+
+    public void setArea(Float area) {
+        this.area = area;
+    }
+
+    public Clientes getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Clientes cliente) {
+        this.cliente = cliente;
+    }
+
+    public List<Obras> getObras() {
+        return obras;
+    }
+
+    public void setObras(List<Obras> obras) {
+        this.obras = obras;
+    }
+
     // Llave foránea
     // Muchas ubicaciones pueden ser registradas por un cliente
     @ManyToOne()
     @JoinColumn(name = "idCliente", referencedColumnName = "ID", nullable = true)
     private Clientes cliente;
-    
+
     // Muchas ubicaciones pertenecen a muchas obras
     @ManyToMany(mappedBy = "ubicaciones")
     List<Obras> obras;
@@ -78,8 +188,6 @@ public class Ubicaciones implements Serializable {
 
     @Override
     public String toString() {
-        return "Dominio.Ubicaciones[ id=" + id + " ]";
+        return "Ubicaciones{" + "id=" + id + ", disponible=" + disponible + ", direccion=" + direccion + ", tipo=" + tipo + ", largo=" + largo + ", ancho=" + ancho + ", area=" + area + ", cliente=" + cliente + ", obras=" + obras + '}';
     }
-    // Atributos
-    
 }

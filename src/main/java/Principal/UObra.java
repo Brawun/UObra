@@ -24,5 +24,7 @@ public class UObra {
         // Se abre el formulario de inicio de sesión
         IniciarSesion inicioSesion = new IniciarSesion();
         inicioSesion.setVisible(true);
+        // Nombre BD: UObra
+        // Contraseña: 1234
     }
 }
