@@ -1,5 +1,5 @@
 /**
- * Compradores.java
+ * ObrasObrero.java
  */
 
 /*
@@ -10,25 +10,38 @@
 package Dominio;
 
 import java.io.Serializable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 /**
- * Esta clase permite .
+ * Esta entidad permite mapear la relación entre Obras y Obreros con todos sus atributos.
  *
- * @author Brandon Figueroa Ugalde
- * ID: 00000233295
- * 18 abr 2023 18:28:34
+ * @author Brandon Figueroa Ugalde - ID: 00000233295
+ * @author Guimel Naely Rubio Morillon - ID: 00000229324
+ * @since Pruebas de Software Prof. María de los Ángeles Germán ITSON
  */
 @Entity
-public class Compradores implements Serializable {
+public class ObrasObrero implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "idObrero", referencedColumnName = "ID")
+    private Obreros obrero;
+    
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "idObra", referencedColumnName = "ID")
+    private Obras obra;
 
     public Long getId() {
         return id;
@@ -48,10 +61,10 @@ public class Compradores implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Compradores)) {
+        if (!(object instanceof ObrasObrero)) {
             return false;
         }
-        Compradores other = (Compradores) object;
+        ObrasObrero other = (ObrasObrero) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -60,7 +73,7 @@ public class Compradores implements Serializable {
 
     @Override
     public String toString() {
-        return "Dominio.Compradores[ id=" + id + " ]";
+        return "Dominio.ObrasObrero[ id=" + id + " ]";
     }
     // Atributos
     

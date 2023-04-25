@@ -10,10 +10,16 @@
 package Dominio;
 
 import java.io.Serializable;
+import java.util.List;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 /**
  * Esta clase permite .
@@ -25,10 +31,12 @@ import javax.persistence.Id;
 @Entity
 public class Ubicaciones implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     @Id
+    @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    
+    private Boolean disponible;
 
     public Long getId() {
         return id;
@@ -37,6 +45,16 @@ public class Ubicaciones implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+    
+    // Llave foránea
+    // Muchas ubicaciones pueden ser registradas por un cliente
+    @ManyToOne()
+    @JoinColumn(name = "idCliente", referencedColumnName = "ID", nullable = true)
+    private Clientes cliente;
+    
+    // Muchas ubicaciones pertenecen a muchas obras
+    @ManyToMany(mappedBy = "ubicaciones")
+    List<Obras> obras;
 
     @Override
     public int hashCode() {

@@ -3,7 +3,6 @@
   <persistence-unit name="Pruebas_UObra" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>Dominio.Pagos</class>
-    <class>Dominio.Compradores</class>
     <class>Dominio.Ubicaciones</class>
     <class>Dominio.Obras</class>
     <class>Dominio.Obreros</class>
@@ -11,6 +10,8 @@
     <class>Dominio.Planos</class>
     <class>Dominio.Permisos</class>
     <class>Dominio.Facturas</class>
+    <class>Dominio.Clientes</class>
+    <class>Dominio.ObrasObrero</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/uobra?zeroDateTimeBehavior=CONVERT_TO_NULL"/>
       <property name="javax.persistence.jdbc.user" value="root"/>

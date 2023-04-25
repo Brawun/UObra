@@ -1,5 +1,5 @@
 /**
- * Obreros.java
+ * Compradores.java
  */
 
 /*
@@ -16,9 +16,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -30,8 +27,8 @@ import javax.persistence.Table;
  * @since Pruebas de Software Prof. María de los Ángeles Germán ITSON
  */
 @Entity
-@Table(name = "Obreros")
-public class Obreros implements Serializable {
+@Table(name = "Clientes")
+public class Clientes implements Serializable {
 
     @Id
     @Column(name = "ID")
@@ -49,55 +46,40 @@ public class Obreros implements Serializable {
     
     @Column(name = "Telefono", nullable = true)
     private String telefono;
+            
+    @Column(name = "DeudaTotal", nullable = true)
+    private Float deudaTotal = (float) 0; 
     
-    @Column(name = "DiasTrabajados", nullable = true)
-    private Integer diasTrabajados = 0;
+    // Un cliente puede solicitar muchas obras
+    @OneToMany(mappedBy = "cliente")
+    private List<Obras> obras;
     
-    @Column(name = "SueldoDiario", nullable = true)
-    private Float sueldoDiario = (float) 200;
-    
-    @OneToMany(mappedBy = "obrero")
-    private List<Pagos> pagos;
-    
-    @ManyToMany()
-    @JoinTable(
-        name = "obrasObrero",
-        joinColumns = @JoinColumn(name = "idObrero", referencedColumnName = "ID", nullable = false),
-        inverseJoinColumns = @JoinColumn(name = "idObra", referencedColumnName = "ID", nullable = false)
-    )
-    private List<Planos> planos;
+    // Un cliente puede registrar muchas ubicaciones
+    @OneToMany(mappedBy = "cliente")
+    private List<Ubicaciones> ubicaciones;
 
-    public Obreros() {
+    public Clientes() {
     }
 
-    public Obreros(Long id, String nombre, String apellidoPaterno, String apellidoMaterno, String telefono, Integer diasTrabajados, Float sueldoDiario) {
+    public Clientes(Long id, String nombre, String apellidoPaterno, String apellidoMaterno, String telefono, List<Obras> obras, List<Ubicaciones> ubicaciones) {
         this.id = id;
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
         this.telefono = telefono;
-        this.diasTrabajados = diasTrabajados;
-        this.sueldoDiario = sueldoDiario;
+        this.obras = obras;
+        this.ubicaciones = ubicaciones;
     }
 
-    public Obreros(String nombre, String apellidoPaterno, String apellidoMaterno, String telefono, Integer diasTrabajados, Float sueldoDiario) {
+    public Clientes(Long id, String nombre, String apellidoPaterno, String apellidoMaterno, String telefono) {
+        this.id = id;
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
         this.telefono = telefono;
-        this.diasTrabajados = diasTrabajados;
-        this.sueldoDiario = sueldoDiario;
     }
 
-    public Obreros(String nombre, String apellidoPaterno, String apellidoMaterno, String telefono, Float sueldoDiario) {
-        this.nombre = nombre;
-        this.apellidoPaterno = apellidoPaterno;
-        this.apellidoMaterno = apellidoMaterno;
-        this.telefono = telefono;
-        this.sueldoDiario = sueldoDiario;
-    }
-
-    public Obreros(String nombre, String apellidoPaterno, String apellidoMaterno, String telefono) {
+    public Clientes(String nombre, String apellidoPaterno, String apellidoMaterno, String telefono) {
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
@@ -144,22 +126,30 @@ public class Obreros implements Serializable {
         this.telefono = telefono;
     }
 
-    public Integer getDiasTrabajados() {
-        return diasTrabajados;
+    public Float getDeudaTotal() {
+        return deudaTotal;
     }
 
-    public void setDiasTrabajados(Integer diasTrabajados) {
-        this.diasTrabajados = diasTrabajados;
+    public void setDeudaTotal(Float deudaTotal) {
+        this.deudaTotal = deudaTotal;
     }
 
-    public Float getSueldoDiario() {
-        return sueldoDiario;
+    public List<Obras> getObras() {
+        return obras;
     }
 
-    public void setSueldoDiario(Float sueldoDiario) {
-        this.sueldoDiario = sueldoDiario;
+    public void setObras(List<Obras> obras) {
+        this.obras = obras;
     }
 
+    public List<Ubicaciones> getUbicaciones() {
+        return ubicaciones;
+    }
+
+    public void setUbicaciones(List<Ubicaciones> ubicaciones) {
+        this.ubicaciones = ubicaciones;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -170,18 +160,15 @@ public class Obreros implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Obreros)) {
+        if (!(object instanceof Clientes)) {
             return false;
         }
-        Obreros other = (Obreros) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        Clientes other = (Clientes) object;
+        return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
     }
 
     @Override
     public String toString() {
-        return "Obreros{" + "id=" + id + ", nombre=" + nombre + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", telefono=" + telefono + ", diasTrabajados=" + diasTrabajados + ", sueldoDiario=" + sueldoDiario + '}';
+        return "Clientes{" + "id=" + id + ", nombre=" + nombre + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", telefono=" + telefono + ", deudaTotal=" + deudaTotal + ", obras=" + obras + ", ubicaciones=" + ubicaciones + '}';
     }
 }

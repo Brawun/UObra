@@ -16,5 +16,5 @@ package Enumeradores;
  * @author Guimel Naely Rubio Morillon ID: 00000229324
  */
 public enum MetodoPago {
-    EFECTIVO, CREDITO, DEBITO
+    EFECTIVO, CREDITO, DEBITO, NO_APLICA
 }

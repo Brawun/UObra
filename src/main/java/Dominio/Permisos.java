@@ -9,26 +9,75 @@
 
 package Dominio;
 
+import Enumeradores.TipoPermiso;
 import java.io.Serializable;
+import java.util.Calendar;
+import java.util.List;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
- * Esta clase permite .
+ * Esta entidad permite mapear # con todos sus atributos.
  *
- * @author Brandon Figueroa Ugalde
- * ID: 00000233295
- * 18 abr 2023 18:29:29
+ * @author Brandon Figueroa Ugalde - ID: 00000233295
+ * @author Guimel Naely Rubio Morillon - ID: 00000229324
+ * @since Pruebas de Software Prof. María de los Ángeles Germán ITSON
  */
 @Entity
+@Table(name = "Permisos")
 public class Permisos implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    @Column(name = "Folio", unique = true, nullable = false)
+    private String folio;
+    
+    @Column(name = "Tipo", nullable = true)
+    @Enumerated(EnumType.STRING)
+    private TipoPermiso tipo;
+    
+    @Column(name = "FechaConcesion", nullable = true)
+    @Temporal(TemporalType.DATE)
+    private Calendar fechaConcesion;
+    
+    // Llave foránea
+    // Muchos permisos pueden ser registrados por un jefe
+    @ManyToOne()
+    @JoinColumn(name = "idJefe", referencedColumnName = "ID", nullable = true)
+    private Jefes jefe;
+    
+    // Muchos permsios pueden pertenecer a muchas obras
+    @ManyToMany(mappedBy = "permisos")
+    List<Obras> obras;
+
+    public Permisos() {
+    }
+
+    public Permisos(Long id, String folio, TipoPermiso tipo, Calendar fechaConcesion) {
+        this.id = id;
+        this.folio = folio;
+        this.tipo = tipo;
+        this.fechaConcesion = fechaConcesion;
+    }
+
+    public Permisos(String folio, TipoPermiso tipo, Calendar fechaConcesion) {
+        this.folio = folio;
+        this.tipo = tipo;
+        this.fechaConcesion = fechaConcesion;
+    }
 
     public Long getId() {
         return id;
@@ -37,7 +86,31 @@ public class Permisos implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+    
+    public TipoPermiso getTipo() {
+        return tipo;
+    }
 
+    public void setTipo(TipoPermiso tipo) {
+        this.tipo = tipo;
+    }
+
+    public Calendar getFechaConcesion() {
+        return fechaConcesion;
+    }
+
+    public void setFechaConcesion(Calendar fechaConcesion) {
+        this.fechaConcesion = fechaConcesion;
+    }
+
+    public String getFolio() {
+        return folio;
+    }
+
+    public void setFolio(String folio) {
+        this.folio = folio;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -60,8 +133,6 @@ public class Permisos implements Serializable {
 
     @Override
     public String toString() {
-        return "Dominio.Permisos[ id=" + id + " ]";
+        return "Permisos{" + "id=" + id + ", folio=" + folio + ", tipo=" + tipo + ", fechaConcesion=" + fechaConcesion + '}';
     }
-    // Atributos
-    
 }
