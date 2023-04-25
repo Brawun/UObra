@@ -42,6 +42,11 @@ public class Permisos implements Serializable {
     @Column(name = "Tipo", nullable = true)
     @Enumerated(EnumType.STRING)
     private TipoPermiso tipo;
+    
+    // AUTOGENERADA
+    @Column(name = "FechaRegistro", nullable = true)
+    @Temporal(TemporalType.DATE)
+    private Calendar fechaRegistro;
 
     @Column(name = "FechaConcesion", nullable = true)
     @Temporal(TemporalType.DATE)
@@ -60,11 +65,14 @@ public class Permisos implements Serializable {
     public Permisos() {
     }
 
-    public Permisos(Long id, String folio, TipoPermiso tipo, Calendar fechaConcesion) {
+    public Permisos(Long id, String folio, TipoPermiso tipo, Calendar fechaRegistro, Calendar fechaConcesion, Jefes jefe, List<Obras> obras) {
         this.id = id;
         this.folio = folio;
         this.tipo = tipo;
+        this.fechaRegistro = fechaRegistro;
         this.fechaConcesion = fechaConcesion;
+        this.jefe = jefe;
+        this.obras = obras;
     }
 
     public Permisos(String folio, TipoPermiso tipo, Calendar fechaConcesion) {
@@ -105,6 +113,30 @@ public class Permisos implements Serializable {
         this.folio = folio;
     }
 
+    public Calendar getFechaRegistro() {
+        return fechaRegistro;
+    }
+
+    public void setFechaRegistro(Calendar fechaRegistro) {
+        this.fechaRegistro = fechaRegistro;
+    }
+
+    public Jefes getJefe() {
+        return jefe;
+    }
+
+    public void setJefe(Jefes jefe) {
+        this.jefe = jefe;
+    }
+
+    public List<Obras> getObras() {
+        return obras;
+    }
+
+    public void setObras(List<Obras> obras) {
+        this.obras = obras;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -127,6 +159,6 @@ public class Permisos implements Serializable {
 
     @Override
     public String toString() {
-        return "Permisos{" + "id=" + id + ", folio=" + folio + ", tipo=" + tipo + ", fechaConcesion=" + fechaConcesion + '}';
+        return "Permisos{" + "id=" + id + ", folio=" + folio + ", tipo=" + tipo + ", fechaRegistro=" + fechaRegistro + ", fechaConcesion=" + fechaConcesion + ", jefe=" + jefe + ", obras=" + obras + '}';
     }
 }

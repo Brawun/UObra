@@ -119,6 +119,38 @@ public class Jefes implements Serializable {
         this.telefono = telefono;
     }
 
+    public List<Facturas> getFacturas() {
+        return facturas;
+    }
+
+    public void setFacturas(List<Facturas> facturas) {
+        this.facturas = facturas;
+    }
+
+    public List<Obras> getObras() {
+        return obras;
+    }
+
+    public void setObras(List<Obras> obras) {
+        this.obras = obras;
+    }
+
+    public List<Permisos> getPermisos() {
+        return permisos;
+    }
+
+    public void setPermisos(List<Permisos> permisos) {
+        this.permisos = permisos;
+    }
+
+    public List<Planos> getPlanos() {
+        return planos;
+    }
+
+    public void setPlanos(List<Planos> planos) {
+        this.planos = planos;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;

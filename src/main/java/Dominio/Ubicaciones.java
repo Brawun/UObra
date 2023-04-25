@@ -5,6 +5,7 @@ package Dominio;
 
 import Enumeradores.TipoUbicacion;
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +17,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * Esta entidad permite mapear una Ubicación con todos sus atributos.
@@ -47,21 +50,37 @@ public class Ubicaciones implements Serializable {
 
     @Column(name = "Ancho", nullable = false)
     private Float ancho;
+    
+    // AUTOGENERADA
+    @Column(name = "FechaRegistro", nullable = true)
+    @Temporal(TemporalType.DATE)
+    private Calendar fechaRegistro;
 
     // AUTOGENERADA
     @Column(name = "Area", nullable = false)
     private Float area;
+    
+    // Llave foránea
+    // Muchas ubicaciones pueden ser registradas por un cliente
+    @ManyToOne()
+    @JoinColumn(name = "idCliente", referencedColumnName = "ID", nullable = true)
+    private Clientes cliente;
+
+    // Muchas ubicaciones pertenecen a muchas obras
+    @ManyToMany(mappedBy = "ubicaciones")
+    List<Obras> obras;
 
     public Ubicaciones() {
     }
 
-    public Ubicaciones(Long id, Boolean disponible, String direccion, TipoUbicacion tipo, Float largo, Float ancho, Float area, Clientes cliente, List<Obras> obras) {
+    public Ubicaciones(Long id, Boolean disponible, String direccion, TipoUbicacion tipo, Float largo, Float ancho, Calendar fechaRegistro, Float area, Clientes cliente, List<Obras> obras) {
         this.id = id;
         this.disponible = disponible;
         this.direccion = direccion;
         this.tipo = tipo;
         this.largo = largo;
         this.ancho = ancho;
+        this.fechaRegistro = fechaRegistro;
         this.area = area;
         this.cliente = cliente;
         this.obras = obras;
@@ -140,6 +159,14 @@ public class Ubicaciones implements Serializable {
         this.area = area;
     }
 
+    public Calendar getFechaRegistro() {
+        return fechaRegistro;
+    }
+
+    public void setFechaRegistro(Calendar fechaRegistro) {
+        this.fechaRegistro = fechaRegistro;
+    }
+
     public Clientes getCliente() {
         return cliente;
     }
@@ -155,16 +182,6 @@ public class Ubicaciones implements Serializable {
     public void setObras(List<Obras> obras) {
         this.obras = obras;
     }
-
-    // Llave foránea
-    // Muchas ubicaciones pueden ser registradas por un cliente
-    @ManyToOne()
-    @JoinColumn(name = "idCliente", referencedColumnName = "ID", nullable = true)
-    private Clientes cliente;
-
-    // Muchas ubicaciones pertenecen a muchas obras
-    @ManyToMany(mappedBy = "ubicaciones")
-    List<Obras> obras;
 
     @Override
     public int hashCode() {
@@ -188,6 +205,6 @@ public class Ubicaciones implements Serializable {
 
     @Override
     public String toString() {
-        return "Ubicaciones{" + "id=" + id + ", disponible=" + disponible + ", direccion=" + direccion + ", tipo=" + tipo + ", largo=" + largo + ", ancho=" + ancho + ", area=" + area + ", cliente=" + cliente + ", obras=" + obras + '}';
+        return "Ubicaciones{" + "id=" + id + ", disponible=" + disponible + ", direccion=" + direccion + ", tipo=" + tipo + ", largo=" + largo + ", ancho=" + ancho + ", fechaRegistro=" + fechaRegistro + ", area=" + area + ", cliente=" + cliente + ", obras=" + obras + '}';
     }
 }

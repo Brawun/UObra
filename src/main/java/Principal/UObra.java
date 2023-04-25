@@ -4,7 +4,12 @@
 
 package Principal;
 
-import GUI.Acceso.IniciarSesion;
+import Dominio.Clientes;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  * Esta clase se utiliza para probar la clase .
@@ -22,9 +27,18 @@ public class UObra {
      */
     public static void main(String[] args) {
         // Se abre el formulario de inicio de sesión
-        IniciarSesion inicioSesion = new IniciarSesion();
-        inicioSesion.setVisible(true);
+//        IniciarSesion inicioSesion = new IniciarSesion();
+//        inicioSesion.setVisible(true);
         // Nombre BD: UObra
         // Contraseña: 1234
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
+        // Se crean las personas no discapacitadas
+        Clientes cliente1 = new Clientes("Brandon", "Figueroa", "Ugalde", "6441249359");
+        // Se persisten todas las personas
+        entityManager.persist(cliente1);
+        entityManager.getTransaction().commit();
+        entityManager.close();
     }
 }

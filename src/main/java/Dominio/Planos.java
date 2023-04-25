@@ -48,6 +48,11 @@ public class Planos implements Serializable {
     @Column(name = "Escala", nullable = true)
     @Enumerated(EnumType.STRING)
     private Escala escala;
+    
+    // AUTOGENERADA
+    @Column(name = "FechaRegistro", nullable = true)
+    @Temporal(TemporalType.DATE)
+    private Calendar fechaRegistro;
 
     @Column(name = "FechaRealización", nullable = true)
     @Temporal(TemporalType.DATE)
@@ -61,11 +66,18 @@ public class Planos implements Serializable {
     @ManyToMany(mappedBy = "planos")
     List<Obras> obras;
 
-    public Planos(Long id, TipoPlano tipo, Escala escala, Calendar fechaRealización) {
+    public Planos() {
+    }
+
+    public Planos(Long id, String folio, TipoPlano tipo, Escala escala, Calendar fechaRegistro, Calendar fechaRealización, Jefes jefe, List<Obras> obras) {
         this.id = id;
+        this.folio = folio;
         this.tipo = tipo;
         this.escala = escala;
+        this.fechaRegistro = fechaRegistro;
         this.fechaRealización = fechaRealización;
+        this.jefe = jefe;
+        this.obras = obras;
     }
 
     public Planos(TipoPlano tipo, Escala escala, Calendar fechaRealización) {
@@ -106,6 +118,14 @@ public class Planos implements Serializable {
         this.escala = escala;
     }
 
+    public Calendar getFechaRegistro() {
+        return fechaRegistro;
+    }
+
+    public void setFechaRegistro(Calendar fechaRegistro) {
+        this.fechaRegistro = fechaRegistro;
+    }
+
     public Calendar getFechaRealización() {
         return fechaRealización;
     }
@@ -120,6 +140,14 @@ public class Planos implements Serializable {
 
     public void setJefe(Jefes jefe) {
         this.jefe = jefe;
+    }
+
+    public List<Obras> getObras() {
+        return obras;
+    }
+
+    public void setObras(List<Obras> obras) {
+        this.obras = obras;
     }
 
     @Override
@@ -144,6 +172,6 @@ public class Planos implements Serializable {
 
     @Override
     public String toString() {
-        return "Planos{" + "id=" + id + ", folio=" + folio + ", tipo=" + tipo + ", escala=" + escala + ", fechaRealizaci\u00f3n=" + fechaRealización + ", jefe=" + jefe + '}';
+        return "Planos{" + "id=" + id + ", folio=" + folio + ", tipo=" + tipo + ", escala=" + escala + ", fechaRegistro=" + fechaRegistro + ", fechaRealizaci\u00f3n=" + fechaRealización + ", jefe=" + jefe + ", obras=" + obras + '}';
     }
 }

@@ -52,7 +52,7 @@ public class Obreros implements Serializable {
     private List<Pagos> pagos;
 
     // Una obrero puede pertenecer a muchas obras
-    @OneToMany(mappedBy = "obreror")
+    @OneToMany(mappedBy = "obrero")
     private List<ObrasObrero> obras;
 
     public Obreros() {

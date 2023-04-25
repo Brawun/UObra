@@ -135,6 +135,14 @@ public class Facturas implements Serializable {
         this.id = id;
     }
 
+    public Jefes getJefe() {
+        return jefe;
+    }
+
+    public void setJefe(Jefes jefe) {
+        this.jefe = jefe;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
