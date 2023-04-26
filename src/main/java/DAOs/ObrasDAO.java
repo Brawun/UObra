@@ -6,13 +6,12 @@ package DAOs;
 import Dominio.Jefes;
 import Dominio.Obras;
 import Dominio.Obreros;
-import Dominio.Pagos;
-import Dominio.Permisos;
-import Dominio.Planos;
-import Dominio.Ubicaciones;
 import Enumeradores.EstadoObra;
 import java.util.Calendar;
 import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  * Esta clase DAO permite implementar métodos para acceder, consultar, eliminar
@@ -23,6 +22,10 @@ import java.util.List;
  * @since Pruebas de Software Prof. María de los Ángeles Germán ITSON
  */
 public class ObrasDAO {
+    
+    EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("com.itson_AgenciaTransito");
+    EntityManager entityManager = managerFactory.createEntityManager();
+    
     // Métodos de acceso
     public void registrarObra(Obras obra) {
         

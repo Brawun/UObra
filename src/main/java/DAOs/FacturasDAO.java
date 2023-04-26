@@ -96,16 +96,19 @@ public class FacturasDAO {
     }
 
     // Consulta una lista de facturas que estén dentro del periodo dado, 
-    // con el estado dado, con el método de pago dado y el monto mayor al dado
-    public List<Facturas> consultarFacturas(Calendar periodoInicio, Calendar periodoFin, EstadoFactura estado, MetodoPago metodoPago, Float monto) throws Exception {
+    // con el estado dado, con el método de pago dado, el monto mayor o igual 
+    // al dado y un jefe identificado por un ID dado
+    public List<Facturas> consultarFacturas(Calendar periodoInicio, Calendar periodoFin, EstadoFactura estado, MetodoPago metodoPago, Float monto, Long jefeId) throws Exception {
         entityManager.getTransaction().begin();
         TypedQuery<Facturas> query;
+        // SIN BÚSQUEDA POR JEFE
         // BUSQUEDA POR 5 CAMPOS
         if (periodoInicio != null
                 && periodoFin != null
                 && estado != null
                 && metodoPago != null
-                && monto != null) { // Se llenaron todos los campos
+                && monto != null
+                && jefeId == null) { // Se llenaron todos los campos
             String jpql = "SELECT f FROM Facturas f WHERE f.estado = :estado AND f.metodoPago = :metodoPago AND f.monto <= :monto AND f.fecha BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Facturas.class);
             query.setParameter("estado", estado);
@@ -117,12 +120,13 @@ public class FacturasDAO {
             entityManager.getTransaction().commit();
             entityManager.close();
             return facturas;
-        // BUSQUEDA POR 4 CAMPOS
+            // BUSQUEDA POR 4 CAMPOS
         } else if (periodoInicio != null
                 && periodoFin != null
                 && estado != null
                 && metodoPago != null
-                && monto == null) { // No se lleno el campo de monto
+                && monto == null
+                && jefeId == null) { // No se lleno el campo de monto
             String jpql = "SELECT f FROM Facturas f WHERE f.estado = :estado AND f.metodoPago = :metodoPago AND f.fecha BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Facturas.class);
             query.setParameter("estado", estado);
@@ -137,7 +141,8 @@ public class FacturasDAO {
                 && periodoFin != null
                 && estado != null
                 && metodoPago == null
-                && monto != null) { // No se lleno el campo de metodo de pago
+                && monto != null
+                && jefeId == null) { // No se lleno el campo de metodo de pago
             String jpql = "SELECT f FROM Facturas f WHERE f.estado = :estado AND f.monto <= :monto AND f.fecha BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Facturas.class);
             query.setParameter("estado", estado);
@@ -152,7 +157,8 @@ public class FacturasDAO {
                 && periodoFin != null
                 && estado == null
                 && metodoPago != null
-                && monto != null) { // No se lleno el campo de estado
+                && monto != null
+                && jefeId == null) { // No se lleno el campo de estado
             String jpql = "SELECT f FROM Facturas f WHERE f.metodoPago = :metodoPago AND f.monto <= :monto AND f.fecha BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Facturas.class);
             query.setParameter("metodoPago", metodoPago);
@@ -167,7 +173,8 @@ public class FacturasDAO {
                 && periodoFin != null
                 && estado != null
                 && metodoPago != null
-                && monto != null) { // No se lleno el campo de fecha inicio
+                && monto != null
+                && jefeId == null) { // No se lleno el campo de fecha inicio
             String jpql = "SELECT f FROM Facturas f WHERE f.estado = :estado AND f.metodoPago = :metodoPago AND f.monto <= :monto AND f.fecha BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Facturas.class);
             query.setParameter("estado", estado);
@@ -183,7 +190,8 @@ public class FacturasDAO {
                 && periodoFin == null
                 && estado != null
                 && metodoPago != null
-                && monto != null) { // No se lleno el campo de fecha fin
+                && monto != null
+                && jefeId == null) { // No se lleno el campo de fecha fin
             String jpql = "SELECT f FROM Facturas f WHERE f.estado = :estado AND f.metodoPago = :metodoPago AND f.monto <= :monto AND f.fecha BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Facturas.class);
             query.setParameter("estado", estado);
@@ -195,12 +203,13 @@ public class FacturasDAO {
             entityManager.getTransaction().commit();
             entityManager.close();
             return facturas;
-        // BUSQUEDA POR 3 CAMPOS
+            // BUSQUEDA POR 3 CAMPOS
         } else if (periodoInicio != null
                 && periodoFin != null
                 && estado != null
                 && metodoPago == null
-                && monto == null) { // No se llenó el campo de método de pago ni monto
+                && monto == null
+                && jefeId == null) { // No se llenó el campo de método de pago ni monto
             String jpql = "SELECT f FROM Facturas f WHERE f.estado = :estado AND f.fecha BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Facturas.class);
             query.setParameter("estado", estado);
@@ -214,7 +223,8 @@ public class FacturasDAO {
                 && periodoFin != null
                 && estado == null
                 && metodoPago != null
-                && monto == null) { // No se llenó el campo de estado ni monto  
+                && monto == null
+                && jefeId == null) { // No se llenó el campo de estado ni monto  
             String jpql = "SELECT f FROM Facturas f WHERE f.metodoPago = :metodoPago AND f.fecha BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Facturas.class);
             query.setParameter("metodoPago", metodoPago);
@@ -228,7 +238,8 @@ public class FacturasDAO {
                 && periodoFin != null
                 && estado == null
                 && metodoPago == null
-                && monto != null) { // No se llenó el campo de estado ni metodo de pago  
+                && monto != null
+                && jefeId == null) { // No se llenó el campo de estado ni metodo de pago  
             String jpql = "SELECT f FROM Facturas f WHERE f.monto <= :monto AND f.fecha BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Facturas.class);
             query.setParameter("monto", monto);
@@ -242,7 +253,8 @@ public class FacturasDAO {
                 && periodoFin == null
                 && estado != null
                 && metodoPago != null
-                && monto == null) { // No se llenó el campo de fin ni monto    
+                && monto == null
+                && jefeId == null) { // No se llenó el campo de fin ni monto    
             String jpql = "SELECT f FROM Facturas f WHERE f.estado = :estado AND f.metodoPago = :metodoPago AND f.fecha BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Facturas.class);
             query.setParameter("estado", estado);
@@ -257,7 +269,8 @@ public class FacturasDAO {
                 && periodoFin == null
                 && estado != null
                 && metodoPago == null
-                && monto != null) { // No se llenó el campo de fin ni metodo de pago  
+                && monto != null
+                && jefeId == null) { // No se llenó el campo de fin ni metodo de pago  
             String jpql = "SELECT f FROM Facturas f WHERE f.estado = :estado AND f.monto <= :monto AND f.fecha BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Facturas.class);
             query.setParameter("estado", estado);
@@ -272,7 +285,8 @@ public class FacturasDAO {
                 && periodoFin == null
                 && estado == null
                 && metodoPago != null
-                && monto != null) { // No se llenó el campo de fin ni estado  
+                && monto != null
+                && jefeId == null) { // No se llenó el campo de fin ni estado  
             String jpql = "SELECT f FROM Facturas f WHERE f.metodoPago = :metodoPago AND f.monto <= :monto AND f.fecha BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Facturas.class);
             query.setParameter("metodoPago", metodoPago);
@@ -287,7 +301,8 @@ public class FacturasDAO {
                 && periodoFin != null
                 && estado != null
                 && metodoPago != null
-                && monto == null) { // No se llenó el campo de inicio ni monto
+                && monto == null
+                && jefeId == null) { // No se llenó el campo de inicio ni monto
             String jpql = "SELECT f FROM Facturas f WHERE f.estado = :estado AND f.metodoPago = :metodoPago AND f.fecha BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Facturas.class);
             query.setParameter("estado", estado);
@@ -302,7 +317,8 @@ public class FacturasDAO {
                 && periodoFin != null
                 && estado != null
                 && metodoPago == null
-                && monto != null) { // No se llenó el campo de inicio ni metodo 
+                && monto != null
+                && jefeId == null) { // No se llenó el campo de inicio ni metodo 
             String jpql = "SELECT f FROM Facturas f WHERE f.estado = :estado AND f.monto <= :monto AND f.fecha BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Facturas.class);
             query.setParameter("estado", estado);
@@ -317,7 +333,8 @@ public class FacturasDAO {
                 && periodoFin != null
                 && estado == null
                 && metodoPago != null
-                && monto != null) { // No se llenó el campo de inicio ni estado 
+                && monto != null
+                && jefeId == null) { // No se llenó el campo de inicio ni estado 
             String jpql = "SELECT f FROM Facturas f WHERE f.metodoPago = :metodoPago AND f.monto <= :monto AND f.fecha BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Facturas.class);
             query.setParameter("metodoPago", metodoPago);
@@ -332,7 +349,8 @@ public class FacturasDAO {
                 && periodoFin == null
                 && estado != null
                 && metodoPago != null
-                && monto != null) { // No se llenó ningún campo de fecha
+                && monto != null
+                && jefeId == null) { // No se llenó ningún campo de fecha
             String jpql = "SELECT f FROM Facturas f WHERE f.estado = :estado AND f.metodoPago = :metodoPago AND f.monto <= :monto";
             query = entityManager.createQuery(jpql, Facturas.class);
             query.setParameter("estado", estado);
@@ -342,12 +360,13 @@ public class FacturasDAO {
             entityManager.getTransaction().commit();
             entityManager.close();
             return facturas;
-        // BUSQUEDA POR 2 CAMPOS
+            // BUSQUEDA POR 2 CAMPOS
         } else if (periodoInicio == null
                 && periodoFin == null
                 && estado == null
                 && metodoPago != null
-                && monto != null) { // No se llenó ningún campo de fecha ni estado
+                && monto != null
+                && jefeId == null) { // No se llenó ningún campo de fecha ni estado
             String jpql = "SELECT f FROM Facturas f WHERE f.metodoPago = :metodoPago AND f.monto <= :monto";
             query = entityManager.createQuery(jpql, Facturas.class);
             query.setParameter("metodoPago", metodoPago);
@@ -360,7 +379,8 @@ public class FacturasDAO {
                 && periodoFin == null
                 && estado != null
                 && metodoPago == null
-                && monto != null) { // No se llenó ningún campo de fecha ni metodo de pago
+                && monto != null
+                && jefeId == null) { // No se llenó ningún campo de fecha ni metodo de pago
             String jpql = "SELECT f FROM Facturas f WHERE f.estado = :estado AND f.monto <= :monto";
             query = entityManager.createQuery(jpql, Facturas.class);
             query.setParameter("estado", estado);
@@ -373,7 +393,8 @@ public class FacturasDAO {
                 && periodoFin == null
                 && estado != null
                 && metodoPago != null
-                && monto == null) { // No se llenó ningún campo de fecha ni monto
+                && monto == null
+                && jefeId == null) { // No se llenó ningún campo de fecha ni monto
             String jpql = "SELECT f FROM Facturas f WHERE f.estado = :estado AND f.metodoPago = :metodoPago";
             query = entityManager.createQuery(jpql, Facturas.class);
             query.setParameter("estado", estado);
@@ -386,7 +407,8 @@ public class FacturasDAO {
                 && periodoFin != null
                 && estado == null
                 && metodoPago == null
-                && monto == null) { // Solo se llenaron campos de fecha
+                && monto == null
+                && jefeId == null) { // Solo se llenaron campos de fecha
             String jpql = "SELECT f FROM Facturas f WHERE f.fecha BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Facturas.class);
             query.setParameter("periodoInicio", periodoInicio);
@@ -399,7 +421,8 @@ public class FacturasDAO {
                 && periodoFin == null
                 && estado != null
                 && metodoPago == null
-                && monto == null) { // Solo se lleno inicio y estado
+                && monto == null
+                && jefeId == null) { // Solo se lleno inicio y estado
             String jpql = "SELECT f FROM Facturas f WHERE f.estado = :estado AND f.fecha BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Facturas.class);
             query.setParameter("estado", estado);
@@ -413,7 +436,8 @@ public class FacturasDAO {
                 && periodoFin == null
                 && estado == null
                 && metodoPago != null
-                && monto == null) { // Solo se lleno inicio y metodo de pago
+                && monto == null
+                && jefeId == null) { // Solo se lleno inicio y metodo de pago
             String jpql = "SELECT f FROM Facturas f WHERE f.metodoPago = :metodoPago AND f.fecha BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Facturas.class);
             query.setParameter("metodoPago", metodoPago);
@@ -427,7 +451,8 @@ public class FacturasDAO {
                 && periodoFin == null
                 && estado == null
                 && metodoPago == null
-                && monto != null) { // Solo se lleno inicio y monto
+                && monto != null
+                && jefeId == null) { // Solo se lleno inicio y monto
             String jpql = "SELECT f FROM Facturas f WHERE f.monto <= :monto AND f.fecha BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Facturas.class);
             query.setParameter("monto", monto);
@@ -441,7 +466,8 @@ public class FacturasDAO {
                 && periodoFin != null
                 && estado != null
                 && metodoPago == null
-                && monto == null) { // Solo se lleno fin y estado
+                && monto == null
+                && jefeId == null) { // Solo se lleno fin y estado
             String jpql = "SELECT f FROM Facturas f WHERE f.estado = :estado AND f.fecha BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Facturas.class);
             query.setParameter("estado", estado);
@@ -455,7 +481,8 @@ public class FacturasDAO {
                 && periodoFin != null
                 && estado == null
                 && metodoPago != null
-                && monto == null) { // Solo se lleno fin y metodo
+                && monto == null
+                && jefeId == null) { // Solo se lleno fin y metodo
             String jpql = "SELECT f FROM Facturas f WHERE f.metodoPago = :metodoPago AND f.fecha BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Facturas.class);
             query.setParameter("metodoPago", metodoPago);
@@ -469,7 +496,8 @@ public class FacturasDAO {
                 && periodoFin != null
                 && estado == null
                 && metodoPago == null
-                && monto != null) { // Solo se lleno fin y monto
+                && monto != null
+                && jefeId == null) { // Solo se lleno fin y monto
             String jpql = "SELECT f FROM Facturas f WHERE f.monto <= :monto AND f.fecha BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Facturas.class);
             query.setParameter("monto", monto);
@@ -479,12 +507,13 @@ public class FacturasDAO {
             entityManager.getTransaction().commit();
             entityManager.close();
             return facturas;
-        // BUSQUEDA POR 1 CAMPO
+            // BUSQUEDA POR 1 CAMPO
         } else if (periodoInicio != null
                 && periodoFin == null
                 && estado == null
                 && metodoPago == null
-                && monto == null) { // Solo se busca por inicio
+                && monto == null
+                && jefeId == null) { // Solo se busca por inicio
             String jpql = "SELECT f FROM Facturas f WHERE f.fecha BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Facturas.class);
             query.setParameter("periodoInicio", periodoInicio);
@@ -497,7 +526,8 @@ public class FacturasDAO {
                 && periodoFin != null
                 && estado == null
                 && metodoPago == null
-                && monto == null) { // Solo se busca por fin
+                && monto == null
+                && jefeId == null) { // Solo se busca por fin
             String jpql = "SELECT f FROM Facturas f WHERE f.fecha BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Facturas.class);
             query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
@@ -510,7 +540,8 @@ public class FacturasDAO {
                 && periodoFin == null
                 && estado != null
                 && metodoPago == null
-                && monto == null) { // Solo se busca por estado
+                && monto == null
+                && jefeId == null) { // Solo se busca por estado
             String jpql = "SELECT f FROM Facturas f WHERE f.estado = :estado";
             query = entityManager.createQuery(jpql, Facturas.class);
             query.setParameter("estado", estado);
@@ -522,7 +553,8 @@ public class FacturasDAO {
                 && periodoFin == null
                 && estado == null
                 && metodoPago != null
-                && monto == null) { // Solo se busca por metodo de pago
+                && monto == null
+                && jefeId == null) { // Solo se busca por metodo de pago
             String jpql = "SELECT f FROM Facturas f WHERE f.metodoPago = :metodoPago";
             query = entityManager.createQuery(jpql, Facturas.class);
             query.setParameter("metodoPago", metodoPago);
@@ -534,7 +566,8 @@ public class FacturasDAO {
                 && periodoFin == null
                 && estado == null
                 && metodoPago == null
-                && monto != null) { // Solo se busca por monto
+                && monto != null
+                && jefeId == null) { // Solo se busca por monto
             String jpql = "SELECT f FROM Facturas f WHERE f.monto <= :monto";
             query = entityManager.createQuery(jpql, Facturas.class);
             query.setParameter("monto", monto);
@@ -542,14 +575,534 @@ public class FacturasDAO {
             entityManager.getTransaction().commit();
             entityManager.close();
             return facturas;
-        // BUSQUEDA POR 0 CAMPOS
+            // BUSQUEDA POR 0 CAMPOS
         } else if (periodoInicio == null
                 && periodoFin == null
                 && estado == null
                 && metodoPago == null
-                && monto == null) { // No se llenó ningún campo
+                && monto == null
+                && jefeId == null) { // No se llenó ningún campo
             String jpql = "SELECT f FROM Facturas f";
             query = entityManager.createQuery(jpql, Facturas.class);
+            List<Facturas> facturas = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return facturas;
+            // CON BÚSQUEDA POR JEFE
+            // BUSQUEDA POR 5 CAMPOS
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado != null
+                && metodoPago != null
+                && monto != null
+                && jefeId != null) { // Se llenaron todos los campos
+            String jpql = "SELECT f FROM Facturas f WHERE f.estado = :estado AND f.metodoPago = :metodoPago AND f.monto <= :monto AND f.fecha BETWEEN :periodoInicio AND :periodoFin AND f.jefe.id = :jefeId";
+            query = entityManager.createQuery(jpql, Facturas.class);
+            query.setParameter("estado", estado);
+            query.setParameter("metodoPago", metodoPago);
+            query.setParameter("monto", monto);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("jefeId", jefeId);
+            List<Facturas> facturas = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return facturas;
+            // BUSQUEDA POR 4 CAMPOS
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado != null
+                && metodoPago != null
+                && monto == null
+                && jefeId != null) { // No se lleno el campo de monto
+            String jpql = "SELECT f FROM Facturas f WHERE f.estado = :estado AND f.metodoPago = :metodoPago AND f.fecha BETWEEN :periodoInicio AND :periodoFin AND f.jefe.id = :jefeId";
+            query = entityManager.createQuery(jpql, Facturas.class);
+            query.setParameter("estado", estado);
+            query.setParameter("metodoPago", metodoPago);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("jefeId", jefeId);
+            List<Facturas> facturas = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return facturas;
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado != null
+                && metodoPago == null
+                && monto != null
+                && jefeId != null) { // No se lleno el campo de metodo de pago
+            String jpql = "SELECT f FROM Facturas f WHERE f.estado = :estado AND f.monto <= :monto AND f.fecha BETWEEN :periodoInicio AND :periodoFin AND f.jefe.id = :jefeId";
+            query = entityManager.createQuery(jpql, Facturas.class);
+            query.setParameter("estado", estado);
+            query.setParameter("monto", monto);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("jefeId", jefeId);
+            List<Facturas> facturas = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return facturas;
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado == null
+                && metodoPago != null
+                && monto != null
+                && jefeId != null) { // No se lleno el campo de estado
+            String jpql = "SELECT f FROM Facturas f WHERE f.metodoPago = :metodoPago AND f.monto <= :monto AND f.fecha BETWEEN :periodoInicio AND :periodoFin AND f.jefe.id = :jefeId";
+            query = entityManager.createQuery(jpql, Facturas.class);
+            query.setParameter("metodoPago", metodoPago);
+            query.setParameter("monto", monto);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("jefeId", jefeId);
+            List<Facturas> facturas = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return facturas;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado != null
+                && metodoPago != null
+                && monto != null
+                && jefeId != null) { // No se lleno el campo de fecha inicio
+            String jpql = "SELECT f FROM Facturas f WHERE f.estado = :estado AND f.metodoPago = :metodoPago AND f.monto <= :monto AND f.fecha BETWEEN :periodoInicio AND :periodoFin AND f.jefe.id = :jefeId";
+            query = entityManager.createQuery(jpql, Facturas.class);
+            query.setParameter("estado", estado);
+            query.setParameter("metodoPago", metodoPago);
+            query.setParameter("monto", monto);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("jefeId", jefeId);
+            List<Facturas> facturas = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return facturas;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado != null
+                && metodoPago != null
+                && monto != null
+                && jefeId != null) { // No se lleno el campo de fecha fin
+            String jpql = "SELECT f FROM Facturas f WHERE f.estado = :estado AND f.metodoPago = :metodoPago AND f.monto <= :monto AND f.fecha BETWEEN :periodoInicio AND :periodoFin AND f.jefe.id = :jefeId";
+            query = entityManager.createQuery(jpql, Facturas.class);
+            query.setParameter("estado", estado);
+            query.setParameter("metodoPago", metodoPago);
+            query.setParameter("monto", monto);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("jefeId", jefeId);
+            List<Facturas> facturas = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return facturas;
+            // BUSQUEDA POR 3 CAMPOS
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado != null
+                && metodoPago == null
+                && monto == null
+                && jefeId != null) { // No se llenó el campo de método de pago ni monto
+            String jpql = "SELECT f FROM Facturas f WHERE f.estado = :estado AND f.fecha BETWEEN :periodoInicio AND :periodoFin AND f.jefe.id = :jefeId";
+            query = entityManager.createQuery(jpql, Facturas.class);
+            query.setParameter("estado", estado);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("jefeId", jefeId);
+            List<Facturas> facturas = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return facturas;
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado == null
+                && metodoPago != null
+                && monto == null
+                && jefeId != null) { // No se llenó el campo de estado ni monto  
+            String jpql = "SELECT f FROM Facturas f WHERE f.metodoPago = :metodoPago AND f.fecha BETWEEN :periodoInicio AND :periodoFin AND f.jefe.id = :jefeId";
+            query = entityManager.createQuery(jpql, Facturas.class);
+            query.setParameter("metodoPago", metodoPago);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("jefeId", jefeId);
+            List<Facturas> facturas = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return facturas;
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado == null
+                && metodoPago == null
+                && monto != null
+                && jefeId != null) { // No se llenó el campo de estado ni metodo de pago  
+            String jpql = "SELECT f FROM Facturas f WHERE f.monto <= :monto AND f.fecha BETWEEN :periodoInicio AND :periodoFin AND f.jefe.id = :jefeId";
+            query = entityManager.createQuery(jpql, Facturas.class);
+            query.setParameter("monto", monto);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("jefeId", jefeId);
+            List<Facturas> facturas = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return facturas;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado != null
+                && metodoPago != null
+                && monto == null
+                && jefeId != null) { // No se llenó el campo de fin ni monto    
+            String jpql = "SELECT f FROM Facturas f WHERE f.estado = :estado AND f.metodoPago = :metodoPago AND f.fecha BETWEEN :periodoInicio AND :periodoFin AND f.jefe.id = :jefeId";
+            query = entityManager.createQuery(jpql, Facturas.class);
+            query.setParameter("estado", estado);
+            query.setParameter("metodoPago", metodoPago);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("jefeId", jefeId);
+            List<Facturas> facturas = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return facturas;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado != null
+                && metodoPago == null
+                && monto != null
+                && jefeId != null) { // No se llenó el campo de fin ni metodo de pago  
+            String jpql = "SELECT f FROM Facturas f WHERE f.estado = :estado AND f.monto <= :monto AND f.fecha BETWEEN :periodoInicio AND :periodoFin AND f.jefe.id = :jefeId";
+            query = entityManager.createQuery(jpql, Facturas.class);
+            query.setParameter("estado", estado);
+            query.setParameter("monto", monto);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("jefeId", jefeId);
+            List<Facturas> facturas = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return facturas;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado == null
+                && metodoPago != null
+                && monto != null
+                && jefeId != null) { // No se llenó el campo de fin ni estado  
+            String jpql = "SELECT f FROM Facturas f WHERE f.metodoPago = :metodoPago AND f.monto <= :monto AND f.fecha BETWEEN :periodoInicio AND :periodoFin AND f.jefe.id = :jefeId";
+            query = entityManager.createQuery(jpql, Facturas.class);
+            query.setParameter("metodoPago", metodoPago);
+            query.setParameter("monto", monto);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("jefeId", jefeId);
+            List<Facturas> facturas = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return facturas;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado != null
+                && metodoPago != null
+                && monto == null
+                && jefeId != null) { // No se llenó el campo de inicio ni monto
+            String jpql = "SELECT f FROM Facturas f WHERE f.estado = :estado AND f.metodoPago = :metodoPago AND f.fecha BETWEEN :periodoInicio AND :periodoFin AND f.jefe.id = :jefeId";
+            query = entityManager.createQuery(jpql, Facturas.class);
+            query.setParameter("estado", estado);
+            query.setParameter("metodoPago", metodoPago);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("jefeId", jefeId);
+            List<Facturas> facturas = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return facturas;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado != null
+                && metodoPago == null
+                && monto != null
+                && jefeId != null) { // No se llenó el campo de inicio ni metodo 
+            String jpql = "SELECT f FROM Facturas f WHERE f.estado = :estado AND f.monto <= :monto AND f.fecha BETWEEN :periodoInicio AND :periodoFin AND f.jefe.id = :jefeId";
+            query = entityManager.createQuery(jpql, Facturas.class);
+            query.setParameter("estado", estado);
+            query.setParameter("monto", monto);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("jefeId", jefeId);
+            List<Facturas> facturas = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return facturas;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado == null
+                && metodoPago != null
+                && monto != null
+                && jefeId != null) { // No se llenó el campo de inicio ni estado 
+            String jpql = "SELECT f FROM Facturas f WHERE f.metodoPago = :metodoPago AND f.monto <= :monto AND f.fecha BETWEEN :periodoInicio AND :periodoFin AND f.jefe.id = :jefeId";
+            query = entityManager.createQuery(jpql, Facturas.class);
+            query.setParameter("metodoPago", metodoPago);
+            query.setParameter("monto", monto);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("jefeId", jefeId);
+            List<Facturas> facturas = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return facturas;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado != null
+                && metodoPago != null
+                && monto != null
+                && jefeId != null) { // No se llenó ningún campo de fecha
+            String jpql = "SELECT f FROM Facturas f WHERE f.estado = :estado AND f.metodoPago = :metodoPago AND f.monto <= :monto AND f.jefe.id = :jefeId";
+            query = entityManager.createQuery(jpql, Facturas.class);
+            query.setParameter("estado", estado);
+            query.setParameter("metodoPago", metodoPago);
+            query.setParameter("monto", monto);
+            query.setParameter("jefeId", jefeId);
+            List<Facturas> facturas = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return facturas;
+            // BUSQUEDA POR 2 CAMPOS
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado == null
+                && metodoPago != null
+                && monto != null
+                && jefeId != null) { // No se llenó ningún campo de fecha ni estado
+            String jpql = "SELECT f FROM Facturas f WHERE f.metodoPago = :metodoPago AND f.monto <= :monto AND f.jefe.id = :jefeId";
+            query = entityManager.createQuery(jpql, Facturas.class);
+            query.setParameter("metodoPago", metodoPago);
+            query.setParameter("monto", monto);
+            query.setParameter("jefeId", jefeId);
+            List<Facturas> facturas = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return facturas;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado != null
+                && metodoPago == null
+                && monto != null
+                && jefeId != null) { // No se llenó ningún campo de fecha ni metodo de pago
+            String jpql = "SELECT f FROM Facturas f WHERE f.estado = :estado AND f.monto <= :monto AND f.jefe.id = :jefeId";
+            query = entityManager.createQuery(jpql, Facturas.class);
+            query.setParameter("estado", estado);
+            query.setParameter("monto", monto);
+            query.setParameter("jefeId", jefeId);
+            List<Facturas> facturas = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return facturas;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado != null
+                && metodoPago != null
+                && monto == null
+                && jefeId != null) { // No se llenó ningún campo de fecha ni monto
+            String jpql = "SELECT f FROM Facturas f WHERE f.estado = :estado AND f.metodoPago = :metodoPago AND f.jefe.id = :jefeId";
+            query = entityManager.createQuery(jpql, Facturas.class);
+            query.setParameter("estado", estado);
+            query.setParameter("metodoPago", metodoPago);
+            query.setParameter("jefeId", jefeId);
+            List<Facturas> facturas = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return facturas;
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado == null
+                && metodoPago == null
+                && monto == null
+                && jefeId != null) { // Solo se llenaron campos de fecha
+            String jpql = "SELECT f FROM Facturas f WHERE f.fecha BETWEEN :periodoInicio AND :periodoFin AND f.jefe.id = :jefeId";
+            query = entityManager.createQuery(jpql, Facturas.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("jefeId", jefeId);
+            List<Facturas> facturas = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return facturas;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado != null
+                && metodoPago == null
+                && monto == null
+                && jefeId != null) { // Solo se lleno inicio y estado
+            String jpql = "SELECT f FROM Facturas f WHERE f.estado = :estado AND f.fecha BETWEEN :periodoInicio AND :periodoFin AND f.jefe.id = :jefeId";
+            query = entityManager.createQuery(jpql, Facturas.class);
+            query.setParameter("estado", estado);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("jefeId", jefeId);
+            List<Facturas> facturas = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return facturas;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado == null
+                && metodoPago != null
+                && monto == null
+                && jefeId != null) { // Solo se lleno inicio y metodo de pago
+            String jpql = "SELECT f FROM Facturas f WHERE f.metodoPago = :metodoPago AND f.fecha BETWEEN :periodoInicio AND :periodoFin AND f.jefe.id = :jefeId";
+            query = entityManager.createQuery(jpql, Facturas.class);
+            query.setParameter("metodoPago", metodoPago);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("jefeId", jefeId);
+            List<Facturas> facturas = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return facturas;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado == null
+                && metodoPago == null
+                && monto != null
+                && jefeId != null) { // Solo se lleno inicio y monto
+            String jpql = "SELECT f FROM Facturas f WHERE f.monto <= :monto AND f.fecha BETWEEN :periodoInicio AND :periodoFin AND f.jefe.id = :jefeId";
+            query = entityManager.createQuery(jpql, Facturas.class);
+            query.setParameter("monto", monto);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("jefeId", jefeId);
+            List<Facturas> facturas = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return facturas;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado != null
+                && metodoPago == null
+                && monto == null
+                && jefeId != null) { // Solo se lleno fin y estado
+            String jpql = "SELECT f FROM Facturas f WHERE f.estado = :estado AND f.fecha BETWEEN :periodoInicio AND :periodoFin AND f.jefe.id = :jefeId";
+            query = entityManager.createQuery(jpql, Facturas.class);
+            query.setParameter("estado", estado);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("jefeId", jefeId);
+            List<Facturas> facturas = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return facturas;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado == null
+                && metodoPago != null
+                && monto == null
+                && jefeId != null) { // Solo se lleno fin y metodo
+            String jpql = "SELECT f FROM Facturas f WHERE f.metodoPago = :metodoPago AND f.fecha BETWEEN :periodoInicio AND :periodoFin AND f.jefe.id = :jefeId";
+            query = entityManager.createQuery(jpql, Facturas.class);
+            query.setParameter("metodoPago", metodoPago);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("jefeId", jefeId);
+            List<Facturas> facturas = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return facturas;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado == null
+                && metodoPago == null
+                && monto != null
+                && jefeId != null) { // Solo se lleno fin y monto
+            String jpql = "SELECT f FROM Facturas f WHERE f.monto <= :monto AND f.fecha BETWEEN :periodoInicio AND :periodoFin AND f.jefe.id = :jefeId";
+            query = entityManager.createQuery(jpql, Facturas.class);
+            query.setParameter("monto", monto);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("jefeId", jefeId);
+            List<Facturas> facturas = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return facturas;
+            // BUSQUEDA POR 1 CAMPO
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado == null
+                && metodoPago == null
+                && monto == null
+                && jefeId != null) { // Solo se busca por inicio
+            String jpql = "SELECT f FROM Facturas f WHERE f.fecha BETWEEN :periodoInicio AND :periodoFin AND f.jefe.id = :jefeId";
+            query = entityManager.createQuery(jpql, Facturas.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("jefeId", jefeId);
+            List<Facturas> facturas = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return facturas;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado == null
+                && metodoPago == null
+                && monto == null
+                && jefeId != null) { // Solo se busca por fin
+            String jpql = "SELECT f FROM Facturas f WHERE f.fecha BETWEEN :periodoInicio AND :periodoFin AND f.jefe.id = :jefeId";
+            query = entityManager.createQuery(jpql, Facturas.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("jefeId", jefeId);
+            List<Facturas> facturas = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return facturas;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado != null
+                && metodoPago == null
+                && monto == null
+                && jefeId != null) { // Solo se busca por estado
+            String jpql = "SELECT f FROM Facturas f WHERE f.estado = :estado AND f.jefe.id = :jefeId";
+            query = entityManager.createQuery(jpql, Facturas.class);
+            query.setParameter("estado", estado);
+            query.setParameter("jefeId", jefeId);
+            List<Facturas> facturas = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return facturas;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado == null
+                && metodoPago != null
+                && monto == null
+                && jefeId != null) { // Solo se busca por metodo de pago
+            String jpql = "SELECT f FROM Facturas f WHERE f.metodoPago = :metodoPago AND f.jefe.id = :jefeId";
+            query = entityManager.createQuery(jpql, Facturas.class);
+            query.setParameter("metodoPago", metodoPago);
+            query.setParameter("jefeId", jefeId);
+            List<Facturas> facturas = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return facturas;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado == null
+                && metodoPago == null
+                && monto != null
+                && jefeId != null) { // Solo se busca por monto
+            String jpql = "SELECT f FROM Facturas f WHERE f.monto <= :monto AND f.jefe.id = :jefeId";
+            query = entityManager.createQuery(jpql, Facturas.class);
+            query.setParameter("monto", monto);
+            query.setParameter("jefeId", jefeId);
+            List<Facturas> facturas = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return facturas;
+            // BUSQUEDA POR 0 CAMPOS
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado == null
+                && metodoPago == null
+                && monto == null
+                && jefeId != null) { // No se llenó ningún campo
+            String jpql = "SELECT f FROM Facturas f AND f.jefe.id = :jefeId";
+            query = entityManager.createQuery(jpql, Facturas.class);
+            query.setParameter("jefeId", jefeId);
             List<Facturas> facturas = query.getResultList();
             entityManager.getTransaction().commit();
             entityManager.close();
