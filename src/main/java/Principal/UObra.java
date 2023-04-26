@@ -1,18 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+/**
+ * UObra.java
  */
 
 package Principal;
 
-import Dominio.Clientes;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+import GUI.Acceso.IniciarSesion;
 
 /**
- * Esta clase se utiliza para probar la clase .
+ * Esta clase se utiliza para ejecutar el sistema UObra.
  *
  * Materia: Pruebas de Software
  * Titular: Maria de los Angeles
@@ -27,18 +22,9 @@ public class UObra {
      */
     public static void main(String[] args) {
         // Se abre el formulario de inicio de sesión
-//        IniciarSesion inicioSesion = new IniciarSesion();
-//        inicioSesion.setVisible(true);
+        IniciarSesion inicioSesion = new IniciarSesion();
+        inicioSesion.setVisible(true);
         // Nombre BD: UObra
         // Contraseña: 1234
-        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
-        EntityManager entityManager = managerFactory.createEntityManager();
-        entityManager.getTransaction().begin();
-        // Se crean las personas no discapacitadas
-        Clientes cliente1 = new Clientes("Brandon", "Figueroa", "Ugalde", "6441249359");
-        // Se persisten todas las personas
-        entityManager.persist(cliente1);
-        entityManager.getTransaction().commit();
-        entityManager.close();
     }
 }
