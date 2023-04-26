@@ -51,11 +51,15 @@ public class Clientes implements Serializable {
     // Un cliente puede registrar muchas ubicaciones
     @OneToMany(mappedBy = "cliente")
     private List<Ubicaciones> ubicaciones;
+    
+    // Un cliente puede realizar muchos pagos
+    @OneToMany(mappedBy = "cliente")
+    private List<Pagos> pagos;
 
     public Clientes() {
     }
 
-    public Clientes(Long id, String nombre, String apellidoPaterno, String apellidoMaterno, String telefono, List<Obras> obras, List<Ubicaciones> ubicaciones) {
+    public Clientes(Long id, String nombre, String apellidoPaterno, String apellidoMaterno, String telefono, List<Obras> obras, List<Ubicaciones> ubicaciones, List<Pagos> pagos) {
         this.id = id;
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
@@ -63,6 +67,7 @@ public class Clientes implements Serializable {
         this.telefono = telefono;
         this.obras = obras;
         this.ubicaciones = ubicaciones;
+        this.pagos = pagos;
     }
 
     public Clientes(Long id, String nombre, String apellidoPaterno, String apellidoMaterno, String telefono) {
@@ -144,6 +149,14 @@ public class Clientes implements Serializable {
         this.ubicaciones = ubicaciones;
     }
 
+    public List<Pagos> getPagos() {
+        return pagos;
+    }
+
+    public void setPagos(List<Pagos> pagos) {
+        this.pagos = pagos;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -163,6 +176,6 @@ public class Clientes implements Serializable {
 
     @Override
     public String toString() {
-        return "Clientes{" + "id=" + id + ", nombre=" + nombre + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", telefono=" + telefono + ", deudaTotal=" + deudaTotal + ", obras=" + obras + ", ubicaciones=" + ubicaciones + '}';
+        return "Clientes{" + "id=" + id + ", nombre=" + nombre + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", telefono=" + telefono + ", deudaTotal=" + deudaTotal + ", obras=" + obras + ", ubicaciones=" + ubicaciones + ", pagos=" + pagos + '}';
     }
 }

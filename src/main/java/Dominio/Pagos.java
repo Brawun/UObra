@@ -38,6 +38,7 @@ public class Pagos implements Serializable {
     @Column(name = "Monto", nullable = true)
     private Float monto;
 
+    // AUTOGENERADA
     @Column(name = "Fecha", nullable = true)
     @Temporal(TemporalType.DATE)
     private Calendar fecha;
@@ -55,32 +56,38 @@ public class Pagos implements Serializable {
     @ManyToOne()
     @JoinColumn(name = "idObra", referencedColumnName = "ID", nullable = true)
     private Obras obra;
+    
+    // Llave foránea
+    @ManyToOne()
+    @JoinColumn(name = "idCliente", referencedColumnName = "ID", nullable = true)
+    private Clientes cliente;
 
     public Pagos() {
     }
 
-    public Pagos(Long id, Float monto, Calendar fecha, MetodoPago metodoPago, Obreros obrero, Obras obra) {
+    public Pagos(Long id, Float monto, Calendar fecha, MetodoPago metodoPago, Obreros obrero, Obras obra, Clientes cliente) {
         this.id = id;
         this.monto = monto;
         this.fecha = fecha;
         this.metodoPago = metodoPago;
         this.obrero = obrero;
         this.obra = obra;
+        this.cliente = cliente;
     }
 
-    public Pagos(Float monto, Calendar fecha, MetodoPago metodoPago, Obreros obrero, Obras obra) {
+    public Pagos(Float monto, MetodoPago metodoPago, Obreros obrero, Obras obra, Clientes cliente) {
         this.monto = monto;
-        this.fecha = fecha;
         this.metodoPago = metodoPago;
         this.obrero = obrero;
         this.obra = obra;
+        this.cliente = cliente;
     }
 
-    public Pagos(Float monto, Calendar fecha, MetodoPago metodoPago, Obras obra) {
+    public Pagos(Float monto, MetodoPago metodoPago, Obras obra, Clientes cliente) {
         this.monto = monto;
-        this.fecha = fecha;
         this.metodoPago = metodoPago;
         this.obra = obra;
+        this.cliente = cliente;
     }
 
     public Long getId() {
@@ -131,6 +138,14 @@ public class Pagos implements Serializable {
         this.obra = obra;
     }
 
+    public Clientes getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Clientes cliente) {
+        this.cliente = cliente;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -153,6 +168,6 @@ public class Pagos implements Serializable {
 
     @Override
     public String toString() {
-        return "Pagos{" + "id=" + id + ", monto=" + monto + ", fecha=" + fecha + ", metodoPago=" + metodoPago + ", obrero=" + obrero + ", obra=" + obra + '}';
+        return "Pagos{" + "id=" + id + ", monto=" + monto + ", fecha=" + fecha + ", metodoPago=" + metodoPago + ", obrero=" + obrero + ", obra=" + obra + ", cliente=" + cliente + '}';
     }
 }

@@ -1,19 +1,14 @@
 /**
  * TipoPlano.java
  */
-
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Enum.java to edit this template
- */
-
 package Enumeradores;
 
 /**
  * Esta clase de tipo Enum permite .
  *
- * @author Brandon Figueroa Ugalde ID: 00000233295
- * @author Guimel Naely Rubio Morillon ID: 00000229324
+ * @author Brandon Figueroa Ugalde - ID: 00000233295
+ * @author Guimel Naely Rubio Morillon - ID: 00000229324
+ * @since Pruebas de Software Prof. María de los Ángeles Germán ITSON
  */
 public enum TipoPlano {
     EJECUCION, ELECTRICO, DESAGUE, UBICACION
