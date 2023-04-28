@@ -58,7 +58,7 @@ public class Facturas implements Serializable {
     // Llave foránea
     // Muchas facturas pueden ser generadas por un jefe
     @ManyToOne()
-    @JoinColumn(name = "idJefe", referencedColumnName = "ID", nullable = true)
+    @JoinColumn(name = "idJefe", referencedColumnName = "ID", nullable = false)
     private Jefes jefe;
 
     public Facturas() {

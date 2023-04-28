@@ -48,7 +48,11 @@ public class Obras implements Serializable {
 
     @Column(name = "Inversion", nullable = false)
     private Float inversion;
-
+    
+    // AUTOGENERADA
+    @Column(name = "CostoTotal", nullable = true)
+    private Float costoTotal;
+    
     // AUTOGENERADA
     @Column(name = "Deuda", nullable = true)
     private Float deuda;
@@ -122,10 +126,11 @@ public class Obras implements Serializable {
     public Obras() {
     }
 
-    public Obras(Long id, Float costoArranque, Float inversion, Float deuda, String nombre, Calendar fechaSolicitada, Calendar fechaInicio, Calendar fechaFin, Jefes jefe, Clientes cliente, List<Pagos> pagos, List<ObrasObrero> obreros, List<Planos> planos, List<Permisos> permisos, List<Ubicaciones> ubicaciones) {
+    public Obras(Long id, Float costoArranque, Float inversion, Float costoTotal, Float deuda, String nombre, Calendar fechaSolicitada, Calendar fechaInicio, Calendar fechaFin, Jefes jefe, Clientes cliente, List<Pagos> pagos, List<ObrasObrero> obreros, List<Planos> planos, List<Permisos> permisos, List<Ubicaciones> ubicaciones) {
         this.id = id;
         this.costoArranque = costoArranque;
         this.inversion = inversion;
+        this.costoTotal = costoTotal;
         this.deuda = deuda;
         this.nombre = nombre;
         this.fechaSolicitada = fechaSolicitada;
@@ -314,6 +319,14 @@ public class Obras implements Serializable {
         this.obreros = obreros;
     }
 
+    public Float getCostoTotal() {
+        return costoTotal;
+    }
+
+    public void setCostoTotal(Float costoTotal) {
+        this.costoTotal = costoTotal;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -333,6 +346,6 @@ public class Obras implements Serializable {
 
     @Override
     public String toString() {
-        return "Obras{" + "id=" + id + ", estado=" + estado + ", costoArranque=" + costoArranque + ", inversion=" + inversion + ", deuda=" + deuda + ", estaPagada=" + estaPagada + ", nombre=" + nombre + ", fechaSolicitada=" + fechaSolicitada + ", fechaInicio=" + fechaInicio + ", fechaFin=" + fechaFin + ", jefe=" + jefe + ", cliente=" + cliente + ", pagos=" + pagos + ", obreros=" + obreros + ", planos=" + planos + ", permisos=" + permisos + ", ubicaciones=" + ubicaciones + '}';
+        return "Obras{" + "id=" + id + ", estado=" + estado + ", costoArranque=" + costoArranque + ", inversion=" + inversion + ", costoTotal=" + costoTotal + ", deuda=" + deuda + ", estaPagada=" + estaPagada + ", nombre=" + nombre + ", fechaSolicitada=" + fechaSolicitada + ", fechaInicio=" + fechaInicio + ", fechaFin=" + fechaFin + ", jefe=" + jefe + ", cliente=" + cliente + ", pagos=" + pagos + ", obreros=" + obreros + ", planos=" + planos + ", permisos=" + permisos + ", ubicaciones=" + ubicaciones + '}';
     }
 }

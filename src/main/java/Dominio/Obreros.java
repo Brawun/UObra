@@ -46,6 +46,12 @@ public class Obreros implements Serializable {
 
     @Column(name = "SueldoDiario", nullable = true)
     private Float sueldoDiario = (float) 200;
+    
+    @Column(name = "PorPagar", nullable = true)
+    private Float porPagar = (float) 0;
+    
+    @Column(name = "Pagado", nullable = true)
+    private Float Pagado = (float) 0;
 
     // Un obrero puede recibir muchos pagos
     @OneToMany(mappedBy = "obrero")
@@ -164,6 +170,22 @@ public class Obreros implements Serializable {
         this.obras = obras;
     }
 
+    public Float getPorPagar() {
+        return porPagar;
+    }
+
+    public void setPorPagar(Float porPagar) {
+        this.porPagar = porPagar;
+    }
+
+    public Float getPagado() {
+        return Pagado;
+    }
+
+    public void setPagado(Float Pagado) {
+        this.Pagado = Pagado;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -186,6 +208,6 @@ public class Obreros implements Serializable {
 
     @Override
     public String toString() {
-        return "Obreros{" + "id=" + id + ", nombre=" + nombre + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", telefono=" + telefono + ", diasTrabajados=" + diasTrabajados + ", sueldoDiario=" + sueldoDiario + ", pagos=" + pagos + ", obras=" + obras + '}';
+        return "Obreros{" + "id=" + id + ", nombre=" + nombre + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", telefono=" + telefono + ", diasTrabajados=" + diasTrabajados + ", sueldoDiario=" + sueldoDiario + ", porPagar=" + porPagar + ", Pagado=" + Pagado + ", pagos=" + pagos + ", obras=" + obras + '}';
     }
 }

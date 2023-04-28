@@ -25,13 +25,38 @@ import javax.persistence.TypedQuery;
  */
 public class FacturasDAO {
 
-    EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("com.itson_AgenciaTransito");
+    /**
+     * Se establece una conexión con la base de datos UObra mediante JPA,
+     * creando un objeto EntityManager que puede ser utilizado para realizar
+     * operaciones de creación, lectura, actualización y eliminación en la base
+     * de datos utilizando el lenguaje JPQL.
+     */
+    EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
     EntityManager entityManager = managerFactory.createEntityManager();
+    
+    /**
+     * Método para persistir la entidad de la clase a la base de datos, en caso
+     * que no se pueda realizar dicha transacción se cancela el guardado de la 
+     * entidad.
+     * 
+     * @param object Objeto a guardar en la base de datos perteneciente a la clase
+     */
+    public void persist(Object object) {
+        entityManager.getTransaction().begin();
+        try {
+            entityManager.persist(object);
+            entityManager.getTransaction().commit();
+        } catch (Exception e) {
+            entityManager.getTransaction().rollback();
+        } finally {
+            entityManager.close();
+        }
+    }
 
     // Métodos de acceso
     public void registrarFactura(Facturas factura) {
         entityManager.getTransaction().begin();
-        entityManager.persist(factura);
+        this.persist(factura);
         entityManager.getTransaction().commit();
         entityManager.close();
     }
@@ -84,8 +109,8 @@ public class FacturasDAO {
     }
 
     public Facturas consultarFactura(Long id) {
-        entityManager.getTransaction().begin();
         if (verificarFactura(id)) {
+            entityManager.getTransaction().begin();
             Facturas factura = entityManager.find(Facturas.class, id);
             entityManager.getTransaction().commit();
             entityManager.close();

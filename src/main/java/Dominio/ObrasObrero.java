@@ -49,19 +49,22 @@ public class ObrasObrero implements Serializable {
     @Temporal(TemporalType.DATE)
     private Calendar fechaFin; 
     
+    // Solamente se genera al insertar una fecha fin
+    @Column(name = "DiasTrabajados", nullable = true)
+    private Integer diasTrabajados = 0; 
+    
     @Column(name = "Activo", nullable = false)
     private Boolean activo = true; 
 
     public ObrasObrero() {
     }
 
-    public ObrasObrero(Long id, Obreros obrero, Obras obra, Calendar fechaInicio, Calendar fechaFin, Boolean activo) {
+    public ObrasObrero(Long id, Obreros obrero, Obras obra, Calendar fechaInicio, Calendar fechaFin) {
         this.id = id;
         this.obrero = obrero;
         this.obra = obra;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
-        this.activo = activo;
     }
 
     public ObrasObrero(Obreros obrero, Obras obra) {
@@ -117,6 +120,14 @@ public class ObrasObrero implements Serializable {
         this.activo = activo;
     }
 
+    public Integer getDiasTrabajados() {
+        return diasTrabajados;
+    }
+
+    public void setDiasTrabajados(Integer diasTrabajados) {
+        this.diasTrabajados = diasTrabajados;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -139,6 +150,6 @@ public class ObrasObrero implements Serializable {
 
     @Override
     public String toString() {
-        return "ObrasObrero{" + "id=" + id + ", obrero=" + obrero + ", obra=" + obra + ", fechaInicio=" + fechaInicio + ", fechaFin=" + fechaFin + ", activo=" + activo + '}';
+        return "ObrasObrero{" + "id=" + id + ", obrero=" + obrero + ", obra=" + obra + ", fechaInicio=" + fechaInicio + ", fechaFin=" + fechaFin + ", diasTrabajados=" + diasTrabajados + ", activo=" + activo + '}';
     }
 }
