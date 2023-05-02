@@ -46,7 +46,7 @@ public class Encriptador {
      * @throws Exception En caso de algún error.
      */
     public Encriptador() throws Exception {
-        myEncryptionKey = "GibranElMejorProfeDeITSON";
+        myEncryptionKey = "AmoPruebasDeSoftware";
         myEncryptionScheme = DESEDE_ENCRYPTION_SCHEME;
         arrayBytes = myEncryptionKey.getBytes(UNICODE_FORMAT);
         ks = new DESedeKeySpec(arrayBytes);
