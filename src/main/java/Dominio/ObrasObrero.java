@@ -54,7 +54,7 @@ public class ObrasObrero implements Serializable {
     private Integer diasTrabajados = 0; 
     
     @Column(name = "Activo", nullable = false)
-    private Boolean activo = true; 
+    private Boolean activa = true; 
 
     public ObrasObrero() {
     }
@@ -113,11 +113,11 @@ public class ObrasObrero implements Serializable {
     }
 
     public Boolean getActivo() {
-        return activo;
+        return activa;
     }
 
-    public void setActivo(Boolean activo) {
-        this.activo = activo;
+    public void setActivo(Boolean activa) {
+        this.activa = activa;
     }
 
     public Integer getDiasTrabajados() {
@@ -142,14 +142,11 @@ public class ObrasObrero implements Serializable {
             return false;
         }
         ObrasObrero other = (ObrasObrero) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
     }
 
     @Override
     public String toString() {
-        return "ObrasObrero{" + "id=" + id + ", obrero=" + obrero + ", obra=" + obra + ", fechaInicio=" + fechaInicio + ", fechaFin=" + fechaFin + ", diasTrabajados=" + diasTrabajados + ", activo=" + activo + '}';
+        return "ObrasObrero{" + "id=" + id + ", obrero=" + obrero + ", obra=" + obra + ", fechaInicio=" + fechaInicio + ", fechaFin=" + fechaFin + ", diasTrabajados=" + diasTrabajados + ", activa=" + activa + '}';
     }
 }

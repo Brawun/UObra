@@ -4,19 +4,27 @@
 package DAOs;
 
 import Dominio.Obras;
+import Dominio.ObrasObrero;
 import Dominio.Obreros;
+import Dominio.Pagos;
+import Dominio.Permisos;
+import Dominio.Planos;
+import Dominio.Ubicaciones;
 import Enumeradores.EstadoObra;
+import Enumeradores.TipoUbicacion;
+import Herramientas.Fecha;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
 
 /**
  * Esta clase DAO permite implementar métodos para acceder, consultar, eliminar
- * y agregar entidades de tipo #.
+ * y agregar entidades de tipo Obras.
  *
  * @author Brandon Figueroa Ugalde - ID: 00000233295
  * @author Guimel Naely Rubio Morillon - ID: 00000229324
@@ -33,6 +41,11 @@ public class ObrasDAO {
     EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
     EntityManager entityManager = managerFactory.createEntityManager();
 
+    /**
+     * Llamada a paquete de Herramientas para manipular fechas.
+     */
+    Fecha fecha = new Fecha(); 
+    
     /**
      * Método para persistir la entidad de la clase a la base de datos, en caso
      * que no se pueda realizar dicha transacción se cancela el guardado de la
@@ -51,17 +64,6 @@ public class ObrasDAO {
         } finally {
             entityManager.close();
         }
-    }
-
-    /**
-     * Método para obtener la fecha del preciso momento.
-     *
-     * @return ahora, fecha del preciso momento.
-     */
-    public Calendar fechaAhora() {
-        Calendar ahora = Calendar.getInstance();
-        ahora.setTime(new Date());
-        return ahora;
     }
 
     // Métodos de acceso
@@ -104,7 +106,7 @@ public class ObrasDAO {
             entityManager.getTransaction().begin();
             Obras obra = consultarObra(id);
             obra.setEstado(EstadoObra.DESARROLLO);
-            obra.setFechaInicio(fechaAhora());
+            obra.setFechaInicio(fecha.fechaAhora());
             entityManager.merge(obra);
             entityManager.getTransaction().commit();
             entityManager.close();
@@ -119,7 +121,7 @@ public class ObrasDAO {
             entityManager.getTransaction().begin();
             Obras obra = consultarObra(id);
             obra.setEstado(EstadoObra.TERMINADA);
-            obra.setFechaFin(fechaAhora());
+            obra.setFechaFin(fecha.fechaAhora());
             entityManager.merge(obra);
             entityManager.getTransaction().commit();
             entityManager.close();
@@ -208,6 +210,7 @@ public class ObrasDAO {
             entityManager.getTransaction().begin();
             Obras obra = consultarObra(id);
             obra.setCostoArranque(obra.getCostoArranque() + monto);
+            obra.setCostoTotal(obra.getCostoTotal() + monto);
             obra.setDeuda(obra.getDeuda() + monto);
             if (obra.getDeuda() > (float) 0) {
                 obra = endeudarObraObj(obra);
@@ -226,6 +229,7 @@ public class ObrasDAO {
             entityManager.getTransaction().begin();
             Obras obra = consultarObra(id);
             obra.setCostoArranque(obra.getCostoArranque() - monto);
+            obra.setCostoTotal(obra.getCostoTotal() - monto);
             obra.setDeuda(obra.getDeuda() - monto);
             if (obra.getDeuda() <= (float) 0) {
                 obra = pagarObraObj(obra);
@@ -244,6 +248,7 @@ public class ObrasDAO {
             entityManager.getTransaction().begin();
             Obras obra = consultarObra(id);
             obra.setInversion(obra.getInversion() + monto);
+            obra.setCostoTotal(obra.getCostoTotal() + monto);
             obra.setDeuda(obra.getDeuda() + monto);
             if (obra.getDeuda() > (float) 0) {
                 obra = endeudarObraObj(obra);
@@ -262,6 +267,7 @@ public class ObrasDAO {
             entityManager.getTransaction().begin();
             Obras obra = consultarObra(id);
             obra.setInversion(obra.getInversion() - monto);
+            obra.setCostoTotal(obra.getCostoTotal() - monto);
             obra.setDeuda(obra.getDeuda() - monto);
             if (obra.getDeuda() <= (float) 0) {
                 obra = pagarObraObj(obra);
@@ -293,8 +299,19 @@ public class ObrasDAO {
     public void asingarObreroObra(Long id, Long idObrero) {
         if (verificarObra(id)) {
             entityManager.getTransaction().begin();
+            // DAOs
+            ObrerosDAO obrerosDAO = new ObrerosDAO();
+            ObrasObreroDAO obrasObreroDAO = new ObrasObreroDAO();
+            // Objetos
+            Obreros obrero = obrerosDAO.consultarObrero(idObrero);
             Obras obra = consultarObra(id);
-            obra.getObreros().add()
+            // Se crea relación obras - obrero
+            ObrasObrero obrasObrero = new ObrasObrero(obrero, obra);
+            // Se registra la relación obra - obrero
+            obrasObreroDAO.registrarObraObrero(obrasObrero);
+            // Se agrega la relación obra - obrero a la obra en particular
+            obra.getObreros().add(obrasObrero);
+            // Se actualiza la obra
             entityManager.merge(obra);
             entityManager.getTransaction().commit();
             entityManager.close();
@@ -304,28 +321,211 @@ public class ObrasDAO {
     }
 
     // Asigna 3 nuevos obreros a una obra, para que esta pueda comenzar
-    public void asingarTresObrerosObra(Long id, Obreros obrero1, Obreros obrero2, Obreros obrero3) {
-
+    public void asingarTresObrerosObra(Long id, Long idObrero1, Long idObrero2, Long idObrero3) {
+        if (verificarObra(id)) {
+            entityManager.getTransaction().begin();
+            // DAOs
+            ObrerosDAO obrerosDAO = new ObrerosDAO();
+            ObrasObreroDAO obrasObreroDAO = new ObrasObreroDAO();
+            // Objetos
+            Obreros obrero1 = obrerosDAO.consultarObrero(idObrero1);
+            Obreros obrero2 = obrerosDAO.consultarObrero(idObrero2);
+            Obreros obrero3 = obrerosDAO.consultarObrero(idObrero3);
+            Obras obra = consultarObra(id);
+            // Se crean las relaciones obras - obrero
+            ObrasObrero obrasObrero1 = new ObrasObrero(obrero1, obra);
+            ObrasObrero obrasObrero2 = new ObrasObrero(obrero2, obra);
+            ObrasObrero obrasObrero3 = new ObrasObrero(obrero3, obra);
+            // Se registra la relación obra - obrero
+            obrasObreroDAO.registrarObraObrero(obrasObrero1);
+            obrasObreroDAO.registrarObraObrero(obrasObrero2);
+            obrasObreroDAO.registrarObraObrero(obrasObrero3);
+            // Se agrega la relación obra - obrero a la obra en particular
+            obra.getObreros().add(obrasObrero1);
+            obra.getObreros().add(obrasObrero2);
+            obra.getObreros().add(obrasObrero3);
+            // Se actualiza la obra
+            entityManager.merge(obra);
+            entityManager.getTransaction().commit();
+            entityManager.close();
+        } else {
+            throw new EntityNotFoundException("No se puede encontrar la obra con ID: " + id);
+        }
     }
 
     // Asigna un nuevo pago a una obra 
-    public void agregarPagoObra(Long idObra, Long idPago) {
-
+    public void agregarPagoObra(Long id, Long idPago) {
+        if (verificarObra(id)) {
+            entityManager.getTransaction().begin();
+            // DAOs
+            PagosDAO pagosDAO = new PagosDAO();
+            // Objetos
+            Pagos pago = pagosDAO.consultarPago(idPago);
+            Obras obra = consultarObra(id);
+            // Se agrega el pago a la obra en particular
+            obra.getPagos().add(pago);
+            // Se elimina a la deuda el pago realizado
+            obra.setDeuda(obra.getDeuda() - pago.getMonto());
+            if (obra.getDeuda() <= (float) 0) {
+                obra = pagarObraObj(obra);
+            }
+            // Se actualiza la obra
+            entityManager.merge(obra);
+            entityManager.getTransaction().commit();
+            entityManager.close();
+        } else {
+            throw new EntityNotFoundException("No se puede encontrar la obra con ID: " + id);
+        }
     }
 
     // Asigna un nuevo plano a obra
-    public void agregarPlanoObra(Long idObra, Long idPlano) {
-
+    public void agregarPlanoObra(Long id, Long idPlano) {
+        if (verificarObra(id)) {
+            entityManager.getTransaction().begin();
+            // DAOs
+            PlanosDAO planosDAO = new PlanosDAO();
+            // Objetos
+            Planos plano = planosDAO.consultarPlano(idPlano);
+            Obras obra = consultarObra(id);
+            // Se agrega el plano a la obra en particular
+            obra.getPlanos().add(plano);
+            // Se actualiza la obra
+            entityManager.merge(obra);
+            entityManager.getTransaction().commit();
+            entityManager.close();
+        } else {
+            throw new EntityNotFoundException("No se puede encontrar la obra con ID: " + id);
+        }
     }
 
     // Asigna un nuevo permiso a obra
-    public void agregarPermisoObra(Long idObra, Long idPermiso) {
-
+    public void agregarPermisoObra(Long id, Long idPermiso) {
+        if (verificarObra(id)) {
+            entityManager.getTransaction().begin();
+            // DAOs
+            PermisosDAO permisosDAO = new PermisosDAO();
+            // Objetos
+            Permisos permiso = permisosDAO.consultarPermiso(idPermiso);
+            Obras obra = consultarObra(id);
+            // Se agrega el plano a la obra en particular
+            obra.getPermisos().add(permiso);
+            // Se actualiza la obra
+            entityManager.merge(obra);
+            entityManager.getTransaction().commit();
+            entityManager.close();
+        } else {
+            throw new EntityNotFoundException("No se puede encontrar la obra con ID: " + id);
+        }
     }
 
     // Asigna una nueva ubicación a obra
-    public void agregarUbicacionObra(Long idObra, Long idUbicacion) {
+    public void agregarUbicacionObra(Long id, Long idUbicacion) {
+        if (verificarObra(id)) {
+            entityManager.getTransaction().begin();
+            // DAOs
+            UbicacionesDAO ubicacionesDAO = new UbicacionesDAO();
+            // Objetos
+            Ubicaciones ubicacion = ubicacionesDAO.consultarUbicacion(idUbicacion);
+            Obras obra = consultarObra(id);
+            // Se agrega el plano a la obra en particular
+            obra.getUbicaciones().add(ubicacion);
+            // Se actualiza el estado de ubicacion a ocupada en casa de que sea 
+            // un solar
+            if (ubicacion.getTipo().equals(TipoUbicacion.SOLAR)) {
+                ubicacionesDAO.ocuparUbicacion(idUbicacion);
+            }
+            // Se actualiza la obra
+            entityManager.merge(obra);
+            entityManager.getTransaction().commit();
+            entityManager.close();
+        } else {
+            throw new EntityNotFoundException("No se puede encontrar la obra con ID: " + id);
+        }
+    }
+    
+    // Elimina un pago a una obra 
+    public void eliminarPagoObra(Long id, Long idPago) {
+        if (verificarObra(id)) {
+            entityManager.getTransaction().begin();
+            // DAOs
+            PagosDAO pagosDAO = new PagosDAO();
+            // Objetos
+            Pagos pago = pagosDAO.consultarPago(idPago);
+            Obras obra = consultarObra(id);
+            // Se agrega el pago a la obra en particular
+            obra.getPagos().remove(pago);
+            // Se agrega a la deuda el pago eliminado
+            obra.setDeuda(obra.getDeuda() + pago.getMonto());
+            if (obra.getDeuda() > (float) 0) {
+                obra = endeudarObraObj(obra);
+            }
+            // Se actualiza la obra
+            entityManager.merge(obra);
+            entityManager.getTransaction().commit();
+            entityManager.close();
+        } else {
+            throw new EntityNotFoundException("No se puede encontrar la obra con ID: " + id);
+        }
+    }
 
+    // Elimina un plano de una obra en particular
+    public void eliminarPlanoObra(Long id, Long idPlano) {
+        if (verificarObra(id)) {
+            entityManager.getTransaction().begin();
+            // DAOs
+            PlanosDAO planosDAO = new PlanosDAO();
+            // Objetos
+            Planos plano = planosDAO.consultarPlano(idPlano);
+            Obras obra = consultarObra(id);
+            // Se agrega el plano a la obra en particular
+            obra.getPlanos().remove(plano);
+            // Se actualiza la obra
+            entityManager.merge(obra);
+            entityManager.getTransaction().commit();
+            entityManager.close();
+        } else {
+            throw new EntityNotFoundException("No se puede encontrar la obra con ID: " + id);
+        }
+    }
+
+    // Elimina un permiso de una obra en particular
+    public void eliminarPermisoObra(Long id, Long idPermiso) {
+        if (verificarObra(id)) {
+            entityManager.getTransaction().begin();
+            // DAOs
+            PermisosDAO permisosDAO = new PermisosDAO();
+            // Objetos
+            Permisos permiso = permisosDAO.consultarPermiso(idPermiso);
+            Obras obra = consultarObra(id);
+            // Se agrega el plano a la obra en particular
+            obra.getPermisos().remove(permiso);
+            // Se actualiza la obra
+            entityManager.merge(obra);
+            entityManager.getTransaction().commit();
+            entityManager.close();
+        } else {
+            throw new EntityNotFoundException("No se puede encontrar la obra con ID: " + id);
+        }
+    }
+
+    // Elimina una ubicación de una obra en particular
+    public void eliminarUbicacionObra(Long id, Long idUbicacion) {
+        if (verificarObra(id)) {
+            entityManager.getTransaction().begin();
+            // DAOs
+            UbicacionesDAO ubicacionesDAO = new UbicacionesDAO();
+            // Objetos
+            Ubicaciones ubicacion = ubicacionesDAO.consultarUbicacion(idUbicacion);
+            Obras obra = consultarObra(id);
+            // Se agrega el plano a la obra en particular
+            obra.getUbicaciones().remove(ubicacion);
+            // Se actualiza la obra
+            entityManager.merge(obra);
+            entityManager.getTransaction().commit();
+            entityManager.close();
+        } else {
+            throw new EntityNotFoundException("No se puede encontrar la obra con ID: " + id);
+        }
     }
 
     // Métodos de consulta 
@@ -349,9 +549,3587 @@ public class ObrasDAO {
         }
     }
 
-    // Arroja una lista de obras que hayan iniciado dentro del periodo dado, 
-    // tengan el estado dado y estén o no pagadas
-    public List<Obras> consultarObras(Calendar periodoInicio, Calendar periodoFin, EstadoObra estado, Boolean pagada, Long clienteId) {
+    // Arroja una lista de obras que hayan sido iniciadas por cierto cliente 
+    // dentro del periodo dado, tengan el estado dado, estén o no pagadas, hayan
+    // costado un total o más dado
+    public List<Obras> consultarObrasFechaInicio(Calendar periodoInicio, Calendar periodoFin, EstadoObra estado, Boolean estaPagada, Float costoTotal, Long clienteId) throws Exception {
+        TypedQuery<Obras> query;
+        // BUSQUEDA POR 6 CAMPOS
+        if (periodoInicio != null
+                && periodoFin != null
+                && estado != null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por inicio, fin, estado, pagada, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+            // BÚSQUEDA POR 5 CAMPOS
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado != null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por inicio, fin, estado, pagada, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado != null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por inicio, fin, estado, pagada, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado != null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por inicio, fin, estado, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado == null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por inicio, fin, pagada, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado != null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por inicio, estado, pagada, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado != null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por fin, estado, pagada, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+            // BÚSQUEDA POR 4 CAMPOS
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado != null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por inicio, fin, estado, pagada
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado != null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por inicio, fin, estado, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado != null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por inicio, fin, estado, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado == null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por inicio, fin, pagada, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado == null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por inicio, fin, pagada, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado == null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por inicio, fin, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado != null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por inicio, estado, pagada, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado != null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por inicio, estado, pagada, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado != null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por inicio, estado, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("estado", estado);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado == null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por inicio, pagada, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado != null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por fin, estado, pagada, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado != null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por fin, estado, pagada, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado != null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por fin, estado, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado == null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por fin, pagada, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado != null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por estado, pagada, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+            // BÚSQUEDA POR 3 CAMPOS
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado != null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por inicio, fin, estado
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado == null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por inicio, fin, pagada
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estaPagada", estaPagada);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado == null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por inicio, fin, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.costoTotal >= :costoTotal "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado == null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por inicio, fin, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.cliente.id = :clienteId "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado != null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por inicio, estado, pagada
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado != null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por inicio, estado, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("estado", estado);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado != null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por inicio, estado, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("estado", estado);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado == null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por inicio, pagada, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado == null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por inicio, pagada, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado == null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por inicio, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado != null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por fin, estado, pagada
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado != null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por fin, estado, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado != null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por fin, estado, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado == null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por fin, pagada, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado == null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por fin, pagada, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado == null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por fin, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado != null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por estado, pagada, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.costoTotal >= :costoTotal";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado != null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por estado, pagada, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado != null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por estado, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("estado", estado);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado == null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por pagada, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+            // BÚSQUEDA POR 2 CAMPOS
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado == null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por inicio, fin
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado != null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por inicio, estado
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("estado", estado);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado == null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por inicio, pagada
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("estaPagada", estaPagada);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado == null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por inicio, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.costoTotal >= :costoTotal "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado == null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por inicio, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.cliente.id = :clienteId "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado != null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por fin, estado
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado == null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por fin, pagada
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estaPagada", estaPagada);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado == null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por fin, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.costoTotal >= :costoTotal "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado == null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por fin, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.cliente.id = :clienteId "
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado != null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por estado, pagada
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado != null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por estado, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.costoTotal >= :costoTotal";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("estado", estado);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado != null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por estado, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.cliente.id = :clienteId";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("estado", estado);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado == null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por pagada, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.costoTotal >= :costoTotal";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado == null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por pagada, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado == null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+            // BÚSQUEDA POR 1 CAMPOS
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado == null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por inicio
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado == null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por fin
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado != null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por estado
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("estado", estado);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado == null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por pagada
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("estaPagada", estaPagada);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado == null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.costoTotal >= :costoTotal";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado == null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.cliente.id = :clienteId";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+            // BÚSQUEDA POR 0 CAMPOS
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado == null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId == null) { // No se llenó ningún campo
+            String jpql = "SELECT o FROM Obras o";            
+            query = entityManager.createQuery(jpql, Obras.class);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else {
+            throw new Exception("No se pudo realizar la búsqueda dinámica de obras");
+        }
+    }
+    
+    // Arroja una lista de obras que hayan sido solicitadas por cierto cliente 
+    // dentro del periodo dado, tengan el estado dado, estén o no pagadas, hayan
+    // costado un total o más dado
+    public List<Obras> consultarObrasFechaSolicitada(Calendar periodoInicio, Calendar periodoFin, EstadoObra estado, Boolean estaPagada, Float costoTotal, Long clienteId) throws Exception {
+        TypedQuery<Obras> query;
+        // BUSQUEDA POR 6 CAMPOS
+        if (periodoInicio != null
+                && periodoFin != null
+                && estado != null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por inicio, fin, estado, pagada, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+            // BÚSQUEDA POR 5 CAMPOS
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado != null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por inicio, fin, estado, pagada, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado != null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por inicio, fin, estado, pagada, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado != null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por inicio, fin, estado, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado == null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por inicio, fin, pagada, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado != null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por inicio, estado, pagada, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado != null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por fin, estado, pagada, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+            // BÚSQUEDA POR 4 CAMPOS
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado != null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por inicio, fin, estado, pagada
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado != null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por inicio, fin, estado, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado != null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por inicio, fin, estado, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado == null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por inicio, fin, pagada, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado == null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por inicio, fin, pagada, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado == null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por inicio, fin, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado != null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por inicio, estado, pagada, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado != null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por inicio, estado, pagada, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado != null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por inicio, estado, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("estado", estado);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado == null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por inicio, pagada, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado != null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por fin, estado, pagada, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado != null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por fin, estado, pagada, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado != null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por fin, estado, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado == null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por fin, pagada, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado != null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por estado, pagada, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+            // BÚSQUEDA POR 3 CAMPOS
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado != null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por inicio, fin, estado
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado == null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por inicio, fin, pagada
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estaPagada", estaPagada);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado == null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por inicio, fin, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.costoTotal >= :costoTotal "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado == null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por inicio, fin, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.cliente.id = :clienteId "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado != null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por inicio, estado, pagada
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado != null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por inicio, estado, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("estado", estado);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado != null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por inicio, estado, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("estado", estado);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado == null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por inicio, pagada, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado == null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por inicio, pagada, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado == null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por inicio, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado != null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por fin, estado, pagada
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado != null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por fin, estado, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado != null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por fin, estado, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado == null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por fin, pagada, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado == null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por fin, pagada, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado == null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por fin, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado != null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por estado, pagada, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.costoTotal >= :costoTotal";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado != null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por estado, pagada, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado != null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por estado, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("estado", estado);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado == null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por pagada, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+            // BÚSQUEDA POR 2 CAMPOS
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado == null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por inicio, fin
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado != null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por inicio, estado
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("estado", estado);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado == null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por inicio, pagada
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("estaPagada", estaPagada);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado == null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por inicio, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.costoTotal >= :costoTotal "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado == null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por inicio, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.cliente.id = :clienteId "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado != null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por fin, estado
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado == null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por fin, pagada
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estaPagada", estaPagada);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado == null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por fin, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.costoTotal >= :costoTotal "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado == null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por fin, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.cliente.id = :clienteId "
+                    + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado != null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por estado, pagada
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado != null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por estado, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.costoTotal >= :costoTotal";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("estado", estado);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado != null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por estado, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.cliente.id = :clienteId";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("estado", estado);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado == null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por pagada, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.costoTotal >= :costoTotal";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado == null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por pagada, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado == null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+            // BÚSQUEDA POR 1 CAMPOS
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado == null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por inicio
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado == null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por fin
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado != null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por estado
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("estado", estado);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado == null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por pagada
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("estaPagada", estaPagada);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado == null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.costoTotal >= :costoTotal";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado == null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.cliente.id = :clienteId";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+            // BÚSQUEDA POR 0 CAMPOS
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado == null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId == null) { // No se llenó ningún campo
+            String jpql = "SELECT o FROM Obras o";            
+            query = entityManager.createQuery(jpql, Obras.class);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else {
+            throw new Exception("No se pudo realizar la búsqueda dinámica de obras");
+        }
+    }
+    
+    // Arroja una lista de obras que hayan sido terminadas por cierto cliente 
+    // dentro del periodo dado, tengan el estado dado, estén o no pagadas, hayan
+    // costado un total o más dado
+    public List<Obras> consultarObrasFechaFin(Calendar periodoInicio, Calendar periodoFin, EstadoObra estado, Boolean estaPagada, Float costoTotal, Long clienteId) throws Exception {
+        TypedQuery<Obras> query;
+        // BUSQUEDA POR 6 CAMPOS
+        if (periodoInicio != null
+                && periodoFin != null
+                && estado != null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por inicio, fin, estado, pagada, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+            // BÚSQUEDA POR 5 CAMPOS
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado != null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por inicio, fin, estado, pagada, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado != null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por inicio, fin, estado, pagada, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado != null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por inicio, fin, estado, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado == null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por inicio, fin, pagada, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado != null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por inicio, estado, pagada, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado != null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por fin, estado, pagada, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+            // BÚSQUEDA POR 4 CAMPOS
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado != null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por inicio, fin, estado, pagada
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado != null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por inicio, fin, estado, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado != null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por inicio, fin, estado, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado == null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por inicio, fin, pagada, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado == null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por inicio, fin, pagada, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado == null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por inicio, fin, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado != null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por inicio, estado, pagada, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado != null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por inicio, estado, pagada, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado != null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por inicio, estado, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("estado", estado);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado == null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por inicio, pagada, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado != null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por fin, estado, pagada, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado != null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por fin, estado, pagada, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado != null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por fin, estado, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado == null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por fin, pagada, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado != null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por estado, pagada, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+            // BÚSQUEDA POR 3 CAMPOS
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado != null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por inicio, fin, estado
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado == null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por inicio, fin, pagada
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estaPagada", estaPagada);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado == null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por inicio, fin, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.costoTotal >= :costoTotal "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado == null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por inicio, fin, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.cliente.id = :clienteId "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado != null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por inicio, estado, pagada
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado != null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por inicio, estado, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("estado", estado);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado != null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por inicio, estado, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("estado", estado);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado == null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por inicio, pagada, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado == null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por inicio, pagada, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado == null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por inicio, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado != null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por fin, estado, pagada
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado != null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por fin, estado, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado != null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por fin, estado, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado == null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por fin, pagada, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado == null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por fin, pagada, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado == null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por fin, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado != null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por estado, pagada, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.costoTotal >= :costoTotal";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado != null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por estado, pagada, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado != null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por estado, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("estado", estado);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado == null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por pagada, costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+            // BÚSQUEDA POR 2 CAMPOS
+        } else if (periodoInicio != null
+                && periodoFin != null
+                && estado == null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por inicio, fin
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", periodoFin);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado != null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por inicio, estado
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("estado", estado);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado == null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por inicio, pagada
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("estaPagada", estaPagada);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado == null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por inicio, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.costoTotal >= :costoTotal "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado == null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por inicio, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.cliente.id = :clienteId "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado != null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por fin, estado
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estado", estado);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado == null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por fin, pagada
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("estaPagada", estaPagada);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado == null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por fin, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.costoTotal >= :costoTotal "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado == null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por fin, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.cliente.id = :clienteId "
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado != null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por estado, pagada
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.estaPagada = :pagada";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("estado", estado);
+            query.setParameter("estaPagada", estaPagada);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado != null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por estado, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.costoTotal >= :costoTotal";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("estado", estado);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado != null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por estado, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado "
+                    + "AND o.cliente.id = :clienteId";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("estado", estado);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado == null
+                && estaPagada != null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por pagada, costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.costoTotal >= :costoTotal";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado == null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por pagada, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada "
+                    + "AND o.cliente.id = :clienteId";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("estaPagada", estaPagada);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado == null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId != null) { // Búsqueda por costo, cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.cliente.id = :clienteId "
+                    + "AND o.costoTotal >= :costoTotal";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("costoTotal", costoTotal);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+            // BÚSQUEDA POR 1 CAMPOS
+        } else if (periodoInicio != null
+                && periodoFin == null
+                && estado == null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por inicio
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", periodoInicio);
+            query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && estado == null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por fin
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
+            query.setParameter("periodoFin", periodoFin);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado != null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por estado
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estado = :estado";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("estado", estado);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado == null
+                && estaPagada != null
+                && costoTotal == null
+                && clienteId == null) { // Búsqueda por pagada
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.estaPagada = :pagada";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("estaPagada", estaPagada);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado == null
+                && estaPagada == null
+                && costoTotal != null
+                && clienteId == null) { // Búsqueda por costo
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.costoTotal >= :costoTotal";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("costoTotal", costoTotal);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado == null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId != null) { // Búsqueda por cliente
+            String jpql = "SELECT o FROM Obras o WHERE "
+                    + "o.cliente.id = :clienteId";
+            query = entityManager.createQuery(jpql, Obras.class);
+            query.setParameter("clienteId", clienteId);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+            // BÚSQUEDA POR 0 CAMPOS
+        } else if (periodoInicio == null
+                && periodoFin == null
+                && estado == null
+                && estaPagada == null
+                && costoTotal == null
+                && clienteId == null) { // No se llenó ningún campo
+            String jpql = "SELECT o FROM Obras o";            
+            query = entityManager.createQuery(jpql, Obras.class);
+            List<Obras> obras = query.getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obras;
+        } else {
+            throw new Exception("No se pudo realizar la búsqueda dinámica de obras");
+        }
+    }
+    
+    // Métodos drivers para búsqueda dinámica
+    public List<Obras> consultarObrasConEstado(EstadoObra estado) throws Exception {
+        return this.consultarObrasFechaInicio(null, null, estado, null, null, null);
+    }
+    
+    public List<Obras> consultarObrasConCostoMayorIgualA(Float monto) throws Exception {
+        return this.consultarObrasFechaInicio(null, null, null, null, monto, null);
+    }
+    
+    public List<Obras> consultarObrasNoPagadasConCostoMayorA(Float monto) throws Exception {
+        return this.consultarObrasFechaInicio(null, null, null, false, monto, null);
+    }
+    
+    public List<Obras> consultarObrasPagadasConCostoMayorA(Float monto) throws Exception {
+        return this.consultarObrasFechaInicio(null, null, null, true, monto, null);
+    }
 
+    public List<Obras> consultarObrasPagadas() throws Exception {
+        return this.consultarObrasFechaInicio(null, null, null, true, null, null);
+    }
+    
+    public List<Obras> consultarObrasNoPagads() throws Exception {
+        return this.consultarObrasFechaInicio(null, null, null, false, null, null);
+    }
+    
+    public List<Obras> consultarTodasObras() throws Exception {
+        return this.consultarObrasFechaInicio(null, null, null, null, null, null);
     }
 }

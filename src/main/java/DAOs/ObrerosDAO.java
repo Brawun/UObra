@@ -13,7 +13,7 @@ import javax.persistence.TypedQuery;
 
 /**
  * Esta clase DAO permite implementar métodos para acceder, consultar, eliminar
- * y agregar entidades de tipo #.
+ * y agregar entidades de tipo Obreros.
  *
  * @author Brandon Figueroa Ugalde - ID: 00000233295
  * @author Guimel Naely Rubio Morillon - ID: 00000229324
@@ -251,7 +251,7 @@ public class ObrerosDAO {
         }
     }
     
-    // Métodos drivers paa búsqueda dinámica
+    // Métodos drivers para búsqueda dinámica
     public List<Obreros> consultarObrerosConDiasTrabajadosMínimo(Integer diasTrabajados) throws Exception {
         return consultarObreros(diasTrabajados, null);
     }

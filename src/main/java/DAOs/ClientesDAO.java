@@ -207,7 +207,7 @@ public class ClientesDAO {
         }
     }
 
-    // Métodos drivers paa búsqueda dinámica
+    // Métodos drivers para búsqueda dinámica
     public List<Clientes> consultarClientesDeudores(Float deudaMínima) throws Exception {
         return consultarClientes(true, deudaMínima);
     }

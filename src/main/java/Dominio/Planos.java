@@ -56,7 +56,7 @@ public class Planos implements Serializable {
 
     @Column(name = "FechaRealización", nullable = true)
     @Temporal(TemporalType.DATE)
-    private Calendar fechaRealización;
+    private Calendar fechaRealizacion;
 
     // Llave foránea
     @ManyToOne()
@@ -69,21 +69,21 @@ public class Planos implements Serializable {
     public Planos() {
     }
 
-    public Planos(Long id, String folio, TipoPlano tipo, Escala escala, Calendar fechaRegistro, Calendar fechaRealización, Jefes jefe, List<Obras> obras) {
+    public Planos(Long id, String folio, TipoPlano tipo, Escala escala, Calendar fechaRegistro, Calendar fechaRealizacion, Jefes jefe, List<Obras> obras) {
         this.id = id;
         this.folio = folio;
         this.tipo = tipo;
         this.escala = escala;
         this.fechaRegistro = fechaRegistro;
-        this.fechaRealización = fechaRealización;
+        this.fechaRealizacion = fechaRealizacion;
         this.jefe = jefe;
         this.obras = obras;
     }
 
-    public Planos(TipoPlano tipo, Escala escala, Calendar fechaRealización) {
+    public Planos(TipoPlano tipo, Escala escala, Calendar fechaRealizacion) {
         this.tipo = tipo;
         this.escala = escala;
-        this.fechaRealización = fechaRealización;
+        this.fechaRealizacion = fechaRealizacion;
     }
 
     public Long getId() {
@@ -126,12 +126,12 @@ public class Planos implements Serializable {
         this.fechaRegistro = fechaRegistro;
     }
 
-    public Calendar getFechaRealización() {
-        return fechaRealización;
+    public Calendar getFechaRealizacion() {
+        return fechaRealizacion;
     }
 
-    public void setFechaRealización(Calendar fechaRealización) {
-        this.fechaRealización = fechaRealización;
+    public void setFechaRealizacion(Calendar fechaRealizacion) {
+        this.fechaRealizacion = fechaRealizacion;
     }
 
     public Jefes getJefe() {
@@ -164,14 +164,11 @@ public class Planos implements Serializable {
             return false;
         }
         Planos other = (Planos) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
     }
 
     @Override
     public String toString() {
-        return "Planos{" + "id=" + id + ", folio=" + folio + ", tipo=" + tipo + ", escala=" + escala + ", fechaRegistro=" + fechaRegistro + ", fechaRealizaci\u00f3n=" + fechaRealización + ", jefe=" + jefe + ", obras=" + obras + '}';
+        return "Planos{" + "id=" + id + ", folio=" + folio + ", tipo=" + tipo + ", escala=" + escala + ", fechaRegistro=" + fechaRegistro + ", fechaRealizacion=" + fechaRealizacion + ", jefe=" + jefe + ", obras=" + obras + '}';
     }
 }

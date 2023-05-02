@@ -200,10 +200,7 @@ public class Obreros implements Serializable {
             return false;
         }
         Obreros other = (Obreros) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
     }
 
     @Override

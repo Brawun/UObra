@@ -55,6 +55,10 @@ public class Ubicaciones implements Serializable {
     @Column(name = "FechaRegistro", nullable = true)
     @Temporal(TemporalType.DATE)
     private Calendar fechaRegistro;
+    
+    @Column(name = "FechaOcupacion", nullable = true)
+    @Temporal(TemporalType.DATE)
+    private Calendar fechaOcupacion;
 
     // AUTOGENERADA
     @Column(name = "Area", nullable = false)
@@ -73,7 +77,7 @@ public class Ubicaciones implements Serializable {
     public Ubicaciones() {
     }
 
-    public Ubicaciones(Long id, Boolean disponible, String direccion, TipoUbicacion tipo, Float largo, Float ancho, Calendar fechaRegistro, Float area, Clientes cliente, List<Obras> obras) {
+    public Ubicaciones(Long id, Boolean disponible, String direccion, TipoUbicacion tipo, Float largo, Float ancho, Calendar fechaRegistro, Calendar fechaOcupacion, Float area, Clientes cliente, List<Obras> obras) {
         this.id = id;
         this.disponible = disponible;
         this.direccion = direccion;
@@ -81,6 +85,7 @@ public class Ubicaciones implements Serializable {
         this.largo = largo;
         this.ancho = ancho;
         this.fechaRegistro = fechaRegistro;
+        this.fechaOcupacion = fechaOcupacion;
         this.area = area;
         this.cliente = cliente;
         this.obras = obras;
@@ -167,6 +172,14 @@ public class Ubicaciones implements Serializable {
         this.fechaRegistro = fechaRegistro;
     }
 
+    public Calendar getFechaOcupacion() {
+        return fechaOcupacion;
+    }
+
+    public void setFechaOcupacion(Calendar fechaOcupacion) {
+        this.fechaOcupacion = fechaOcupacion;
+    }
+    
     public Clientes getCliente() {
         return cliente;
     }
@@ -197,14 +210,11 @@ public class Ubicaciones implements Serializable {
             return false;
         }
         Ubicaciones other = (Ubicaciones) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
     }
 
     @Override
     public String toString() {
-        return "Ubicaciones{" + "id=" + id + ", disponible=" + disponible + ", direccion=" + direccion + ", tipo=" + tipo + ", largo=" + largo + ", ancho=" + ancho + ", fechaRegistro=" + fechaRegistro + ", area=" + area + ", cliente=" + cliente + ", obras=" + obras + '}';
+        return "Ubicaciones{" + "id=" + id + ", disponible=" + disponible + ", direccion=" + direccion + ", tipo=" + tipo + ", largo=" + largo + ", ancho=" + ancho + ", fechaRegistro=" + fechaRegistro + ", fechaOcupacion=" + fechaOcupacion + ", area=" + area + ", cliente=" + cliente + ", obras=" + obras + '}';
     }
 }

@@ -43,9 +43,13 @@ public class Facturas implements Serializable {
     private String descripcion;
 
     // AUTOGENERADA
-    @Column(name = "Fecha", nullable = true)
+    @Column(name = "FechaCreada", nullable = true)
     @Temporal(TemporalType.DATE)
-    private Calendar fecha;
+    private Calendar fechaCreada;
+    
+    @Column(name = "FechaPagada", nullable = true)
+    @Temporal(TemporalType.DATE)
+    private Calendar fechaPagada;
 
     @Column(name = "Estado", nullable = false)
     @Enumerated(EnumType.STRING)
@@ -64,18 +68,18 @@ public class Facturas implements Serializable {
     public Facturas() {
     }
 
-    public Facturas(Long id, Float monto, Calendar fecha, EstadoFactura estado, MetodoPago metodoPago, Jefes jefe) {
+    public Facturas(Long id, Float monto, String descripcion, Calendar fechaCreada, Calendar fechaPagada, Jefes jefe) {
         this.id = id;
         this.monto = monto;
-        this.fecha = fecha;
-        this.estado = estado;
-        this.metodoPago = metodoPago;
+        this.descripcion = descripcion;
+        this.fechaCreada = fechaCreada;
+        this.fechaPagada = fechaPagada;
         this.jefe = jefe;
     }
 
     public Facturas(Float monto, Calendar fecha, EstadoFactura estado, MetodoPago metodoPago, Jefes jefe) {
         this.monto = monto;
-        this.fecha = fecha;
+        this.fechaCreada = fecha;
         this.estado = estado;
         this.metodoPago = metodoPago;
         this.jefe = jefe;
@@ -83,7 +87,7 @@ public class Facturas implements Serializable {
 
     public Facturas(Float monto, Calendar fecha, Jefes jefe) {
         this.monto = monto;
-        this.fecha = fecha;
+        this.fechaCreada = fecha;
         this.jefe = jefe;
     }
 
@@ -103,12 +107,20 @@ public class Facturas implements Serializable {
         this.descripcion = descripcion;
     }
 
-    public Calendar getFecha() {
-        return fecha;
+    public Calendar getFechaCreada() {
+        return fechaCreada;
     }
 
-    public void setFecha(Calendar fecha) {
-        this.fecha = fecha;
+    public void setFechaCreada(Calendar fechaCreada) {
+        this.fechaCreada = fechaCreada;
+    }
+
+    public Calendar getFechaPagada() {
+        return fechaPagada;
+    }
+
+    public void setFechaPagada(Calendar fechaPagada) {
+        this.fechaPagada = fechaPagada;
     }
 
     public EstadoFactura getEstado() {
@@ -162,6 +174,6 @@ public class Facturas implements Serializable {
 
     @Override
     public String toString() {
-        return "Facturas{" + "id=" + id + ", monto=" + monto + ", descripcion=" + descripcion + ", fecha=" + fecha + ", estado=" + estado + ", metodoPago=" + metodoPago + ", jefe=" + jefe.getId() + '}';
+        return "Facturas{" + "id=" + id + ", monto=" + monto + ", descripcion=" + descripcion + ", fechaCreada=" + fechaCreada + ", fechaPagada=" + fechaPagada + ", estado=" + estado + ", metodoPago=" + metodoPago + ", jefe=" + jefe + '}';
     }
 }
