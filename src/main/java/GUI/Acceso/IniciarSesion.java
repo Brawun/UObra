@@ -4,6 +4,12 @@
  */
 package GUI.Acceso;
 
+import DAOs.ClientesDAO;
+import DAOs.JefesDAO;
+import DAOs.ObrerosDAO;
+import Dominio.Clientes;
+import Dominio.Jefes;
+import Dominio.Obreros;
 import GUI.Cliente.PanelCliente;
 import GUI.Insercion.InsercionMasiva;
 import GUI.Jefe.PanelJefe;
@@ -219,14 +225,50 @@ public class IniciarSesion extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Error: Elija un tipo de usuario válido para inicio de sesión.");
         }
         else if (this.cbxTipoUsuario.getSelectedItem() == "Obrero") {
-            PanelObrero panelObrero = new PanelObrero();
-            panelObrero.setVisible(true);
+            try {
+                ObrerosDAO ObrerosDAO = new ObrerosDAO();
+                String usuario = this.txtUsuario.getText().trim();
+                String contrasena = new String(this.txtContrasenia.getPassword());
+                if (ObrerosDAO.verificarContrasenaUsuario(usuario, contrasena)) {
+                    Obreros obrero = ObrerosDAO.consultarObrerosUsuario(usuario);
+                    new PanelObrero(obrero).setVisible(true);
+                    this.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Error: Usuario o contraseña de obrero incorrectas (Intente de nuevo).");
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(IniciarSesion.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } else if (this.cbxTipoUsuario.getSelectedItem() == "Jefe") {
-            PanelJefe panelJefe = new PanelJefe();
-            panelJefe.setVisible(true);
+            try {
+                JefesDAO JefesDAO = new JefesDAO();
+                String usuario = this.txtUsuario.getText().trim();
+                String contrasena = new String(this.txtContrasenia.getPassword());
+                if (JefesDAO.verificarContrasenaUsuario(usuario, contrasena)) {
+                    Jefes jefe = JefesDAO.consultarJefesUsuario(usuario);
+                    new PanelJefe(jefe).setVisible(true);
+                    this.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Error: Usuario o contraseña de jefe incorrectas (Intente de nuevo).");
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(IniciarSesion.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } else if (this.cbxTipoUsuario.getSelectedItem() == "Cliente") {
-            PanelCliente panelComprador = new PanelCliente();
-            panelComprador.setVisible(true);
+            try {
+                ClientesDAO ClientesDAO = new ClientesDAO();
+                String usuario = this.txtUsuario.getText().trim();
+                String contrasena = new String(this.txtContrasenia.getPassword());
+                if (ClientesDAO.verificarContrasenaUsuario(usuario, contrasena)) {
+                    Clientes cliente = ClientesDAO.consultarClientesUsuario(usuario);
+                    new PanelCliente(cliente).setVisible(true);
+                    this.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Error: Usuario o contraseña de cliente incorrectas (Intente de nuevo).");
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(IniciarSesion.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_btnAceptarActionPerformed
 

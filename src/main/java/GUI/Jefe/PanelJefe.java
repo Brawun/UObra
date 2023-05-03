@@ -4,6 +4,7 @@
  */
 package GUI.Jefe;
 
+import Dominio.Jefes;
 import GUI.Jefe.Facturas.ConsultarFacturas;
 import GUI.Jefe.Facturas.PagarFactura;
 import GUI.Jefe.Facturas.RegistrarFactura;
@@ -23,10 +24,15 @@ import GUI.Jefe.Planos.RegistrarPlano;
  */
 public class PanelJefe extends javax.swing.JFrame {
 
+    // Atributos
+    Jefes jefe;
+    
     /**
      * Creates new form JefeObra
+     * @param jefe
      */
-    public PanelJefe() {
+    public PanelJefe(Jefes jefe) {
+        this.jefe = jefe;
         initComponents();
     }
 

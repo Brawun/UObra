@@ -261,7 +261,7 @@ public class RegistrarCuenta extends javax.swing.JFrame {
                             if (!jefesDAO.verificarUsuarioJefe(this.txtUsuario.getText())) {
                                 if (!this.txtContrasenia.getText().isBlank()) {
                                     if (valida.validarTelefono(this.txtTelefono.getText())) {
-                                        // Se registra un obrero con los datos ingresados y con el salario mínimo, el cual puede ser posteriormente editado por un jefe
+                                        // Se registra un jefe con los datos ingresados
                                         jefesDAO.registrarJefe(new Jefes(this.txtNombre.getText(), this.txtApellidoPaterno.getText(), this.txtApellidoMaterno.getText(), this.txtTelefono.getText(), this.txtContrasenia.getText(), this.txtUsuario.getText()));
                                         JOptionPane.showMessageDialog(null, "Se guardó exitosamente el jefe " + this.txtNombre.getText() + " " + this.txtApellidoPaterno.getText() + " " + this.txtApellidoMaterno.getText() + ". ☺");
                                         this.cbxTipoUsuario.setSelectedItem("Elija uno...");
@@ -303,7 +303,7 @@ public class RegistrarCuenta extends javax.swing.JFrame {
                             if (!clientesDAO.verificarUsuarioCliente(this.txtUsuario.getText())) {
                                 if (!this.txtContrasenia.getText().isBlank()) {
                                     if (valida.validarTelefono(this.txtTelefono.getText())) {
-                                        // Se registra un obrero con los datos ingresados y con el salario mínimo, el cual puede ser posteriormente editado por un jefe
+                                        // Se registra un cliente con los datos ingresados
                                         clientesDAO.registrarCliente(new Clientes(this.txtNombre.getText(), this.txtApellidoPaterno.getText(), this.txtApellidoMaterno.getText(), this.txtTelefono.getText(), this.txtContrasenia.getText(), this.txtUsuario.getText()));
                                         JOptionPane.showMessageDialog(null, "Se guardó exitosamente el cliente " + this.txtNombre.getText() + " " + this.txtApellidoPaterno.getText() + " " + this.txtApellidoMaterno.getText() + ". ☺");
                                         this.cbxTipoUsuario.setSelectedItem("Elija uno...");

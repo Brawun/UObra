@@ -4,16 +4,22 @@
  */
 package GUI.Cliente;
 
+import Dominio.Clientes;
+
 /**
  *
  * @author naely
  */
 public class PanelCliente extends javax.swing.JFrame {
 
+    // Atributos
+    Clientes cliente;
+    
     /**
      * Creates new form Comprador
      */
-    public PanelCliente() {
+    public PanelCliente(Clientes cliente) {
+        this.cliente = cliente;
         initComponents();
     }
 
