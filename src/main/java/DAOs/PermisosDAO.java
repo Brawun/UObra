@@ -6,6 +6,7 @@ package DAOs;
 import Dominio.Jefes;
 import Dominio.Permisos;
 import Enumeradores.TipoPermiso;
+import Herramientas.Encriptador;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
@@ -80,8 +81,11 @@ public class PermisosDAO {
         }
     }
     
-    public void editarTipoPermisoFolio(String folio, TipoPermiso tipo) {
-        if (verificarPermisoFolio(folio)) {
+    public void editarTipoPermisoFolio(String folio, TipoPermiso tipo) throws Exception {
+        Encriptador crypt = new Encriptador();
+        String verifico = folio;
+        verifico = crypt.encrypt(verifico);
+        if (verificarPermisoFolio(verifico)) {
             entityManager.getTransaction().begin();
             Permisos permiso = consultarPermisoFolio(folio);
             if (!permiso.getTipo().equals(tipo)) {
@@ -110,8 +114,11 @@ public class PermisosDAO {
         }
     }
     
-    public void editarFechaConcesionPermisoFolio(String folio, Calendar fechaConcesion) {
-        if (verificarPermisoFolio(folio)) {
+    public void editarFechaConcesionPermisoFolio(String folio, Calendar fechaConcesion) throws Exception {
+        Encriptador crypt = new Encriptador();
+        String verifico = folio;
+        verifico = crypt.encrypt(verifico);
+        if (verificarPermisoFolio(verifico)) {
             entityManager.getTransaction().begin();
             Permisos permiso = consultarPermisoFolio(folio);
             if (!permiso.getFechaConcesion().equals(fechaConcesion)) {
@@ -137,8 +144,11 @@ public class PermisosDAO {
         }
     }
 
-    public void eliminarPermisoFolio(String folio) {
-        if (verificarPermisoFolio(folio)) {
+    public void eliminarPermisoFolio(String folio) throws Exception {
+        Encriptador crypt = new Encriptador();
+        String verifico = folio;
+        verifico = crypt.encrypt(verifico);
+        if (verificarPermisoFolio(verifico)) {
             entityManager.getTransaction().begin();
             Permisos permiso = consultarPermisoFolio(folio);
             entityManager.remove(permiso);
@@ -178,7 +188,9 @@ public class PermisosDAO {
         }
     }
 
-    public Permisos consultarPermisoFolio(String folio) {
+    public Permisos consultarPermisoFolio(String folio) throws Exception {
+        Encriptador crypt = new Encriptador();
+        folio = crypt.encrypt(folio);
         if (verificarPermisoFolio(folio)) {
             entityManager.getTransaction().begin();
             Permisos permiso = entityManager.find(Permisos.class, folio);
@@ -186,7 +198,7 @@ public class PermisosDAO {
             entityManager.close();
             return permiso;
         } else {
-            throw new EntityNotFoundException("No se puede encontrar el permiso con folio: " + folio);
+            throw new EntityNotFoundException("No se puede encontrar el permiso con folio: " + crypt.decrypt(folio));
         }
     }
 

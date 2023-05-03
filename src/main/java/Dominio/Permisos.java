@@ -4,11 +4,13 @@
 package Dominio;
 
 import Enumeradores.TipoPermiso;
+import Escucha.PermisosEscucha;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
@@ -29,6 +31,7 @@ import javax.persistence.TemporalType;
  * @since Pruebas de Software Prof. María de los Ángeles Germán ITSON
  */
 @Entity
+@EntityListeners({PermisosEscucha.class})
 @Table(name = "Permisos")
 public class Permisos implements Serializable {
 
@@ -36,6 +39,7 @@ public class Permisos implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // ENCRIPTAR
     @Column(name = "Folio", unique = true, nullable = false)
     private String folio;
 
@@ -79,6 +83,13 @@ public class Permisos implements Serializable {
         this.folio = folio;
         this.tipo = tipo;
         this.fechaConcesion = fechaConcesion;
+    }
+
+    public Permisos(String folio, TipoPermiso tipo, Calendar fechaConcesion, Jefes jefe) {
+        this.folio = folio;
+        this.tipo = tipo;
+        this.fechaConcesion = fechaConcesion;
+        this.jefe = jefe;
     }
 
     public Long getId() {

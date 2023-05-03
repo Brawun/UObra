@@ -3,10 +3,12 @@
  */
 package Dominio;
 
+import Escucha.ObrerosEscucha;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,6 +23,7 @@ import javax.persistence.Table;
  * @since Pruebas de Software Prof. María de los Ángeles Germán ITSON
  */
 @Entity
+@EntityListeners({ObrerosEscucha.class})
 @Table(name = "Obreros")
 public class Obreros implements Serializable {
 
@@ -28,24 +31,33 @@ public class Obreros implements Serializable {
     @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    
     @Column(name = "Nombre", nullable = true)
     private String nombre;
-
+    
     @Column(name = "ApellidoPaterno", nullable = true)
     private String apellidoPaterno;
-
+    
     @Column(name = "ApellidoMaterno", nullable = true)
     private String apellidoMaterno;
 
-    @Column(name = "Telefono", nullable = true)
+    // ENCRIPTAR
+    @Column(name = "Telefono", nullable = false)
     private String telefono;
+    
+    // ENCRIPTAR
+    @Column(name = "Contraseña", nullable = false, unique = false)
+    private String contrasena;
+    
+    // ENCRIPTAR
+    @Column(name = "Usuario", nullable = false, unique = true)
+    private String usuario;
 
     @Column(name = "DiasTrabajados", nullable = true)
     private Integer diasTrabajados = 0;
-
+    
     @Column(name = "SueldoDiario", nullable = true)
-    private Float sueldoDiario = (float) 200;
+    private Float sueldoDiario;
     
     @Column(name = "PorPagar", nullable = true)
     private Float porPagar = (float) 0;
@@ -91,11 +103,14 @@ public class Obreros implements Serializable {
         this.sueldoDiario = sueldoDiario;
     }
 
-    public Obreros(String nombre, String apellidoPaterno, String apellidoMaterno, String telefono) {
+    public Obreros(String nombre, String apellidoPaterno, String apellidoMaterno, String telefono, String contrasena, String usuario, Float sueldoDiario) {
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
         this.telefono = telefono;
+        this.sueldoDiario = sueldoDiario;
+        this.contrasena = contrasena;
+        this.usuario = usuario;
     }
 
     public Long getId() {
@@ -136,6 +151,22 @@ public class Obreros implements Serializable {
 
     public void setTelefono(String telefono) {
         this.telefono = telefono;
+    }
+
+    public String getContrasena() {
+        return contrasena;
+    }
+
+    public void setContrasena(String contrasena) {
+        this.contrasena = contrasena;
+    }
+
+    public String getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
     }
 
     public Integer getDiasTrabajados() {
@@ -205,6 +236,6 @@ public class Obreros implements Serializable {
 
     @Override
     public String toString() {
-        return "Obreros{" + "id=" + id + ", nombre=" + nombre + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", telefono=" + telefono + ", diasTrabajados=" + diasTrabajados + ", sueldoDiario=" + sueldoDiario + ", porPagar=" + porPagar + ", Pagado=" + Pagado + ", pagos=" + pagos + ", obras=" + obras + '}';
+        return "Obreros{" + "id=" + id + ", nombre=" + nombre + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", telefono=" + telefono + ", contrasena=" + contrasena + ", usuario=" + usuario + ", diasTrabajados=" + diasTrabajados + ", sueldoDiario=" + sueldoDiario + ", porPagar=" + porPagar + ", Pagado=" + Pagado + ", pagos=" + pagos + ", obras=" + obras + '}';
     }
 }

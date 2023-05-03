@@ -5,10 +5,12 @@ package Dominio;
 
 import Enumeradores.EstadoFactura;
 import Enumeradores.MetodoPago;
+import Escucha.FacturasEscucha;
 import java.io.Serializable;
 import java.util.Calendar;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
@@ -28,6 +30,7 @@ import javax.persistence.TemporalType;
  * @since Pruebas de Software Prof. María de los Ángeles Germán ITSON
  */
 @Entity
+@EntityListeners({FacturasEscucha.class})
 @Table(name = "Facturas")
 public class Facturas implements Serializable {
 
@@ -38,7 +41,7 @@ public class Facturas implements Serializable {
 
     @Column(name = "Monto", nullable = false)
     private Float monto;
-
+    
     @Column(name = "Descripcion", nullable = false)
     private String descripcion;
 
@@ -85,9 +88,9 @@ public class Facturas implements Serializable {
         this.jefe = jefe;
     }
 
-    public Facturas(Float monto, Calendar fecha, Jefes jefe) {
+    public Facturas(Float monto, String descripcion, Jefes jefe) {
         this.monto = monto;
-        this.fechaCreada = fecha;
+        this.descripcion = descripcion;
         this.jefe = jefe;
     }
 

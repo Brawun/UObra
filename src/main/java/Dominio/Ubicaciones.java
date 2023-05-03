@@ -4,11 +4,13 @@
 package Dominio;
 
 import Enumeradores.TipoUbicacion;
+import Escucha.UbicacionesEscucha;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
@@ -17,6 +19,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -28,6 +31,8 @@ import javax.persistence.TemporalType;
  * @since Pruebas de Software Prof. María de los Ángeles Germán ITSON
  */
 @Entity
+@EntityListeners({UbicacionesEscucha.class})
+@Table(name = "Ubicaciones")
 public class Ubicaciones implements Serializable {
 
     @Id
@@ -37,7 +42,7 @@ public class Ubicaciones implements Serializable {
 
     @Column(name = "EstaDisponible", nullable = false)
     private Boolean disponible;
-
+    
     @Column(name = "Direccion", nullable = false)
     private String direccion;
 

@@ -3,6 +3,7 @@
  */
 package DAOs;
 
+import Dominio.Clientes;
 import Dominio.Obras;
 import Dominio.ObrasObrero;
 import Dominio.Obreros;
@@ -104,9 +105,14 @@ public class ObrasDAO {
     public void iniciarObra(Long id) {
         if (verificarObra(id)) {
             entityManager.getTransaction().begin();
+            ClientesDAO ClientesDAO = new ClientesDAO();
             Obras obra = consultarObra(id);
             obra.setEstado(EstadoObra.DESARROLLO);
             obra.setFechaInicio(fecha.fechaAhora());
+            // Se le suma la deuda a cliente al iniciar la obra
+            Clientes cliente = ClientesDAO.consultarCliente(obra.getCliente().getId());
+            cliente.setDeudaTotal(cliente.getDeudaTotal() + obra.getCostoTotal());
+            entityManager.merge(cliente);
             entityManager.merge(obra);
             entityManager.getTransaction().commit();
             entityManager.close();
@@ -174,11 +180,16 @@ public class ObrasDAO {
     public void restarDeudaObra(Long id, Float monto) {
         if (verificarObra(id)) {
             entityManager.getTransaction().begin();
+            ClientesDAO ClientesDAO = new ClientesDAO();
             Obras obra = consultarObra(id);
             obra.setDeuda(obra.getDeuda() - monto);
             if (obra.getDeuda() <= (float) 0) {
                 obra = pagarObraObj(obra);
             }
+            // Se le resta a la deuda de cliente igualmente
+            Clientes cliente = ClientesDAO.consultarCliente(obra.getCliente().getId());
+            cliente.setDeudaTotal(cliente.getDeudaTotal() - monto);
+            entityManager.merge(cliente);
             entityManager.merge(obra);
             entityManager.getTransaction().commit();
             entityManager.close();
@@ -191,11 +202,16 @@ public class ObrasDAO {
     public void sumarDeudaObra(Long id, Float monto) {
         if (verificarObra(id)) {
             entityManager.getTransaction().begin();
+            ClientesDAO ClientesDAO = new ClientesDAO();
             Obras obra = consultarObra(id);
             obra.setDeuda(obra.getDeuda() + monto);
             if (obra.getDeuda() > (float) 0) {
                 obra = endeudarObraObj(obra);
             }
+            // Se le suma a la deuda de cliente igualmente
+            Clientes cliente = ClientesDAO.consultarCliente(obra.getCliente().getId());
+            cliente.setDeudaTotal(cliente.getDeudaTotal() + monto);
+            entityManager.merge(cliente);
             entityManager.merge(obra);
             entityManager.getTransaction().commit();
             entityManager.close();
@@ -208,6 +224,7 @@ public class ObrasDAO {
     public void sumarCostoArranqueObra(Long id, Float monto) {
         if (verificarObra(id)) {
             entityManager.getTransaction().begin();
+            ClientesDAO ClientesDAO = new ClientesDAO();
             Obras obra = consultarObra(id);
             obra.setCostoArranque(obra.getCostoArranque() + monto);
             obra.setCostoTotal(obra.getCostoTotal() + monto);
@@ -215,6 +232,10 @@ public class ObrasDAO {
             if (obra.getDeuda() > (float) 0) {
                 obra = endeudarObraObj(obra);
             }
+            // Se le suma a la deuda de cliente igualmente
+            Clientes cliente = ClientesDAO.consultarCliente(obra.getCliente().getId());
+            cliente.setDeudaTotal(cliente.getDeudaTotal() + monto);
+            entityManager.merge(cliente);
             entityManager.merge(obra);
             entityManager.getTransaction().commit();
             entityManager.close();
@@ -227,6 +248,7 @@ public class ObrasDAO {
     public void restarCostoArranqueObra(Long id, Float monto) {
         if (verificarObra(id)) {
             entityManager.getTransaction().begin();
+            ClientesDAO ClientesDAO = new ClientesDAO();
             Obras obra = consultarObra(id);
             obra.setCostoArranque(obra.getCostoArranque() - monto);
             obra.setCostoTotal(obra.getCostoTotal() - monto);
@@ -234,6 +256,10 @@ public class ObrasDAO {
             if (obra.getDeuda() <= (float) 0) {
                 obra = pagarObraObj(obra);
             }
+            // Se le resta a la deuda de cliente igualmente
+            Clientes cliente = ClientesDAO.consultarCliente(obra.getCliente().getId());
+            cliente.setDeudaTotal(cliente.getDeudaTotal() - monto);
+            entityManager.merge(cliente);
             entityManager.merge(obra);
             entityManager.getTransaction().commit();
             entityManager.close();
@@ -246,6 +272,7 @@ public class ObrasDAO {
     public void sumarInversionObra(Long id, Float monto) {
         if (verificarObra(id)) {
             entityManager.getTransaction().begin();
+            ClientesDAO ClientesDAO = new ClientesDAO();
             Obras obra = consultarObra(id);
             obra.setInversion(obra.getInversion() + monto);
             obra.setCostoTotal(obra.getCostoTotal() + monto);
@@ -253,6 +280,10 @@ public class ObrasDAO {
             if (obra.getDeuda() > (float) 0) {
                 obra = endeudarObraObj(obra);
             }
+            // Se le suma a la deuda de cliente igualmente
+            Clientes cliente = ClientesDAO.consultarCliente(obra.getCliente().getId());
+            cliente.setDeudaTotal(cliente.getDeudaTotal() + monto);
+            entityManager.merge(cliente);
             entityManager.merge(obra);
             entityManager.getTransaction().commit();
             entityManager.close();
@@ -265,6 +296,7 @@ public class ObrasDAO {
     public void restarInversionObra(Long id, Float monto) {
         if (verificarObra(id)) {
             entityManager.getTransaction().begin();
+            ClientesDAO ClientesDAO = new ClientesDAO();
             Obras obra = consultarObra(id);
             obra.setInversion(obra.getInversion() - monto);
             obra.setCostoTotal(obra.getCostoTotal() - monto);
@@ -272,6 +304,10 @@ public class ObrasDAO {
             if (obra.getDeuda() <= (float) 0) {
                 obra = pagarObraObj(obra);
             }
+            // Se le resta a la deuda de cliente igualmente
+            Clientes cliente = ClientesDAO.consultarCliente(obra.getCliente().getId());
+            cliente.setDeudaTotal(cliente.getDeudaTotal() - monto);
+            entityManager.merge(cliente);
             entityManager.merge(obra);
             entityManager.getTransaction().commit();
             entityManager.close();
@@ -359,6 +395,7 @@ public class ObrasDAO {
             entityManager.getTransaction().begin();
             // DAOs
             PagosDAO pagosDAO = new PagosDAO();
+            ClientesDAO ClientesDAO = new ClientesDAO();
             // Objetos
             Pagos pago = pagosDAO.consultarPago(idPago);
             Obras obra = consultarObra(id);
@@ -369,7 +406,11 @@ public class ObrasDAO {
             if (obra.getDeuda() <= (float) 0) {
                 obra = pagarObraObj(obra);
             }
-            // Se actualiza la obra
+            // Se actualiza la deuda de cliente restando el monto del pago asignado
+            Clientes cliente = ClientesDAO.consultarCliente(obra.getCliente().getId());
+            cliente.setDeudaTotal(cliente.getDeudaTotal() - pago.getMonto());
+            // Se actualiza la obra y cliente
+            entityManager.merge(cliente);
             entityManager.merge(obra);
             entityManager.getTransaction().commit();
             entityManager.close();
@@ -448,19 +489,25 @@ public class ObrasDAO {
         if (verificarObra(id)) {
             entityManager.getTransaction().begin();
             // DAOs
-            PagosDAO pagosDAO = new PagosDAO();
+            PagosDAO PagosDAO = new PagosDAO();
+            ClientesDAO ClientesDAO = new ClientesDAO();
             // Objetos
-            Pagos pago = pagosDAO.consultarPago(idPago);
+            Pagos pago = PagosDAO.consultarPago(idPago);
             Obras obra = consultarObra(id);
-            // Se agrega el pago a la obra en particular
+            // Se elimina el pago de la obra en particular
             obra.getPagos().remove(pago);
+            // Se elimina el pago de la base de datos
+            PagosDAO.eliminarPago(idPago);
             // Se agrega a la deuda el pago eliminado
             obra.setDeuda(obra.getDeuda() + pago.getMonto());
             if (obra.getDeuda() > (float) 0) {
                 obra = endeudarObraObj(obra);
             }
-            // Se actualiza la obra
-            entityManager.merge(obra);
+            // Se actualiza la deuda de cliente sumando el monto del pago asignado
+            Clientes cliente = ClientesDAO.consultarCliente(obra.getCliente().getId());
+            cliente.setDeudaTotal(cliente.getDeudaTotal() + pago.getMonto());
+            // Se actualiza la obra y cliente
+            entityManager.merge(cliente);
             entityManager.getTransaction().commit();
             entityManager.close();
         } else {

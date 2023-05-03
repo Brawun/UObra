@@ -4,11 +4,13 @@
 package Dominio;
 
 import Enumeradores.EstadoObra;
+import Escucha.ObrasEscucha;
 import java.util.List;
 import java.io.Serializable;
 import java.util.Calendar;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
@@ -31,6 +33,7 @@ import javax.persistence.TemporalType;
  * @since Pruebas de Software Prof. María de los Ángeles Germán ITSON
  */
 @Entity
+@EntityListeners({ObrasEscucha.class})
 @Table(name = "Obras")
 public class Obras implements Serializable {
 

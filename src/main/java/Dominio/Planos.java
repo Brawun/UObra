@@ -5,11 +5,13 @@ package Dominio;
 
 import Enumeradores.Escala;
 import Enumeradores.TipoPlano;
+import Escucha.PlanosEscucha;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
@@ -30,6 +32,7 @@ import javax.persistence.TemporalType;
  * @since Pruebas de Software Prof. María de los Ángeles Germán ITSON
  */
 @Entity
+@EntityListeners({PlanosEscucha.class})
 @Table(name = "Planos")
 public class Planos implements Serializable {
 
@@ -38,6 +41,7 @@ public class Planos implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // ENCRIPTAR
     @Column(name = "Folio", unique = true, nullable = false)
     private String folio;
 
@@ -84,6 +88,14 @@ public class Planos implements Serializable {
         this.tipo = tipo;
         this.escala = escala;
         this.fechaRealizacion = fechaRealizacion;
+    }
+
+    public Planos(String folio, TipoPlano tipo, Escala escala, Calendar fechaRealizacion, Jefes jefe) {
+        this.folio = folio;
+        this.tipo = tipo;
+        this.escala = escala;
+        this.fechaRealizacion = fechaRealizacion;
+        this.jefe = jefe;
     }
 
     public Long getId() {

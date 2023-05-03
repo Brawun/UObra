@@ -6,6 +6,7 @@ package DAOs;
 import Dominio.Clientes;
 import Dominio.Ubicaciones;
 import Enumeradores.TipoUbicacion;
+import Herramientas.Encriptador;
 import Herramientas.Fecha;
 import java.util.Calendar;
 import java.util.LinkedList;
@@ -263,8 +264,9 @@ public class UbicacionesDAO {
     // mayor o igual a la dada, tengan un cierto largo dado, un ancho cierto 
     // dado, una direccion parecida cierta dada y hayan sido registradas por el 
     // cliente dado
-    public List<Ubicaciones> consultarUbicacionesOcupacion(Calendar periodoInicio, Calendar periodoFin, Boolean disponible, TipoUbicacion tipo, Float ancho, Float largo, Float area, String direccion, Clientes cliente) {
+    public List<Ubicaciones> consultarUbicacionesOcupacion(Calendar periodoInicio, Calendar periodoFin, Boolean disponible, TipoUbicacion tipo, Float ancho, Float largo, Float area, String direccion, Clientes cliente) throws Exception {
         entityManager.getTransaction().begin();
+        Encriptador crypt = new Encriptador();
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Ubicaciones> criteria = criteriaBuilder.createQuery(Ubicaciones.class);
         Root<Ubicaciones> root = criteria.from(Ubicaciones.class);

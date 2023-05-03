@@ -7,6 +7,7 @@ import Dominio.Jefes;
 import Dominio.Planos;
 import Enumeradores.Escala;
 import Enumeradores.TipoPlano;
+import Herramientas.Encriptador;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
@@ -81,8 +82,11 @@ public class PlanosDAO {
         }
     }
     
-    public void editarFechaRealizacionPlanoFolio(String folio, Calendar fechaRealizacion) {
-        if (verificarPlanoFolio(folio)) {
+    public void editarFechaRealizacionPlanoFolio(String folio, Calendar fechaRealizacion) throws Exception {
+        Encriptador crypt = new Encriptador();
+        String verifico = folio;
+        verifico = crypt.encrypt(verifico);
+        if (verificarPlanoFolio(verifico)) {
             entityManager.getTransaction().begin();
             Planos plano = consultarPlanoFolio(folio);
             if (!plano.getFechaRealizacion().equals(fechaRealizacion)) {
@@ -111,8 +115,11 @@ public class PlanosDAO {
         }
     }
     
-    public void editarTipoPlanoFolio(String folio, TipoPlano tipo) {
-        if (verificarPlanoFolio(folio)) {
+    public void editarTipoPlanoFolio(String folio, TipoPlano tipo) throws Exception {
+        Encriptador crypt = new Encriptador();
+        String verifico = folio;
+        verifico = crypt.encrypt(verifico);
+        if (verificarPlanoFolio(verifico)) {
             entityManager.getTransaction().begin();
             Planos plano = consultarPlanoFolio(folio);
             if (!plano.getTipo().equals(tipo)) {
@@ -141,8 +148,11 @@ public class PlanosDAO {
         }
     }
     
-    public void editarEscalaFolio(String folio, Escala escala) {
-        if (verificarPlanoFolio(folio)) {
+    public void editarEscalaFolio(String folio, Escala escala) throws Exception {
+        Encriptador crypt = new Encriptador();
+        String verifico = folio;
+        verifico = crypt.encrypt(verifico);
+        if (verificarPlanoFolio(verifico)) {
             entityManager.getTransaction().begin();
             Planos plano = consultarPlanoFolio(folio);
             if (!plano.getEscala().equals(escala)) {
@@ -168,8 +178,11 @@ public class PlanosDAO {
         }
     }
     
-    public void eliminarPlano(String folio) {
-        if (verificarPlanoFolio(folio)) {
+    public void eliminarPlanoFolio(String folio) throws Exception {
+        Encriptador crypt = new Encriptador();
+        String verifico = folio;
+        verifico = crypt.encrypt(verifico);
+        if (verificarPlanoFolio(verifico)) {
             entityManager.getTransaction().begin();
             Planos plano = consultarPlanoFolio(folio);
             entityManager.remove(plano);
@@ -210,7 +223,9 @@ public class PlanosDAO {
         }
     }
     
-    public Planos consultarPlanoFolio(String folio) {
+    public Planos consultarPlanoFolio(String folio) throws Exception {
+        Encriptador crypt = new Encriptador();
+        folio = crypt.encrypt(folio);
         if (verificarPlanoFolio(folio)) {
             entityManager.getTransaction().begin();
             Planos plano = entityManager.find(Planos.class, folio);
@@ -218,7 +233,7 @@ public class PlanosDAO {
             entityManager.close();
             return plano;
         } else {
-            throw new EntityNotFoundException("No se puede encontrar el plano con folio: " + folio);
+            throw new EntityNotFoundException("No se puede encontrar el plano con folio: " + crypt.decrypt(folio));
         }
     }
 

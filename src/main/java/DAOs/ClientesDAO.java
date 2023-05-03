@@ -7,6 +7,7 @@ import Dominio.Clientes;
 import Dominio.Obras;
 import Dominio.Pagos;
 import Dominio.Ubicaciones;
+import Herramientas.Encriptador;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -50,6 +51,112 @@ public class ClientesDAO {
             entityManager.getTransaction().rollback();
         } finally {
             entityManager.close();
+        }
+    }
+
+    // Métodos de inicio de sesión
+    
+    /**
+     * Este método regresa un cliente, el cuál es utilizado para generar el inicio
+     * de sesión deseado.
+     *
+     * @param usuario usuario ingresado. 
+     * @param contrasena constraseña ingresada.
+     * @return Cliente si el inicio de sesión fue existoso, nulo en caso contrario.
+     * @throws Exception en caso que haya una excepción con la encriptación.
+     */
+    public Clientes iniciarSesionCliente(String usuario, String contrasena) throws Exception {
+        String verifico = usuario;
+        String consulta = usuario;
+        if (verificarUsuarioCliente(verifico)) {
+            entityManager.getTransaction().begin();
+            // Cliente a regresar inicializado
+            Clientes cliente = null;
+            if (this.verificarContrasenaUsuario(usuario, contrasena)) {
+                // Se busca cliente a regresar
+                cliente = this.consultarClientesUsuario(consulta);
+            }
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return cliente;
+        } else {
+            throw new EntityNotFoundException("No se puede encontrar el cliente con usuario: " + usuario);
+        }
+    }
+
+    /**
+     * Método para verificar que un usuario exista en la base de datos de
+     * clientes.
+     *
+     * @param usuario usuario a buscar en la base de datos
+     * @return Verdadero si el usuario es encontrado, falso en caso contrario
+     * @throws Exception en caso que haya una excepción con la encriptación.
+     */
+    public boolean verificarUsuarioCliente(String usuario) throws Exception {
+        entityManager.getTransaction().begin();
+        // Encriptador/Desencriptador
+        Encriptador crypt = new Encriptador();
+        // Se encripta el usuario a buscar antes de buscarlo ya que en la base de datos
+        // se encuentran todos encriptados
+        String usuarioEncriptado = crypt.encrypt(usuario);
+        // Verifica si el usuario ingresado existe en la base de datos de clientes
+        Clientes cliente = entityManager.find(Clientes.class, usuarioEncriptado);
+        entityManager.getTransaction().commit();
+        entityManager.close();
+        return cliente != null;
+    }
+
+    /**
+     * Método para buscar un usuario en la base de datos de clientes.
+     *
+     * @param usuario usuario a buscar en la base de datos
+     * @return Verdadero si el usuario es encontrado, falso en caso contrario
+     * @throws Exception en caso que haya una excepción con la encriptación.
+     */
+    public Clientes consultarClientesUsuario(String usuario) throws Exception {
+        String verifico = usuario;
+        if (verificarUsuarioCliente(verifico)) {
+            entityManager.getTransaction().begin();
+            // Encriptador/Desencriptador
+            Encriptador crypt = new Encriptador();
+            // Se encripta el usuario a buscar antes de buscarlo ya que en la base de datos
+            // se encuentran todos encriptados
+            String usuarioEncriptado = crypt.encrypt(usuario);
+            // Consulta el cliente con el usuario dado de la base de datos
+            Clientes cliente = entityManager.find(Clientes.class, usuarioEncriptado);
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return cliente;
+        } else {
+            throw new EntityNotFoundException("No se puede encontrar el cliente con usuario: " + usuario);
+        }
+    }
+
+    /**
+     * Método para validar un inicio de sesión, correspondiendo un usuario y 
+     * una contraseña.
+     *
+     * @param usuario usuario al que le puede corresponder la contraseña
+     * @param contrasena contraseña a la que se verificará si es la que corresponde a usuario
+     * @return Verdadero si el usuario y la contraseña corresponden, falso en caso contrario
+     * @throws Exception en caso que haya una excepción con la encriptación.
+     */
+    public boolean verificarContrasenaUsuario(String usuario, String contrasena) throws Exception {
+        String verifico = usuario;
+        if (verificarUsuarioCliente(verifico)) {
+            entityManager.getTransaction().begin();
+            // Encriptador/Desencriptador
+            Encriptador crypt = new Encriptador();
+            // Se encripta el usuario y contraseña a buscar antes de buscarlo ya 
+            // que en la base de datos se encuentran todos encriptados
+            String contrasenaEncriptada = crypt.encrypt(contrasena);
+            // Consulta el cliente con el usuario dado de la base de datos
+            Clientes cliente = this.consultarClientesUsuario(usuario);
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return cliente.getContrasena().equals(contrasenaEncriptada);
+        } else {
+            throw new EntityNotFoundException("No se puede encontrar el cliente con usuario: " + usuario);
         }
     }
 

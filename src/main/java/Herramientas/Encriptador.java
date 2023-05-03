@@ -56,7 +56,7 @@ public class Encriptador {
     }
 
     /**
-     * Método para encriptar un String, con el algoritmo AES.
+     * Método para encriptar un String, con el algoritmo DES.
      *
      * @param sinEncriptar Mensaje a encriptar.
      * @return mensaje encriptado
@@ -79,7 +79,7 @@ public class Encriptador {
     }
 
     /**
-     * Método para desencriptar un String, con el algoritmo AES.
+     * Método para desencriptar un String, con el algoritmo DES.
      *
      * @param encriptado Mensaje encriptado.
      * @return mensaje desencriptado
@@ -100,4 +100,28 @@ public class Encriptador {
             return desencriptado; // Se regresa el mensaje desencriptado
         }
     }
+    
+//    /**
+//     * Método para desencriptar utilizando un Path, con el algoritmo DES.
+//     *
+//     * @param encriptado Mensaje encriptado.
+//     * @return mensaje desencriptado
+//     */
+//    public Path<Object> decrypt(Path<Object> encriptado) {
+//        if (encriptado == null) {
+//            return null;
+//        } else {
+//            String desencriptado = null;
+//            String encripto = encriptado.toString();
+//            try {
+//                cipher.init(Cipher.DECRYPT_MODE, key);
+//                byte[] bytes = Base64.decodeBase64(encripto.getBytes());
+//                byte[] plainText = cipher.doFinal(bytes);
+//                desencriptado = new String(plainText);
+//            } catch (InvalidKeyException | BadPaddingException | IllegalBlockSizeException e) {
+//                Logger.getLogger(Encriptador.class.getName()).log(Level.SEVERE, null, e);
+//            }
+//            return desencriptado; // Se regresa el mensaje desencriptado
+//        }
+//    }
 }

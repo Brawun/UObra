@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * Esta clase permite encapsular herramientas útiles a la hora de querer
@@ -69,5 +70,11 @@ public class Fecha {
 
         // Retornar la diferencia en días
         return diferenciaDias;
+    }
+    
+    public Calendar crearFecha(Integer dia, Integer mes, Integer anho) {
+        // Se desplaza el mes -1
+        mes = mes - 1;
+        return new GregorianCalendar(anho, mes, dia);
     }
 }

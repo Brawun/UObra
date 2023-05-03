@@ -4,10 +4,12 @@
 package Dominio;
 
 import Enumeradores.MetodoPago;
+import Escucha.PagosEscucha;
 import java.io.Serializable;
 import java.util.Calendar;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
@@ -27,6 +29,7 @@ import javax.persistence.TemporalType;
  * @since Pruebas de Software Prof. María de los Ángeles Germán ITSON
  */
 @Entity
+@EntityListeners({PagosEscucha.class})
 @Table(name = "Pagos")
 public class Pagos implements Serializable {
 

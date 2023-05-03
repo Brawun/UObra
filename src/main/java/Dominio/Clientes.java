@@ -3,10 +3,12 @@
  */
 package Dominio;
 
+import Escucha.ClientesEscucha;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,6 +23,7 @@ import javax.persistence.Table;
  * @since Pruebas de Software Prof. María de los Ángeles Germán ITSON
  */
 @Entity
+@EntityListeners({ClientesEscucha.class})
 @Table(name = "Clientes")
 public class Clientes implements Serializable {
 
@@ -28,19 +31,28 @@ public class Clientes implements Serializable {
     @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    
     @Column(name = "Nombre", nullable = true)
     private String nombre;
-
+    
     @Column(name = "ApellidoPaterno", nullable = true)
     private String apellidoPaterno;
-
+    
     @Column(name = "ApellidoMaterno", nullable = true)
     private String apellidoMaterno;
 
-    @Column(name = "Telefono", nullable = true)
+    // ENCRIPTAR
+    @Column(name = "Telefono", nullable = false)
     private String telefono;
-
+    
+    // ENCRIPTAR
+    @Column(name = "Contraseña", nullable = false, unique = false)
+    private String contrasena;
+    
+    // ENCRIPTAR
+    @Column(name = "Usuario", nullable = false, unique = true)
+    private String usuario;
+    
     @Column(name = "DeudaTotal", nullable = true)
     private Float deudaTotal = (float) 0;
 
@@ -59,12 +71,14 @@ public class Clientes implements Serializable {
     public Clientes() {
     }
 
-    public Clientes(Long id, String nombre, String apellidoPaterno, String apellidoMaterno, String telefono, List<Obras> obras, List<Ubicaciones> ubicaciones, List<Pagos> pagos) {
+    public Clientes(Long id, String nombre, String apellidoPaterno, String apellidoMaterno, String telefono, String contrasena, String usuario, List<Obras> obras, List<Ubicaciones> ubicaciones, List<Pagos> pagos) {
         this.id = id;
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
         this.telefono = telefono;
+        this.contrasena = contrasena;
+        this.usuario = usuario;
         this.obras = obras;
         this.ubicaciones = ubicaciones;
         this.pagos = pagos;
@@ -78,11 +92,13 @@ public class Clientes implements Serializable {
         this.telefono = telefono;
     }
 
-    public Clientes(String nombre, String apellidoPaterno, String apellidoMaterno, String telefono) {
+    public Clientes(String nombre, String apellidoPaterno, String apellidoMaterno, String telefono, String contrasena, String usuario) {
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
         this.telefono = telefono;
+        this.contrasena = contrasena;
+        this.usuario = usuario;
     }
 
     public Long getId() {
@@ -115,6 +131,22 @@ public class Clientes implements Serializable {
 
     public void setApellidoMaterno(String apellidoMaterno) {
         this.apellidoMaterno = apellidoMaterno;
+    }
+
+    public String getContrasena() {
+        return contrasena;
+    }
+
+    public void setContrasena(String contrasena) {
+        this.contrasena = contrasena;
+    }
+    
+    public String getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
     }
 
     public String getTelefono() {
@@ -176,6 +208,6 @@ public class Clientes implements Serializable {
 
     @Override
     public String toString() {
-        return "Clientes{" + "id=" + id + ", nombre=" + nombre + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", telefono=" + telefono + ", deudaTotal=" + deudaTotal + ", obras=" + obras + ", ubicaciones=" + ubicaciones + ", pagos=" + pagos + '}';
+        return "Clientes{" + "id=" + id + ", nombre=" + nombre + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", telefono=" + telefono + ", contrasena=" + contrasena + ", usuario=" + usuario + ", deudaTotal=" + deudaTotal + ", obras=" + obras + ", ubicaciones=" + ubicaciones + ", pagos=" + pagos + '}';
     }
 }

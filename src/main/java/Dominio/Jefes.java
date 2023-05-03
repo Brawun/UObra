@@ -3,10 +3,12 @@
  */
 package Dominio;
 
+import Escucha.JefesEscucha;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,6 +23,7 @@ import javax.persistence.Table;
  * @since Pruebas de Software Prof. María de los Ángeles Germán ITSON
  */
 @Entity
+@EntityListeners({JefesEscucha.class})
 @Table(name = "Jefes")
 public class Jefes implements Serializable {
 
@@ -28,18 +31,27 @@ public class Jefes implements Serializable {
     @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    
     @Column(name = "Nombre", nullable = true)
     private String nombre;
-
+    
     @Column(name = "ApellidoPaterno", nullable = true)
     private String apellidoPaterno;
-
+    
     @Column(name = "ApellidoMaterno", nullable = true)
     private String apellidoMaterno;
 
-    @Column(name = "Telefono", nullable = true)
+    // ENCRIPTAR
+    @Column(name = "Telefono", nullable = false)
     private String telefono;
+    
+    // ENCRIPTAR
+    @Column(name = "Contraseña", nullable = false, unique = false)
+    private String contrasena;
+    
+    // ENCRIPTAR
+    @Column(name = "Usuario", nullable = false, unique = true)
+    private String usuario;
 
     // Un jefe puede registrar muchas facturas
     @OneToMany(mappedBy = "jefe")
@@ -60,23 +72,27 @@ public class Jefes implements Serializable {
     public Jefes() {
     }
 
-    public Jefes(Long id, String nombre, String apellidoPaterno, String apellidoMaterno, String telefono, List<Facturas> facturas, List<Obras> obras, List<Permisos> permisos, List<Planos> planos) {
+    public Jefes(Long id, String nombre, String apellidoPaterno, String apellidoMaterno, String telefono, String contrasena, String usuario, List<Facturas> facturas, List<Obras> obras, List<Permisos> permisos, List<Planos> planos) {
         this.id = id;
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
         this.telefono = telefono;
+        this.contrasena = contrasena;
+        this.usuario = usuario;
         this.facturas = facturas;
         this.obras = obras;
         this.permisos = permisos;
         this.planos = planos;
     }
 
-    public Jefes(String nombre, String apellidoPaterno, String apellidoMaterno, String telefono) {
+    public Jefes(String nombre, String apellidoPaterno, String apellidoMaterno, String telefono, String contrasena, String usuario) {
         this.nombre = nombre;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
         this.telefono = telefono;
+        this.contrasena = contrasena;
+        this.usuario = usuario;
     }
 
     public Long getId() {
@@ -117,6 +133,22 @@ public class Jefes implements Serializable {
 
     public void setTelefono(String telefono) {
         this.telefono = telefono;
+    }
+
+    public String getContrasena() {
+        return contrasena;
+    }
+
+    public void setContrasena(String contrasena) {
+        this.contrasena = contrasena;
+    }
+
+    public String getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
     }
 
     public List<Facturas> getFacturas() {
@@ -170,6 +202,6 @@ public class Jefes implements Serializable {
 
     @Override
     public String toString() {
-        return "Jefes{" + "id=" + id + ", nombre=" + nombre + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", telefono=" + telefono + ", facturas=" + facturas + ", obras=" + obras + ", permisos=" + permisos + ", planos=" + planos + '}';
+        return "Jefes{" + "id=" + id + ", nombre=" + nombre + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", telefono=" + telefono + ", contrasena=" + contrasena + ", usuario=" + usuario + ", facturas=" + facturas + ", obras=" + obras + ", permisos=" + permisos + ", planos=" + planos + '}';
     }
 }
