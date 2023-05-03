@@ -25,7 +25,7 @@ public class Validadores {
      * @return Verdadero si el teléfono tiene el formato correcto, falso en caso
      * contrario
      */
-    public static boolean validarTelefono(String telefono) {
+    public boolean validarTelefono(String telefono) {
         // Se remueven espacios en blanco
         CharSequence cadena = telefono.trim();
         // Expresión regular

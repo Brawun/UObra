@@ -3,10 +3,7 @@
  */
 package Principal;
 
-import Dominio.Clientes;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+import GUI.Acceso.IniciarSesion;
 
 /**
  * Esta clase principal permite ejecutra el sistema UObra.
@@ -24,8 +21,8 @@ public class UObra {
      */
     public static void main(String[] args) {
         // Se abre el formulario de inicio de sesión
-//        IniciarSesion inicioSesion = new IniciarSesion();
-//        inicioSesion.setVisible(true);
+        IniciarSesion inicioSesion = new IniciarSesion();
+        inicioSesion.setVisible(true);
         // Nombre BD: UObra
         // Contraseña: 1234
     }

@@ -6,7 +6,6 @@ package DAOs;
 import Dominio.ObrasObrero;
 import Herramientas.Fecha;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -26,49 +25,24 @@ import javax.persistence.TypedQuery;
 public class ObrasObreroDAO {
 
     /**
-     * Se establece una conexión con la base de datos UObra mediante JPA,
-     * creando un objeto EntityManager que puede ser utilizado para realizar
-     * operaciones de creación, lectura, actualización y eliminación en la base
-     * de datos utilizando el lenguaje JPQL.
-     */
-    EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
-    EntityManager entityManager = managerFactory.createEntityManager();
-    
-    /**
      * Llamada a paquete de Herramientas para manipular fechas.
      */
-    Fecha fecha = new Fecha(); 
-
-    /**
-     * Método para persistir la entidad de la clase a la base de datos, en caso
-     * que no se pueda realizar dicha transacción se cancela el guardado de la
-     * entidad.
-     *
-     * @param object Objeto a guardar en la base de datos perteneciente a la
-     * clase
-     */
-    public void persist(Object object) {
-        entityManager.getTransaction().begin();
-        try {
-            entityManager.persist(object);
-            entityManager.getTransaction().commit();
-        } catch (Exception e) {
-            entityManager.getTransaction().rollback();
-        } finally {
-            entityManager.close();
-        }
-    }
+    Fecha fecha = new Fecha();
 
     // Métodos de acceso
     public void registrarObraObrero(ObrasObrero obrasObrero) {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        this.persist(obrasObrero);
+        entityManager.persist(obrasObrero);
         entityManager.getTransaction().commit();
         entityManager.close();
     }
 
     public void eliminarObrasObrero(Long id) {
         if (verificarObrasObrero(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             ObrasObrero obrasObrero = consultarObrasObrero(id);
             entityManager.remove(obrasObrero);
@@ -81,6 +55,8 @@ public class ObrasObreroDAO {
 
     public void desactivarObrasObrero(Long id) {
         if (verificarObrasObrero(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             ObrasObrero obrasObrero = consultarObrasObrero(id);
             // Se cambia el estado a inactivo
@@ -100,6 +76,8 @@ public class ObrasObreroDAO {
 
     public void pagarObrasObrero(Long id) {
         if (verificarObrasObrero(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             ObrerosDAO obrerosDAO = new ObrerosDAO();
             ObrasObrero obrasObrero = consultarObrasObrero(id);
@@ -118,6 +96,8 @@ public class ObrasObreroDAO {
 
     public void desactivarYPagarObrasObrero(Long id) {
         if (verificarObrasObrero(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             ObrerosDAO obrerosDAO = new ObrerosDAO();
             ObrasObrero obrasObrero = consultarObrasObrero(id);
@@ -143,6 +123,8 @@ public class ObrasObreroDAO {
 
     public void activarObrasObrero(Long id) {
         if (verificarObrasObrero(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             ObrasObrero obrasObrero = consultarObrasObrero(id);
             obrasObrero.setActivo(true);
@@ -160,6 +142,8 @@ public class ObrasObreroDAO {
 
     public void sumarDiasTrabajadosObrasObrero(Long id, Integer dias) {
         if (verificarObrasObrero(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             ObrasObrero obrasObrero = consultarObrasObrero(id);
             obrasObrero.setDiasTrabajados(obrasObrero.getDiasTrabajados() + dias);
@@ -173,6 +157,8 @@ public class ObrasObreroDAO {
 
     public void restarDiasTrabajadosObrasObrero(Long id, Integer dias) {
         if (verificarObrasObrero(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             ObrasObrero obrasObrero = consultarObrasObrero(id);
             // No se permite que una relación obras - obreros tenga un total de
@@ -196,6 +182,8 @@ public class ObrasObreroDAO {
 
     // Métodos de consulta 
     public Boolean verificarObrasObrero(Long id) {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         ObrasObrero obrasObrero = entityManager.find(ObrasObrero.class, id);
         entityManager.getTransaction().commit();
@@ -205,6 +193,8 @@ public class ObrasObreroDAO {
 
     public ObrasObrero consultarObrasObrero(Long id) {
         if (verificarObrasObrero(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             ObrasObrero obrasObrero = entityManager.find(ObrasObrero.class, id);
             entityManager.getTransaction().commit();
@@ -220,6 +210,8 @@ public class ObrasObreroDAO {
     // trabajados y con la obra/obrero en particular
     public List<ObrasObrero> consultarObrasObrerosFechaInicio(Calendar periodoInicio, Calendar periodoFin, Boolean activa, Integer diasTrabajados, Long obraId, Long obreroId) throws Exception {
         TypedQuery<ObrasObrero> query;
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         // BUSQUEDA POR 6 CAMPOS
         if (periodoInicio != null
                 && periodoFin != null
@@ -232,7 +224,7 @@ public class ObrasObreroDAO {
                     + "AND o.diasTrabajados >= :diasTrabajados "
                     + "AND o.obra.id = :obraId "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", periodoFin);
@@ -255,7 +247,7 @@ public class ObrasObreroDAO {
                     + "o.diasTrabajados >= :diasTrabajados "
                     + "AND o.obra.id = :obraId "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", periodoFin);
@@ -276,7 +268,7 @@ public class ObrasObreroDAO {
                     + "o.activa = :activa "
                     + "AND o.obra.id = :obraId "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", periodoFin);
@@ -297,7 +289,7 @@ public class ObrasObreroDAO {
                     + "o.activa = :activa "
                     + "AND o.diasTrabajados >= :diasTrabajados "
                     + "AND o.obra.id = :obraId "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", periodoFin);
@@ -318,7 +310,7 @@ public class ObrasObreroDAO {
                     + "o.activa = :activa "
                     + "AND o.diasTrabajados >= :diasTrabajados "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", periodoFin);
@@ -340,7 +332,7 @@ public class ObrasObreroDAO {
                     + "AND o.diasTrabajados >= :diasTrabajados "
                     + "AND o.obra.id = :obraId "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
@@ -363,7 +355,7 @@ public class ObrasObreroDAO {
                     + "AND o.diasTrabajados >= :diasTrabajados "
                     + "AND o.obra.id = :obraId "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
             query.setParameter("periodoFin", periodoFin);
@@ -385,7 +377,7 @@ public class ObrasObreroDAO {
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.obra.id = :obraId "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", periodoFin);
@@ -404,7 +396,7 @@ public class ObrasObreroDAO {
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.diasTrabajados >= :diasTrabajados "
                     + "AND o.obra.id = :obraId "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", periodoFin);
@@ -423,7 +415,7 @@ public class ObrasObreroDAO {
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.activa = :activa "
                     + "AND o.obra.id = :obraId "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", periodoFin);
@@ -442,7 +434,7 @@ public class ObrasObreroDAO {
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "AND o.diasTrabajados >= :diasTrabajados "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";              
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", periodoFin);
@@ -461,7 +453,7 @@ public class ObrasObreroDAO {
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.activa = :activa "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", periodoFin);
@@ -480,7 +472,7 @@ public class ObrasObreroDAO {
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.activa = :activa "
                     + "AND o.diasTrabajados >= :diasTrabajados "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", periodoFin);
@@ -500,7 +492,7 @@ public class ObrasObreroDAO {
                     + "o.diasTrabajados >= :diasTrabajados "
                     + "AND o.obra.id = :obraId "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
@@ -521,7 +513,7 @@ public class ObrasObreroDAO {
                     + "o.activa = :activa "
                     + "AND o.obra.id = :obraId "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
@@ -542,7 +534,7 @@ public class ObrasObreroDAO {
                     + "o.activa = :activa "
                     + "AND o.diasTrabajados >= :diasTrabajados "
                     + "AND o.obra.id = :obraId "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
@@ -563,7 +555,7 @@ public class ObrasObreroDAO {
                     + "o.activa = :activa "
                     + "AND o.diasTrabajados >= :diasTrabajados "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
@@ -584,9 +576,9 @@ public class ObrasObreroDAO {
                     + "o.diasTrabajados >= :diasTrabajados "
                     + "AND o.obra.id = :obraId "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
-            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1)); 
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
             query.setParameter("periodoFin", periodoFin);
             query.setParameter("diasTrabajados", diasTrabajados);
             query.setParameter("obraId", obraId);
@@ -605,9 +597,9 @@ public class ObrasObreroDAO {
                     + "o.activa = :activa "
                     + "AND o.obra.id = :obraId "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
-            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1)); 
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
             query.setParameter("periodoFin", periodoFin);
             query.setParameter("activa", activa);
             query.setParameter("obraId", obraId);
@@ -626,9 +618,9 @@ public class ObrasObreroDAO {
                     + "o.activa = :activa "
                     + "AND o.diasTrabajados >= :diasTrabajados "
                     + "AND o.obra.id = :obraId "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
-            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1)); 
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
             query.setParameter("periodoFin", periodoFin);
             query.setParameter("activa", activa);
             query.setParameter("diasTrabajados", diasTrabajados);
@@ -647,9 +639,9 @@ public class ObrasObreroDAO {
                     + "o.activa = :activa "
                     + "AND o.diasTrabajados >= :diasTrabajados "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
-            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1)); 
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
             query.setParameter("periodoFin", periodoFin);
             query.setParameter("activa", activa);
             query.setParameter("diasTrabajados", diasTrabajados);
@@ -668,7 +660,7 @@ public class ObrasObreroDAO {
                     + "o.activa = :activa "
                     + "AND o.diasTrabajados >= :diasTrabajados "
                     + "AND o.obra.id = :obraId "
-                    + "AND o.obrero.id = :obreroId";            
+                    + "AND o.obrero.id = :obreroId";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("activa", activa);
             query.setParameter("diasTrabajados", diasTrabajados);
@@ -687,7 +679,7 @@ public class ObrasObreroDAO {
                 && obreroId == null) { // Búsqueda por inicio, fin, obra
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.obra.id = :obraId "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", periodoFin);
@@ -704,7 +696,7 @@ public class ObrasObreroDAO {
                 && obreroId != null) { // Búsqueda por inicio, fin, obrero
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.obrero.id = :obreroId "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", periodoFin);
@@ -721,7 +713,7 @@ public class ObrasObreroDAO {
                 && obreroId == null) { // Búsqueda por inicio, fin, dias
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "AND o.diasTrabajados >= :diasTrabajados "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", periodoFin);
@@ -738,7 +730,7 @@ public class ObrasObreroDAO {
                 && obreroId == null) { // Búsqueda por inicio, fin, activa
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.activa = :activa "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", periodoFin);
@@ -756,7 +748,7 @@ public class ObrasObreroDAO {
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.obra.id = :obraId "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
@@ -775,7 +767,7 @@ public class ObrasObreroDAO {
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.diasTrabajados >= :diasTrabajados "
                     + "AND o.obra.id = :obraId "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
@@ -794,7 +786,7 @@ public class ObrasObreroDAO {
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.activa = :activa "
                     + "AND o.obra.id = :obraId "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
@@ -804,16 +796,16 @@ public class ObrasObreroDAO {
             entityManager.getTransaction().commit();
             entityManager.close();
             return obrasObreros;
-        } else if (periodoInicio != null 
+        } else if (periodoInicio != null
                 && periodoFin == null
                 && activa == null
-                && diasTrabajados != null 
-                && obraId == null 
+                && diasTrabajados != null
+                && obraId == null
                 && obreroId != null) { // Búsqueda por inicio, obrero, dias
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.diasTrabajados >= :diasTrabajados "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
@@ -823,16 +815,16 @@ public class ObrasObreroDAO {
             entityManager.getTransaction().commit();
             entityManager.close();
             return obrasObreros;
-        } else if (periodoInicio != null 
+        } else if (periodoInicio != null
                 && periodoFin == null
-                && activa != null 
+                && activa != null
                 && diasTrabajados == null
                 && obraId == null
                 && obreroId != null) { // Búsqueda por inicio, obrero, activa
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.activa = :activa "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
@@ -842,16 +834,16 @@ public class ObrasObreroDAO {
             entityManager.getTransaction().commit();
             entityManager.close();
             return obrasObreros;
-        } else if (periodoInicio != null 
+        } else if (periodoInicio != null
                 && periodoFin == null
-                && activa != null 
-                && diasTrabajados != null 
+                && activa != null
+                && diasTrabajados != null
                 && obraId == null
                 && obreroId == null) { // Búsqueda por inicio, activa, dias
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.activa = :activa "
                     + "AND o.diasTrabajados >= :diasTrabajados "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
@@ -861,18 +853,18 @@ public class ObrasObreroDAO {
             entityManager.getTransaction().commit();
             entityManager.close();
             return obrasObreros;
-        } else if (periodoInicio == null 
-                && periodoFin != null 
+        } else if (periodoInicio == null
+                && periodoFin != null
                 && activa == null
                 && diasTrabajados == null
-                && obraId != null 
+                && obraId != null
                 && obreroId != null) { // Búsqueda por fin, obra, obrero
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.obra.id = :obraId "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
-            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1)); 
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
             query.setParameter("periodoFin", periodoFin);
             query.setParameter("obraId", obraId);
             query.setParameter("obreroId", obreroId);
@@ -881,7 +873,7 @@ public class ObrasObreroDAO {
             entityManager.close();
             return obrasObreros;
         } else if (periodoInicio == null
-                && periodoFin != null 
+                && periodoFin != null
                 && activa == null
                 && diasTrabajados != null
                 && obraId != null
@@ -889,9 +881,9 @@ public class ObrasObreroDAO {
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.diasTrabajados >= :diasTrabajados "
                     + "AND o.obra.id = :obraId "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
-            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1)); 
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
             query.setParameter("periodoFin", periodoFin);
             query.setParameter("diasTrabajados", diasTrabajados);
             query.setParameter("obraId", obraId);
@@ -899,18 +891,18 @@ public class ObrasObreroDAO {
             entityManager.getTransaction().commit();
             entityManager.close();
             return obrasObreros;
-        } else if (periodoInicio == null 
-                && periodoFin != null 
-                && activa != null 
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && activa != null
                 && diasTrabajados == null
-                && obraId != null 
+                && obraId != null
                 && obreroId == null) { // Búsqueda por fin, obra, activa
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.activa = :activa "
                     + "AND o.obra.id = :obraId "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
-            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1)); 
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
             query.setParameter("periodoFin", periodoFin);
             query.setParameter("activa", activa);
             query.setParameter("obraId", obraId);
@@ -919,17 +911,17 @@ public class ObrasObreroDAO {
             entityManager.close();
             return obrasObreros;
         } else if (periodoInicio == null
-                && periodoFin != null 
+                && periodoFin != null
                 && activa == null
-                && diasTrabajados != null 
+                && diasTrabajados != null
                 && obraId == null
                 && obreroId != null) { // Búsqueda por fin, obrero, dias
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.diasTrabajados >= :diasTrabajados "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
-            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1)); 
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
             query.setParameter("periodoFin", periodoFin);
             query.setParameter("diasTrabajados", diasTrabajados);
             query.setParameter("obreroId", obreroId);
@@ -938,17 +930,17 @@ public class ObrasObreroDAO {
             entityManager.close();
             return obrasObreros;
         } else if (periodoInicio == null
-                && periodoFin != null 
-                && activa != null 
+                && periodoFin != null
+                && activa != null
                 && diasTrabajados == null
                 && obraId == null
                 && obreroId != null) { // Búsqueda por fin, obrero, activa
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.activa = :activa "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
-            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1)); 
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
             query.setParameter("periodoFin", periodoFin);
             query.setParameter("activa", activa);
             query.setParameter("obreroId", obreroId);
@@ -957,17 +949,17 @@ public class ObrasObreroDAO {
             entityManager.close();
             return obrasObreros;
         } else if (periodoInicio == null
-                && periodoFin != null 
-                && activa != null 
-                && diasTrabajados != null 
+                && periodoFin != null
+                && activa != null
+                && diasTrabajados != null
                 && obraId == null
                 && obreroId == null) { // Búsqueda por fin, activa, dias
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.activa = :activa "
                     + "AND o.diasTrabajados >= :diasTrabajados "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
-            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1)); 
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
             query.setParameter("periodoFin", periodoFin);
             query.setParameter("activa", activa);
             query.setParameter("diasTrabajados", diasTrabajados);
@@ -984,7 +976,7 @@ public class ObrasObreroDAO {
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.diasTrabajados >= :diasTrabajados "
                     + "AND o.obra.id = :obraId "
-                    + "AND o.obrero.id = :obreroId";       
+                    + "AND o.obrero.id = :obreroId";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("diasTrabajados", diasTrabajados);
             query.setParameter("obraId", obraId);
@@ -995,14 +987,14 @@ public class ObrasObreroDAO {
             return obrasObreros;
         } else if (periodoInicio == null
                 && periodoFin == null
-                && activa != null 
+                && activa != null
                 && diasTrabajados == null
-                && obraId != null 
+                && obraId != null
                 && obreroId != null) { // Búsqueda por obra, obrero, activa
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.activa = :activa "
                     + "AND o.obra.id = :obraId "
-                    + "AND o.obrero.id = :obreroId";           
+                    + "AND o.obrero.id = :obreroId";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("activa", activa);
             query.setParameter("obraId", obraId);
@@ -1013,14 +1005,14 @@ public class ObrasObreroDAO {
             return obrasObreros;
         } else if (periodoInicio == null
                 && periodoFin == null
-                && activa != null 
-                && diasTrabajados != null 
-                && obraId != null 
+                && activa != null
+                && diasTrabajados != null
+                && obraId != null
                 && obreroId == null) { // Búsqueda por obra, activa, dias
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.activa = :activa "
                     + "AND o.diasTrabajados >= :diasTrabajados "
-                    + "AND o.obra.id = :obraId";      
+                    + "AND o.obra.id = :obraId";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("activa", activa);
             query.setParameter("diasTrabajados", diasTrabajados);
@@ -1031,14 +1023,14 @@ public class ObrasObreroDAO {
             return obrasObreros;
         } else if (periodoInicio == null
                 && periodoFin == null
-                && activa != null 
-                && diasTrabajados != null 
+                && activa != null
+                && diasTrabajados != null
                 && obraId == null
                 && obreroId != null) { // Búsqueda por obrero, activa, dias
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.activa = :activa "
                     + "AND o.diasTrabajados >= :diasTrabajados "
-                    + "AND o.obrero.id = :obreroId";          
+                    + "AND o.obrero.id = :obreroId";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("activa", activa);
             query.setParameter("diasTrabajados", diasTrabajados);
@@ -1055,7 +1047,7 @@ public class ObrasObreroDAO {
                 && obraId == null
                 && obreroId == null) { // Búsqueda por inicio, fin
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
-                    + "o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", periodoFin);
@@ -1071,7 +1063,7 @@ public class ObrasObreroDAO {
                 && obreroId == null) { // Búsqueda por inicio, activa
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.activa = :activa "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
@@ -1088,7 +1080,7 @@ public class ObrasObreroDAO {
                 && obreroId == null) { // Búsqueda por inicio, dias
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.diasTrabajados >= :diasTrabajados "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
@@ -1105,7 +1097,7 @@ public class ObrasObreroDAO {
                 && obreroId == null) { // Búsqueda por inicio, obra
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.obra.id = :obraId "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
@@ -1122,7 +1114,7 @@ public class ObrasObreroDAO {
                 && obreroId != null) { // Búsqueda por inicio, obrero
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.obrero.id = :obreroId "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
@@ -1139,9 +1131,9 @@ public class ObrasObreroDAO {
                 && obreroId == null) { // Búsqueda por fin, activa
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.activa = :activa "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
-            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1)); 
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
             query.setParameter("periodoFin", periodoFin);
             query.setParameter("activa", activa);
             List<ObrasObrero> obrasObreros = query.getResultList();
@@ -1156,9 +1148,9 @@ public class ObrasObreroDAO {
                 && obreroId == null) { // Búsqueda por fin, dias
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.diasTrabajados >= :diasTrabajados "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
-            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1)); 
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
             query.setParameter("periodoFin", periodoFin);
             query.setParameter("diasTrabajados", diasTrabajados);
             List<ObrasObrero> obrasObreros = query.getResultList();
@@ -1173,9 +1165,9 @@ public class ObrasObreroDAO {
                 && obreroId == null) { // Búsqueda por fin, obra
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "AND o.obra.id = :obraId "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
-            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1)); 
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
             query.setParameter("periodoFin", periodoFin);
             query.setParameter("obraId", obraId);
             List<ObrasObrero> obrasObreros = query.getResultList();
@@ -1190,9 +1182,9 @@ public class ObrasObreroDAO {
                 && obreroId != null) { // Búsqueda por fin, obrero
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.obrero.id = :obreroId "
-                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
-            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1)); 
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
             query.setParameter("periodoFin", periodoFin);
             query.setParameter("obreroId", obreroId);
             List<ObrasObrero> obrasObreros = query.getResultList();
@@ -1207,7 +1199,7 @@ public class ObrasObreroDAO {
                 && obreroId == null) { // Búsqueda por activa, dias
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.activa = :activa "
-                    + "AND o.diasTrabajados >= :diasTrabajados";            
+                    + "AND o.diasTrabajados >= :diasTrabajados";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("activa", activa);
             query.setParameter("diasTrabajados", diasTrabajados);
@@ -1223,7 +1215,7 @@ public class ObrasObreroDAO {
                 && obreroId != null) { // Búsqueda por obrero, activa
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.activa = :activa "
-                    + "AND o.obrero.id = :obreroId";            
+                    + "AND o.obrero.id = :obreroId";
             query = entityManager.createQuery(jpql, ObrasObrero.class);;
             query.setParameter("activa", activa);
             query.setParameter("obreroId", obreroId);
@@ -1239,7 +1231,7 @@ public class ObrasObreroDAO {
                 && obreroId == null) { // Búsqueda por obra, activa
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.activa = :activa "
-                    + "AND o.obra.id = :obraId";            
+                    + "AND o.obra.id = :obraId";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("activa", activa);
             query.setParameter("obraId", obraId);
@@ -1255,7 +1247,7 @@ public class ObrasObreroDAO {
                 && obreroId == null) { // Búsqueda por obra, dias
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.diasTrabajados >= :diasTrabajados "
-                    + "AND o.obra.id = :obraId";            
+                    + "AND o.obra.id = :obraId";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("diasTrabajados", diasTrabajados);
             query.setParameter("obraId", obraId);
@@ -1271,7 +1263,7 @@ public class ObrasObreroDAO {
                 && obreroId != null) { // Búsqueda por obrero, dias
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.diasTrabajados >= :diasTrabajados "
-                    + "AND o.obrero.id = :obreroId";            
+                    + "AND o.obrero.id = :obreroId";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("diasTrabajados", diasTrabajados);
             query.setParameter("obreroId", obreroId);
@@ -1287,7 +1279,7 @@ public class ObrasObreroDAO {
                 && obreroId != null) { // Búsqueda por obra, obrero
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.obra.id = :obraId "
-                    + "AND o.obrero.id = :obreroId";           
+                    + "AND o.obrero.id = :obreroId";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("obraId", obraId);
             query.setParameter("obreroId", obreroId);
@@ -1303,7 +1295,7 @@ public class ObrasObreroDAO {
                 && obraId == null
                 && obreroId == null) { // Búsqueda por inicio
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
-                    + "o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
@@ -1318,9 +1310,9 @@ public class ObrasObreroDAO {
                 && obraId == null
                 && obreroId == null) { // Búsqueda por fin
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
-                    + "o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";            
+                    + "o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
-            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1)); 
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
             query.setParameter("periodoFin", periodoFin);
             List<ObrasObrero> obrasObreros = query.getResultList();
             entityManager.getTransaction().commit();
@@ -1333,7 +1325,7 @@ public class ObrasObreroDAO {
                 && obraId != null
                 && obreroId == null) { // Búsqueda por obra
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
-                    + "o.obra.id = :obraId";            
+                    + "o.obra.id = :obraId";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("obraId", obraId);
             List<ObrasObrero> obrasObreros = query.getResultList();
@@ -1347,7 +1339,7 @@ public class ObrasObreroDAO {
                 && obraId == null
                 && obreroId != null) { // Búsqueda por obrero
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
-                    + "o.obrero.id = :obreroId";            
+                    + "o.obrero.id = :obreroId";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("obreroId", obreroId);
             List<ObrasObrero> obrasObreros = query.getResultList();
@@ -1361,7 +1353,7 @@ public class ObrasObreroDAO {
                 && obraId == null
                 && obreroId == null) { // Búsqueda por activa
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
-                    + "o.activa = :activa";            
+                    + "o.activa = :activa";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("activa", activa);
             List<ObrasObrero> obrasObreros = query.getResultList();
@@ -1375,7 +1367,7 @@ public class ObrasObreroDAO {
                 && obraId == null
                 && obreroId == null) { // Búsqueda por dias
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
-                    + "o.diasTrabajados >= :diasTrabajados";            
+                    + "o.diasTrabajados >= :diasTrabajados";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("diasTrabajados", diasTrabajados);
             List<ObrasObrero> obrasObreros = query.getResultList();
@@ -1389,7 +1381,7 @@ public class ObrasObreroDAO {
                 && diasTrabajados == null
                 && obraId == null
                 && obreroId == null) { // No se llenó ningún campo
-            String jpql = "SELECT o FROM ObrasObrero o";            
+            String jpql = "SELECT o FROM ObrasObrero o";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             List<ObrasObrero> obrasObreros = query.getResultList();
             entityManager.getTransaction().commit();
@@ -1399,12 +1391,14 @@ public class ObrasObreroDAO {
             throw new Exception("No se pudo realizar la búsqueda dinámica de relacion obras - obreros");
         }
     }
-    
+
     // Manda una lista de obras - obreros que cumplan en finalización con el
     // periodo de inicio y fin, con el estado de activa, con un mínimo de dias 
     // trabajados y con la obra/obrero en particular
     public List<ObrasObrero> consultarObrasObrerosFechaFin(Calendar periodoInicio, Calendar periodoFin, Boolean activa, Integer diasTrabajados, Long obraId, Long obreroId) throws Exception {
         TypedQuery<ObrasObrero> query;
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         // BUSQUEDA POR 6 CAMPOS
         if (periodoInicio != null
                 && periodoFin != null
@@ -1417,7 +1411,7 @@ public class ObrasObreroDAO {
                     + "AND o.diasTrabajados >= :diasTrabajados "
                     + "AND o.obra.id = :obraId "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", periodoFin);
@@ -1440,7 +1434,7 @@ public class ObrasObreroDAO {
                     + "o.diasTrabajados >= :diasTrabajados "
                     + "AND o.obra.id = :obraId "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", periodoFin);
@@ -1461,7 +1455,7 @@ public class ObrasObreroDAO {
                     + "o.activa = :activa "
                     + "AND o.obra.id = :obraId "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", periodoFin);
@@ -1482,7 +1476,7 @@ public class ObrasObreroDAO {
                     + "o.activa = :activa "
                     + "AND o.diasTrabajados >= :diasTrabajados "
                     + "AND o.obra.id = :obraId "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", periodoFin);
@@ -1503,7 +1497,7 @@ public class ObrasObreroDAO {
                     + "o.activa = :activa "
                     + "AND o.diasTrabajados >= :diasTrabajados "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", periodoFin);
@@ -1525,7 +1519,7 @@ public class ObrasObreroDAO {
                     + "AND o.diasTrabajados >= :diasTrabajados "
                     + "AND o.obra.id = :obraId "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
@@ -1548,7 +1542,7 @@ public class ObrasObreroDAO {
                     + "AND o.diasTrabajados >= :diasTrabajados "
                     + "AND o.obra.id = :obraId "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
             query.setParameter("periodoFin", periodoFin);
@@ -1570,7 +1564,7 @@ public class ObrasObreroDAO {
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.obra.id = :obraId "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", periodoFin);
@@ -1589,7 +1583,7 @@ public class ObrasObreroDAO {
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.diasTrabajados >= :diasTrabajados "
                     + "AND o.obra.id = :obraId "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", periodoFin);
@@ -1608,7 +1602,7 @@ public class ObrasObreroDAO {
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.activa = :activa "
                     + "AND o.obra.id = :obraId "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", periodoFin);
@@ -1627,7 +1621,7 @@ public class ObrasObreroDAO {
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "AND o.diasTrabajados >= :diasTrabajados "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";              
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", periodoFin);
@@ -1646,7 +1640,7 @@ public class ObrasObreroDAO {
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.activa = :activa "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", periodoFin);
@@ -1665,7 +1659,7 @@ public class ObrasObreroDAO {
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.activa = :activa "
                     + "AND o.diasTrabajados >= :diasTrabajados "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", periodoFin);
@@ -1685,7 +1679,7 @@ public class ObrasObreroDAO {
                     + "o.diasTrabajados >= :diasTrabajados "
                     + "AND o.obra.id = :obraId "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
@@ -1706,7 +1700,7 @@ public class ObrasObreroDAO {
                     + "o.activa = :activa "
                     + "AND o.obra.id = :obraId "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
@@ -1727,7 +1721,7 @@ public class ObrasObreroDAO {
                     + "o.activa = :activa "
                     + "AND o.diasTrabajados >= :diasTrabajados "
                     + "AND o.obra.id = :obraId "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
@@ -1748,7 +1742,7 @@ public class ObrasObreroDAO {
                     + "o.activa = :activa "
                     + "AND o.diasTrabajados >= :diasTrabajados "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
@@ -1769,9 +1763,9 @@ public class ObrasObreroDAO {
                     + "o.diasTrabajados >= :diasTrabajados "
                     + "AND o.obra.id = :obraId "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
-            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1)); 
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
             query.setParameter("periodoFin", periodoFin);
             query.setParameter("diasTrabajados", diasTrabajados);
             query.setParameter("obraId", obraId);
@@ -1790,9 +1784,9 @@ public class ObrasObreroDAO {
                     + "o.activa = :activa "
                     + "AND o.obra.id = :obraId "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
-            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1)); 
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
             query.setParameter("periodoFin", periodoFin);
             query.setParameter("activa", activa);
             query.setParameter("obraId", obraId);
@@ -1811,9 +1805,9 @@ public class ObrasObreroDAO {
                     + "o.activa = :activa "
                     + "AND o.diasTrabajados >= :diasTrabajados "
                     + "AND o.obra.id = :obraId "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
-            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1)); 
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
             query.setParameter("periodoFin", periodoFin);
             query.setParameter("activa", activa);
             query.setParameter("diasTrabajados", diasTrabajados);
@@ -1832,9 +1826,9 @@ public class ObrasObreroDAO {
                     + "o.activa = :activa "
                     + "AND o.diasTrabajados >= :diasTrabajados "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
-            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1)); 
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
             query.setParameter("periodoFin", periodoFin);
             query.setParameter("activa", activa);
             query.setParameter("diasTrabajados", diasTrabajados);
@@ -1853,7 +1847,7 @@ public class ObrasObreroDAO {
                     + "o.activa = :activa "
                     + "AND o.diasTrabajados >= :diasTrabajados "
                     + "AND o.obra.id = :obraId "
-                    + "AND o.obrero.id = :obreroId";            
+                    + "AND o.obrero.id = :obreroId";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("activa", activa);
             query.setParameter("diasTrabajados", diasTrabajados);
@@ -1872,7 +1866,7 @@ public class ObrasObreroDAO {
                 && obreroId == null) { // Búsqueda por inicio, fin, obra
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.obra.id = :obraId "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", periodoFin);
@@ -1889,7 +1883,7 @@ public class ObrasObreroDAO {
                 && obreroId != null) { // Búsqueda por inicio, fin, obrero
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.obrero.id = :obreroId "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", periodoFin);
@@ -1906,7 +1900,7 @@ public class ObrasObreroDAO {
                 && obreroId == null) { // Búsqueda por inicio, fin, dias
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "AND o.diasTrabajados >= :diasTrabajados "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", periodoFin);
@@ -1923,7 +1917,7 @@ public class ObrasObreroDAO {
                 && obreroId == null) { // Búsqueda por inicio, fin, activa
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.activa = :activa "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", periodoFin);
@@ -1941,7 +1935,7 @@ public class ObrasObreroDAO {
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.obra.id = :obraId "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
@@ -1960,7 +1954,7 @@ public class ObrasObreroDAO {
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.diasTrabajados >= :diasTrabajados "
                     + "AND o.obra.id = :obraId "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
@@ -1979,7 +1973,7 @@ public class ObrasObreroDAO {
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.activa = :activa "
                     + "AND o.obra.id = :obraId "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
@@ -1989,16 +1983,16 @@ public class ObrasObreroDAO {
             entityManager.getTransaction().commit();
             entityManager.close();
             return obrasObreros;
-        } else if (periodoInicio != null 
+        } else if (periodoInicio != null
                 && periodoFin == null
                 && activa == null
-                && diasTrabajados != null 
-                && obraId == null 
+                && diasTrabajados != null
+                && obraId == null
                 && obreroId != null) { // Búsqueda por inicio, obrero, dias
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.diasTrabajados >= :diasTrabajados "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
@@ -2008,16 +2002,16 @@ public class ObrasObreroDAO {
             entityManager.getTransaction().commit();
             entityManager.close();
             return obrasObreros;
-        } else if (periodoInicio != null 
+        } else if (periodoInicio != null
                 && periodoFin == null
-                && activa != null 
+                && activa != null
                 && diasTrabajados == null
                 && obraId == null
                 && obreroId != null) { // Búsqueda por inicio, obrero, activa
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.activa = :activa "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
@@ -2027,16 +2021,16 @@ public class ObrasObreroDAO {
             entityManager.getTransaction().commit();
             entityManager.close();
             return obrasObreros;
-        } else if (periodoInicio != null 
+        } else if (periodoInicio != null
                 && periodoFin == null
-                && activa != null 
-                && diasTrabajados != null 
+                && activa != null
+                && diasTrabajados != null
                 && obraId == null
                 && obreroId == null) { // Búsqueda por inicio, activa, dias
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.activa = :activa "
                     + "AND o.diasTrabajados >= :diasTrabajados "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
@@ -2046,18 +2040,18 @@ public class ObrasObreroDAO {
             entityManager.getTransaction().commit();
             entityManager.close();
             return obrasObreros;
-        } else if (periodoInicio == null 
-                && periodoFin != null 
+        } else if (periodoInicio == null
+                && periodoFin != null
                 && activa == null
                 && diasTrabajados == null
-                && obraId != null 
+                && obraId != null
                 && obreroId != null) { // Búsqueda por fin, obra, obrero
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.obra.id = :obraId "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
-            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1)); 
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
             query.setParameter("periodoFin", periodoFin);
             query.setParameter("obraId", obraId);
             query.setParameter("obreroId", obreroId);
@@ -2066,7 +2060,7 @@ public class ObrasObreroDAO {
             entityManager.close();
             return obrasObreros;
         } else if (periodoInicio == null
-                && periodoFin != null 
+                && periodoFin != null
                 && activa == null
                 && diasTrabajados != null
                 && obraId != null
@@ -2074,9 +2068,9 @@ public class ObrasObreroDAO {
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.diasTrabajados >= :diasTrabajados "
                     + "AND o.obra.id = :obraId "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
-            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1)); 
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
             query.setParameter("periodoFin", periodoFin);
             query.setParameter("diasTrabajados", diasTrabajados);
             query.setParameter("obraId", obraId);
@@ -2084,18 +2078,18 @@ public class ObrasObreroDAO {
             entityManager.getTransaction().commit();
             entityManager.close();
             return obrasObreros;
-        } else if (periodoInicio == null 
-                && periodoFin != null 
-                && activa != null 
+        } else if (periodoInicio == null
+                && periodoFin != null
+                && activa != null
                 && diasTrabajados == null
-                && obraId != null 
+                && obraId != null
                 && obreroId == null) { // Búsqueda por fin, obra, activa
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.activa = :activa "
                     + "AND o.obra.id = :obraId "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
-            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1)); 
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
             query.setParameter("periodoFin", periodoFin);
             query.setParameter("activa", activa);
             query.setParameter("obraId", obraId);
@@ -2104,17 +2098,17 @@ public class ObrasObreroDAO {
             entityManager.close();
             return obrasObreros;
         } else if (periodoInicio == null
-                && periodoFin != null 
+                && periodoFin != null
                 && activa == null
-                && diasTrabajados != null 
+                && diasTrabajados != null
                 && obraId == null
                 && obreroId != null) { // Búsqueda por fin, obrero, dias
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.diasTrabajados >= :diasTrabajados "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
-            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1)); 
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
             query.setParameter("periodoFin", periodoFin);
             query.setParameter("diasTrabajados", diasTrabajados);
             query.setParameter("obreroId", obreroId);
@@ -2123,17 +2117,17 @@ public class ObrasObreroDAO {
             entityManager.close();
             return obrasObreros;
         } else if (periodoInicio == null
-                && periodoFin != null 
-                && activa != null 
+                && periodoFin != null
+                && activa != null
                 && diasTrabajados == null
                 && obraId == null
                 && obreroId != null) { // Búsqueda por fin, obrero, activa
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.activa = :activa "
                     + "AND o.obrero.id = :obreroId "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
-            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1)); 
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
             query.setParameter("periodoFin", periodoFin);
             query.setParameter("activa", activa);
             query.setParameter("obreroId", obreroId);
@@ -2142,17 +2136,17 @@ public class ObrasObreroDAO {
             entityManager.close();
             return obrasObreros;
         } else if (periodoInicio == null
-                && periodoFin != null 
-                && activa != null 
-                && diasTrabajados != null 
+                && periodoFin != null
+                && activa != null
+                && diasTrabajados != null
                 && obraId == null
                 && obreroId == null) { // Búsqueda por fin, activa, dias
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.activa = :activa "
                     + "AND o.diasTrabajados >= :diasTrabajados "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
-            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1)); 
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
             query.setParameter("periodoFin", periodoFin);
             query.setParameter("activa", activa);
             query.setParameter("diasTrabajados", diasTrabajados);
@@ -2169,7 +2163,7 @@ public class ObrasObreroDAO {
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.diasTrabajados >= :diasTrabajados "
                     + "AND o.obra.id = :obraId "
-                    + "AND o.obrero.id = :obreroId";       
+                    + "AND o.obrero.id = :obreroId";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("diasTrabajados", diasTrabajados);
             query.setParameter("obraId", obraId);
@@ -2180,14 +2174,14 @@ public class ObrasObreroDAO {
             return obrasObreros;
         } else if (periodoInicio == null
                 && periodoFin == null
-                && activa != null 
+                && activa != null
                 && diasTrabajados == null
-                && obraId != null 
+                && obraId != null
                 && obreroId != null) { // Búsqueda por obra, obrero, activa
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.activa = :activa "
                     + "AND o.obra.id = :obraId "
-                    + "AND o.obrero.id = :obreroId";           
+                    + "AND o.obrero.id = :obreroId";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("activa", activa);
             query.setParameter("obraId", obraId);
@@ -2198,14 +2192,14 @@ public class ObrasObreroDAO {
             return obrasObreros;
         } else if (periodoInicio == null
                 && periodoFin == null
-                && activa != null 
-                && diasTrabajados != null 
-                && obraId != null 
+                && activa != null
+                && diasTrabajados != null
+                && obraId != null
                 && obreroId == null) { // Búsqueda por obra, activa, dias
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.activa = :activa "
                     + "AND o.diasTrabajados >= :diasTrabajados "
-                    + "AND o.obra.id = :obraId";      
+                    + "AND o.obra.id = :obraId";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("activa", activa);
             query.setParameter("diasTrabajados", diasTrabajados);
@@ -2216,14 +2210,14 @@ public class ObrasObreroDAO {
             return obrasObreros;
         } else if (periodoInicio == null
                 && periodoFin == null
-                && activa != null 
-                && diasTrabajados != null 
+                && activa != null
+                && diasTrabajados != null
                 && obraId == null
                 && obreroId != null) { // Búsqueda por obrero, activa, dias
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.activa = :activa "
                     + "AND o.diasTrabajados >= :diasTrabajados "
-                    + "AND o.obrero.id = :obreroId";          
+                    + "AND o.obrero.id = :obreroId";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("activa", activa);
             query.setParameter("diasTrabajados", diasTrabajados);
@@ -2240,7 +2234,7 @@ public class ObrasObreroDAO {
                 && obraId == null
                 && obreroId == null) { // Búsqueda por inicio, fin
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
-                    + "o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", periodoFin);
@@ -2256,7 +2250,7 @@ public class ObrasObreroDAO {
                 && obreroId == null) { // Búsqueda por inicio, activa
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.activa = :activa "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
@@ -2273,7 +2267,7 @@ public class ObrasObreroDAO {
                 && obreroId == null) { // Búsqueda por inicio, dias
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.diasTrabajados >= :diasTrabajados "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
@@ -2290,7 +2284,7 @@ public class ObrasObreroDAO {
                 && obreroId == null) { // Búsqueda por inicio, obra
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.obra.id = :obraId "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
@@ -2307,7 +2301,7 @@ public class ObrasObreroDAO {
                 && obreroId != null) { // Búsqueda por inicio, obrero
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.obrero.id = :obreroId "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
@@ -2324,9 +2318,9 @@ public class ObrasObreroDAO {
                 && obreroId == null) { // Búsqueda por fin, activa
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.activa = :activa "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
-            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1)); 
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
             query.setParameter("periodoFin", periodoFin);
             query.setParameter("activa", activa);
             List<ObrasObrero> obrasObreros = query.getResultList();
@@ -2341,9 +2335,9 @@ public class ObrasObreroDAO {
                 && obreroId == null) { // Búsqueda por fin, dias
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.diasTrabajados >= :diasTrabajados "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
-            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1)); 
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
             query.setParameter("periodoFin", periodoFin);
             query.setParameter("diasTrabajados", diasTrabajados);
             List<ObrasObrero> obrasObreros = query.getResultList();
@@ -2358,9 +2352,9 @@ public class ObrasObreroDAO {
                 && obreroId == null) { // Búsqueda por fin, obra
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "AND o.obra.id = :obraId "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
-            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1)); 
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
             query.setParameter("periodoFin", periodoFin);
             query.setParameter("obraId", obraId);
             List<ObrasObrero> obrasObreros = query.getResultList();
@@ -2375,9 +2369,9 @@ public class ObrasObreroDAO {
                 && obreroId != null) { // Búsqueda por fin, obrero
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.obrero.id = :obreroId "
-                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
-            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1)); 
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
             query.setParameter("periodoFin", periodoFin);
             query.setParameter("obreroId", obreroId);
             List<ObrasObrero> obrasObreros = query.getResultList();
@@ -2392,7 +2386,7 @@ public class ObrasObreroDAO {
                 && obreroId == null) { // Búsqueda por activa, dias
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.activa = :activa "
-                    + "AND o.diasTrabajados >= :diasTrabajados";            
+                    + "AND o.diasTrabajados >= :diasTrabajados";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("activa", activa);
             query.setParameter("diasTrabajados", diasTrabajados);
@@ -2408,7 +2402,7 @@ public class ObrasObreroDAO {
                 && obreroId != null) { // Búsqueda por obrero, activa
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.activa = :activa "
-                    + "AND o.obrero.id = :obreroId";            
+                    + "AND o.obrero.id = :obreroId";
             query = entityManager.createQuery(jpql, ObrasObrero.class);;
             query.setParameter("activa", activa);
             query.setParameter("obreroId", obreroId);
@@ -2424,7 +2418,7 @@ public class ObrasObreroDAO {
                 && obreroId == null) { // Búsqueda por obra, activa
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.activa = :activa "
-                    + "AND o.obra.id = :obraId";            
+                    + "AND o.obra.id = :obraId";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("activa", activa);
             query.setParameter("obraId", obraId);
@@ -2440,7 +2434,7 @@ public class ObrasObreroDAO {
                 && obreroId == null) { // Búsqueda por obra, dias
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.diasTrabajados >= :diasTrabajados "
-                    + "AND o.obra.id = :obraId";            
+                    + "AND o.obra.id = :obraId";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("diasTrabajados", diasTrabajados);
             query.setParameter("obraId", obraId);
@@ -2456,7 +2450,7 @@ public class ObrasObreroDAO {
                 && obreroId != null) { // Búsqueda por obrero, dias
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.diasTrabajados >= :diasTrabajados "
-                    + "AND o.obrero.id = :obreroId";            
+                    + "AND o.obrero.id = :obreroId";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("diasTrabajados", diasTrabajados);
             query.setParameter("obreroId", obreroId);
@@ -2472,7 +2466,7 @@ public class ObrasObreroDAO {
                 && obreroId != null) { // Búsqueda por obra, obrero
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
                     + "o.obra.id = :obraId "
-                    + "AND o.obrero.id = :obreroId";           
+                    + "AND o.obrero.id = :obreroId";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("obraId", obraId);
             query.setParameter("obreroId", obreroId);
@@ -2488,7 +2482,7 @@ public class ObrasObreroDAO {
                 && obraId == null
                 && obreroId == null) { // Búsqueda por inicio
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
-                    + "o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("periodoInicio", periodoInicio);
             query.setParameter("periodoFin", new GregorianCalendar(3000, Calendar.JANUARY, 1));
@@ -2503,9 +2497,9 @@ public class ObrasObreroDAO {
                 && obraId == null
                 && obreroId == null) { // Búsqueda por fin
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
-                    + "o.fechaFin BETWEEN :periodoInicio AND :periodoFin";            
+                    + "o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
-            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1)); 
+            query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
             query.setParameter("periodoFin", periodoFin);
             List<ObrasObrero> obrasObreros = query.getResultList();
             entityManager.getTransaction().commit();
@@ -2518,7 +2512,7 @@ public class ObrasObreroDAO {
                 && obraId != null
                 && obreroId == null) { // Búsqueda por obra
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
-                    + "o.obra.id = :obraId";            
+                    + "o.obra.id = :obraId";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("obraId", obraId);
             List<ObrasObrero> obrasObreros = query.getResultList();
@@ -2532,7 +2526,7 @@ public class ObrasObreroDAO {
                 && obraId == null
                 && obreroId != null) { // Búsqueda por obrero
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
-                    + "o.obrero.id = :obreroId";            
+                    + "o.obrero.id = :obreroId";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("obreroId", obreroId);
             List<ObrasObrero> obrasObreros = query.getResultList();
@@ -2546,7 +2540,7 @@ public class ObrasObreroDAO {
                 && obraId == null
                 && obreroId == null) { // Búsqueda por activa
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
-                    + "o.activa = :activa";            
+                    + "o.activa = :activa";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("activa", activa);
             List<ObrasObrero> obrasObreros = query.getResultList();
@@ -2560,7 +2554,7 @@ public class ObrasObreroDAO {
                 && obraId == null
                 && obreroId == null) { // Búsqueda por dias
             String jpql = "SELECT o FROM ObrasObrero o WHERE "
-                    + "o.diasTrabajados >= :diasTrabajados";            
+                    + "o.diasTrabajados >= :diasTrabajados";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             query.setParameter("diasTrabajados", diasTrabajados);
             List<ObrasObrero> obrasObreros = query.getResultList();
@@ -2574,7 +2568,7 @@ public class ObrasObreroDAO {
                 && diasTrabajados == null
                 && obraId == null
                 && obreroId == null) { // No se llenó ningún campo
-            String jpql = "SELECT o FROM ObrasObrero o";            
+            String jpql = "SELECT o FROM ObrasObrero o";
             query = entityManager.createQuery(jpql, ObrasObrero.class);
             List<ObrasObrero> obrasObreros = query.getResultList();
             entityManager.getTransaction().commit();
@@ -2584,7 +2578,7 @@ public class ObrasObreroDAO {
             throw new Exception("No se pudo realizar la búsqueda dinámica de relacion obras - obreros");
         }
     }
-    
+
     // Métodos drivers para búsqueda dinámica
     public List<ObrasObrero> consultarObrasObreroActivas() throws Exception {
         return this.consultarObrasObrerosFechaInicio(null, null, true, 0, null, null);
@@ -2593,7 +2587,7 @@ public class ObrasObreroDAO {
     public List<ObrasObrero> consultarObrasObreroInactivas() throws Exception {
         return this.consultarObrasObrerosFechaInicio(null, null, false, 1, null, null);
     }
-    
+
     public List<ObrasObrero> consultarTodasObrasObrero() throws Exception {
         return this.consultarObrasObrerosFechaInicio(null, null, null, null, null, null);
     }

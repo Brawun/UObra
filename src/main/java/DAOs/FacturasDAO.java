@@ -25,45 +25,20 @@ import javax.persistence.TypedQuery;
  */
 public class FacturasDAO {
 
-    /**
-     * Se establece una conexión con la base de datos UObra mediante JPA,
-     * creando un objeto EntityManager que puede ser utilizado para realizar
-     * operaciones de creación, lectura, actualización y eliminación en la base
-     * de datos utilizando el lenguaje JPQL.
-     */
-    EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
-    EntityManager entityManager = managerFactory.createEntityManager();
-
-    /**
-     * Método para persistir la entidad de la clase a la base de datos, en caso
-     * que no se pueda realizar dicha transacción se cancela el guardado de la
-     * entidad.
-     *
-     * @param object Objeto a guardar en la base de datos perteneciente a la
-     * clase
-     */
-    public void persist(Object object) {
-        entityManager.getTransaction().begin();
-        try {
-            entityManager.persist(object);
-            entityManager.getTransaction().commit();
-        } catch (Exception e) {
-            entityManager.getTransaction().rollback();
-        } finally {
-            entityManager.close();
-        }
-    }
-
     // Métodos de acceso
     public void registrarFactura(Facturas factura) {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        this.persist(factura);
+        entityManager.persist(factura);
         entityManager.getTransaction().commit();
         entityManager.close();
     }
 
     public void eliminarFactura(Long id) {
         if (verificarFactura(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Facturas factura = consultarFactura(id);
             entityManager.remove(factura);
@@ -76,6 +51,8 @@ public class FacturasDAO {
 
     public void pagarFactura(Long id) {
         if (verificarFactura(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Facturas factura = consultarFactura(id);
             factura.setEstado(EstadoFactura.PAGADA);
@@ -89,6 +66,8 @@ public class FacturasDAO {
 
     public void cambiarMetodoPagoFactura(Long id, MetodoPago metodo) {
         if (verificarFactura(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Facturas factura = consultarFactura(id);
             factura.setMetodoPago(metodo);
@@ -102,6 +81,8 @@ public class FacturasDAO {
 
     // Métodos de consulta 
     public Boolean verificarFactura(Long id) {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         Facturas factura = entityManager.find(Facturas.class, id);
         entityManager.getTransaction().commit();
@@ -111,6 +92,8 @@ public class FacturasDAO {
 
     public Facturas consultarFactura(Long id) {
         if (verificarFactura(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Facturas factura = entityManager.find(Facturas.class, id);
             entityManager.getTransaction().commit();
@@ -125,6 +108,8 @@ public class FacturasDAO {
     // dado, con el estado dado, con el método de pago dado, el monto mayor o 
     // igual al dado y un jefe identificado por un ID dado
     public List<Facturas> consultarFacturasFechaCreada(Calendar periodoInicio, Calendar periodoFin, EstadoFactura estado, MetodoPago metodoPago, Float monto, Long jefeId) throws Exception {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         TypedQuery<Facturas> query;
         // SIN BÚSQUEDA POR JEFE
@@ -1361,11 +1346,13 @@ public class FacturasDAO {
             throw new Exception("No se pudo realizar la búsqueda dinámica de facturas");
         }
     }
-    
+
     // Consulta una lista de facturas que hayan sido pagadas dentro del periodo  
     // dado, con el estado dado, con el método de pago dado, el monto mayor o 
     // igual al dado y un jefe identificado por un ID dado
     public List<Facturas> consultarFacturasFechaPagada(Calendar periodoInicio, Calendar periodoFin, EstadoFactura estado, MetodoPago metodoPago, Float monto, Long jefeId) throws Exception {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         TypedQuery<Facturas> query;
         // SIN BÚSQUEDA POR JEFE
@@ -2602,12 +2589,13 @@ public class FacturasDAO {
             throw new Exception("No se pudo realizar la búsqueda dinámica de facturas");
         }
     }
-    
-    
+
     // Consulta facturas por medio de su descripción sin tomar en cuenta ningún
     // otro parámetro
     public List<Facturas> consultarFacturasPorDescripcion(String descripcion) throws Exception {
-        if (descripcion != null) { 
+        if (descripcion != null) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             TypedQuery<Facturas> query;
             String jpql = "SELECT f FROM Facturas f WHERE "
                     + "f.descripcion LIKE CONCAT('%',:descripcion,'%')";
@@ -2621,11 +2609,13 @@ public class FacturasDAO {
             throw new Exception("No se pudo realizar la búsqueda por descripción de facturas");
         }
     }
-    
+
     // Consulta facturas por medio de su descripción y jefe que la emitió
     public List<Facturas> consultarFacturasPorDescripcionJefe(String descripcion, Long jefeId) throws Exception {
-        if (descripcion != null 
-                && jefeId != null) { 
+        if (descripcion != null
+                && jefeId != null) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             TypedQuery<Facturas> query;
             String jpql = "SELECT f FROM Facturas f WHERE "
                     + "f.descripcion LIKE CONCAT('%',:descripcion,'%') "
@@ -2641,13 +2631,15 @@ public class FacturasDAO {
             throw new Exception("No se pudo realizar la búsqueda por descripción y jefe de facturas");
         }
     }
-    
+
     // Consulta facturas por medio de su descripción, jefe que la emitió y periodo
     public List<Facturas> consultarFacturasPorDescripcionJefePeriodo(Calendar periodoInicio, Calendar periodoFin, String descripcion, Long jefeId) throws Exception {
-        if (descripcion != null 
-                && jefeId != null 
-                && periodoInicio != null 
-                && periodoFin != null) { 
+        if (descripcion != null
+                && jefeId != null
+                && periodoInicio != null
+                && periodoFin != null) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             TypedQuery<Facturas> query;
             String jpql = "SELECT f FROM Facturas f WHERE "
                     + "f.descripcion LIKE CONCAT('%',:descripcion,'%') "
@@ -2667,7 +2659,7 @@ public class FacturasDAO {
             throw new Exception("No se pudo realizar la búsqueda por descripción, jefe y periodo de facturas");
         }
     }
-    
+
     // Métodos drivers para búsqueda dinámica
     public List<Facturas> consultarFacturasConMetodoPago(MetodoPago metodoPago) throws Exception {
         return consultarFacturasFechaCreada(null, null, null, metodoPago, null, null);
@@ -2676,31 +2668,31 @@ public class FacturasDAO {
     public List<Facturas> consultarFacturasConEstado(EstadoFactura estado) throws Exception {
         return consultarFacturasFechaCreada(null, null, estado, null, null, null);
     }
-    
+
     public List<Facturas> consultarFacturasPorJefe(Long jefeId) throws Exception {
         return consultarFacturasFechaCreada(null, null, null, null, null, jefeId);
     }
-    
+
     public List<Facturas> consultarFacturasConMontoMínimo(Float monto) throws Exception {
         return consultarFacturasFechaCreada(null, null, null, null, monto, null);
     }
-    
+
     public List<Facturas> consultarFacturasEnPeriodoCreadas(Calendar periodoInicio, Calendar periodoFin) throws Exception {
         return consultarFacturasFechaCreada(periodoInicio, periodoFin, null, null, null, null);
     }
-    
+
     public List<Facturas> consultarFacturasEnPeriodoPagadas(Calendar periodoInicio, Calendar periodoFin) throws Exception {
         return consultarFacturasFechaPagada(periodoInicio, periodoFin, null, null, null, null);
     }
-    
+
     public List<Facturas> consultarTodasFacturas() throws Exception {
         return consultarFacturasFechaCreada(null, null, null, null, null, null);
     }
-    
+
     public List<Facturas> consultarFacturasDescripcionInicia(String descripción, Long jefeId, Calendar periodoInicio) throws Exception {
         return consultarFacturasPorDescripcionJefePeriodo(periodoInicio, new GregorianCalendar(3000, Calendar.JANUARY, 1), descripción, jefeId);
     }
-    
+
     public List<Facturas> consultarFacturasDescripcionFin(String descripción, Long jefeId, Calendar periodoFin) throws Exception {
         return consultarFacturasPorDescripcionJefePeriodo(new GregorianCalendar(1600, Calendar.JANUARY, 1), periodoFin, descripción, jefeId);
     }

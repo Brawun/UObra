@@ -9,6 +9,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
@@ -21,47 +22,21 @@ import javax.persistence.TypedQuery;
  * @since Pruebas de Software Prof. María de los Ángeles Germán ITSON
  */
 public class ObrerosDAO {
-    
-    /**
-     * Se establece una conexión con la base de datos UObra mediante JPA,
-     * creando un objeto EntityManager que puede ser utilizado para realizar
-     * operaciones de creación, lectura, actualización y eliminación en la base
-     * de datos utilizando el lenguaje JPQL.
-     */
-    EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
-    EntityManager entityManager = managerFactory.createEntityManager();
-    
-    /**
-     * Método para persistir la entidad de la clase a la base de datos, en caso
-     * que no se pueda realizar dicha transacción se cancela el guardado de la 
-     * entidad.
-     * 
-     * @param object Objeto a guardar en la base de datos perteneciente a la clase
-     */
-    public void persist(Object object) {
-        entityManager.getTransaction().begin();
-        try {
-            entityManager.persist(object);
-            entityManager.getTransaction().commit();
-        } catch (Exception e) {
-            entityManager.getTransaction().rollback();
-        } finally {
-            entityManager.close();
-        }
-    }
-    
+
     // Métodos de inicio de sesión
-    
     /**
-     * Este método regresa un obrero, el cuál es utilizado para generar el inicio
-     * de sesión deseado.
+     * Este método regresa un obrero, el cuál es utilizado para generar el
+     * inicio de sesión deseado.
      *
-     * @param usuario usuario ingresado. 
+     * @param usuario usuario ingresado.
      * @param contrasena constraseña ingresada.
-     * @return Obrero si el inicio de sesión fue existoso, nulo en caso contrario.
+     * @return Obrero si el inicio de sesión fue existoso, nulo en caso
+     * contrario.
      * @throws Exception en caso que haya una excepción con la encriptación.
      */
     public Obreros iniciarSesionObrero(String usuario, String contrasena) throws Exception {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         String verifico = usuario;
         String consulta = usuario;
         if (verificarUsuarioObrero(verifico)) {
@@ -89,6 +64,8 @@ public class ObrerosDAO {
      * @throws Exception en caso que haya una excepción con la encriptación.
      */
     public boolean verificarUsuarioObrero(String usuario) throws Exception {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         // Encriptador/Desencriptador
         Encriptador crypt = new Encriptador();
@@ -96,10 +73,19 @@ public class ObrerosDAO {
         // se encuentran todos encriptados
         String usuarioEncriptado = crypt.encrypt(usuario);
         // Verifica si el usuario ingresado existe en la base de datos de obreros
-        Obreros obrero = entityManager.find(Obreros.class, usuarioEncriptado);
+        TypedQuery<Obreros> query;
+        String jpql = "SELECT o FROM Obreros o WHERE o.usuario = :usuarioEncriptado";
+        query = entityManager.createQuery(jpql, Obreros.class);
+        query.setParameter("usuarioEncriptado", usuarioEncriptado);
         entityManager.getTransaction().commit();
+        try {
+            query.getSingleResult();
+        } catch (NoResultException e) {
+            entityManager.close();
+            return false;
+        }
         entityManager.close();
-        return obrero != null;
+        return true;
     }
 
     /**
@@ -110,6 +96,8 @@ public class ObrerosDAO {
      * @throws Exception en caso que haya una excepción con la encriptación.
      */
     public Obreros consultarObrerosUsuario(String usuario) throws Exception {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         String verifico = usuario;
         if (verificarUsuarioObrero(verifico)) {
             entityManager.getTransaction().begin();
@@ -119,7 +107,11 @@ public class ObrerosDAO {
             // se encuentran todos encriptados
             String usuarioEncriptado = crypt.encrypt(usuario);
             // Consulta el obrero con el usuario dado de la base de datos
-            Obreros obrero = entityManager.find(Obreros.class, usuarioEncriptado);
+            TypedQuery<Obreros> query;
+            String jpql = "SELECT o FROM Obreros o WHERE o.usuario = :usuarioEncriptado";
+            query = entityManager.createQuery(jpql, Obreros.class);
+            query.setParameter("usuarioEncriptado", usuarioEncriptado);
+            Obreros obrero = query.getSingleResult();
             entityManager.getTransaction().commit();
             entityManager.close();
             return obrero;
@@ -129,15 +121,19 @@ public class ObrerosDAO {
     }
 
     /**
-     * Método para validar un inicio de sesión, correspondiendo un usuario y 
-     * una contraseña.
+     * Método para validar un inicio de sesión, correspondiendo un usuario y una
+     * contraseña.
      *
      * @param usuario usuario al que le puede corresponder la contraseña
-     * @param contrasena contraseña a la que se verificará si es la que corresponde a usuario
-     * @return Verdadero si el usuario y la contraseña corresponden, falso en caso contrario
+     * @param contrasena contraseña a la que se verificará si es la que
+     * corresponde a usuario
+     * @return Verdadero si el usuario y la contraseña corresponden, falso en
+     * caso contrario
      * @throws Exception en caso que haya una excepción con la encriptación.
      */
     public boolean verificarContrasenaUsuario(String usuario, String contrasena) throws Exception {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         String verifico = usuario;
         if (verificarUsuarioObrero(verifico)) {
             entityManager.getTransaction().begin();
@@ -155,16 +151,20 @@ public class ObrerosDAO {
             throw new EntityNotFoundException("No se puede encontrar el obrero con usuario: " + usuario);
         }
     }
-    
+
     // Métodos de acceso
     public void registrarObrero(Obreros obrero) {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        this.persist(obrero);
+        entityManager.persist(obrero);
         entityManager.getTransaction().commit();
         entityManager.close();
     }
-    
+
     public void eliminarObrero(Long id) {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         if (verificarObrero(id)) {
             entityManager.getTransaction().begin();
             Obreros obrero = consultarObrero(id);
@@ -175,10 +175,12 @@ public class ObrerosDAO {
             throw new EntityNotFoundException("No se puede encontrar el obrero con ID: " + id);
         }
     }
-    
+
     // Sube el sueldo del obrero el monto dado
     public void subirSueldoObrero(Long id, Float monto) {
         if (verificarObrero(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Obreros obrero = consultarObrero(id);
             obrero.setSueldoDiario(obrero.getSueldoDiario() + monto);
@@ -189,10 +191,12 @@ public class ObrerosDAO {
             throw new EntityNotFoundException("No se puede encontrar el obrero con ID: " + id);
         }
     }
-    
+
     // Baja el sueldo del obrero el monto dado
     public void bajarSueldoObrero(Long id, Float monto) {
         if (verificarObrero(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Obreros obrero = consultarObrero(id);
             obrero.setSueldoDiario(obrero.getSueldoDiario() - monto);
@@ -203,10 +207,12 @@ public class ObrerosDAO {
             throw new EntityNotFoundException("No se puede encontrar el obrero con ID: " + id);
         }
     }
-    
+
     // Resta a obrero una cierta cantidad por pagar
     public void restarPorPagar(Long id, Float monto) {
         if (verificarObrero(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Obreros obrero = consultarObrero(id);
             obrero.setPorPagar(obrero.getPorPagar() - monto);
@@ -217,10 +223,12 @@ public class ObrerosDAO {
             throw new EntityNotFoundException("No se puede encontrar el obrero con ID: " + id);
         }
     }
-    
+
     // Suma a obrero una cierta cantidad por pagar
     public void sumarPorPagar(Long id, Float monto) {
         if (verificarObrero(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Obreros obrero = consultarObrero(id);
             obrero.setPorPagar(obrero.getPorPagar() + monto);
@@ -231,10 +239,12 @@ public class ObrerosDAO {
             throw new EntityNotFoundException("No se puede encontrar el obrero con ID: " + id);
         }
     }
-    
+
     // Resta a obrero una cierta cantidad por pagado
     public void restarPagado(Long id, Float monto) {
         if (verificarObrero(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Obreros obrero = consultarObrero(id);
             obrero.setPagado(obrero.getPagado() - monto);
@@ -246,10 +256,12 @@ public class ObrerosDAO {
             throw new EntityNotFoundException("No se puede encontrar el obrero con ID: " + id);
         }
     }
-    
+
     // Suma a obrero una cierta cantidad por pagado
     public void sumarPagado(Long id, Float monto) {
         if (verificarObrero(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Obreros obrero = consultarObrero(id);
             obrero.setPagado(obrero.getPagado() + monto);
@@ -261,10 +273,12 @@ public class ObrerosDAO {
             throw new EntityNotFoundException("No se puede encontrar el obrero con ID: " + id);
         }
     }
-    
+
     // Suma a los dias trabajados la cantidad dada
     public void sumarDiasTrabajadosObrero(Long id, Integer dias) {
         if (verificarObrero(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Obreros obrero = consultarObrero(id);
             obrero.setDiasTrabajados(obrero.getDiasTrabajados() + dias);
@@ -276,10 +290,12 @@ public class ObrerosDAO {
             throw new EntityNotFoundException("No se puede encontrar el obrero con ID: " + id);
         }
     }
-    
+
     // Resta a los dias trabajados la cantidad dada
     public void restarDiasTrabajadosObrero(Long id, Integer dias) {
         if (verificarObrero(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Obreros obrero = consultarObrero(id);
             obrero.setDiasTrabajados(obrero.getDiasTrabajados() - dias);
@@ -290,21 +306,25 @@ public class ObrerosDAO {
         } else {
             throw new EntityNotFoundException("No se puede encontrar el obrero con ID: " + id);
         }
-    } 
-    
+    }
+
     // Métodos de consulta 
     public Boolean verificarObrero(Long id) {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        Obreros obrero = entityManager.find (Obreros.class, id);
+        Obreros obrero = entityManager.find(Obreros.class, id);
         entityManager.getTransaction().commit();
         entityManager.close();
         return obrero != null;
     }
-    
+
     public Obreros consultarObrero(Long id) {
         if (verificarObrero(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            Obreros obrero = entityManager.find (Obreros.class, id);
+            Obreros obrero = entityManager.find(Obreros.class, id);
             entityManager.getTransaction().commit();
             entityManager.close();
             return obrero;
@@ -312,10 +332,12 @@ public class ObrerosDAO {
             throw new EntityNotFoundException("No se puede encontrar el obrero con ID: " + id);
         }
     }
-    
+
     // Regresa una lista de obreros con un mayor de dias trabajados y mayor 
     // sueldo diario al dado
     public List<Obreros> consultarObreros(Integer diasTrabajados, Float sueldoDiario) throws Exception {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         if (diasTrabajados != null && sueldoDiario != null) {
             TypedQuery<Obreros> query;
@@ -357,7 +379,7 @@ public class ObrerosDAO {
             throw new Exception("No se pudo realizar la búsqueda de obreros con éxito.");
         }
     }
-    
+
     // Métodos drivers para búsqueda dinámica
     public List<Obreros> consultarObrerosConDiasTrabajadosMínimo(Integer diasTrabajados) throws Exception {
         return consultarObreros(diasTrabajados, null);

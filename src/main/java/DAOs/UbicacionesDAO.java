@@ -32,49 +32,24 @@ import javax.persistence.criteria.Root;
 public class UbicacionesDAO {
 
     /**
-     * Se establece una conexión con la base de datos UObra mediante JPA,
-     * creando un objeto EntityManager que puede ser utilizado para realizar
-     * operaciones de creación, lectura, actualización y eliminación en la base
-     * de datos utilizando el lenguaje JPQL.
-     */
-    EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
-    EntityManager entityManager = managerFactory.createEntityManager();
-
-    /**
      * Llamada a paquete de Herramientas para manipular fechas.
      */
     Fecha fecha = new Fecha();
 
-    /**
-     * Método para persistir la entidad de la clase a la base de datos, en caso
-     * que no se pueda realizar dicha transacción se cancela el guardado de la
-     * entidad.
-     *
-     * @param object Objeto a guardar en la base de datos perteneciente a la
-     * clase
-     */
-    public void persist(Object object) {
-        entityManager.getTransaction().begin();
-        try {
-            entityManager.persist(object);
-            entityManager.getTransaction().commit();
-        } catch (Exception e) {
-            entityManager.getTransaction().rollback();
-        } finally {
-            entityManager.close();
-        }
-    }
-
     // Métodos de acceso
     public void registrarUbicacion(Ubicaciones ubicacion) {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        this.persist(ubicacion);
+        entityManager.persist(ubicacion);
         entityManager.getTransaction().commit();
         entityManager.close();
     }
 
     public void ocuparUbicacion(Long id) {
         if (verificarUbicacion(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Ubicaciones ubicacion = consultarUbicacion(id);
             if (ubicacion.getDisponible()) {
@@ -91,6 +66,8 @@ public class UbicacionesDAO {
 
     public void desocuparUbicacion(Long id) {
         if (verificarUbicacion(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Ubicaciones ubicacion = consultarUbicacion(id);
             if (!ubicacion.getDisponible()) {
@@ -106,6 +83,8 @@ public class UbicacionesDAO {
 
     public void editarTipo(Long id, TipoUbicacion tipo) {
         if (verificarUbicacion(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Ubicaciones ubicacion = consultarUbicacion(id);
             if (!ubicacion.getTipo().equals(tipo)) {
@@ -121,6 +100,8 @@ public class UbicacionesDAO {
 
     public void editarDireccion(Long id, String direccion) {
         if (verificarUbicacion(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Ubicaciones ubicacion = consultarUbicacion(id);
             if (!ubicacion.getDireccion().equalsIgnoreCase(direccion)) {
@@ -136,6 +117,8 @@ public class UbicacionesDAO {
 
     public void editarLargo(Long id, Float largo) {
         if (verificarUbicacion(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Ubicaciones ubicacion = consultarUbicacion(id);
             if (!Objects.equals(ubicacion.getLargo(), largo)) {
@@ -151,6 +134,8 @@ public class UbicacionesDAO {
 
     public void editarAncho(Long id, Float ancho) {
         if (verificarUbicacion(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Ubicaciones ubicacion = consultarUbicacion(id);
             if (!Objects.equals(ubicacion.getAncho(), ancho)) {
@@ -166,6 +151,8 @@ public class UbicacionesDAO {
 
     public void eliminarUbicacion(Long id) {
         if (verificarUbicacion(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Ubicaciones ubicacion = consultarUbicacion(id);
             entityManager.remove(ubicacion);
@@ -178,6 +165,8 @@ public class UbicacionesDAO {
 
     // Métodos de consulta 
     public Boolean verificarUbicacion(Long id) {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         Ubicaciones ubicacion = entityManager.find(Ubicaciones.class, id);
         entityManager.getTransaction().commit();
@@ -187,6 +176,8 @@ public class UbicacionesDAO {
 
     public Ubicaciones consultarUbicacion(Long id) {
         if (verificarUbicacion(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Ubicaciones ubicacion = entityManager.find(Ubicaciones.class, id);
             entityManager.getTransaction().commit();
@@ -203,6 +194,8 @@ public class UbicacionesDAO {
     // dado, una direccion parecida cierta dada y hayan sido registradas por el 
     // cliente dado
     public List<Ubicaciones> consultarUbicacionesRegistro(Calendar periodoInicio, Calendar periodoFin, Boolean disponible, TipoUbicacion tipo, Float ancho, Float largo, Float area, String direccion, Clientes cliente) {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Ubicaciones> criteria = criteriaBuilder.createQuery(Ubicaciones.class);
@@ -265,6 +258,8 @@ public class UbicacionesDAO {
     // dado, una direccion parecida cierta dada y hayan sido registradas por el 
     // cliente dado
     public List<Ubicaciones> consultarUbicacionesOcupacion(Calendar periodoInicio, Calendar periodoFin, Boolean disponible, TipoUbicacion tipo, Float ancho, Float largo, Float area, String direccion, Clientes cliente) throws Exception {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         Encriptador crypt = new Encriptador();
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();

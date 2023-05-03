@@ -30,50 +30,25 @@ import javax.persistence.criteria.Root;
  */
 public class PlanosDAO {
 
-    /**
-     * Se establece una conexión con la base de datos UObra mediante JPA,
-     * creando un objeto EntityManager que puede ser utilizado para realizar
-     * operaciones de creación, lectura, actualización y eliminación en la base
-     * de datos utilizando el lenguaje JPQL.
-     */
-    EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
-    EntityManager entityManager = managerFactory.createEntityManager();
-
-    /**
-     * Método para persistir la entidad de la clase a la base de datos, en caso
-     * que no se pueda realizar dicha transacción se cancela el guardado de la
-     * entidad.
-     *
-     * @param object Objeto a guardar en la base de datos perteneciente a la
-     * clase
-     */
-    public void persist(Object object) {
-        entityManager.getTransaction().begin();
-        try {
-            entityManager.persist(object);
-            entityManager.getTransaction().commit();
-        } catch (Exception e) {
-            entityManager.getTransaction().rollback();
-        } finally {
-            entityManager.close();
-        }
-    }
-
     // Métodos de acceso
     public void registrarPlano(Planos plano) {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        this.persist(plano);
+        entityManager.persist(plano);
         entityManager.getTransaction().commit();
         entityManager.close();
     }
-    
+
     public void editarFechaRealizacionPlano(Long id, Calendar fechaRealizacion) {
         if (verificarPlano(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Planos plano = consultarPlano(id);
             if (!plano.getFechaRealizacion().equals(fechaRealizacion)) {
-               plano.setFechaRealizacion(fechaRealizacion);
-               entityManager.merge(plano); 
+                plano.setFechaRealizacion(fechaRealizacion);
+                entityManager.merge(plano);
             }
             entityManager.getTransaction().commit();
             entityManager.close();
@@ -81,17 +56,19 @@ public class PlanosDAO {
             throw new EntityNotFoundException("No se puede encontrar el plano con ID: " + id);
         }
     }
-    
+
     public void editarFechaRealizacionPlanoFolio(String folio, Calendar fechaRealizacion) throws Exception {
         Encriptador crypt = new Encriptador();
         String verifico = folio;
         verifico = crypt.encrypt(verifico);
         if (verificarPlanoFolio(verifico)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Planos plano = consultarPlanoFolio(folio);
             if (!plano.getFechaRealizacion().equals(fechaRealizacion)) {
-               plano.setFechaRealizacion(fechaRealizacion);
-               entityManager.merge(plano); 
+                plano.setFechaRealizacion(fechaRealizacion);
+                entityManager.merge(plano);
             }
             entityManager.getTransaction().commit();
             entityManager.close();
@@ -99,9 +76,11 @@ public class PlanosDAO {
             throw new EntityNotFoundException("No se puede encontrar el plano con folio: " + folio);
         }
     }
-    
+
     public void editarTipoPlano(Long id, TipoPlano tipo) {
         if (verificarPlano(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Planos plano = consultarPlano(id);
             if (!plano.getTipo().equals(tipo)) {
@@ -114,12 +93,14 @@ public class PlanosDAO {
             throw new EntityNotFoundException("No se puede encontrar el plano con ID: " + id);
         }
     }
-    
+
     public void editarTipoPlanoFolio(String folio, TipoPlano tipo) throws Exception {
         Encriptador crypt = new Encriptador();
         String verifico = folio;
         verifico = crypt.encrypt(verifico);
         if (verificarPlanoFolio(verifico)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Planos plano = consultarPlanoFolio(folio);
             if (!plano.getTipo().equals(tipo)) {
@@ -132,9 +113,11 @@ public class PlanosDAO {
             throw new EntityNotFoundException("No se puede encontrar el plano con folio: " + folio);
         }
     }
-    
+
     public void editarEscalaPlano(Long id, Escala escala) {
         if (verificarPlano(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Planos plano = consultarPlano(id);
             if (!plano.getEscala().equals(escala)) {
@@ -147,12 +130,14 @@ public class PlanosDAO {
             throw new EntityNotFoundException("No se puede encontrar el plano con ID: " + id);
         }
     }
-    
+
     public void editarEscalaFolio(String folio, Escala escala) throws Exception {
         Encriptador crypt = new Encriptador();
         String verifico = folio;
         verifico = crypt.encrypt(verifico);
         if (verificarPlanoFolio(verifico)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Planos plano = consultarPlanoFolio(folio);
             if (!plano.getEscala().equals(escala)) {
@@ -168,6 +153,8 @@ public class PlanosDAO {
 
     public void eliminarPlano(Long id) {
         if (verificarPlano(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Planos plano = consultarPlano(id);
             entityManager.remove(plano);
@@ -177,12 +164,14 @@ public class PlanosDAO {
             throw new EntityNotFoundException("No se puede encontrar el plano con ID: " + id);
         }
     }
-    
+
     public void eliminarPlanoFolio(String folio) throws Exception {
         Encriptador crypt = new Encriptador();
         String verifico = folio;
         verifico = crypt.encrypt(verifico);
         if (verificarPlanoFolio(verifico)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Planos plano = consultarPlanoFolio(folio);
             entityManager.remove(plano);
@@ -193,17 +182,20 @@ public class PlanosDAO {
         }
     }
 
-
     // Métodos de consulta 
     public Boolean verificarPlano(Long id) {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         Planos plano = entityManager.find(Planos.class, id);
         entityManager.getTransaction().commit();
         entityManager.close();
         return plano != null;
     }
-    
+
     public Boolean verificarPlanoFolio(String folio) {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         Planos plano = entityManager.find(Planos.class, folio);
         entityManager.getTransaction().commit();
@@ -213,6 +205,8 @@ public class PlanosDAO {
 
     public Planos consultarPlano(Long id) {
         if (verificarPlano(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Planos plano = entityManager.find(Planos.class, id);
             entityManager.getTransaction().commit();
@@ -222,11 +216,13 @@ public class PlanosDAO {
             throw new EntityNotFoundException("No se puede encontrar el plano con ID: " + id);
         }
     }
-    
+
     public Planos consultarPlanoFolio(String folio) throws Exception {
         Encriptador crypt = new Encriptador();
         folio = crypt.encrypt(folio);
         if (verificarPlanoFolio(folio)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Planos plano = entityManager.find(Planos.class, folio);
             entityManager.getTransaction().commit();
@@ -240,6 +236,8 @@ public class PlanosDAO {
     // Regresa una lista de planos que hayan sido registrados dentro del periodo
     // dado, con la escala dada, del tipo dado y registrados por el jefe dado
     public List<Planos> consultarPlanosRegistro(Calendar periodoInicio, Calendar periodoFin, Escala escala, TipoPlano tipo, Jefes jefe) {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Planos> criteria = criteriaBuilder.createQuery(Planos.class);
@@ -259,7 +257,7 @@ public class PlanosDAO {
         if (tipo != null) {
             predicates.add(criteriaBuilder.equal(root.get("escala"), escala));
         }
-        
+
         // Filtramos por tipo de plano si existe
         if (tipo != null) {
             predicates.add(criteriaBuilder.equal(root.get("tipo"), tipo));
@@ -275,10 +273,12 @@ public class PlanosDAO {
         entityManager.close();
         return entityManager.createQuery(criteria).getResultList();
     }
-    
+
     // Regresa una lista de planos que hayan sido realizados dentro del periodo
     // dado, con la escala dada, del tipo dado y registrados por el jefe dado
     public List<Planos> consultarPlanosRealizacion(Calendar periodoInicio, Calendar periodoFin, Escala escala, TipoPlano tipo, Jefes jefe) {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Planos> criteria = criteriaBuilder.createQuery(Planos.class);
@@ -298,7 +298,7 @@ public class PlanosDAO {
         if (tipo != null) {
             predicates.add(criteriaBuilder.equal(root.get("escala"), escala));
         }
-        
+
         // Filtramos por tipo de plano si existe
         if (tipo != null) {
             predicates.add(criteriaBuilder.equal(root.get("tipo"), tipo));

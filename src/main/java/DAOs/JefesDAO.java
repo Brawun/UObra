@@ -9,6 +9,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
@@ -21,42 +22,13 @@ import javax.persistence.TypedQuery;
  * @since Pruebas de Software Prof. María de los Ángeles Germán ITSON
  */
 public class JefesDAO {
-    
-    /**
-     * Se establece una conexión con la base de datos UObra mediante JPA,
-     * creando un objeto EntityManager que puede ser utilizado para realizar
-     * operaciones de creación, lectura, actualización y eliminación en la base
-     * de datos utilizando el lenguaje JPQL.
-     */
-    EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
-    EntityManager entityManager = managerFactory.createEntityManager();
-    
-    /**
-     * Método para persistir la entidad de la clase a la base de datos, en caso
-     * que no se pueda realizar dicha transacción se cancela el guardado de la 
-     * entidad.
-     * 
-     * @param object Objeto a guardar en la base de datos perteneciente a la clase
-     */
-    public void persist(Object object) {
-        entityManager.getTransaction().begin();
-        try {
-            entityManager.persist(object);
-            entityManager.getTransaction().commit();
-        } catch (Exception e) {
-            entityManager.getTransaction().rollback();
-        } finally {
-            entityManager.close();
-        }
-    }
-    
+
     // Métodos de inicio de sesión
-    
     /**
      * Este método regresa un jefe, el cuál es utilizado para generar el inicio
      * de sesión deseado.
      *
-     * @param usuario usuario ingresado. 
+     * @param usuario usuario ingresado.
      * @param contrasena constraseña ingresada.
      * @return Jefe si el inicio de sesión fue existoso, nulo en caso contrario.
      * @throws Exception en caso que haya una excepción con la encriptación.
@@ -65,6 +37,8 @@ public class JefesDAO {
         String verifico = usuario;
         String consulta = usuario;
         if (verificarUsuarioJefe(verifico)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             // Jefe a regresar inicializado
             Jefes jefe = null;
@@ -81,14 +55,15 @@ public class JefesDAO {
     }
 
     /**
-     * Método para verificar que un usuario exista en la base de datos de
-     * jefes.
+     * Método para verificar que un usuario exista en la base de datos de jefes.
      *
      * @param usuario usuario a buscar en la base de datos
      * @return Verdadero si el usuario es encontrado, falso en caso contrario
      * @throws Exception en caso que haya una excepción con la encriptación.
      */
     public boolean verificarUsuarioJefe(String usuario) throws Exception {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         // Encriptador/Desencriptador
         Encriptador crypt = new Encriptador();
@@ -96,10 +71,19 @@ public class JefesDAO {
         // se encuentran todos encriptados
         String usuarioEncriptado = crypt.encrypt(usuario);
         // Verifica si el usuario ingresado existe en la base de datos de jefes
-        Jefes jefe = entityManager.find(Jefes.class, usuarioEncriptado);
+        TypedQuery<Jefes> query;
+        String jpql = "SELECT o FROM Jefes o WHERE o.usuario = :usuarioEncriptado";
+        query = entityManager.createQuery(jpql, Jefes.class);
+        query.setParameter("usuarioEncriptado", usuarioEncriptado);
         entityManager.getTransaction().commit();
+        try {
+            query.getSingleResult();
+        } catch (NoResultException e) {
+            entityManager.close();
+            return false;
+        }
         entityManager.close();
-        return jefe != null;
+        return true;
     }
 
     /**
@@ -112,6 +96,8 @@ public class JefesDAO {
     public Jefes consultarJefesUsuario(String usuario) throws Exception {
         String verifico = usuario;
         if (verificarUsuarioJefe(verifico)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             // Encriptador/Desencriptador
             Encriptador crypt = new Encriptador();
@@ -119,7 +105,11 @@ public class JefesDAO {
             // se encuentran todos encriptados
             String usuarioEncriptado = crypt.encrypt(usuario);
             // Consulta el jefe con el usuario dado de la base de datos
-            Jefes jefe = entityManager.find(Jefes.class, usuarioEncriptado);
+            TypedQuery<Jefes> query;
+            String jpql = "SELECT o FROM Jefes o WHERE o.usuario = :usuarioEncriptado";
+            query = entityManager.createQuery(jpql, Jefes.class);
+            query.setParameter("usuarioEncriptado", usuarioEncriptado);
+            Jefes jefe = query.getSingleResult();
             entityManager.getTransaction().commit();
             entityManager.close();
             return jefe;
@@ -129,17 +119,21 @@ public class JefesDAO {
     }
 
     /**
-     * Método para validar un inicio de sesión, correspondiendo un usuario y 
-     * una contraseña.
+     * Método para validar un inicio de sesión, correspondiendo un usuario y una
+     * contraseña.
      *
      * @param usuario usuario al que le puede corresponder la contraseña
-     * @param contrasena contraseña a la que se verificará si es la que corresponde a usuario
-     * @return Verdadero si el usuario y la contraseña corresponden, falso en caso contrario
+     * @param contrasena contraseña a la que se verificará si es la que
+     * corresponde a usuario
+     * @return Verdadero si el usuario y la contraseña corresponden, falso en
+     * caso contrario
      * @throws Exception en caso que haya una excepción con la encriptación.
      */
     public boolean verificarContrasenaUsuario(String usuario, String contrasena) throws Exception {
         String verifico = usuario;
         if (verificarUsuarioJefe(verifico)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             // Encriptador/Desencriptador
             Encriptador crypt = new Encriptador();
@@ -155,17 +149,21 @@ public class JefesDAO {
             throw new EntityNotFoundException("No se puede encontrar el jefe con usuario: " + usuario);
         }
     }
-    
+
     // Métodos de acceso
     public void registrarJefe(Jefes jefe) {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        this.persist(jefe);
+        entityManager.persist(jefe);
         entityManager.getTransaction().commit();
         entityManager.close();
     }
-    
+
     public void eliminarJefe(Long id) {
         if (verificarJefe(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Jefes jefe = consultarJefe(id);
             entityManager.remove(jefe);
@@ -175,18 +173,22 @@ public class JefesDAO {
             throw new EntityNotFoundException("No se puede encontrar el jefe con ID: " + id);
         }
     }
-    
+
     // Métodos de consulta 
     public Boolean verificarJefe(Long id) {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         Jefes jefe = entityManager.find(Jefes.class, id);
         entityManager.getTransaction().commit();
         entityManager.close();
         return jefe != null;
     }
-    
+
     public Jefes consultarJefe(Long id) {
         if (verificarJefe(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Jefes jefe = entityManager.find(Jefes.class, id);
             entityManager.getTransaction().commit();
@@ -196,9 +198,11 @@ public class JefesDAO {
             throw new EntityNotFoundException("No se puede encontrar el jefe con ID: " + id);
         }
     }
-    
+
     // Método para consultar todos los jefes
-    public List<Jefes> consultarJefes() { 
+    public List<Jefes> consultarJefes() {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         TypedQuery<Jefes> query;
         String jpql = "SELECT j FROM Jefes j";

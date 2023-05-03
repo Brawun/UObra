@@ -39,21 +39,21 @@ public class ObrerosEscucha {
     public void calcularAtributosAutogeneradosYEncriptar(Obreros e) throws Exception {
         Encriptador crypt = new Encriptador();
         // Se encriptan datos sensibles
-        System.out.println("\n" + "Encriptando datos... ¡Usuario: " + e.getUsuario()
-                + " encriptado! Resultado: " + crypt.encrypt(e.getUsuario())
+        System.out.println("\n" + "Encriptando datos... ¡Usuario: " + e.usuario
+                + " encriptado! Resultado: " + crypt.encrypt(e.usuario)
                 + "\n");
         // Encripta usuario
-        e.setUsuario(crypt.encrypt(e.getUsuario()));
-        System.out.println("\n" + "Encriptando datos... ¡Contraseña: " + e.getContrasena()
-                + " encriptada! Resultado: " + crypt.encrypt(e.getContrasena())
+        e.usuario = crypt.encrypt(e.usuario);
+        System.out.println("\n" + "Encriptando datos... ¡Contraseña: " + e.contrasena
+                + " encriptada! Resultado: " + crypt.encrypt(e.contrasena)
                 + "\n");
         // Encripta contraseña
-        e.setContrasena(crypt.encrypt(e.getContrasena()));
-        System.out.println("\n" + "Encriptando datos... ¡Teléfono: " + e.getTelefono()
-                + " encriptado! Resultado: " + crypt.encrypt(e.getTelefono())
+        e.contrasena = crypt.encrypt(e.contrasena);
+        System.out.println("\n" + "Encriptando datos... ¡Teléfono: " + e.telefono
+                + " encriptado! Resultado: " + crypt.encrypt(e.telefono)
                 + "\n");
         // Encripta teléfono
-        e.setTelefono(crypt.encrypt(e.getTelefono()));
+        e.telefono = crypt.encrypt(e.telefono);
     }
 
     /**
@@ -68,15 +68,15 @@ public class ObrerosEscucha {
         Encriptador crypt = new Encriptador();
         System.out.println("\n" + " + Se agregó la entidad obrero: "
                 + " - Nombre completo: "
-                + e.getNombre()
-                + e.getApellidoPaterno()
-                + e.getApellidoMaterno()
-                + " - Teléfono: " + crypt.decrypt(e.getTelefono())
-                + " - Usuario: " + crypt.decrypt(e.getUsuario())
-                + " - Contraseña: " + crypt.decrypt(e.getContrasena())
-                + " - Sueldo diario: $ " + e.getSueldoDiario() + " MXN"
-                + " - ID: " + e.getId()
-                + "\n");;
+                + e.nombre + " "
+                + e.apellidoPaterno + " "
+                + e.apellidoMaterno + " "
+                + " - Teléfono: " + crypt.decrypt(e.telefono)
+                + " - Usuario: " + crypt.decrypt(e.usuario)
+                + " - Contraseña: " + crypt.decrypt(e.contrasena)
+                + " - Sueldo diario: $ " + e.sueldoDiario + " MXN"
+                + " - ID: " + e.id
+                + "\n");
     }
     
     /**
@@ -104,14 +104,14 @@ public class ObrerosEscucha {
         Encriptador crypt = new Encriptador();
         System.out.println("\n" + " = Se eliminó la entidad obrero: "
                 + " - Nombre completo: "
-                + e.getNombre()
-                + e.getApellidoPaterno()
-                + e.getApellidoMaterno()
-                + " - Teléfono: " + crypt.decrypt(e.getTelefono())
-                + " - Usuario: " + crypt.decrypt(e.getUsuario())
-                + " - Contraseña: " + crypt.decrypt(e.getContrasena())
-                + " - Sueldo diario: $ " + e.getSueldoDiario() + " MXN"
-                + " - ID: " + e.getId()
+                + e.nombre + " "
+                + e.apellidoPaterno + " "
+                + e.apellidoMaterno + " "
+                + " - Teléfono: " + crypt.decrypt(e.telefono)
+                + " - Usuario: " + crypt.decrypt(e.usuario)
+                + " - Contraseña: " + crypt.decrypt(e.contrasena)
+                + " - Sueldo diario: $ " + e.sueldoDiario + " MXN"
+                + " - ID: " + e.id
                 + "\n");
     } 
 }

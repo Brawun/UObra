@@ -29,45 +29,20 @@ import javax.persistence.criteria.Root;
  */
 public class PermisosDAO {
 
-    /**
-     * Se establece una conexión con la base de datos UObra mediante JPA,
-     * creando un objeto EntityManager que puede ser utilizado para realizar
-     * operaciones de creación, lectura, actualización y eliminación en la base
-     * de datos utilizando el lenguaje JPQL.
-     */
-    EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
-    EntityManager entityManager = managerFactory.createEntityManager();
-
-    /**
-     * Método para persistir la entidad de la clase a la base de datos, en caso
-     * que no se pueda realizar dicha transacción se cancela el guardado de la
-     * entidad.
-     *
-     * @param object Objeto a guardar en la base de datos perteneciente a la
-     * clase
-     */
-    public void persist(Object object) {
-        entityManager.getTransaction().begin();
-        try {
-            entityManager.persist(object);
-            entityManager.getTransaction().commit();
-        } catch (Exception e) {
-            entityManager.getTransaction().rollback();
-        } finally {
-            entityManager.close();
-        }
-    }
-
     // Métodos de acceso
     public void registrarPermiso(Permisos permiso) {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        this.persist(permiso);
+        entityManager.persist(permiso);
         entityManager.getTransaction().commit();
         entityManager.close();
     }
-    
+
     public void editarTipoPermiso(Long id, TipoPermiso tipo) {
         if (verificarPermiso(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Permisos permiso = consultarPermiso(id);
             if (!permiso.getTipo().equals(tipo)) {
@@ -80,12 +55,14 @@ public class PermisosDAO {
             throw new EntityNotFoundException("No se puede encontrar el permiso con ID: " + id);
         }
     }
-    
+
     public void editarTipoPermisoFolio(String folio, TipoPermiso tipo) throws Exception {
         Encriptador crypt = new Encriptador();
         String verifico = folio;
         verifico = crypt.encrypt(verifico);
         if (verificarPermisoFolio(verifico)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Permisos permiso = consultarPermisoFolio(folio);
             if (!permiso.getTipo().equals(tipo)) {
@@ -98,9 +75,11 @@ public class PermisosDAO {
             throw new EntityNotFoundException("No se puede encontrar el permiso con folio: " + folio);
         }
     }
-    
-    public void editarFechaConcesionPermiso(Long id, Calendar fechaConcesion) { 
+
+    public void editarFechaConcesionPermiso(Long id, Calendar fechaConcesion) {
         if (verificarPermiso(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Permisos permiso = consultarPermiso(id);
             if (!permiso.getFechaConcesion().equals(fechaConcesion)) {
@@ -113,12 +92,14 @@ public class PermisosDAO {
             throw new EntityNotFoundException("No se puede encontrar el permiso con ID: " + id);
         }
     }
-    
+
     public void editarFechaConcesionPermisoFolio(String folio, Calendar fechaConcesion) throws Exception {
         Encriptador crypt = new Encriptador();
         String verifico = folio;
         verifico = crypt.encrypt(verifico);
         if (verificarPermisoFolio(verifico)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Permisos permiso = consultarPermisoFolio(folio);
             if (!permiso.getFechaConcesion().equals(fechaConcesion)) {
@@ -134,6 +115,8 @@ public class PermisosDAO {
 
     public void eliminarPermiso(Long id) {
         if (verificarPermiso(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Permisos permiso = consultarPermiso(id);
             entityManager.remove(permiso);
@@ -149,6 +132,8 @@ public class PermisosDAO {
         String verifico = folio;
         verifico = crypt.encrypt(verifico);
         if (verificarPermisoFolio(verifico)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Permisos permiso = consultarPermisoFolio(folio);
             entityManager.remove(permiso);
@@ -161,6 +146,8 @@ public class PermisosDAO {
 
     // Métodos de consulta 
     public Boolean verificarPermiso(Long id) {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         Permisos permiso = entityManager.find(Permisos.class, id);
         entityManager.getTransaction().commit();
@@ -169,6 +156,8 @@ public class PermisosDAO {
     }
 
     public Boolean verificarPermisoFolio(String folio) {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         Permisos permiso = entityManager.find(Permisos.class, folio);
         entityManager.getTransaction().commit();
@@ -178,6 +167,8 @@ public class PermisosDAO {
 
     public Permisos consultarPermiso(Long id) {
         if (verificarPermiso(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Permisos permiso = entityManager.find(Permisos.class, id);
             entityManager.getTransaction().commit();
@@ -192,6 +183,8 @@ public class PermisosDAO {
         Encriptador crypt = new Encriptador();
         folio = crypt.encrypt(folio);
         if (verificarPermisoFolio(folio)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Permisos permiso = entityManager.find(Permisos.class, folio);
             entityManager.getTransaction().commit();
@@ -206,6 +199,8 @@ public class PermisosDAO {
     // dado, correspondan al tipo dado y hayan sido registrados por el jefe si es
     // que es dado
     public List<Permisos> consultarPermisosRegistro(Calendar periodoInicio, Calendar periodoFin, TipoPermiso tipo, Jefes jefe) {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Permisos> criteria = criteriaBuilder.createQuery(Permisos.class);
@@ -236,11 +231,13 @@ public class PermisosDAO {
         entityManager.close();
         return entityManager.createQuery(criteria).getResultList();
     }
-    
+
     // Regresa una lista de permisos que hayan sido concedidos dentro del periodo
     // dado, correspondan al tipo dado y hayan sido registrados por el jefe si es
     // que es dado
     public List<Permisos> consultarPermisosConcesion(Calendar periodoInicio, Calendar periodoFin, TipoPermiso tipo, Jefes jefe) {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Permisos> criteria = criteriaBuilder.createQuery(Permisos.class);

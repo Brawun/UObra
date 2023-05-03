@@ -12,6 +12,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
@@ -25,50 +26,23 @@ import javax.persistence.TypedQuery;
  */
 public class ClientesDAO {
 
-    /**
-     * Se establece una conexión con la base de datos UObra mediante JPA,
-     * creando un objeto EntityManager que puede ser utilizado para realizar
-     * operaciones de creación, lectura, actualización y eliminación en la base
-     * de datos utilizando el lenguaje JPQL.
-     */
-    EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
-    EntityManager entityManager = managerFactory.createEntityManager();
-
-    /**
-     * Método para persistir la entidad de la clase a la base de datos, en caso
-     * que no se pueda realizar dicha transacción se cancela el guardado de la
-     * entidad.
-     *
-     * @param object Objeto a guardar en la base de datos perteneciente a la
-     * clase
-     */
-    public void persist(Object object) {
-        entityManager.getTransaction().begin();
-        try {
-            entityManager.persist(object);
-            entityManager.getTransaction().commit();
-        } catch (Exception e) {
-            entityManager.getTransaction().rollback();
-        } finally {
-            entityManager.close();
-        }
-    }
-
     // Métodos de inicio de sesión
-    
     /**
-     * Este método regresa un cliente, el cuál es utilizado para generar el inicio
-     * de sesión deseado.
+     * Este método regresa un cliente, el cuál es utilizado para generar el
+     * inicio de sesión deseado.
      *
-     * @param usuario usuario ingresado. 
+     * @param usuario usuario ingresado.
      * @param contrasena constraseña ingresada.
-     * @return Cliente si el inicio de sesión fue existoso, nulo en caso contrario.
+     * @return Cliente si el inicio de sesión fue existoso, nulo en caso
+     * contrario.
      * @throws Exception en caso que haya una excepción con la encriptación.
      */
     public Clientes iniciarSesionCliente(String usuario, String contrasena) throws Exception {
         String verifico = usuario;
         String consulta = usuario;
         if (verificarUsuarioCliente(verifico)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             // Cliente a regresar inicializado
             Clientes cliente = null;
@@ -93,6 +67,8 @@ public class ClientesDAO {
      * @throws Exception en caso que haya una excepción con la encriptación.
      */
     public boolean verificarUsuarioCliente(String usuario) throws Exception {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         // Encriptador/Desencriptador
         Encriptador crypt = new Encriptador();
@@ -100,10 +76,19 @@ public class ClientesDAO {
         // se encuentran todos encriptados
         String usuarioEncriptado = crypt.encrypt(usuario);
         // Verifica si el usuario ingresado existe en la base de datos de clientes
-        Clientes cliente = entityManager.find(Clientes.class, usuarioEncriptado);
+        TypedQuery<Clientes> query;
+        String jpql = "SELECT o FROM Clientes o WHERE o.usuario = :usuarioEncriptado";
+        query = entityManager.createQuery(jpql, Clientes.class);
+        query.setParameter("usuarioEncriptado", usuarioEncriptado);
         entityManager.getTransaction().commit();
+        try {
+            query.getSingleResult();
+        } catch (NoResultException e) {
+            entityManager.close();
+            return false;
+        }
         entityManager.close();
-        return cliente != null;
+        return true;
     }
 
     /**
@@ -116,6 +101,8 @@ public class ClientesDAO {
     public Clientes consultarClientesUsuario(String usuario) throws Exception {
         String verifico = usuario;
         if (verificarUsuarioCliente(verifico)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             // Encriptador/Desencriptador
             Encriptador crypt = new Encriptador();
@@ -123,7 +110,11 @@ public class ClientesDAO {
             // se encuentran todos encriptados
             String usuarioEncriptado = crypt.encrypt(usuario);
             // Consulta el cliente con el usuario dado de la base de datos
-            Clientes cliente = entityManager.find(Clientes.class, usuarioEncriptado);
+            TypedQuery<Clientes> query;
+            String jpql = "SELECT o FROM Clientes o WHERE o.usuario = :usuarioEncriptado";
+            query = entityManager.createQuery(jpql, Clientes.class);
+            query.setParameter("usuarioEncriptado", usuarioEncriptado);
+            Clientes cliente = query.getSingleResult();
             entityManager.getTransaction().commit();
             entityManager.close();
             return cliente;
@@ -133,17 +124,21 @@ public class ClientesDAO {
     }
 
     /**
-     * Método para validar un inicio de sesión, correspondiendo un usuario y 
-     * una contraseña.
+     * Método para validar un inicio de sesión, correspondiendo un usuario y una
+     * contraseña.
      *
      * @param usuario usuario al que le puede corresponder la contraseña
-     * @param contrasena contraseña a la que se verificará si es la que corresponde a usuario
-     * @return Verdadero si el usuario y la contraseña corresponden, falso en caso contrario
+     * @param contrasena contraseña a la que se verificará si es la que
+     * corresponde a usuario
+     * @return Verdadero si el usuario y la contraseña corresponden, falso en
+     * caso contrario
      * @throws Exception en caso que haya una excepción con la encriptación.
      */
     public boolean verificarContrasenaUsuario(String usuario, String contrasena) throws Exception {
         String verifico = usuario;
         if (verificarUsuarioCliente(verifico)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             // Encriptador/Desencriptador
             Encriptador crypt = new Encriptador();
@@ -162,8 +157,10 @@ public class ClientesDAO {
 
     // Métodos de acceso
     public void registrarCliente(Clientes cliente) {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        this.persist(cliente);
+        entityManager.persist(cliente);
         entityManager.getTransaction().commit();
         entityManager.close();
     }
@@ -171,6 +168,8 @@ public class ClientesDAO {
     // Sumar a la deuda del cliente el monto dado
     public void sumarDeudaCliente(Long id, Float monto) {
         if (verificarCliente(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Clientes cliente = consultarCliente(id);
             cliente.setDeudaTotal(cliente.getDeudaTotal() + monto);
@@ -185,6 +184,8 @@ public class ClientesDAO {
     // Restar a la deuda del cliente el monto dado
     public void restarDeudaCliente(Long id, Float monto) {
         if (verificarCliente(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Clientes cliente = consultarCliente(id);
             cliente.setDeudaTotal(cliente.getDeudaTotal() - monto);
@@ -199,6 +200,8 @@ public class ClientesDAO {
     // Se agrega la obra dada al cliente
     public void agregarObraCliente(Long id, Obras obra) throws Exception {
         if (verificarCliente(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Clientes cliente = consultarCliente(id);
             if (cliente.getObras().add(obra)) {
@@ -216,6 +219,8 @@ public class ClientesDAO {
     // Se agrega la ubicacion dada al cliente
     public void agregarUbicacionCliente(Long id, Ubicaciones ubicacion) throws Exception {
         if (verificarCliente(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Clientes cliente = consultarCliente(id);
             if (cliente.getUbicaciones().add(ubicacion)) {
@@ -233,6 +238,8 @@ public class ClientesDAO {
     // Se agrega el pago dado al cliente
     public void agregarPagosCliente(Long id, Pagos pago) throws Exception {
         if (verificarCliente(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Clientes cliente = consultarCliente(id);
             if (cliente.getPagos().add(pago)) {
@@ -249,6 +256,8 @@ public class ClientesDAO {
 
     public void eliminarCliente(Long id) {
         if (verificarCliente(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Clientes cliente = consultarCliente(id);
             entityManager.remove(cliente);
@@ -261,6 +270,8 @@ public class ClientesDAO {
 
     // Métodos de consulta 
     public Boolean verificarCliente(Long id) {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         Clientes cliente = entityManager.find(Clientes.class, id);
         entityManager.getTransaction().commit();
@@ -270,6 +281,8 @@ public class ClientesDAO {
 
     public Clientes consultarCliente(Long id) {
         if (verificarCliente(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Clientes cliente = entityManager.find(Clientes.class, id);
             entityManager.getTransaction().commit();
@@ -283,6 +296,8 @@ public class ClientesDAO {
     // Regresa una lista de clientes que esten endeudados o no y su deuda sea 
     // mayor o igual a la dada
     public List<Clientes> consultarClientes(Boolean endeudados, Float deuda) throws Exception {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         if (endeudados && deuda > (float) 0) { // Si se buscan clientes con deudas (true)
             TypedQuery<Clientes> query;

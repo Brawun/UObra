@@ -34,49 +34,24 @@ import javax.persistence.TypedQuery;
 public class ObrasDAO {
 
     /**
-     * Se establece una conexión con la base de datos UObra mediante JPA,
-     * creando un objeto EntityManager que puede ser utilizado para realizar
-     * operaciones de creación, lectura, actualización y eliminación en la base
-     * de datos utilizando el lenguaje JPQL.
-     */
-    EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
-    EntityManager entityManager = managerFactory.createEntityManager();
-
-    /**
      * Llamada a paquete de Herramientas para manipular fechas.
      */
-    Fecha fecha = new Fecha(); 
-    
-    /**
-     * Método para persistir la entidad de la clase a la base de datos, en caso
-     * que no se pueda realizar dicha transacción se cancela el guardado de la
-     * entidad.
-     *
-     * @param object Objeto a guardar en la base de datos perteneciente a la
-     * clase
-     */
-    public void persist(Object object) {
-        entityManager.getTransaction().begin();
-        try {
-            entityManager.persist(object);
-            entityManager.getTransaction().commit();
-        } catch (Exception e) {
-            entityManager.getTransaction().rollback();
-        } finally {
-            entityManager.close();
-        }
-    }
+    Fecha fecha = new Fecha();
 
     // Métodos de acceso
     public void registrarObra(Obras obra) {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        this.persist(obra);
+        entityManager.persist(obra);
         entityManager.getTransaction().commit();
         entityManager.close();
     }
 
     public void eliminarObra(Long id) {
         if (verificarObra(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Obras obra = consultarObra(id);
             entityManager.remove(obra);
@@ -90,6 +65,8 @@ public class ObrasDAO {
     // Cambia la obra al estado dado
     public void cambiarEstadoObra(Long id, EstadoObra estadoNuevo) {
         if (verificarObra(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Obras obra = consultarObra(id);
             obra.setEstado(estadoNuevo);
@@ -104,6 +81,8 @@ public class ObrasDAO {
     // Inserta una fecha inicio y cambia el estado
     public void iniciarObra(Long id) {
         if (verificarObra(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             ClientesDAO ClientesDAO = new ClientesDAO();
             Obras obra = consultarObra(id);
@@ -124,6 +103,8 @@ public class ObrasDAO {
     // Inserta una fecha fin y cambia el estado
     public void terminarObra(Long id) {
         if (verificarObra(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Obras obra = consultarObra(id);
             obra.setEstado(EstadoObra.TERMINADA);
@@ -139,6 +120,8 @@ public class ObrasDAO {
     // Cambia el booleando pagada a true por medio de una búsqueda por ID
     public void pagarObraID(Long id) {
         if (verificarObra(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Obras obra = consultarObra(id);
             obra.setEstaPagada(true);
@@ -153,6 +136,8 @@ public class ObrasDAO {
     // Cambia el booleando pagada a false por medio de una búsqueda por ID
     public void endeudarObraID(Long id) {
         if (verificarObra(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Obras obra = consultarObra(id);
             obra.setEstaPagada(false);
@@ -179,6 +164,8 @@ public class ObrasDAO {
     // Suma monto a deuda
     public void restarDeudaObra(Long id, Float monto) {
         if (verificarObra(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             ClientesDAO ClientesDAO = new ClientesDAO();
             Obras obra = consultarObra(id);
@@ -201,6 +188,8 @@ public class ObrasDAO {
     // Resta monto a deuda
     public void sumarDeudaObra(Long id, Float monto) {
         if (verificarObra(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             ClientesDAO ClientesDAO = new ClientesDAO();
             Obras obra = consultarObra(id);
@@ -223,6 +212,8 @@ public class ObrasDAO {
     // Suma monto a costo arranque
     public void sumarCostoArranqueObra(Long id, Float monto) {
         if (verificarObra(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             ClientesDAO ClientesDAO = new ClientesDAO();
             Obras obra = consultarObra(id);
@@ -247,6 +238,8 @@ public class ObrasDAO {
     // Resta monto a costo arranque
     public void restarCostoArranqueObra(Long id, Float monto) {
         if (verificarObra(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             ClientesDAO ClientesDAO = new ClientesDAO();
             Obras obra = consultarObra(id);
@@ -271,6 +264,8 @@ public class ObrasDAO {
     // Suma monto a inversion
     public void sumarInversionObra(Long id, Float monto) {
         if (verificarObra(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             ClientesDAO ClientesDAO = new ClientesDAO();
             Obras obra = consultarObra(id);
@@ -295,6 +290,8 @@ public class ObrasDAO {
     // Resta monto a inversion
     public void restarInversionObra(Long id, Float monto) {
         if (verificarObra(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             ClientesDAO ClientesDAO = new ClientesDAO();
             Obras obra = consultarObra(id);
@@ -320,6 +317,8 @@ public class ObrasDAO {
     public void asignarJefeObra(Long id, Long IdJefe) {
         if (verificarObra(id)) {
             JefesDAO JefesDAO = new JefesDAO();
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Obras obra = consultarObra(id);
             obra.setJefe(JefesDAO.consultarJefe(id));
@@ -334,6 +333,8 @@ public class ObrasDAO {
     // Asigna un nuevo obrero a una obra
     public void asingarObreroObra(Long id, Long idObrero) {
         if (verificarObra(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             // DAOs
             ObrerosDAO obrerosDAO = new ObrerosDAO();
@@ -359,6 +360,8 @@ public class ObrasDAO {
     // Asigna 3 nuevos obreros a una obra, para que esta pueda comenzar
     public void asingarTresObrerosObra(Long id, Long idObrero1, Long idObrero2, Long idObrero3) {
         if (verificarObra(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             // DAOs
             ObrerosDAO obrerosDAO = new ObrerosDAO();
@@ -392,6 +395,8 @@ public class ObrasDAO {
     // Asigna un nuevo pago a una obra 
     public void agregarPagoObra(Long id, Long idPago) {
         if (verificarObra(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             // DAOs
             PagosDAO pagosDAO = new PagosDAO();
@@ -422,6 +427,8 @@ public class ObrasDAO {
     // Asigna un nuevo plano a obra
     public void agregarPlanoObra(Long id, Long idPlano) {
         if (verificarObra(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             // DAOs
             PlanosDAO planosDAO = new PlanosDAO();
@@ -442,6 +449,8 @@ public class ObrasDAO {
     // Asigna un nuevo permiso a obra
     public void agregarPermisoObra(Long id, Long idPermiso) {
         if (verificarObra(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             // DAOs
             PermisosDAO permisosDAO = new PermisosDAO();
@@ -462,6 +471,8 @@ public class ObrasDAO {
     // Asigna una nueva ubicación a obra
     public void agregarUbicacionObra(Long id, Long idUbicacion) {
         if (verificarObra(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             // DAOs
             UbicacionesDAO ubicacionesDAO = new UbicacionesDAO();
@@ -483,10 +494,12 @@ public class ObrasDAO {
             throw new EntityNotFoundException("No se puede encontrar la obra con ID: " + id);
         }
     }
-    
+
     // Elimina un pago a una obra 
     public void eliminarPagoObra(Long id, Long idPago) {
         if (verificarObra(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             // DAOs
             PagosDAO PagosDAO = new PagosDAO();
@@ -518,6 +531,8 @@ public class ObrasDAO {
     // Elimina un plano de una obra en particular
     public void eliminarPlanoObra(Long id, Long idPlano) {
         if (verificarObra(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             // DAOs
             PlanosDAO planosDAO = new PlanosDAO();
@@ -538,6 +553,8 @@ public class ObrasDAO {
     // Elimina un permiso de una obra en particular
     public void eliminarPermisoObra(Long id, Long idPermiso) {
         if (verificarObra(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             // DAOs
             PermisosDAO permisosDAO = new PermisosDAO();
@@ -558,6 +575,8 @@ public class ObrasDAO {
     // Elimina una ubicación de una obra en particular
     public void eliminarUbicacionObra(Long id, Long idUbicacion) {
         if (verificarObra(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             // DAOs
             UbicacionesDAO ubicacionesDAO = new UbicacionesDAO();
@@ -577,6 +596,8 @@ public class ObrasDAO {
 
     // Métodos de consulta 
     public Boolean verificarObra(Long id) {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         Obras obra = entityManager.find(Obras.class, id);
         entityManager.getTransaction().commit();
@@ -586,6 +607,8 @@ public class ObrasDAO {
 
     public Obras consultarObra(Long id) {
         if (verificarObra(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Obras obra = entityManager.find(Obras.class, id);
             entityManager.getTransaction().commit();
@@ -601,6 +624,8 @@ public class ObrasDAO {
     // costado un total o más dado
     public List<Obras> consultarObrasFechaInicio(Calendar periodoInicio, Calendar periodoFin, EstadoObra estado, Boolean estaPagada, Float costoTotal, Long clienteId) throws Exception {
         TypedQuery<Obras> query;
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         // BUSQUEDA POR 6 CAMPOS
         if (periodoInicio != null
                 && periodoFin != null
@@ -1770,7 +1795,7 @@ public class ObrasDAO {
                 && estaPagada == null
                 && costoTotal == null
                 && clienteId == null) { // No se llenó ningún campo
-            String jpql = "SELECT o FROM Obras o";            
+            String jpql = "SELECT o FROM Obras o";
             query = entityManager.createQuery(jpql, Obras.class);
             List<Obras> obras = query.getResultList();
             entityManager.getTransaction().commit();
@@ -1780,12 +1805,14 @@ public class ObrasDAO {
             throw new Exception("No se pudo realizar la búsqueda dinámica de obras");
         }
     }
-    
+
     // Arroja una lista de obras que hayan sido solicitadas por cierto cliente 
     // dentro del periodo dado, tengan el estado dado, estén o no pagadas, hayan
     // costado un total o más dado
     public List<Obras> consultarObrasFechaSolicitada(Calendar periodoInicio, Calendar periodoFin, EstadoObra estado, Boolean estaPagada, Float costoTotal, Long clienteId) throws Exception {
         TypedQuery<Obras> query;
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         // BUSQUEDA POR 6 CAMPOS
         if (periodoInicio != null
                 && periodoFin != null
@@ -2955,7 +2982,7 @@ public class ObrasDAO {
                 && estaPagada == null
                 && costoTotal == null
                 && clienteId == null) { // No se llenó ningún campo
-            String jpql = "SELECT o FROM Obras o";            
+            String jpql = "SELECT o FROM Obras o";
             query = entityManager.createQuery(jpql, Obras.class);
             List<Obras> obras = query.getResultList();
             entityManager.getTransaction().commit();
@@ -2965,12 +2992,14 @@ public class ObrasDAO {
             throw new Exception("No se pudo realizar la búsqueda dinámica de obras");
         }
     }
-    
+
     // Arroja una lista de obras que hayan sido terminadas por cierto cliente 
     // dentro del periodo dado, tengan el estado dado, estén o no pagadas, hayan
     // costado un total o más dado
     public List<Obras> consultarObrasFechaFin(Calendar periodoInicio, Calendar periodoFin, EstadoObra estado, Boolean estaPagada, Float costoTotal, Long clienteId) throws Exception {
         TypedQuery<Obras> query;
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         // BUSQUEDA POR 6 CAMPOS
         if (periodoInicio != null
                 && periodoFin != null
@@ -4140,7 +4169,7 @@ public class ObrasDAO {
                 && estaPagada == null
                 && costoTotal == null
                 && clienteId == null) { // No se llenó ningún campo
-            String jpql = "SELECT o FROM Obras o";            
+            String jpql = "SELECT o FROM Obras o";
             query = entityManager.createQuery(jpql, Obras.class);
             List<Obras> obras = query.getResultList();
             entityManager.getTransaction().commit();
@@ -4150,20 +4179,20 @@ public class ObrasDAO {
             throw new Exception("No se pudo realizar la búsqueda dinámica de obras");
         }
     }
-    
+
     // Métodos drivers para búsqueda dinámica
     public List<Obras> consultarObrasConEstado(EstadoObra estado) throws Exception {
         return this.consultarObrasFechaInicio(null, null, estado, null, null, null);
     }
-    
+
     public List<Obras> consultarObrasConCostoMayorIgualA(Float monto) throws Exception {
         return this.consultarObrasFechaInicio(null, null, null, null, monto, null);
     }
-    
+
     public List<Obras> consultarObrasNoPagadasConCostoMayorA(Float monto) throws Exception {
         return this.consultarObrasFechaInicio(null, null, null, false, monto, null);
     }
-    
+
     public List<Obras> consultarObrasPagadasConCostoMayorA(Float monto) throws Exception {
         return this.consultarObrasFechaInicio(null, null, null, true, monto, null);
     }
@@ -4171,11 +4200,11 @@ public class ObrasDAO {
     public List<Obras> consultarObrasPagadas() throws Exception {
         return this.consultarObrasFechaInicio(null, null, null, true, null, null);
     }
-    
+
     public List<Obras> consultarObrasNoPagads() throws Exception {
         return this.consultarObrasFechaInicio(null, null, null, false, null, null);
     }
-    
+
     public List<Obras> consultarTodasObras() throws Exception {
         return this.consultarObrasFechaInicio(null, null, null, null, null, null);
     }

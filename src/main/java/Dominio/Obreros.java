@@ -30,34 +30,34 @@ public class Obreros implements Serializable {
     @Id
     @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    public Long id;
     
     @Column(name = "Nombre", nullable = true)
-    private String nombre;
+    public String nombre;
     
     @Column(name = "ApellidoPaterno", nullable = true)
-    private String apellidoPaterno;
+    public String apellidoPaterno;
     
     @Column(name = "ApellidoMaterno", nullable = true)
-    private String apellidoMaterno;
+    public String apellidoMaterno;
 
     // ENCRIPTAR
     @Column(name = "Telefono", nullable = false)
-    private String telefono;
+    public String telefono;
     
     // ENCRIPTAR
     @Column(name = "Contraseña", nullable = false, unique = false)
-    private String contrasena;
+    public String contrasena;
     
     // ENCRIPTAR
     @Column(name = "Usuario", nullable = false, unique = true)
-    private String usuario;
+    public String usuario;
 
     @Column(name = "DiasTrabajados", nullable = true)
     private Integer diasTrabajados = 0;
     
     @Column(name = "SueldoDiario", nullable = true)
-    private Float sueldoDiario;
+    public Float sueldoDiario;
     
     @Column(name = "PorPagar", nullable = true)
     private Float porPagar = (float) 0;

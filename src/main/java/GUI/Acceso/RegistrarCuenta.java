@@ -4,6 +4,17 @@
  */
 package GUI.Acceso;
 
+import DAOs.ClientesDAO;
+import DAOs.JefesDAO;
+import DAOs.ObrerosDAO;
+import Dominio.Clientes;
+import Dominio.Jefes;
+import Dominio.Obreros;
+import Herramientas.Validadores;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author 52644
@@ -26,114 +37,160 @@ public class RegistrarCuenta extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        cbxTipoUsuario = new javax.swing.JComboBox<>();
+        lblTitulo = new javax.swing.JLabel();
         lblTipoUsuario = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        lblTipoUsuario1 = new javax.swing.JLabel();
-        lblTipoUsuario2 = new javax.swing.JLabel();
-        lblTipoUsuario3 = new javax.swing.JLabel();
-        lblTipoUsuario4 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        lblNombre = new javax.swing.JLabel();
+        lblApellidoPaterno = new javax.swing.JLabel();
+        lblApellidoMaterno = new javax.swing.JLabel();
+        lblUsuario = new javax.swing.JLabel();
+        lblContrasenia = new javax.swing.JLabel();
+        lblTelefono = new javax.swing.JLabel();
+        lblInfo = new javax.swing.JLabel();
+        txtNombre = new javax.swing.JTextField();
+        txtApellidoMaterno = new javax.swing.JTextField();
+        txtApellidoPaterno = new javax.swing.JTextField();
+        txtContrasenia = new javax.swing.JTextField();
+        txtUsuario = new javax.swing.JTextField();
+        txtTelefono = new javax.swing.JTextField();
+        btnRegistrar = new javax.swing.JButton();
+        btnCancelar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Registrar Cuenta");
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel1.setText("Registrar una nueva cuenta");
+        cbxTipoUsuario.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elija uno...", "Obrero", "Jefe", "Cliente" }));
+
+        lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblTitulo.setText("Registrar una nueva cuenta");
 
         lblTipoUsuario.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblTipoUsuario.setText("Tipo de Usuario");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Obrero", "Jefe", "Comprador" }));
+        lblNombre.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblNombre.setText("Nombre");
 
-        lblTipoUsuario1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lblTipoUsuario1.setText("Nombre");
+        lblApellidoPaterno.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblApellidoPaterno.setText("Apellido paterno");
 
-        lblTipoUsuario2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lblTipoUsuario2.setText("Apellido paterno");
+        lblApellidoMaterno.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblApellidoMaterno.setText("Apellido materno");
 
-        lblTipoUsuario3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lblTipoUsuario3.setText("Apellido materno");
+        lblUsuario.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblUsuario.setText("Usuario");
 
-        lblTipoUsuario4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lblTipoUsuario4.setText("Teléfono");
+        lblContrasenia.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblContrasenia.setText("Contraseña");
 
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jButton1.setText("Registrar");
+        lblTelefono.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblTelefono.setText("Teléfono");
 
-        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jButton2.setText("Cancelar");
+        lblInfo.setText("Formato teléfono: (111) 111-1111");
+
+        btnRegistrar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnRegistrar.setText("Registrar");
+        btnRegistrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegistrarActionPerformed(evt);
+            }
+        });
+
+        btnCancelar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(98, 98, 98))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(59, 59, 59)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lblTipoUsuario3)
-                            .addComponent(lblTipoUsuario4)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblTipoUsuario, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lblTipoUsuario1, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lblTipoUsuario2, javax.swing.GroupLayout.Alignment.TRAILING))))
-                .addGap(18, 28, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jTextField1)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
-                    .addComponent(jTextField2)
-                    .addComponent(jTextField4))
-                .addGap(26, 26, 26))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(157, 157, 157)
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton2)
+                .addComponent(btnRegistrar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
+                .addComponent(btnCancelar)
                 .addGap(17, 17, 17))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblTitulo)
+                .addGap(85, 85, 85))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(lblInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                    .addGap(24, 24, 24)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(lblTipoUsuario, javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(lblNombre, javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(lblApellidoPaterno, javax.swing.GroupLayout.Alignment.TRAILING)))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(20, 20, 20)
+                                    .addComponent(lblApellidoMaterno)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(68, 68, 68)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(lblTelefono)
+                                    .addComponent(lblContrasenia)
+                                    .addComponent(lblUsuario))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(cbxTipoUsuario, 0, 189, Short.MAX_VALUE)
+                                .addComponent(txtNombre)
+                                .addComponent(txtApellidoPaterno)
+                                .addComponent(txtApellidoMaterno))
+                            .addComponent(txtUsuario, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtContrasenia, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtTelefono, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(29, 29, 29))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(38, 38, 38)
-                .addComponent(jLabel1)
+                .addGap(21, 21, 21)
+                .addComponent(lblTitulo)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblTipoUsuario)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbxTipoUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblTipoUsuario1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblNombre)
+                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblTipoUsuario2)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblApellidoPaterno)
+                    .addComponent(txtApellidoPaterno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblTipoUsuario3)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblApellidoMaterno)
+                    .addComponent(txtApellidoMaterno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblTipoUsuario4)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                    .addComponent(lblUsuario)
+                    .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(lblContrasenia)
+                    .addComponent(txtContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblTelefono)
+                    .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(9, 9, 9)
+                .addComponent(lblInfo)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnRegistrar)
+                    .addComponent(btnCancelar))
                 .addGap(19, 19, 19))
         );
 
@@ -141,20 +198,165 @@ public class RegistrarCuenta extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        int i = JOptionPane.showConfirmDialog(this, "¿Seguro que deseas cancelar el registro? Los datos no se guardarán", "Advertencia", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        if (i == JOptionPane.YES_OPTION) {
+            this.dispose();
+            new IniciarSesion().setVisible(true);
+        }
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
+        if (this.cbxTipoUsuario.getSelectedItem() == "Elija uno...") {
+            JOptionPane.showMessageDialog(null, "Error: Elija un tipo de usuario válido para registro de cuenta.");
+        } else if (this.cbxTipoUsuario.getSelectedItem() == "Obrero") {
+            Validadores valida = new Validadores();
+            ObrerosDAO obrerosDAO = new ObrerosDAO();
+            if (valida.validarNombre(this.txtNombre.getText())) {
+                if (valida.validarNombre(this.txtApellidoPaterno.getText())) {
+                    if (valida.validarNombre(this.txtApellidoMaterno.getText())) {
+                        try {
+                            if (!obrerosDAO.verificarUsuarioObrero(this.txtUsuario.getText())) {
+                                if (!this.txtContrasenia.getText().isBlank()) {
+                                    if (valida.validarTelefono(this.txtTelefono.getText())) {
+                                        // Se registra un obrero con los datos ingresados y con el salario mínimo, el cual puede ser posteriormente editado por un jefe
+                                        obrerosDAO.registrarObrero(new Obreros(this.txtNombre.getText(), this.txtApellidoPaterno.getText(), this.txtApellidoMaterno.getText(), this.txtTelefono.getText(), this.txtContrasenia.getText(), this.txtUsuario.getText(), (float) 200));
+                                        JOptionPane.showMessageDialog(null, "Se guardó exitosamente el obrero " + this.txtNombre.getText() + " " + this.txtApellidoPaterno.getText() + " " + this.txtApellidoMaterno.getText() + ". ☺");
+                                        this.cbxTipoUsuario.setSelectedItem("Elija uno...");
+                                        this.txtApellidoMaterno.setText("");
+                                        this.txtApellidoPaterno.setText("");
+                                        this.txtContrasenia.setText("");
+                                        this.txtNombre.setText("");
+                                        this.txtTelefono.setText("");
+                                        this.txtUsuario.setText("");
+                                    } else {
+                                        JOptionPane.showMessageDialog(null, "Error: Capture un número de teléfono válido. (Solamente números, siguiendo el formato especificado).");
+                                    }
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "Error: Llene el campo de contraseña. (No deje espacios en blanco).");
+                                }
+
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Error: Elija un usuario distinto. (Usuario ya existente).");
+                            }
+                        } catch (Exception ex) {
+                            Logger.getLogger(RegistrarCuenta.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Error: Elija un apellido materno válido. (No incluye números ni símbolos).");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Error: Elija un apellido paterno válido. (No incluye números ni símbolos).");
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Error: Elija un nombre(s) válidos. (No incluyen números ni símbolos).");
+            }
+        } else if (this.cbxTipoUsuario.getSelectedItem() == "Jefe") {
+            Validadores valida = new Validadores();
+            JefesDAO jefesDAO = new JefesDAO();
+            if (valida.validarNombre(this.txtNombre.getText())) {
+                if (valida.validarNombre(this.txtApellidoPaterno.getText())) {
+                    if (valida.validarNombre(this.txtApellidoMaterno.getText())) {
+                        try {
+                            if (!jefesDAO.verificarUsuarioJefe(this.txtUsuario.getText())) {
+                                if (!this.txtContrasenia.getText().isBlank()) {
+                                    if (valida.validarTelefono(this.txtTelefono.getText())) {
+                                        // Se registra un obrero con los datos ingresados y con el salario mínimo, el cual puede ser posteriormente editado por un jefe
+                                        jefesDAO.registrarJefe(new Jefes(this.txtNombre.getText(), this.txtApellidoPaterno.getText(), this.txtApellidoMaterno.getText(), this.txtTelefono.getText(), this.txtContrasenia.getText(), this.txtUsuario.getText()));
+                                        JOptionPane.showMessageDialog(null, "Se guardó exitosamente el jefe " + this.txtNombre.getText() + " " + this.txtApellidoPaterno.getText() + " " + this.txtApellidoMaterno.getText() + ". ☺");
+                                        this.cbxTipoUsuario.setSelectedItem("Elija uno...");
+                                        this.txtApellidoMaterno.setText("");
+                                        this.txtApellidoPaterno.setText("");
+                                        this.txtContrasenia.setText("");
+                                        this.txtNombre.setText("");
+                                        this.txtTelefono.setText("");
+                                        this.txtUsuario.setText("");
+                                    } else {
+                                        JOptionPane.showMessageDialog(null, "Error: Capture un número de teléfono válido. (Solamente números, siguiendo el formato especificado).");
+                                    }
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "Error: Llene el campo de contraseña. (No deje espacios en blanco).");
+                                }
+
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Error: Elija un usuario distinto. (Usuario ya existente).");
+                            }
+                        } catch (Exception ex) {
+                            Logger.getLogger(RegistrarCuenta.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Error: Elija un apellido materno válido. (No incluye números ni símbolos).");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Error: Elija un apellido paterno válido. (No incluye números ni símbolos).");
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Error: Elija un nombre(s) válidos. (No incluyen números ni símbolos).");
+            }
+        } else if (this.cbxTipoUsuario.getSelectedItem() == "Cliente") {
+            Validadores valida = new Validadores();
+            ClientesDAO clientesDAO = new ClientesDAO();
+            if (valida.validarNombre(this.txtNombre.getText())) {
+                if (valida.validarNombre(this.txtApellidoPaterno.getText())) {
+                    if (valida.validarNombre(this.txtApellidoMaterno.getText())) {
+                        try {
+                            if (!clientesDAO.verificarUsuarioCliente(this.txtUsuario.getText())) {
+                                if (!this.txtContrasenia.getText().isBlank()) {
+                                    if (valida.validarTelefono(this.txtTelefono.getText())) {
+                                        // Se registra un obrero con los datos ingresados y con el salario mínimo, el cual puede ser posteriormente editado por un jefe
+                                        clientesDAO.registrarCliente(new Clientes(this.txtNombre.getText(), this.txtApellidoPaterno.getText(), this.txtApellidoMaterno.getText(), this.txtTelefono.getText(), this.txtContrasenia.getText(), this.txtUsuario.getText()));
+                                        JOptionPane.showMessageDialog(null, "Se guardó exitosamente el cliente " + this.txtNombre.getText() + " " + this.txtApellidoPaterno.getText() + " " + this.txtApellidoMaterno.getText() + ". ☺");
+                                        this.cbxTipoUsuario.setSelectedItem("Elija uno...");
+                                        this.txtApellidoMaterno.setText("");
+                                        this.txtApellidoPaterno.setText("");
+                                        this.txtContrasenia.setText("");
+                                        this.txtNombre.setText("");
+                                        this.txtTelefono.setText("");
+                                        this.txtUsuario.setText("");
+                                    } else {
+                                        JOptionPane.showMessageDialog(null, "Error: Capture un número de teléfono válido. (Solamente números, siguiendo el formato especificado).");
+                                    }
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "Error: Llene el campo de contraseña. (No deje espacios en blanco).");
+                                }
+
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Error: Elija un usuario distinto. (Usuario ya existente).");
+                            }
+                        } catch (Exception ex) {
+                            Logger.getLogger(RegistrarCuenta.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Error: Elija un apellido materno válido. (No incluye números ni símbolos).");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Error: Elija un apellido paterno válido. (No incluye números ni símbolos).");
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Error: Elija un nombre(s) válidos. (No incluyen números ni símbolos).");
+            }
+        }
+    }//GEN-LAST:event_btnRegistrarActionPerformed
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
+    private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnRegistrar;
+    private javax.swing.JComboBox<String> cbxTipoUsuario;
+    private javax.swing.JLabel lblApellidoMaterno;
+    private javax.swing.JLabel lblApellidoPaterno;
+    private javax.swing.JLabel lblContrasenia;
+    private javax.swing.JLabel lblInfo;
+    private javax.swing.JLabel lblNombre;
+    private javax.swing.JLabel lblTelefono;
     private javax.swing.JLabel lblTipoUsuario;
-    private javax.swing.JLabel lblTipoUsuario1;
-    private javax.swing.JLabel lblTipoUsuario2;
-    private javax.swing.JLabel lblTipoUsuario3;
-    private javax.swing.JLabel lblTipoUsuario4;
+    private javax.swing.JLabel lblTitulo;
+    private javax.swing.JLabel lblUsuario;
+    private javax.swing.JTextField txtApellidoMaterno;
+    private javax.swing.JTextField txtApellidoPaterno;
+    private javax.swing.JTextField txtContrasenia;
+    private javax.swing.JTextField txtNombre;
+    private javax.swing.JTextField txtTelefono;
+    private javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables
 }

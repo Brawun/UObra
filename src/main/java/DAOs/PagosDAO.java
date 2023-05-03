@@ -30,45 +30,20 @@ import javax.persistence.criteria.Root;
  */
 public class PagosDAO {
 
-    /**
-     * Se establece una conexión con la base de datos UObra mediante JPA,
-     * creando un objeto EntityManager que puede ser utilizado para realizar
-     * operaciones de creación, lectura, actualización y eliminación en la base
-     * de datos utilizando el lenguaje JPQL.
-     */
-    EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
-    EntityManager entityManager = managerFactory.createEntityManager();
-
-    /**
-     * Método para persistir la entidad de la clase a la base de datos, en caso
-     * que no se pueda realizar dicha transacción se cancela el guardado de la
-     * entidad.
-     *
-     * @param object Objeto a guardar en la base de datos perteneciente a la
-     * clase
-     */
-    public void persist(Object object) {
-        entityManager.getTransaction().begin();
-        try {
-            entityManager.persist(object);
-            entityManager.getTransaction().commit();
-        } catch (Exception e) {
-            entityManager.getTransaction().rollback();
-        } finally {
-            entityManager.close();
-        }
-    }
-
     // Métodos de acceso
     public void registrarPago(Pagos pago) {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        this.persist(pago);
+        entityManager.persist(pago);
         entityManager.getTransaction().commit();
         entityManager.close();
     }
 
     public void eliminarPago(Long id) {
         if (verificarPago(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Pagos pago = consultarPago(id);
             entityManager.remove(pago);
@@ -81,6 +56,8 @@ public class PagosDAO {
 
     // Métodos de consulta 
     public Boolean verificarPago(Long id) {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         Pagos pago = entityManager.find(Pagos.class, id);
         entityManager.getTransaction().commit();
@@ -90,6 +67,8 @@ public class PagosDAO {
 
     public Pagos consultarPago(Long id) {
         if (verificarPago(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Pagos pago = entityManager.find(Pagos.class, id);
             entityManager.getTransaction().commit();
@@ -105,6 +84,8 @@ public class PagosDAO {
     // al dado, hayan sido recibidas por cierto obrero, si aplica, hayan sido 
     // hechos por dado cliente y que pertenece a la obra dada
     public List<Pagos> consultarPagos(Calendar periodoInicio, Calendar periodoFin, MetodoPago metodoPago, Float monto, Obreros obrero, Obras obra, Clientes cliente) {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Pagos> criteria = criteriaBuilder.createQuery(Pagos.class);
