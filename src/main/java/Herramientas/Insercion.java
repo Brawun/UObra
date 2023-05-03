@@ -360,6 +360,8 @@ public class Insercion {
             ObrasObrero obraObrero4 = new ObrasObrero(ObrerosDAO.consultarObrero(1L), ObrasDAO.consultarObra(4L));
             ObrasObrero obraObrero5 = new ObrasObrero(ObrerosDAO.consultarObrero(1L), ObrasDAO.consultarObra(5L));
             ObrasObrero obraObrero6 = new ObrasObrero(ObrerosDAO.consultarObrero(1L), ObrasDAO.consultarObra(6L));
+            ObrasObrero obraObreroInactiva1 = new ObrasObrero(ObrerosDAO.consultarObrero(1L), ObrasDAO.consultarObra(7L), false);
+            ObrasObrero obraObreroInactiva2 = new ObrasObrero(ObrerosDAO.consultarObrero(1L), ObrasDAO.consultarObra(8L), false);
             // Obrero 2
             ObrasObrero obraObrero7 = new ObrasObrero(ObrerosDAO.consultarObrero(2L), ObrasDAO.consultarObra(1L));
             ObrasObrero obraObrero8 = new ObrasObrero(ObrerosDAO.consultarObrero(2L), ObrasDAO.consultarObra(2L));
@@ -367,6 +369,8 @@ public class Insercion {
             ObrasObrero obraObrero10 = new ObrasObrero(ObrerosDAO.consultarObrero(2L), ObrasDAO.consultarObra(4L));
             ObrasObrero obraObrero11 = new ObrasObrero(ObrerosDAO.consultarObrero(2L), ObrasDAO.consultarObra(5L));
             ObrasObrero obraObrero12 = new ObrasObrero(ObrerosDAO.consultarObrero(2L), ObrasDAO.consultarObra(6L));
+            ObrasObrero obraObreroInactiva3 = new ObrasObrero(ObrerosDAO.consultarObrero(2L), ObrasDAO.consultarObra(7L), false);
+            ObrasObrero obraObreroInactiva4 = new ObrasObrero(ObrerosDAO.consultarObrero(2L), ObrasDAO.consultarObra(8L), false);
             // Obrero 3
             ObrasObrero obraObrero13 = new ObrasObrero(ObrerosDAO.consultarObrero(3L), ObrasDAO.consultarObra(1L));
             ObrasObrero obraObrero14 = new ObrasObrero(ObrerosDAO.consultarObrero(3L), ObrasDAO.consultarObra(2L));
@@ -374,6 +378,8 @@ public class Insercion {
             ObrasObrero obraObrero16 = new ObrasObrero(ObrerosDAO.consultarObrero(3L), ObrasDAO.consultarObra(4L));
             ObrasObrero obraObrero17 = new ObrasObrero(ObrerosDAO.consultarObrero(3L), ObrasDAO.consultarObra(5L));
             ObrasObrero obraObrero18 = new ObrasObrero(ObrerosDAO.consultarObrero(3L), ObrasDAO.consultarObra(6L));
+            ObrasObrero obraObreroInactiva5 = new ObrasObrero(ObrerosDAO.consultarObrero(3L), ObrasDAO.consultarObra(7L), false);
+            ObrasObrero obraObreroInactiva6 = new ObrasObrero(ObrerosDAO.consultarObrero(3L), ObrasDAO.consultarObra(8L), false);
             // Obrero 4
             ObrasObrero obraObrero19 = new ObrasObrero(ObrerosDAO.consultarObrero(4L), ObrasDAO.consultarObra(7L));
             ObrasObrero obraObrero20 = new ObrasObrero(ObrerosDAO.consultarObrero(4L), ObrasDAO.consultarObra(8L));
@@ -432,6 +438,12 @@ public class Insercion {
             entityManager.persist(obraObrero34);
             entityManager.persist(obraObrero35);
             entityManager.persist(obraObrero36);
+            entityManager.persist(obraObreroInactiva1);
+            entityManager.persist(obraObreroInactiva2);
+            entityManager.persist(obraObreroInactiva3);
+            entityManager.persist(obraObreroInactiva4);
+            entityManager.persist(obraObreroInactiva5);
+            entityManager.persist(obraObreroInactiva6);
             entityManager.getTransaction().commit();
             entityManager.close();
             return true;

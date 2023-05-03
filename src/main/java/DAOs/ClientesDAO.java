@@ -154,6 +154,38 @@ public class ClientesDAO {
             throw new EntityNotFoundException("No se puede encontrar el cliente con usuario: " + usuario);
         }
     }
+    
+    public void editarContrasena(Long id, String nuevaContrasena) throws Exception {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
+        if (verificarCliente(id)) {
+            entityManager.getTransaction().begin();
+            Clientes cliente = consultarCliente(id);
+            Encriptador crypt = new Encriptador();
+            cliente.setContrasena(crypt.encrypt(nuevaContrasena));
+            entityManager.merge(cliente);
+            entityManager.getTransaction().commit();
+            entityManager.close();
+        } else {
+            throw new EntityNotFoundException("No se puede encontrar el cliente con ID: " + id);
+        }
+    }
+    
+    public void editarUsuario(Long id, String nuevoUsuario) throws Exception {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
+        if (verificarCliente(id)) {
+            entityManager.getTransaction().begin();
+            Clientes cliente = consultarCliente(id);
+            Encriptador crypt = new Encriptador();
+            cliente.setUsuario(crypt.encrypt(nuevoUsuario));
+            entityManager.merge(cliente);
+            entityManager.getTransaction().commit();
+            entityManager.close();
+        } else {
+            throw new EntityNotFoundException("No se puede encontrar el cliente con ID: " + id);
+        }
+    }
 
     // Métodos de acceso
     public void registrarCliente(Clientes cliente) {

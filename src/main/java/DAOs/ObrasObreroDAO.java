@@ -2583,9 +2583,17 @@ public class ObrasObreroDAO {
     public List<ObrasObrero> consultarObrasObreroActivas() throws Exception {
         return this.consultarObrasObrerosFechaInicio(null, null, true, 0, null, null);
     }
-
+    
     public List<ObrasObrero> consultarObrasObreroInactivas() throws Exception {
         return this.consultarObrasObrerosFechaInicio(null, null, false, 1, null, null);
+    }
+    
+    public List<ObrasObrero> consultarObrasObreroDeObreroActivas(Long obreroId) throws Exception {
+        return this.consultarObrasObrerosFechaInicio(null, null, true, null, null, obreroId);
+    }
+    
+    public List<ObrasObrero> consultarObrasObreroDeObreroInactivas(Long obreroId) throws Exception {
+        return this.consultarObrasObrerosFechaInicio(null, null, false, null, null, obreroId);
     }
 
     public List<ObrasObrero> consultarTodasObrasObrero() throws Exception {

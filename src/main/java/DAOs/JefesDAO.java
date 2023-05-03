@@ -149,6 +149,38 @@ public class JefesDAO {
             throw new EntityNotFoundException("No se puede encontrar el jefe con usuario: " + usuario);
         }
     }
+    
+    public void editarContrasena(Long id, String nuevaContrasena) throws Exception {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
+        if (verificarJefe(id)) {
+            entityManager.getTransaction().begin();
+            Jefes jefe = consultarJefe(id);
+            Encriptador crypt = new Encriptador();
+            jefe.setContrasena(crypt.encrypt(nuevaContrasena));
+            entityManager.merge(jefe);
+            entityManager.getTransaction().commit();
+            entityManager.close();
+        } else {
+            throw new EntityNotFoundException("No se puede encontrar el jefe con ID: " + id);
+        }
+    }
+    
+    public void editarUsuario(Long id, String nuevoUsuario) throws Exception {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
+        if (verificarJefe(id)) {
+            entityManager.getTransaction().begin();
+            Jefes jefe = consultarJefe(id);
+            Encriptador crypt = new Encriptador();
+            jefe.setUsuario(crypt.encrypt(nuevoUsuario));
+            entityManager.merge(jefe);
+            entityManager.getTransaction().commit();
+            entityManager.close();
+        } else {
+            throw new EntityNotFoundException("No se puede encontrar el jefe con ID: " + id);
+        }
+    }
 
     // Métodos de acceso
     public void registrarJefe(Jefes jefe) {

@@ -72,6 +72,12 @@ public class ObrasObrero implements Serializable {
         this.fechaFin = fechaFin;
     }
 
+    public ObrasObrero(Obreros obrero, Obras obra, Boolean activa) {
+        this.obrero = obrero;
+        this.obra = obra;
+        this.activa = activa;
+    }
+
     public ObrasObrero(Obreros obrero, Obras obra) {
         this.obrero = obrero;
         this.obra = obra;

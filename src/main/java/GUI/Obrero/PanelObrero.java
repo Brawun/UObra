@@ -5,6 +5,10 @@
 package GUI.Obrero;
 
 import Dominio.Obreros;
+import GUI.Acceso.IniciarSesion;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -21,8 +25,13 @@ public class PanelObrero extends javax.swing.JFrame {
      */
     public PanelObrero(Obreros obrero) {
         this.obrero = obrero;
+        // Se ingresan los datos de obrero en el panel
+        this.lblInsertarID.setText(this.obrero.id.toString());
+        this.lblInsertarNombre.setText(this.obrero.nombre);
+        this.lblInsertarApellidoPaterno.setText(this.obrero.apellidoPaterno);
+        this.lblInsertarApellidoMaterno.setText(this.obrero.apellidoMaterno);
+        this.lblInsertarSueldoDiario.setText(this.obrero.sueldoDiario.toString());
         initComponents();
-        this.jLabel8.setText(obrero.nombre);
     }
 
     /**
@@ -34,102 +43,243 @@ public class PanelObrero extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jMenuItem3 = new javax.swing.JMenuItem();
+        Separador1 = new javax.swing.JSeparator();
         btnSalir = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jSeparator1 = new javax.swing.JSeparator();
-        jLabel8 = new javax.swing.JLabel();
+        lblInsertarNombre = new javax.swing.JLabel();
+        lblInsertarApellidoPaterno = new javax.swing.JLabel();
+        lblInsertarApellidoMaterno = new javax.swing.JLabel();
+        lblInsertarID = new javax.swing.JLabel();
+        lblInsertarSueldoDiario = new javax.swing.JLabel();
+        lblTitulo = new javax.swing.JLabel();
+        lblSueldoDiaro = new javax.swing.JLabel();
+        lblID = new javax.swing.JLabel();
+        lbl$ = new javax.swing.JLabel();
+        lblMXN = new javax.swing.JLabel();
+        Menu = new javax.swing.JMenuBar();
+        MenuConsulta = new javax.swing.JMenu();
+        mniConsultarPagos = new javax.swing.JMenuItem();
+        minConsultarNomina = new javax.swing.JMenuItem();
+        mniConsultarObras = new javax.swing.JMenuItem();
+        MenuCuenta = new javax.swing.JMenu();
+        mniCambiarContrasena = new javax.swing.JMenuItem();
+        mniCambiarUsuario = new javax.swing.JMenuItem();
+
+        jMenuItem3.setText("jMenuItem3");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         btnSalir.setText("Salir");
+        btnSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalirActionPerformed(evt);
+            }
+        });
 
-        jLabel1.setText("Sistema UObras  - Obrero");
+        lblInsertarNombre.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblInsertarNombre.setText("nombre");
 
-        jLabel2.setText("Obras trabajando");
+        lblInsertarApellidoPaterno.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblInsertarApellidoPaterno.setText("apellido paterno");
 
-        jLabel3.setText("Total de dias ");
+        lblInsertarApellidoMaterno.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblInsertarApellidoMaterno.setText("apellido materno");
 
-        jLabel4.setText("Fecha de inicio");
+        lblInsertarID.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblInsertarID.setText("id");
 
-        jLabel5.setText("Fecha de finalizacion ");
+        lblInsertarSueldoDiario.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblInsertarSueldoDiario.setText("sueldo");
 
-        jLabel6.setText("Sueldo diario ");
+        lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblTitulo.setText("Panel Obrero");
 
-        jLabel7.setText("Nombre del obrero");
+        lblSueldoDiaro.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblSueldoDiaro.setText("Sueldo diario ");
 
-        jLabel8.setText("jLabel8");
+        lblID.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblID.setText("- ID:");
+
+        lbl$.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lbl$.setText("$");
+
+        lblMXN.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblMXN.setText("MXN");
+
+        MenuConsulta.setText("Consulta");
+
+        mniConsultarPagos.setText("Consultar Pagos");
+        mniConsultarPagos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mniConsultarPagosActionPerformed(evt);
+            }
+        });
+        MenuConsulta.add(mniConsultarPagos);
+
+        minConsultarNomina.setText("Consultar Nómina");
+        MenuConsulta.add(minConsultarNomina);
+
+        mniConsultarObras.setText("Consultar Obras");
+        mniConsultarObras.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mniConsultarObrasActionPerformed(evt);
+            }
+        });
+        MenuConsulta.add(mniConsultarObras);
+
+        Menu.add(MenuConsulta);
+
+        MenuCuenta.setText("Cuenta");
+
+        mniCambiarContrasena.setText("Cambiar contraseña");
+        mniCambiarContrasena.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mniCambiarContrasenaActionPerformed(evt);
+            }
+        });
+        MenuCuenta.add(mniCambiarContrasena);
+
+        mniCambiarUsuario.setText("Cambiar usuario");
+        mniCambiarUsuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mniCambiarUsuarioActionPerformed(evt);
+            }
+        });
+        MenuCuenta.add(mniCambiarUsuario);
+
+        Menu.add(MenuCuenta);
+
+        setJMenuBar(Menu);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnSalir)
-                .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(24, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(lblID)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(lblInsertarID)
+                                    .addGap(6, 6, 6))
+                                .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(lblInsertarNombre, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(lblSueldoDiaro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(12, 12, 12)
+                                .addComponent(lblInsertarApellidoPaterno, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(lblInsertarApellidoMaterno, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lbl$)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblInsertarSueldoDiario, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(4, 4, 4)
+                        .addComponent(lblMXN)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnSalir)
+                        .addGap(18, 18, 18))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(17, 17, 17)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(22, 22, 22)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel8))
+                    .addComponent(lblTitulo)
+                    .addComponent(lblID)
+                    .addComponent(lblInsertarID))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel2)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel3)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel4)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel5)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
-                .addComponent(btnSalir)
-                .addContainerGap())
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblInsertarNombre)
+                    .addComponent(lblInsertarApellidoPaterno)
+                    .addComponent(lblInsertarApellidoMaterno))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addComponent(lblSueldoDiaro)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblInsertarSueldoDiario)
+                            .addComponent(lbl$)
+                            .addComponent(lblMXN))
+                        .addContainerGap(23, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnSalir)
+                        .addGap(14, 14, 14))))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
+        int i = JOptionPane.showConfirmDialog(this, "¿Seguro que desea salir?", "Advertencia", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        if (i == JOptionPane.YES_OPTION) {
+            new IniciarSesion().setVisible(true);
+            this.dispose();
+        }
+    }//GEN-LAST:event_btnSalirActionPerformed
+
+    private void mniConsultarPagosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniConsultarPagosActionPerformed
+        new PagosObrero(this.obrero).setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_mniConsultarPagosActionPerformed
+
+    private void mniConsultarObrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniConsultarObrasActionPerformed
+        new ObrasObrero(this.obrero).setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_mniConsultarObrasActionPerformed
+
+    private void mniCambiarContrasenaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniCambiarContrasenaActionPerformed
+        try {
+            new EditarContrasenaObrero(this.obrero).setVisible(true);
+            this.dispose();
+        } catch (Exception ex) {
+            Logger.getLogger(PanelObrero.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_mniCambiarContrasenaActionPerformed
+
+    private void mniCambiarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniCambiarUsuarioActionPerformed
+        try {
+            new EditarUsuarioObrero(this.obrero).setVisible(true);
+            this.dispose();
+        } catch (Exception ex) {
+            Logger.getLogger(PanelObrero.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_mniCambiarUsuarioActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuBar Menu;
+    private javax.swing.JMenu MenuConsulta;
+    private javax.swing.JMenu MenuCuenta;
+    private javax.swing.JSeparator Separador1;
     private javax.swing.JButton btnSalir;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JLabel lbl$;
+    private javax.swing.JLabel lblID;
+    private javax.swing.JLabel lblInsertarApellidoMaterno;
+    private javax.swing.JLabel lblInsertarApellidoPaterno;
+    private javax.swing.JLabel lblInsertarID;
+    private javax.swing.JLabel lblInsertarNombre;
+    private javax.swing.JLabel lblInsertarSueldoDiario;
+    private javax.swing.JLabel lblMXN;
+    private javax.swing.JLabel lblSueldoDiaro;
+    private javax.swing.JLabel lblTitulo;
+    private javax.swing.JMenuItem minConsultarNomina;
+    private javax.swing.JMenuItem mniCambiarContrasena;
+    private javax.swing.JMenuItem mniCambiarUsuario;
+    private javax.swing.JMenuItem mniConsultarObras;
+    private javax.swing.JMenuItem mniConsultarPagos;
     // End of variables declaration//GEN-END:variables
 }

@@ -151,6 +151,38 @@ public class ObrerosDAO {
             throw new EntityNotFoundException("No se puede encontrar el obrero con usuario: " + usuario);
         }
     }
+    
+    public void editarContrasena(Long id, String nuevaContrasena) throws Exception {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
+        if (verificarObrero(id)) {
+            entityManager.getTransaction().begin();
+            Obreros obrero = consultarObrero(id);
+            Encriptador crypt = new Encriptador();
+            obrero.setContrasena(crypt.encrypt(nuevaContrasena));
+            entityManager.merge(obrero);
+            entityManager.getTransaction().commit();
+            entityManager.close();
+        } else {
+            throw new EntityNotFoundException("No se puede encontrar el obrero con ID: " + id);
+        }
+    }
+    
+    public void editarUsuario(Long id, String nuevoUsuario) throws Exception {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
+        if (verificarObrero(id)) {
+            entityManager.getTransaction().begin();
+            Obreros obrero = consultarObrero(id);
+            Encriptador crypt = new Encriptador();
+            obrero.setUsuario(crypt.encrypt(nuevoUsuario));
+            entityManager.merge(obrero);
+            entityManager.getTransaction().commit();
+            entityManager.close();
+        } else {
+            throw new EntityNotFoundException("No se puede encontrar el obrero con ID: " + id);
+        }
+    }
 
     // Métodos de acceso
     public void registrarObrero(Obreros obrero) {
