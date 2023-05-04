@@ -236,7 +236,7 @@ public class PanelObrero extends javax.swing.JFrame {
     }//GEN-LAST:event_mniConsultarPagosActionPerformed
 
     private void mniConsultarObrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniConsultarObrasActionPerformed
-        new ObrasObrero(this.obrero).setVisible(true);
+        new ConsultaObrasObrero(this.obrero).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_mniConsultarObrasActionPerformed
 

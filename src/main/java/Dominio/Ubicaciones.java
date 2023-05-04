@@ -41,7 +41,7 @@ public class Ubicaciones implements Serializable {
     private Long id;
 
     @Column(name = "EstaDisponible", nullable = false)
-    private Boolean disponible;
+    private Boolean disponible = true;
     
     @Column(name = "Direccion", nullable = false)
     private String direccion;

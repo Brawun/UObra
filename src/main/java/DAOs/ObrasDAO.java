@@ -89,9 +89,7 @@ public class ObrasDAO {
             obra.setEstado(EstadoObra.DESARROLLO);
             obra.setFechaInicio(fecha.fechaAhora());
             // Se le suma la deuda a cliente al iniciar la obra
-            Clientes cliente = ClientesDAO.consultarCliente(obra.getCliente().getId());
-            cliente.setDeudaTotal(cliente.getDeudaTotal() + obra.getCostoTotal());
-            entityManager.merge(cliente);
+            ClientesDAO.sumarDeudaCliente(obra.getCliente().getId(), obra.getCostoTotal());
             entityManager.merge(obra);
             entityManager.getTransaction().commit();
             entityManager.close();
@@ -174,9 +172,8 @@ public class ObrasDAO {
                 obra = pagarObraObj(obra);
             }
             // Se le resta a la deuda de cliente igualmente
-            Clientes cliente = ClientesDAO.consultarCliente(obra.getCliente().getId());
-            cliente.setDeudaTotal(cliente.getDeudaTotal() - monto);
-            entityManager.merge(cliente);
+            ClientesDAO.restarDeudaCliente(obra.getCliente().getId(), monto);
+            // Se actualiza la obra
             entityManager.merge(obra);
             entityManager.getTransaction().commit();
             entityManager.close();
@@ -198,9 +195,8 @@ public class ObrasDAO {
                 obra = endeudarObraObj(obra);
             }
             // Se le suma a la deuda de cliente igualmente
-            Clientes cliente = ClientesDAO.consultarCliente(obra.getCliente().getId());
-            cliente.setDeudaTotal(cliente.getDeudaTotal() + monto);
-            entityManager.merge(cliente);
+            ClientesDAO.sumarDeudaCliente(obra.getCliente().getId(), monto);
+            // Se actualiza la obra
             entityManager.merge(obra);
             entityManager.getTransaction().commit();
             entityManager.close();
@@ -224,9 +220,8 @@ public class ObrasDAO {
                 obra = endeudarObraObj(obra);
             }
             // Se le suma a la deuda de cliente igualmente
-            Clientes cliente = ClientesDAO.consultarCliente(obra.getCliente().getId());
-            cliente.setDeudaTotal(cliente.getDeudaTotal() + monto);
-            entityManager.merge(cliente);
+            ClientesDAO.sumarDeudaCliente(obra.getCliente().getId(), monto);
+            // Se actualiza la obra
             entityManager.merge(obra);
             entityManager.getTransaction().commit();
             entityManager.close();
@@ -250,9 +245,8 @@ public class ObrasDAO {
                 obra = pagarObraObj(obra);
             }
             // Se le resta a la deuda de cliente igualmente
-            Clientes cliente = ClientesDAO.consultarCliente(obra.getCliente().getId());
-            cliente.setDeudaTotal(cliente.getDeudaTotal() - monto);
-            entityManager.merge(cliente);
+            ClientesDAO.restarDeudaCliente(obra.getCliente().getId(), monto);
+            // Se actualiza la obra
             entityManager.merge(obra);
             entityManager.getTransaction().commit();
             entityManager.close();
@@ -276,9 +270,8 @@ public class ObrasDAO {
                 obra = endeudarObraObj(obra);
             }
             // Se le suma a la deuda de cliente igualmente
-            Clientes cliente = ClientesDAO.consultarCliente(obra.getCliente().getId());
-            cliente.setDeudaTotal(cliente.getDeudaTotal() + monto);
-            entityManager.merge(cliente);
+            ClientesDAO.sumarDeudaCliente(obra.getCliente().getId(), monto);
+            // Se actualiza la obra
             entityManager.merge(obra);
             entityManager.getTransaction().commit();
             entityManager.close();
@@ -302,9 +295,8 @@ public class ObrasDAO {
                 obra = pagarObraObj(obra);
             }
             // Se le resta a la deuda de cliente igualmente
-            Clientes cliente = ClientesDAO.consultarCliente(obra.getCliente().getId());
-            cliente.setDeudaTotal(cliente.getDeudaTotal() - monto);
-            entityManager.merge(cliente);
+            ClientesDAO.restarDeudaCliente(obra.getCliente().getId(), monto);
+            // Se actualiza la obra
             entityManager.merge(obra);
             entityManager.getTransaction().commit();
             entityManager.close();
@@ -392,30 +384,50 @@ public class ObrasDAO {
         }
     }
 
-    // Asigna un nuevo pago a una obra 
-    public void agregarPagoObra(Long id, Long idPago) {
+    // Asigna un nuevo pago a una obra sin actualizar la deuda de cliente
+    public void agregarPagoObra(Long id, Pagos pago) {
+        if (verificarObra(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
+            entityManager.getTransaction().begin();
+            // Objetos
+            Obras obra = consultarObra(id);
+            // Se agrega el pago a la obra en particular
+            // obra.getPagos().add(pago);
+            // Se elimina a la deuda el pago realizado
+            obra.setDeuda(obra.getDeuda() - pago.getMonto());
+            if (obra.getDeuda() <= (float) 0) {
+                obra = pagarObraObj(obra);
+            }
+            // Se actualiza la obra 
+            entityManager.merge(obra);
+            entityManager.getTransaction().commit();
+            entityManager.close();
+        } else {
+            throw new EntityNotFoundException("No se puede encontrar la obra con ID: " + id);
+        }
+    }
+    
+    // Asigna un nuevo pago a una obra actualizando a deuda de cliente
+    public void agregarPagoObraActualizandoCliente(Long id, Pagos pago) {
         if (verificarObra(id)) {
             EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
             EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             // DAOs
-            PagosDAO pagosDAO = new PagosDAO();
             ClientesDAO ClientesDAO = new ClientesDAO();
             // Objetos
-            Pagos pago = pagosDAO.consultarPago(idPago);
             Obras obra = consultarObra(id);
             // Se agrega el pago a la obra en particular
-            obra.getPagos().add(pago);
+            // obra.getPagos().add(pago);
             // Se elimina a la deuda el pago realizado
             obra.setDeuda(obra.getDeuda() - pago.getMonto());
             if (obra.getDeuda() <= (float) 0) {
                 obra = pagarObraObj(obra);
             }
             // Se actualiza la deuda de cliente restando el monto del pago asignado
-            Clientes cliente = ClientesDAO.consultarCliente(obra.getCliente().getId());
-            cliente.setDeudaTotal(cliente.getDeudaTotal() - pago.getMonto());
-            // Se actualiza la obra y cliente
-            entityManager.merge(cliente);
+            ClientesDAO.restarDeudaCliente(obra.getCliente().getId(), pago.getMonto());
+            // Se actualiza la obra 
             entityManager.merge(obra);
             entityManager.getTransaction().commit();
             entityManager.close();
@@ -495,8 +507,36 @@ public class ObrasDAO {
         }
     }
 
-    // Elimina un pago a una obra 
-    public void eliminarPagoObra(Long id, Long idPago) {
+    // Elimina un pago a una obra sin actualizar la deuda de cliente
+    public void eliminarPagoObra(Long id, Pagos pago) {
+        if (verificarObra(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
+            entityManager.getTransaction().begin();
+            // DAOs
+            PagosDAO PagosDAO = new PagosDAO();
+            // Objetos
+            Obras obra = consultarObra(id);
+            // Se elimina el pago de la obra en particular
+            obra.getPagos().remove(pago);
+            // Se elimina el pago de la base de datos
+            PagosDAO.eliminarPago(pago.getId());
+            // Se agrega a la deuda el pago eliminado
+            obra.setDeuda(obra.getDeuda() + pago.getMonto());
+            if (obra.getDeuda() > (float) 0) {
+                obra = endeudarObraObj(obra);
+            }
+            // Se actualiza la obra
+            entityManager.merge(obra);
+            entityManager.getTransaction().commit();
+            entityManager.close();
+        } else {
+            throw new EntityNotFoundException("No se puede encontrar la obra con ID: " + id);
+        }
+    }
+    
+    // Elimina un pago a una obra actualizando a deuda de cliente
+    public void eliminarPagoObraActualizandoCliente(Long id, Pagos pago) {
         if (verificarObra(id)) {
             EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
             EntityManager entityManager = managerFactory.createEntityManager();
@@ -505,22 +545,20 @@ public class ObrasDAO {
             PagosDAO PagosDAO = new PagosDAO();
             ClientesDAO ClientesDAO = new ClientesDAO();
             // Objetos
-            Pagos pago = PagosDAO.consultarPago(idPago);
             Obras obra = consultarObra(id);
             // Se elimina el pago de la obra en particular
             obra.getPagos().remove(pago);
             // Se elimina el pago de la base de datos
-            PagosDAO.eliminarPago(idPago);
+            PagosDAO.eliminarPago(pago.getId());
             // Se agrega a la deuda el pago eliminado
             obra.setDeuda(obra.getDeuda() + pago.getMonto());
             if (obra.getDeuda() > (float) 0) {
                 obra = endeudarObraObj(obra);
             }
             // Se actualiza la deuda de cliente sumando el monto del pago asignado
-            Clientes cliente = ClientesDAO.consultarCliente(obra.getCliente().getId());
-            cliente.setDeudaTotal(cliente.getDeudaTotal() + pago.getMonto());
-            // Se actualiza la obra y cliente
-            entityManager.merge(cliente);
+            ClientesDAO.sumarDeudaCliente(obra.getCliente().getId(), pago.getMonto());
+            // Se actualiza la obra
+            entityManager.merge(obra);
             entityManager.getTransaction().commit();
             entityManager.close();
         } else {

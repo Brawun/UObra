@@ -349,6 +349,6 @@ public class Obras implements Serializable {
 
     @Override
     public String toString() {
-        return "Obras{" + "id=" + id + ", estado=" + estado + ", costoArranque=" + costoArranque + ", inversion=" + inversion + ", costoTotal=" + costoTotal + ", deuda=" + deuda + ", estaPagada=" + estaPagada + ", nombre=" + nombre + ", fechaSolicitada=" + fechaSolicitada + ", fechaInicio=" + fechaInicio + ", fechaFin=" + fechaFin + ", jefe=" + jefe + ", cliente=" + cliente + ", pagos=" + pagos + ", obreros=" + obreros + ", planos=" + planos + ", permisos=" + permisos + ", ubicaciones=" + ubicaciones + '}';
+        return "Obras{" + "id=" + id + ", estado=" + estado + ", costoArranque=" + costoArranque + ", inversion=" + inversion + ", costoTotal=" + costoTotal + ", deuda=" + deuda + ", estaPagada=" + estaPagada + ", nombre=" + nombre + ", fechaSolicitada=" + fechaSolicitada + ", cliente=" + cliente.getId() + '}';
     }
 }

@@ -4,6 +4,7 @@
 package DAOs;
 
 import Dominio.Obreros;
+import Dominio.Pagos;
 import Herramientas.Encriptador;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -193,6 +194,36 @@ public class ObrerosDAO {
         entityManager.getTransaction().commit();
         entityManager.close();
     }
+    
+    public void agregarPagoObrero(Long id, Pagos pago) {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
+        if (verificarObrero(id)) {
+            entityManager.getTransaction().begin();
+            Obreros obrero = consultarObrero(id);
+            //obrero.getPagos().add(pago);
+            entityManager.merge(obrero);
+            entityManager.getTransaction().commit();
+            entityManager.close();
+        } else {
+            throw new EntityNotFoundException("No se puede encontrar el obrero con ID: " + id);
+        }
+    }
+    
+    public void eliminarPagoObrero(Long id, Pagos pago) {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
+        if (verificarObrero(id)) {
+            entityManager.getTransaction().begin();
+            Obreros obrero = consultarObrero(id);
+            obrero.getPagos().remove(pago);
+            entityManager.merge(obrero);
+            entityManager.getTransaction().commit();
+            entityManager.close();
+        } else {
+            throw new EntityNotFoundException("No se puede encontrar el obrero con ID: " + id);
+        }
+    } 
 
     public void eliminarObrero(Long id) {
         EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");

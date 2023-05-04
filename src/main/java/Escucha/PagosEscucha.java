@@ -3,11 +3,13 @@
  */
 package Escucha;
 
+import DAOs.ClientesDAO;
 import DAOs.ObrasDAO;
+import DAOs.ObrerosDAO;
 import Dominio.Pagos;
+import Enumeradores.MetodoPago;
 import Herramientas.Fecha;
 import java.text.ParseException;
-import java.util.Calendar;
 import javax.persistence.PostPersist;
 import javax.persistence.PostUpdate;
 import javax.persistence.PrePersist;
@@ -30,11 +32,6 @@ public class PagosEscucha {
      */
     
     /**
-     * Llamada a paquete de Herramientas para manipular fechas y encriptar.
-     */
-    Fecha fecha = new Fecha();
-    
-    /**
      * Método que escucha cada que se quiera pesistir una entidad Pago
      * se calcularán ciertos atributos referentes a la misma y se encriptarán 
      * otros antes de ser guardados en la base de datos.
@@ -43,9 +40,8 @@ public class PagosEscucha {
      */
     @PrePersist
     public void calcularAtributosAutogeneradosYEncriptar(Pagos e) {
-        Calendar ahora = fecha.fechaAhora();
         // Se inserta la fecha del pago del preciso momento
-        e.setFecha(ahora);
+        e.setFecha(new Fecha().fechaAhora());
     }
 
     /**
@@ -57,15 +53,22 @@ public class PagosEscucha {
      */
     @PostPersist
     public void guardarPagos(Pagos e) throws ParseException {
+        // Si el pago se hizo en efectivo se relaciona con un obrero
+        if (e.getMetodoPago() == MetodoPago.EFECTIVO) {
+            new ObrerosDAO().consultarObrero(e.getObrero().id).getPagos().add(e);
+        }
+        // Se agrega el pago a obra
+        new ObrasDAO().consultarObra(e.getObra().getId()).getPagos().add(e);
+        // Se actualiza la deuda de cliente restando el monto del pago asignado
+        new ClientesDAO().restarDeudaCliente(e.getCliente().getId(), e.getMonto());
+        // Se imprime en consola
         System.out.println("\n" + " + Se agregó la entidad pago: "
-                + " - Fecha: " + fecha.formatoFecha(e.getFecha())
+                + " - Fecha: " + new Fecha().formatoFecha(e.getFecha())
                 + " - Monto: $ " + e.getMonto() + " MXN"
                 + " - ID cliente: " + e.getCliente().getId()
                 + " - ID obra: " + e.getObra().getId()
                 + " - ID: " + e.getId()
                 + "\n");
-        ObrasDAO ObrasDAO = new ObrasDAO();
-        ObrasDAO.agregarPagoObra(e.getObra().getId(), e.getId());
     }
     
     /**
@@ -76,8 +79,14 @@ public class PagosEscucha {
      */
     @PreUpdate
     public void PreActualizarPagos(Pagos e) {
-        ObrasDAO ObrasDAO = new ObrasDAO();
-        ObrasDAO.eliminarPagoObra(e.getObra().getId(), e.getId());
+        // Se elimina el pago de obra
+        new ObrasDAO().consultarObra(e.getObra().getId()).getPagos().remove(e);
+        // Se actualiza la deuda de cliente sumando el monto del pago asignado
+        new ClientesDAO().sumarDeudaCliente(e.getCliente().getId(), e.getMonto());
+        // Si el pago se hizo en efectivo se relaciona con un obrero
+        if (e.getMetodoPago() == MetodoPago.EFECTIVO) {
+            new ObrerosDAO().eliminarPagoObrero(e.getObrero().getId(), e);
+        }
     }
     
     /**
@@ -88,11 +97,18 @@ public class PagosEscucha {
      */
     @PostUpdate
     public void PostActualizarPagos(Pagos e) {
+        // Se agrega el pago de obra
+        new ObrasDAO().consultarObra(e.getObra().getId()).getPagos().add(e);
+        // Se actualiza la deuda de cliente restando el monto del pago asignado
+        new ClientesDAO().restarDeudaCliente(e.getCliente().getId(), e.getMonto());
+        // Si el pago se hizo en efectivo se relaciona con un obrero
+        if (e.getMetodoPago() == MetodoPago.EFECTIVO) {
+            new ObrerosDAO().agregarPagoObrero(e.getObrero().getId(), e);
+        }
+        // Se imprime en consola un mensaje
         System.out.println("\n" + " > Se actualizó la entidad pago: "
                 + " - ID: " + e.getId()
                 + "\n");
-        ObrasDAO ObrasDAO = new ObrasDAO();
-        ObrasDAO.agregarPagoObra(e.getObra().getId(), e.getId());
     }
 
     /**
@@ -104,14 +120,17 @@ public class PagosEscucha {
      */
     @PreRemove
     public void removerPagos(Pagos e) throws ParseException {
+        // Se elimina el pago de obra
+        new ObrasDAO().consultarObra(e.getObra().getId()).getPagos().remove(e);
+        // Se actualiza la deuda de cliente sumando el monto del pago asignado
+        new ClientesDAO().sumarDeudaCliente(e.getCliente().getId(), e.getMonto());
+        // Se imprime en consola
         System.out.println("\n" + " = Se eliminó la entidad pago: : "
-                + " - Fecha: " + fecha.formatoFecha(e.getFecha())
+                + " - Fecha: " + new Fecha().formatoFecha(e.getFecha())
                 + " - Monto: $ " + e.getMonto() + " MXN"
                 + " - ID cliente: " + e.getCliente().getId()
                 + " - ID obra: " + e.getObra().getId()
                 + " - ID: " + e.getId()
                 + "\n");
-        ObrasDAO ObrasDAO = new ObrasDAO();
-        ObrasDAO.eliminarPagoObra(e.getObra().getId(), e.getId());
     }  
 }

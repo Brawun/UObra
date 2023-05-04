@@ -208,6 +208,6 @@ public class Clientes implements Serializable {
 
     @Override
     public String toString() {
-        return "Clientes{" + "id=" + id + ", nombre=" + nombre + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", telefono=" + telefono + ", contrasena=" + contrasena + ", usuario=" + usuario + ", deudaTotal=" + deudaTotal + ", obras=" + obras + ", ubicaciones=" + ubicaciones + ", pagos=" + pagos + '}';
+        return "Clientes{" + "id=" + id + ", nombre=" + nombre + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + '}';
     }
 }

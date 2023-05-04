@@ -101,4 +101,26 @@ public class Validadores {
         // Devuelve verdadero si la cadena coincide con el patrón
         return matcher.matches();
     }
+    
+    /**
+     * Método para validar enteros, se verifica que sea un número de longuitud
+     * indeterminada sin un punto decimal, se utiliza para verificar dias, entre
+     * otros campos.
+     * 
+     * @param entero Entero a validar.
+     * @return Verdadero si el entero tiene el formato correcto, falso en caso
+     * contrario 
+     */
+    public boolean validarEntero(String entero) {
+        // Se remueven espacios en blanco
+        CharSequence cadena = entero.trim();
+        // Expresión regular
+        String patron = "^\\d+$"; 
+        // Se crea un objeto de tipo pattern para verificar patrones
+        Pattern p = Pattern.compile(patron);
+        // Objeto de verificación
+        Matcher matcher = p.matcher(cadena);
+        // Devuelve verdadero si la cadena coincide con el patrón
+        return matcher.matches();
+    }
 }

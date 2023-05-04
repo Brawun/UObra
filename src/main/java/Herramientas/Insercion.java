@@ -224,8 +224,8 @@ public class Insercion {
      * @return Verdadero si se pudo realizar la inserción falso en caso
      * contrario.
      */
-    public boolean InsercionMasivaFacturas() {
-        try {
+    public void InsercionMasivaFacturas() {
+////        try {
             entityManager.getTransaction().begin();
             // Se crea el objeto DAO tipo jefes
             JefesDAO JefesDAO = new JefesDAO();
@@ -273,10 +273,10 @@ public class Insercion {
             entityManager.persist(factura20);
             entityManager.getTransaction().commit();
             entityManager.close();
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+////            return true;
+////        } catch (Exception e) {
+////            return false;
+////        }
     }
 
     /**
@@ -285,8 +285,8 @@ public class Insercion {
      * @return Verdadero si se pudo realizar la inserción falso en caso
      * contrario.
      */
-    public boolean InsercionMasivaObras() {
-        try {
+    public void InsercionMasivaObras() {
+////        try {
             entityManager.getTransaction().begin();
             // Se crea el objeto DAO tipo cliente
             ClientesDAO ClientesDAO = new ClientesDAO();
@@ -334,10 +334,10 @@ public class Insercion {
             entityManager.persist(obra20);
             entityManager.getTransaction().commit();
             entityManager.close();
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+////            return true;
+////        } catch (Exception e) {
+////            return false;
+////        }
     }
 
     /**
@@ -346,8 +346,8 @@ public class Insercion {
      * @return Verdadero si se pudo realizar la inserción falso en caso
      * contrario.
      */
-    public boolean InsercionMasivaObrasObrero() {
-        try {
+    public void InsercionMasivaObrasObrero() {
+////        try {
             entityManager.getTransaction().begin();
             // Se crea el objeto DAO tipo obra y obrero
             ObrasDAO ObrasDAO = new ObrasDAO();
@@ -446,10 +446,10 @@ public class Insercion {
             entityManager.persist(obraObreroInactiva6);
             entityManager.getTransaction().commit();
             entityManager.close();
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+////            return true;
+////        } catch (Exception e) {
+////            return false;
+////        }
     }
 
     /**
@@ -458,42 +458,28 @@ public class Insercion {
      * @return Verdadero si se pudo realizar la inserción falso en caso
      * contrario.
      */
-    public boolean InsercionMasivaPagos() {
-        try {
+    public void InsercionMasivaPagos() {
+////        try {
             entityManager.getTransaction().begin();
             // Se crea el objeto DAO tipo cliente, obrero y obra
             ClientesDAO ClientesDAO = new ClientesDAO();
             ObrerosDAO ObrerosDAO = new ObrerosDAO();
             ObrasDAO ObrasDAO = new ObrasDAO();
             // Se crean las entidades tipo pago
-            Pagos pago1 = new Pagos((float) 0.0, MetodoPago.CREDITO, ObrasDAO.consultarObra(1L), ClientesDAO.consultarCliente(1L));
-            Pagos pago2 = new Pagos((float) 0.0, MetodoPago.CREDITO, ObrasDAO.consultarObra(2L), ClientesDAO.consultarCliente(2L));
-            Pagos pago3 = new Pagos((float) 0.0, MetodoPago.CREDITO, ObrasDAO.consultarObra(3L), ClientesDAO.consultarCliente(3L));
-            Pagos pago4 = new Pagos((float) 0.0, MetodoPago.DEBITO, ObrasDAO.consultarObra(4L), ClientesDAO.consultarCliente(4L));
-            Pagos pago5 = new Pagos((float) 0.0, MetodoPago.DEBITO, ObrasDAO.consultarObra(5L), ClientesDAO.consultarCliente(5L));
-            Pagos pago6 = new Pagos((float) 0.0, MetodoPago.DEBITO, ObrasDAO.consultarObra(6L), ClientesDAO.consultarCliente(6L));
+            Pagos pago1 = new Pagos((float) 1000.0, MetodoPago.CREDITO, ObrasDAO.consultarObra(1L), ClientesDAO.consultarCliente(1L));
+            Pagos pago2 = new Pagos((float) 800.0, MetodoPago.DEBITO, ObrasDAO.consultarObra(4L), ClientesDAO.consultarCliente(1L));
             // En caso que el método de pago del pago sea por efectivo se registra a que obrero se le entregó el pago
-            Pagos pago7 = new Pagos((float) 0.0, MetodoPago.EFECTIVO, ObrerosDAO.consultarObrero(1L), ObrasDAO.consultarObra(7L), ClientesDAO.consultarCliente(7L));
-            Pagos pago8 = new Pagos((float) 0.0, MetodoPago.EFECTIVO, ObrerosDAO.consultarObrero(2L), ObrasDAO.consultarObra(8L), ClientesDAO.consultarCliente(8L));
-            Pagos pago9 = new Pagos((float) 0.0, MetodoPago.EFECTIVO, ObrerosDAO.consultarObrero(3L), ObrasDAO.consultarObra(9L), ClientesDAO.consultarCliente(9L));
-            Pagos pago10 = new Pagos((float) 0.0, MetodoPago.EFECTIVO, ObrerosDAO.consultarObrero(4L), ObrasDAO.consultarObra(10L), ClientesDAO.consultarCliente(10L));
+            Pagos pago3 = new Pagos((float) 1200.0, MetodoPago.EFECTIVO, ObrerosDAO.consultarObrero(1L), ObrasDAO.consultarObra(7L), ClientesDAO.consultarCliente(1L));
             // Se persisten las entidades tipo pago
             entityManager.persist(pago1);
             entityManager.persist(pago2);
             entityManager.persist(pago3);
-            entityManager.persist(pago4);
-            entityManager.persist(pago5);
-            entityManager.persist(pago6);
-            entityManager.persist(pago7);
-            entityManager.persist(pago8);
-            entityManager.persist(pago9);
-            entityManager.persist(pago10);
             entityManager.getTransaction().commit();
             entityManager.close();
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+////            return true;
+////        } catch (Exception e) {
+////            return false;
+////        }
     }
 
     /**
@@ -502,8 +488,8 @@ public class Insercion {
      * @return Verdadero si se pudo realizar la inserción falso en caso
      * contrario.
      */
-    public boolean InsercionMasivaPermisos() {
-        try {
+    public void InsercionMasivaPermisos() {
+////        try {
             entityManager.getTransaction().begin();
             // Se crea el objeto DAO tipo jefe
             JefesDAO JefesDAO = new JefesDAO();
@@ -531,10 +517,10 @@ public class Insercion {
             entityManager.persist(permiso10);
             entityManager.getTransaction().commit();
             entityManager.close();
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+////            return true;
+////        } catch (Exception e) {
+////            return false;
+////        }
     }
 
     /**
@@ -543,8 +529,8 @@ public class Insercion {
      * @return Verdadero si se pudo realizar la inserción falso en caso
      * contrario.
      */
-    public boolean InsercionMasivaPlanos() {
-        try {
+    public void InsercionMasivaPlanos() {
+////        try {
             entityManager.getTransaction().begin();
             // Se crea el objeto DAO tipo jefe
             JefesDAO JefesDAO = new JefesDAO();
@@ -576,10 +562,10 @@ public class Insercion {
             entityManager.persist(plano10);
             entityManager.getTransaction().commit();
             entityManager.close();
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+////            return true;
+////        } catch (Exception e) {
+////            return false;
+////        }
     }
 
     /**
@@ -588,8 +574,8 @@ public class Insercion {
      * @return Verdadero si se pudo realizar la inserción falso en caso
      * contrario.
      */
-    public boolean InsercionMasivaUbicaciones() {
-        try {
+    public void InsercionMasivaUbicaciones() {
+////        try {
             entityManager.getTransaction().begin();
             // Se crea el objeto DAO tipo cliente
             ClientesDAO ClientesDAO = new ClientesDAO();
@@ -617,9 +603,9 @@ public class Insercion {
             entityManager.persist(ubicacion10);
             entityManager.getTransaction().commit();
             entityManager.close();
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+////            return true;
+////        } catch (Exception e) {
+////            return false;
+////        }
     }
 }

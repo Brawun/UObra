@@ -168,6 +168,6 @@ public class Pagos implements Serializable {
 
     @Override
     public String toString() {
-        return "Pagos{" + "id=" + id + ", monto=" + monto + ", fecha=" + fecha + ", metodoPago=" + metodoPago + ", obrero=" + obrero + ", obra=" + obra + ", cliente=" + cliente + '}';
+        return "Pagos{" + "id=" + id + ", monto=" + monto + ", fecha=" + fecha + ", metodoPago=" + metodoPago + ", obra=" + obra.getId() + ", cliente=" + cliente.getId() + '}';
     }
 }

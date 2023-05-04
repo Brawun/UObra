@@ -16,7 +16,7 @@ package Herramientas;
  * ID: 00000233295
  * 3 may 2023 08:54:11
  */
-public class NewClass {
+public class BORRAR {
     // Atributos
     
     
