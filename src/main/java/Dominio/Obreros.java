@@ -6,6 +6,7 @@ package Dominio;
 import Escucha.ObrerosEscucha;
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -66,11 +67,11 @@ public class Obreros implements Serializable {
     private Float Pagado = (float) 0;
 
     // Un obrero puede recibir muchos pagos
-    @OneToMany(mappedBy = "obrero")
+    @OneToMany(mappedBy = "obrero", cascade = {CascadeType.REMOVE})
     private List<Pagos> pagos;
 
     // Una obrero puede pertenecer a muchas obras
-    @OneToMany(mappedBy = "obrero")
+    @OneToMany(mappedBy = "obrero", cascade = {CascadeType.REMOVE})
     private List<ObrasObrero> obras;
 
     public Obreros() {

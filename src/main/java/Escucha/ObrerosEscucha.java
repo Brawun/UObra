@@ -38,6 +38,8 @@ public class ObrerosEscucha {
     @PrePersist
     public void calcularAtributosAutogeneradosYEncriptar(Obreros e) throws Exception {
         Encriptador crypt = new Encriptador();
+        // Se inserta el sueldo diario de default
+        e.setSueldoDiario((float) 200.0);
         // Se encriptan datos sensibles
         System.out.println("\n" + "Encriptando datos... ¡Usuario: " + e.usuario
                 + " encriptado! Resultado: " + crypt.encrypt(e.usuario)

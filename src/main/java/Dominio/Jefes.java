@@ -6,6 +6,7 @@ package Dominio;
 import Escucha.JefesEscucha;
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -54,19 +55,19 @@ public class Jefes implements Serializable {
     public String usuario;
 
     // Un jefe puede registrar muchas facturas
-    @OneToMany(mappedBy = "jefe")
+    @OneToMany(mappedBy = "jefe", cascade = {CascadeType.REMOVE})
     private List<Facturas> facturas;
 
     // Un jefe puede aceptar muchas obras
-    @OneToMany(mappedBy = "jefe")
+    @OneToMany(mappedBy = "jefe", cascade = {CascadeType.REMOVE})
     private List<Obras> obras;
 
     // Un jefe puede registrar muchos permisos
-    @OneToMany(mappedBy = "jefe")
+    @OneToMany(mappedBy = "jefe", cascade = {CascadeType.REMOVE})
     private List<Permisos> permisos;
 
     // Un jefe puede registrar muchos planos
-    @OneToMany(mappedBy = "jefe")
+    @OneToMany(mappedBy = "jefe", cascade = {CascadeType.REMOVE})
     private List<Planos> planos;
 
     public Jefes() {

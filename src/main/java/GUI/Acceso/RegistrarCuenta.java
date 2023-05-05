@@ -26,6 +26,13 @@ public class RegistrarCuenta extends javax.swing.JFrame {
      */
     public RegistrarCuenta() {
         initComponents();
+        this.cbxTipoUsuario.setSelectedItem("Elija uno...");
+        this.txtApellidoMaterno.setText("");
+        this.txtApellidoPaterno.setText("");
+        this.txtContrasenia.setText("");
+        this.txtNombre.setText("");
+        this.txtTelefono.setText("");
+        this.txtUsuario.setText("");
     }
 
     /**
@@ -56,6 +63,8 @@ public class RegistrarCuenta extends javax.swing.JFrame {
         btnRegistrar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
+        lblInfoNombres = new javax.swing.JLabel();
+        lblInfoUsuario = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Registrar Cuenta");
@@ -103,10 +112,29 @@ public class RegistrarCuenta extends javax.swing.JFrame {
             }
         });
 
+        lblInfoNombres.setText("Nombres y Apellidos por separado");
+
+        lblInfoUsuario.setText("Ingrese un usuario único");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jSeparator1)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(btnCancelar)
+                                .addGap(17, 17, 17))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(lblTitulo)
+                                .addGap(85, 85, 85))))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
@@ -139,23 +167,14 @@ public class RegistrarCuenta extends javax.swing.JFrame {
                             .addComponent(txtTelefono, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnRegistrar)
-                            .addComponent(lblInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblInfoUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblInfoNombres, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnRegistrar)
+                                .addGap(108, 108, 108)))))
                 .addGap(29, 29, 29))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jSeparator1)
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(btnCancelar)
-                        .addGap(17, 17, 17))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(lblTitulo)
-                        .addGap(85, 85, 85))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -168,7 +187,9 @@ public class RegistrarCuenta extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblTipoUsuario)
                     .addComponent(cbxTipoUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblInfoNombres)
+                .addGap(4, 4, 4)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblNombre)
                     .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -180,7 +201,9 @@ public class RegistrarCuenta extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblApellidoMaterno)
                     .addComponent(txtApellidoMaterno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGap(8, 8, 8)
+                .addComponent(lblInfoUsuario)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblUsuario)
                     .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -188,12 +211,12 @@ public class RegistrarCuenta extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblContrasenia)
                     .addComponent(txtContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblInfo)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblTelefono)
                     .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(9, 9, 9)
-                .addComponent(lblInfo)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnRegistrar)
@@ -228,14 +251,9 @@ public class RegistrarCuenta extends javax.swing.JFrame {
                                     if (valida.validarTelefono(this.txtTelefono.getText())) {
                                         // Se registra un obrero con los datos ingresados y con el salario mínimo, el cual puede ser posteriormente editado por un jefe
                                         obrerosDAO.registrarObrero(new Obreros(this.txtNombre.getText(), this.txtApellidoPaterno.getText(), this.txtApellidoMaterno.getText(), this.txtTelefono.getText(), this.txtContrasenia.getText(), this.txtUsuario.getText(), (float) 200));
-                                        JOptionPane.showMessageDialog(null, "Se guardó exitosamente el obrero " + this.txtNombre.getText() + " " + this.txtApellidoPaterno.getText() + " " + this.txtApellidoMaterno.getText() + ". ☺");
-                                        this.cbxTipoUsuario.setSelectedItem("Elija uno...");
-                                        this.txtApellidoMaterno.setText("");
-                                        this.txtApellidoPaterno.setText("");
-                                        this.txtContrasenia.setText("");
-                                        this.txtNombre.setText("");
-                                        this.txtTelefono.setText("");
-                                        this.txtUsuario.setText("");
+                                        JOptionPane.showMessageDialog(null, "Se creó exitosamente la cuenta del obrero " + this.txtNombre.getText() + " " + this.txtApellidoPaterno.getText() + " " + this.txtApellidoMaterno.getText() + ". ☺");
+                                        this.dispose();
+                                        new IniciarSesion().setVisible(true);
                                     } else {
                                         JOptionPane.showMessageDialog(null, "Error: Capture un número de teléfono válido. (Solamente números, siguiendo el formato especificado).");
                                     }
@@ -270,14 +288,9 @@ public class RegistrarCuenta extends javax.swing.JFrame {
                                     if (valida.validarTelefono(this.txtTelefono.getText())) {
                                         // Se registra un jefe con los datos ingresados
                                         jefesDAO.registrarJefe(new Jefes(this.txtNombre.getText(), this.txtApellidoPaterno.getText(), this.txtApellidoMaterno.getText(), this.txtTelefono.getText(), this.txtContrasenia.getText(), this.txtUsuario.getText()));
-                                        JOptionPane.showMessageDialog(null, "Se guardó exitosamente el jefe " + this.txtNombre.getText() + " " + this.txtApellidoPaterno.getText() + " " + this.txtApellidoMaterno.getText() + ". ☺");
-                                        this.cbxTipoUsuario.setSelectedItem("Elija uno...");
-                                        this.txtApellidoMaterno.setText("");
-                                        this.txtApellidoPaterno.setText("");
-                                        this.txtContrasenia.setText("");
-                                        this.txtNombre.setText("");
-                                        this.txtTelefono.setText("");
-                                        this.txtUsuario.setText("");
+                                        JOptionPane.showMessageDialog(null, "Se creó exitosamente la cuenta del jefe " + this.txtNombre.getText() + " " + this.txtApellidoPaterno.getText() + " " + this.txtApellidoMaterno.getText() + ". ☺");
+                                        this.dispose();
+                                        new IniciarSesion().setVisible(true);
                                     } else {
                                         JOptionPane.showMessageDialog(null, "Error: Capture un número de teléfono válido. (Solamente números, siguiendo el formato especificado).");
                                     }
@@ -312,14 +325,9 @@ public class RegistrarCuenta extends javax.swing.JFrame {
                                     if (valida.validarTelefono(this.txtTelefono.getText())) {
                                         // Se registra un cliente con los datos ingresados
                                         clientesDAO.registrarCliente(new Clientes(this.txtNombre.getText(), this.txtApellidoPaterno.getText(), this.txtApellidoMaterno.getText(), this.txtTelefono.getText(), this.txtContrasenia.getText(), this.txtUsuario.getText()));
-                                        JOptionPane.showMessageDialog(null, "Se guardó exitosamente el cliente " + this.txtNombre.getText() + " " + this.txtApellidoPaterno.getText() + " " + this.txtApellidoMaterno.getText() + ". ☺");
-                                        this.cbxTipoUsuario.setSelectedItem("Elija uno...");
-                                        this.txtApellidoMaterno.setText("");
-                                        this.txtApellidoPaterno.setText("");
-                                        this.txtContrasenia.setText("");
-                                        this.txtNombre.setText("");
-                                        this.txtTelefono.setText("");
-                                        this.txtUsuario.setText("");
+                                        JOptionPane.showMessageDialog(null, "Se creó exitosamente la cuenta del cliente " + this.txtNombre.getText() + " " + this.txtApellidoPaterno.getText() + " " + this.txtApellidoMaterno.getText() + ". ☺");
+                                        this.dispose();
+                                        new IniciarSesion().setVisible(true);
                                     } else {
                                         JOptionPane.showMessageDialog(null, "Error: Capture un número de teléfono válido. (Solamente números, siguiendo el formato especificado).");
                                     }
@@ -355,6 +363,8 @@ public class RegistrarCuenta extends javax.swing.JFrame {
     private javax.swing.JLabel lblApellidoPaterno;
     private javax.swing.JLabel lblContrasenia;
     private javax.swing.JLabel lblInfo;
+    private javax.swing.JLabel lblInfoNombres;
+    private javax.swing.JLabel lblInfoUsuario;
     private javax.swing.JLabel lblNombre;
     private javax.swing.JLabel lblTelefono;
     private javax.swing.JLabel lblTipoUsuario;

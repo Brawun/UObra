@@ -45,7 +45,7 @@ public class PanelObrero extends javax.swing.JFrame {
 
         jMenuItem3 = new javax.swing.JMenuItem();
         Separador1 = new javax.swing.JSeparator();
-        btnSalir = new javax.swing.JButton();
+        btnCerrarSesion = new javax.swing.JButton();
         lblInsertarNombre = new javax.swing.JLabel();
         lblInsertarApellidoPaterno = new javax.swing.JLabel();
         lblInsertarApellidoMaterno = new javax.swing.JLabel();
@@ -69,10 +69,10 @@ public class PanelObrero extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        btnSalir.setText("Salir");
-        btnSalir.addActionListener(new java.awt.event.ActionListener() {
+        btnCerrarSesion.setText("Cerrar Sesión");
+        btnCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSalirActionPerformed(evt);
+                btnCerrarSesionActionPerformed(evt);
             }
         });
 
@@ -185,7 +185,7 @@ public class PanelObrero extends javax.swing.JFrame {
                         .addGap(4, 4, 4)
                         .addComponent(lblMXN)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnSalir)
+                        .addComponent(btnCerrarSesion)
                         .addGap(18, 18, 18))))
         );
         layout.setVerticalGroup(
@@ -215,20 +215,20 @@ public class PanelObrero extends javax.swing.JFrame {
                         .addContainerGap(23, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnSalir)
+                        .addComponent(btnCerrarSesion)
                         .addGap(14, 14, 14))))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
+    private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
         int i = JOptionPane.showConfirmDialog(this, "¿Seguro que desea salir?", "Advertencia", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         if (i == JOptionPane.YES_OPTION) {
             new IniciarSesion().setVisible(true);
             this.dispose();
         }
-    }//GEN-LAST:event_btnSalirActionPerformed
+    }//GEN-LAST:event_btnCerrarSesionActionPerformed
 
     private void mniConsultarPagosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniConsultarPagosActionPerformed
         new PagosObrero(this.obrero).setVisible(true);
@@ -264,7 +264,7 @@ public class PanelObrero extends javax.swing.JFrame {
     private javax.swing.JMenu MenuConsulta;
     private javax.swing.JMenu MenuCuenta;
     private javax.swing.JSeparator Separador1;
-    private javax.swing.JButton btnSalir;
+    private javax.swing.JButton btnCerrarSesion;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JLabel lbl$;
     private javax.swing.JLabel lblID;

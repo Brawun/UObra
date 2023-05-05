@@ -6,6 +6,7 @@ package Dominio;
 import Escucha.ClientesEscucha;
 import java.io.Serializable;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -57,15 +58,15 @@ public class Clientes implements Serializable {
     private Float deudaTotal = (float) 0;
 
     // Un cliente puede solicitar muchas obras
-    @OneToMany(mappedBy = "cliente")
+    @OneToMany(mappedBy = "cliente", cascade = {CascadeType.REMOVE})
     private List<Obras> obras;
 
     // Un cliente puede registrar muchas ubicaciones
-    @OneToMany(mappedBy = "cliente")
+    @OneToMany(mappedBy = "cliente", cascade = {CascadeType.REMOVE})
     private List<Ubicaciones> ubicaciones;
     
     // Un cliente puede realizar muchos pagos
-    @OneToMany(mappedBy = "cliente")
+    @OneToMany(mappedBy = "cliente", cascade = {CascadeType.REMOVE})
     private List<Pagos> pagos;
 
     public Clientes() {

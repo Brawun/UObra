@@ -4,6 +4,7 @@
 package DAOs;
 
 import Dominio.Jefes;
+import Dominio.Obras;
 import Dominio.Permisos;
 import Enumeradores.TipoPermiso;
 import Herramientas.Encriptador;
@@ -142,6 +143,24 @@ public class PermisosDAO {
         } else {
             throw new EntityNotFoundException("No se puede encontrar el permiso con folio: " + folio);
         }
+    }
+    
+    public boolean verificarPermisoIniciacion(Obras obra) {
+        for (Permisos permiso : obra.getPermisos()) {
+            if (permiso.getTipo().equals(TipoPermiso.INICIACION)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean verificarPermisoFinalizacion(Obras obra) {
+        for (Permisos permiso : obra.getPermisos()) {
+            if (permiso.getTipo().equals(TipoPermiso.FINALIZACION)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // Métodos de consulta 

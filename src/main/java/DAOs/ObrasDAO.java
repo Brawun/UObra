@@ -38,6 +38,17 @@ public class ObrasDAO {
      */
     Fecha fecha = new Fecha();
 
+    /**
+     * DAOs
+     */
+    PagosDAO PagosDAO = new PagosDAO();
+    PlanosDAO PlanosDAO = new PlanosDAO();
+    ObrerosDAO ObrerosDAO = new ObrerosDAO();
+    PermisosDAO PermisosDAO = new PermisosDAO();
+    ClientesDAO ClientesDAO = new ClientesDAO();
+    ObrasObreroDAO ObrasObreroDAO = new ObrasObreroDAO();
+    UbicacionesDAO UbicacionesDAO = new UbicacionesDAO();
+
     // Métodos de acceso
     public void registrarObra(Obras obra) {
         EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
@@ -79,37 +90,48 @@ public class ObrasDAO {
     }
 
     // Inserta una fecha inicio y cambia el estado
-    public void iniciarObra(Long id) {
+    public boolean iniciarObra(Long id) {
         if (verificarObra(id)) {
             EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
             EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            ClientesDAO ClientesDAO = new ClientesDAO();
             Obras obra = consultarObra(id);
-            obra.setEstado(EstadoObra.DESARROLLO);
-            obra.setFechaInicio(fecha.fechaAhora());
-            // Se le suma la deuda a cliente al iniciar la obra
-            ClientesDAO.sumarDeudaCliente(obra.getCliente().getId(), obra.getCostoTotal());
-            entityManager.merge(obra);
-            entityManager.getTransaction().commit();
-            entityManager.close();
+            // Se verifica si la obra en particular tiene permiso de iniciación
+            if (PermisosDAO.verificarPermisoIniciacion(obra)) {
+                obra.setEstado(EstadoObra.DESARROLLO);
+                obra.setFechaInicio(fecha.fechaAhora());
+                // Se le suma la deuda a cliente al iniciar la obra
+                ClientesDAO.sumarDeudaCliente(obra.getCliente().getId(), obra.getCostoTotal());
+                entityManager.merge(obra);
+                entityManager.getTransaction().commit();
+                entityManager.close();
+                return true;
+            }
+            return false;
         } else {
             throw new EntityNotFoundException("No se puede encontrar la obra con ID: " + id);
         }
     }
 
     // Inserta una fecha fin y cambia el estado
-    public void terminarObra(Long id) {
+    public boolean terminarObra(Long id) {
         if (verificarObra(id)) {
             EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
             EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Obras obra = consultarObra(id);
-            obra.setEstado(EstadoObra.TERMINADA);
-            obra.setFechaFin(fecha.fechaAhora());
-            entityManager.merge(obra);
-            entityManager.getTransaction().commit();
-            entityManager.close();
+            // Se verifica si la obra en particular tiene permiso de finalización
+            if (PermisosDAO.verificarPermisoFinalizacion(obra)) {
+                obra.setEstado(EstadoObra.DESARROLLO);
+                obra.setFechaInicio(fecha.fechaAhora());
+                // Se le suma la deuda a cliente al iniciar la obra
+                ClientesDAO.sumarDeudaCliente(obra.getCliente().getId(), obra.getCostoTotal());
+                entityManager.merge(obra);
+                entityManager.getTransaction().commit();
+                entityManager.close();
+                return true;
+            }
+            return false;
         } else {
             throw new EntityNotFoundException("No se puede encontrar la obra con ID: " + id);
         }
@@ -165,7 +187,6 @@ public class ObrasDAO {
             EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
             EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            ClientesDAO ClientesDAO = new ClientesDAO();
             Obras obra = consultarObra(id);
             obra.setDeuda(obra.getDeuda() - monto);
             if (obra.getDeuda() <= (float) 0) {
@@ -188,7 +209,6 @@ public class ObrasDAO {
             EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
             EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            ClientesDAO ClientesDAO = new ClientesDAO();
             Obras obra = consultarObra(id);
             obra.setDeuda(obra.getDeuda() + monto);
             if (obra.getDeuda() > (float) 0) {
@@ -211,7 +231,6 @@ public class ObrasDAO {
             EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
             EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            ClientesDAO ClientesDAO = new ClientesDAO();
             Obras obra = consultarObra(id);
             obra.setCostoArranque(obra.getCostoArranque() + monto);
             obra.setCostoTotal(obra.getCostoTotal() + monto);
@@ -236,7 +255,6 @@ public class ObrasDAO {
             EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
             EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            ClientesDAO ClientesDAO = new ClientesDAO();
             Obras obra = consultarObra(id);
             obra.setCostoArranque(obra.getCostoArranque() - monto);
             obra.setCostoTotal(obra.getCostoTotal() - monto);
@@ -261,7 +279,6 @@ public class ObrasDAO {
             EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
             EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            ClientesDAO ClientesDAO = new ClientesDAO();
             Obras obra = consultarObra(id);
             obra.setInversion(obra.getInversion() + monto);
             obra.setCostoTotal(obra.getCostoTotal() + monto);
@@ -286,7 +303,6 @@ public class ObrasDAO {
             EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
             EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            ClientesDAO ClientesDAO = new ClientesDAO();
             Obras obra = consultarObra(id);
             obra.setInversion(obra.getInversion() - monto);
             obra.setCostoTotal(obra.getCostoTotal() - monto);
@@ -328,16 +344,13 @@ public class ObrasDAO {
             EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
             EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            // DAOs
-            ObrerosDAO obrerosDAO = new ObrerosDAO();
-            ObrasObreroDAO obrasObreroDAO = new ObrasObreroDAO();
             // Objetos
-            Obreros obrero = obrerosDAO.consultarObrero(idObrero);
+            Obreros obrero = ObrerosDAO.consultarObrero(idObrero);
             Obras obra = consultarObra(id);
             // Se crea relación obras - obrero
             ObrasObrero obrasObrero = new ObrasObrero(obrero, obra);
             // Se registra la relación obra - obrero
-            obrasObreroDAO.registrarObraObrero(obrasObrero);
+            ObrasObreroDAO.registrarObraObrero(obrasObrero);
             // Se agrega la relación obra - obrero a la obra en particular
             obra.getObreros().add(obrasObrero);
             // Se actualiza la obra
@@ -355,22 +368,19 @@ public class ObrasDAO {
             EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
             EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            // DAOs
-            ObrerosDAO obrerosDAO = new ObrerosDAO();
-            ObrasObreroDAO obrasObreroDAO = new ObrasObreroDAO();
             // Objetos
-            Obreros obrero1 = obrerosDAO.consultarObrero(idObrero1);
-            Obreros obrero2 = obrerosDAO.consultarObrero(idObrero2);
-            Obreros obrero3 = obrerosDAO.consultarObrero(idObrero3);
+            Obreros obrero1 = ObrerosDAO.consultarObrero(idObrero1);
+            Obreros obrero2 = ObrerosDAO.consultarObrero(idObrero2);
+            Obreros obrero3 = ObrerosDAO.consultarObrero(idObrero3);
             Obras obra = consultarObra(id);
             // Se crean las relaciones obras - obrero
             ObrasObrero obrasObrero1 = new ObrasObrero(obrero1, obra);
             ObrasObrero obrasObrero2 = new ObrasObrero(obrero2, obra);
             ObrasObrero obrasObrero3 = new ObrasObrero(obrero3, obra);
             // Se registra la relación obra - obrero
-            obrasObreroDAO.registrarObraObrero(obrasObrero1);
-            obrasObreroDAO.registrarObraObrero(obrasObrero2);
-            obrasObreroDAO.registrarObraObrero(obrasObrero3);
+            ObrasObreroDAO.registrarObraObrero(obrasObrero1);
+            ObrasObreroDAO.registrarObraObrero(obrasObrero2);
+            ObrasObreroDAO.registrarObraObrero(obrasObrero3);
             // Se agrega la relación obra - obrero a la obra en particular
             obra.getObreros().add(obrasObrero1);
             obra.getObreros().add(obrasObrero2);
@@ -407,15 +417,13 @@ public class ObrasDAO {
             throw new EntityNotFoundException("No se puede encontrar la obra con ID: " + id);
         }
     }
-    
+
     // Asigna un nuevo pago a una obra actualizando a deuda de cliente
     public void agregarPagoObraActualizandoCliente(Long id, Pagos pago) {
         if (verificarObra(id)) {
             EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
             EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            // DAOs
-            ClientesDAO ClientesDAO = new ClientesDAO();
             // Objetos
             Obras obra = consultarObra(id);
             // Se agrega el pago a la obra en particular
@@ -442,10 +450,8 @@ public class ObrasDAO {
             EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
             EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            // DAOs
-            PlanosDAO planosDAO = new PlanosDAO();
             // Objetos
-            Planos plano = planosDAO.consultarPlano(idPlano);
+            Planos plano = PlanosDAO.consultarPlano(idPlano);
             Obras obra = consultarObra(id);
             // Se agrega el plano a la obra en particular
             obra.getPlanos().add(plano);
@@ -464,10 +470,8 @@ public class ObrasDAO {
             EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
             EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            // DAOs
-            PermisosDAO permisosDAO = new PermisosDAO();
             // Objetos
-            Permisos permiso = permisosDAO.consultarPermiso(idPermiso);
+            Permisos permiso = PermisosDAO.consultarPermiso(idPermiso);
             Obras obra = consultarObra(id);
             // Se agrega el plano a la obra en particular
             obra.getPermisos().add(permiso);
@@ -486,17 +490,15 @@ public class ObrasDAO {
             EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
             EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            // DAOs
-            UbicacionesDAO ubicacionesDAO = new UbicacionesDAO();
             // Objetos
-            Ubicaciones ubicacion = ubicacionesDAO.consultarUbicacion(idUbicacion);
+            Ubicaciones ubicacion = UbicacionesDAO.consultarUbicacion(idUbicacion);
             Obras obra = consultarObra(id);
             // Se agrega el plano a la obra en particular
             obra.getUbicaciones().add(ubicacion);
             // Se actualiza el estado de ubicacion a ocupada en casa de que sea 
             // un solar
             if (ubicacion.getTipo().equals(TipoUbicacion.SOLAR)) {
-                ubicacionesDAO.ocuparUbicacion(idUbicacion);
+                UbicacionesDAO.ocuparUbicacion(idUbicacion);
             }
             // Se actualiza la obra
             entityManager.merge(obra);
@@ -513,8 +515,6 @@ public class ObrasDAO {
             EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
             EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            // DAOs
-            PagosDAO PagosDAO = new PagosDAO();
             // Objetos
             Obras obra = consultarObra(id);
             // Se elimina el pago de la obra en particular
@@ -534,16 +534,13 @@ public class ObrasDAO {
             throw new EntityNotFoundException("No se puede encontrar la obra con ID: " + id);
         }
     }
-    
+
     // Elimina un pago a una obra actualizando a deuda de cliente
     public void eliminarPagoObraActualizandoCliente(Long id, Pagos pago) {
         if (verificarObra(id)) {
             EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
             EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            // DAOs
-            PagosDAO PagosDAO = new PagosDAO();
-            ClientesDAO ClientesDAO = new ClientesDAO();
             // Objetos
             Obras obra = consultarObra(id);
             // Se elimina el pago de la obra en particular
@@ -572,10 +569,8 @@ public class ObrasDAO {
             EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
             EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            // DAOs
-            PlanosDAO planosDAO = new PlanosDAO();
             // Objetos
-            Planos plano = planosDAO.consultarPlano(idPlano);
+            Planos plano = PlanosDAO.consultarPlano(idPlano);
             Obras obra = consultarObra(id);
             // Se agrega el plano a la obra en particular
             obra.getPlanos().remove(plano);
@@ -594,10 +589,8 @@ public class ObrasDAO {
             EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
             EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            // DAOs
-            PermisosDAO permisosDAO = new PermisosDAO();
             // Objetos
-            Permisos permiso = permisosDAO.consultarPermiso(idPermiso);
+            Permisos permiso = PermisosDAO.consultarPermiso(idPermiso);
             Obras obra = consultarObra(id);
             // Se agrega el plano a la obra en particular
             obra.getPermisos().remove(permiso);
@@ -616,10 +609,8 @@ public class ObrasDAO {
             EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
             EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            // DAOs
-            UbicacionesDAO ubicacionesDAO = new UbicacionesDAO();
             // Objetos
-            Ubicaciones ubicacion = ubicacionesDAO.consultarUbicacion(idUbicacion);
+            Ubicaciones ubicacion = UbicacionesDAO.consultarUbicacion(idUbicacion);
             Obras obra = consultarObra(id);
             // Se agrega el plano a la obra en particular
             obra.getUbicaciones().remove(ubicacion);

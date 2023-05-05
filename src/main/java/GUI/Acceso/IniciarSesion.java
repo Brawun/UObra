@@ -25,6 +25,9 @@ import javax.swing.JOptionPane;
  */
 public class IniciarSesion extends javax.swing.JFrame {
 
+    // Atributos
+    private int contador = 0;
+
     /**
      * Creates new form IniciarSesion
      */
@@ -55,9 +58,12 @@ public class IniciarSesion extends javax.swing.JFrame {
         txtContrasenia = new javax.swing.JPasswordField();
         jSeparator1 = new javax.swing.JSeparator();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
         Menu = new javax.swing.JMenuBar();
         MenuHerramientas = new javax.swing.JMenu();
         mniInsercion = new javax.swing.JMenuItem();
+        mniInsercionRapida = new javax.swing.JMenuItem();
         mniEliminarBD = new javax.swing.JMenuItem();
         MenuExtras = new javax.swing.JMenu();
         mniAcercaDe = new javax.swing.JMenuItem();
@@ -72,7 +78,7 @@ public class IniciarSesion extends javax.swing.JFrame {
             }
         });
 
-        chbVerContrasenia.setText("Ver");
+        chbVerContrasenia.setText("👁");
         chbVerContrasenia.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 chbVerContraseniaStateChanged(evt);
@@ -113,6 +119,10 @@ public class IniciarSesion extends javax.swing.JFrame {
 
         jLabel1.setText("¿Nueva cuenta?");
 
+        jLabel2.setText("Ingrese su usuario");
+
+        jLabel3.setText("Ingrese su contraseña");
+
         MenuHerramientas.setText("Herramientas");
 
         mniInsercion.setText("Inserción Masiva");
@@ -122,6 +132,14 @@ public class IniciarSesion extends javax.swing.JFrame {
             }
         });
         MenuHerramientas.add(mniInsercion);
+
+        mniInsercionRapida.setText("Inserción Rápida");
+        mniInsercionRapida.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mniInsercionRapidaActionPerformed(evt);
+            }
+        });
+        MenuHerramientas.add(mniInsercionRapida);
 
         mniEliminarBD.setText("Eliminar Base de Datos");
         mniEliminarBD.addActionListener(new java.awt.event.ActionListener() {
@@ -163,6 +181,7 @@ public class IniciarSesion extends javax.swing.JFrame {
                         .addGap(16, 16, 16))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lblTipoUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -172,13 +191,16 @@ public class IniciarSesion extends javax.swing.JFrame {
                                             .addComponent(lblContrasenia)
                                             .addComponent(lblUsuario))))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(cbxTipoUsuario, 0, 226, Short.MAX_VALUE)
-                                    .addComponent(txtUsuario)
-                                    .addComponent(txtContrasenia))
-                                .addGap(18, 18, 18)
-                                .addComponent(chbVerContrasenia))
-                            .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(cbxTipoUsuario, 0, 226, Short.MAX_VALUE)
+                                            .addComponent(txtUsuario)
+                                            .addComponent(txtContrasenia))
+                                        .addGap(18, 18, 18)
+                                        .addComponent(chbVerContrasenia))
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel3))))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(99, Short.MAX_VALUE)
@@ -196,26 +218,30 @@ public class IniciarSesion extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(8, 8, 8)
+                .addGap(16, 16, 16)
                 .addComponent(lblBienvenida)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(4, 4, 4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblTítulo)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblTipoUsuario)
                     .addComponent(cbxTipoUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(29, 29, 29)
+                .addGap(7, 7, 7)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblUsuario))
-                .addGap(28, 28, 28)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblContrasenia)
                     .addComponent(chbVerContrasenia)
                     .addComponent(txtContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
                 .addComponent(btnAceptar)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -239,8 +265,7 @@ public class IniciarSesion extends javax.swing.JFrame {
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
         if (this.cbxTipoUsuario.getSelectedItem() == "Elija uno...") {
             JOptionPane.showMessageDialog(null, "Error: Elija un tipo de usuario válido para inicio de sesión.");
-        }
-        else if (this.cbxTipoUsuario.getSelectedItem() == "Obrero") {
+        } else if (this.cbxTipoUsuario.getSelectedItem() == "Obrero") {
             try {
                 ObrerosDAO ObrerosDAO = new ObrerosDAO();
                 String usuario = this.txtUsuario.getText().trim();
@@ -289,20 +314,19 @@ public class IniciarSesion extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAceptarActionPerformed
 
     private void mniAcercaDeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniAcercaDeActionPerformed
-       JOptionPane.showMessageDialog(null, "Autores: \n"
-                        + " - Brandon Figueroa Ugalde \n" 
-                        + " - Guimel Naely Rubio Morillon \n"
-                        + "\nProf. María de los Ángeles Germán \n"
-                        + "Pruebas de Software ITSON "
-                        + "☺");
+        JOptionPane.showMessageDialog(null, "Autores: \n"
+                + " - Brandon Figueroa Ugalde \n"
+                + " - Guimel Naely Rubio Morillon \n"
+                + "\nProf. María de los Ángeles Germán \n"
+                + "Pruebas de Software ITSON "
+                + "☺");
     }//GEN-LAST:event_mniAcercaDeActionPerformed
 
     private void mniEliminarBDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniEliminarBDActionPerformed
         int i = JOptionPane.showConfirmDialog(this, "¿Seguro que quiere eliminar la base de datos?", "Advertencia", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         if (i == JOptionPane.YES_OPTION) {
             try {
-                Insercion insercion = new Insercion();
-                if (insercion.EliminarBaseDeDatos()) {
+                if (new Insercion().EliminarBaseDeDatos()) {
                     JOptionPane.showMessageDialog(null, "Se eliminó la base de datos correctamente.");
                 } else {
                     JOptionPane.showMessageDialog(null, "No fue posible eliminar la base de datos.");
@@ -324,12 +348,26 @@ public class IniciarSesion extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRegistrarCuentaActionPerformed
 
     private void chbVerContraseniaStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_chbVerContraseniaStateChanged
-       if (this.chbVerContrasenia.isSelected()) {
-           this.txtContrasenia.setEchoChar((char) 0);
-       } else {
-           this.txtContrasenia.setEchoChar('•');
-       }
+        if (this.chbVerContrasenia.isSelected()) {
+            this.txtContrasenia.setEchoChar((char) 0);
+        } else {
+            this.txtContrasenia.setEchoChar('•');
+        }
     }//GEN-LAST:event_chbVerContraseniaStateChanged
+
+    private void mniInsercionRapidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniInsercionRapidaActionPerformed
+        new Insercion().InsercionRapida()
+        if (this.contador == 0) {
+            if (new Insercion().InsercionRapida()) {
+                this.contador = 1;
+                JOptionPane.showMessageDialog(null, "Se realizó la inserción rápida correctamente.");
+            } else {
+                JOptionPane.showMessageDialog(null, "No se pudo realizar la inserción rápida.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "No se puede realizar la inserción rápida más de una vez.");
+        }
+    }//GEN-LAST:event_mniInsercionRapidaActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuBar Menu;
@@ -341,6 +379,8 @@ public class IniciarSesion extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cbxTipoUsuario;
     private javax.swing.JCheckBox chbVerContrasenia;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel lblBienvenida;
     private javax.swing.JLabel lblContrasenia;
@@ -350,6 +390,7 @@ public class IniciarSesion extends javax.swing.JFrame {
     private javax.swing.JMenuItem mniAcercaDe;
     private javax.swing.JMenuItem mniEliminarBD;
     private javax.swing.JMenuItem mniInsercion;
+    private javax.swing.JMenuItem mniInsercionRapida;
     private javax.swing.JPasswordField txtContrasenia;
     private javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables

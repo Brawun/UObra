@@ -14,6 +14,9 @@ import javax.swing.JOptionPane;
  */
 public class InsercionMasiva extends javax.swing.JFrame {
 
+    // Atributos
+    Insercion insercion = new Insercion();
+
     /**
      * Creates new form InsercionMasiva
      */
@@ -208,7 +211,6 @@ public class InsercionMasiva extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnInsertarObrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInsertarObrasActionPerformed
-        Insercion insercion = new Insercion();
 ////        if (insercion.InsercionMasivaObras()) {
 ////            JOptionPane.showMessageDialog(null, "Se realizó la inserción masiva de obras correctamente.");
 ////        } else {
@@ -218,15 +220,11 @@ public class InsercionMasiva extends javax.swing.JFrame {
     }//GEN-LAST:event_btnInsertarObrasActionPerformed
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
-        int i = JOptionPane.showConfirmDialog(this, "¿Seguro que desea salir?", "Advertencia", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-        if (i == JOptionPane.YES_OPTION) {
-            this.dispose();
-            new IniciarSesion().setVisible(true);
-        }
+        this.dispose();
+        new IniciarSesion().setVisible(true);
     }//GEN-LAST:event_btnSalirActionPerformed
 
     private void btnInsertarClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInsertarClientesActionPerformed
-        Insercion insercion = new Insercion();
         if (insercion.InsercionMasivaClientes()) {
             JOptionPane.showMessageDialog(null, "Se realizó la inserción masiva de clientes correctamente.");
         } else {
@@ -235,7 +233,6 @@ public class InsercionMasiva extends javax.swing.JFrame {
     }//GEN-LAST:event_btnInsertarClientesActionPerformed
 
     private void btnInsertarJefesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInsertarJefesActionPerformed
-        Insercion insercion = new Insercion();
         if (insercion.InsercionMasivaJefes()) {
             JOptionPane.showMessageDialog(null, "Se realizó la inserción masiva de jefes correctamente.");
         } else {
@@ -244,7 +241,6 @@ public class InsercionMasiva extends javax.swing.JFrame {
     }//GEN-LAST:event_btnInsertarJefesActionPerformed
 
     private void btnInsertarObrerosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInsertarObrerosActionPerformed
-        Insercion insercion = new Insercion();
         if (insercion.InsercionMasivaObreros()) {
             JOptionPane.showMessageDialog(null, "Se realizó la inserción masiva de obreros correctamente.");
         } else {
@@ -253,7 +249,6 @@ public class InsercionMasiva extends javax.swing.JFrame {
     }//GEN-LAST:event_btnInsertarObrerosActionPerformed
 
     private void btnInsertarUbicacionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInsertarUbicacionesActionPerformed
-        Insercion insercion = new Insercion();
 ////        if (insercion.InsercionMasivaUbicaciones()) {
 ////            JOptionPane.showMessageDialog(null, "Se realizó la inserción masiva de ubicaciones correctamente.");
 ////        } else {
@@ -263,7 +258,6 @@ public class InsercionMasiva extends javax.swing.JFrame {
     }//GEN-LAST:event_btnInsertarUbicacionesActionPerformed
 
     private void btnInsertarPermisosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInsertarPermisosActionPerformed
-        Insercion insercion = new Insercion();
 ////        if (insercion.InsercionMasivaPermisos()) {
 ////            JOptionPane.showMessageDialog(null, "Se realizó la inserción masiva de permisos correctamente.");
 ////        } else {
@@ -273,7 +267,6 @@ public class InsercionMasiva extends javax.swing.JFrame {
     }//GEN-LAST:event_btnInsertarPermisosActionPerformed
 
     private void btnInsertarPlanosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInsertarPlanosActionPerformed
-        Insercion insercion = new Insercion();
 ////        if (insercion.InsercionMasivaPlanos()) {
 ////            JOptionPane.showMessageDialog(null, "Se realizó la inserción masiva de planos correctamente.");
 ////        } else {
@@ -283,7 +276,6 @@ public class InsercionMasiva extends javax.swing.JFrame {
     }//GEN-LAST:event_btnInsertarPlanosActionPerformed
 
     private void btnInsertarObrasObreroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInsertarObrasObreroActionPerformed
-        Insercion insercion = new Insercion();
 ////        if (insercion.InsercionMasivaObrasObrero()) {
 ////            JOptionPane.showMessageDialog(null, "Se realizó la inserción masiva de obras - obrero correctamente.");
 ////        } else {
@@ -293,7 +285,6 @@ public class InsercionMasiva extends javax.swing.JFrame {
     }//GEN-LAST:event_btnInsertarObrasObreroActionPerformed
 
     private void btnInsertarFacturasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInsertarFacturasActionPerformed
-        Insercion insercion = new Insercion();
 ////        if (insercion.InsercionMasivaFacturas()) {
 ////            JOptionPane.showMessageDialog(null, "Se realizó la inserción masiva de facturas correctamente.");
 ////        } else {
@@ -303,7 +294,6 @@ public class InsercionMasiva extends javax.swing.JFrame {
     }//GEN-LAST:event_btnInsertarFacturasActionPerformed
 
     private void btnInsertarPagosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInsertarPagosActionPerformed
-        Insercion insercion = new Insercion();
 ////        if (insercion.InsercionMasivaPagos()) {
 ////            JOptionPane.showMessageDialog(null, "Se realizó la inserción masiva de pagos correctamente.");
 ////        } else {
