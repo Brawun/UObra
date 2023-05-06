@@ -15,6 +15,8 @@ import GUI.Insercion.InsercionMasiva;
 import GUI.Jefe.PanelJefe;
 import GUI.Obrero.PanelObrero;
 import Herramientas.Insercion;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -33,6 +35,10 @@ public class IniciarSesion extends javax.swing.JFrame {
      */
     public IniciarSesion() {
         initComponents();
+        Image image = Toolkit.getDefaultToolkit().getImage("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\Icono.png");
+        if (image != null) {
+            this.setIconImage(image);
+        }
     }
 
     /**
@@ -52,7 +58,7 @@ public class IniciarSesion extends javax.swing.JFrame {
         txtUsuario = new javax.swing.JTextField();
         lblContrasenia = new javax.swing.JLabel();
         btnAceptar = new javax.swing.JButton();
-        lblBienvenida = new javax.swing.JLabel();
+        UObraLogo = new javax.swing.JLabel();
         lblTítulo = new javax.swing.JLabel();
         btnRegistrarCuenta = new javax.swing.JButton();
         txtContrasenia = new javax.swing.JPasswordField();
@@ -104,8 +110,8 @@ public class IniciarSesion extends javax.swing.JFrame {
             }
         });
 
-        lblBienvenida.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        lblBienvenida.setText("Bienvenid@ al sistema UObra ");
+        UObraLogo.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        UObraLogo.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\UObra.png")); // NOI18N
 
         lblTítulo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lblTítulo.setText("Inicio de Sesión");
@@ -169,8 +175,17 @@ public class IniciarSesion extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(lblTítulo)
+                        .addGap(151, 151, 151))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(btnAceptar)
+                        .addGap(169, 169, 169))))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap(18, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnRegistrarCuenta)
@@ -200,26 +215,17 @@ public class IniciarSesion extends javax.swing.JFrame {
                                         .addGap(18, 18, 18)
                                         .addComponent(chbVerContrasenia))
                                     .addComponent(jLabel2)
-                                    .addComponent(jLabel3))))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(99, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(lblBienvenida)
-                        .addGap(84, 84, 84))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(lblTítulo)
-                        .addGap(151, 151, 151))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(btnAceptar)
-                        .addGap(166, 166, 166))))
+                                    .addComponent(jLabel3)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(136, 136, 136)
+                                .addComponent(UObraLogo)))
+                        .addContainerGap(24, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addComponent(lblBienvenida)
+                .addContainerGap(12, Short.MAX_VALUE)
+                .addComponent(UObraLogo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -241,7 +247,7 @@ public class IniciarSesion extends javax.swing.JFrame {
                     .addComponent(lblContrasenia)
                     .addComponent(chbVerContrasenia)
                     .addComponent(txtContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
                 .addComponent(btnAceptar)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -314,12 +320,14 @@ public class IniciarSesion extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAceptarActionPerformed
 
     private void mniAcercaDeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniAcercaDeActionPerformed
+        this.setVisible(false);
         JOptionPane.showMessageDialog(null, "Autores: \n"
                 + " - Brandon Figueroa Ugalde \n"
                 + " - Guimel Naely Rubio Morillon \n"
                 + "\nProf. María de los Ángeles Germán \n"
                 + "Pruebas de Software ITSON "
                 + "☺");
+        this.setVisible(true);
     }//GEN-LAST:event_mniAcercaDeActionPerformed
 
     private void mniEliminarBDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniEliminarBDActionPerformed
@@ -356,7 +364,6 @@ public class IniciarSesion extends javax.swing.JFrame {
     }//GEN-LAST:event_chbVerContraseniaStateChanged
 
     private void mniInsercionRapidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniInsercionRapidaActionPerformed
-        new Insercion().InsercionRapida()
         if (this.contador == 0) {
             if (new Insercion().InsercionRapida()) {
                 this.contador = 1;
@@ -373,6 +380,7 @@ public class IniciarSesion extends javax.swing.JFrame {
     private javax.swing.JMenuBar Menu;
     private javax.swing.JMenu MenuExtras;
     private javax.swing.JMenu MenuHerramientas;
+    private javax.swing.JLabel UObraLogo;
     private javax.swing.JButton btnAceptar;
     private javax.swing.JButton btnRegistrarCuenta;
     private javax.swing.JButton btnSalir;
@@ -382,7 +390,6 @@ public class IniciarSesion extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JLabel lblBienvenida;
     private javax.swing.JLabel lblContrasenia;
     private javax.swing.JLabel lblTipoUsuario;
     private javax.swing.JLabel lblTítulo;

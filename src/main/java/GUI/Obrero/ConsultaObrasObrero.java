@@ -5,9 +5,13 @@
 package GUI.Obrero;
 
 import DAOs.ObrasObreroDAO;
+import DAOs.ObrerosDAO;
 import Dominio.ObrasObrero;
 import Dominio.Obreros;
+import Herramientas.Fecha;
 import Herramientas.Validadores;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,34 +26,56 @@ public class ConsultaObrasObrero extends javax.swing.JFrame {
 
     // Atributos
     Obreros obrero = new Obreros();
+    ObrerosDAO ObrerosDAO = new ObrerosDAO();
+    ObrasObreroDAO ObrasObreroDAO = new ObrasObreroDAO();
 
     /**
      * Creates new form ObrasObrero
      */
     public ConsultaObrasObrero(Obreros obrero) {
+        initComponents();
+        Image image = Toolkit.getDefaultToolkit().getImage("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\Icono.png");
+        if (image != null) {
+            this.setIconImage(image);
+        }
         this.obrero = obrero;
         this.txtDias.setEditable(true);
         this.txtDias.setText("0");
-        initComponents();
     }
 
-    public void cargarTablaObrasObrero(Boolean activa) throws Exception {
-        ObrasObreroDAO ObrasObreroDAO = new ObrasObreroDAO();
+    public void cargarTablaObrasObrero(Boolean activa, Integer fechas) throws Exception {
         List<ObrasObrero> listaObrasObrero;
-        listaObrasObrero = ObrasObreroDAO.
-                consultarObrasObrerosFechaFin(// Se busca por acción FIN
-                        this.periodoInicio.getCalendar() != null // Si el usuario ingresó un periodo inicio se ingresa en el campo
-                        ? this.periodoInicio.getCalendar() : null,
-                        this.periodoFinal.getCalendar() != null // Si el usuario ingresó un periodo fin se ingresa en el campo
-                        ? this.periodoFinal.getCalendar() : null,
-                        activa,
-                        Integer.valueOf(this.txtDias.getText()),
-                        null, // Cualquier obra
-                        this.obrero.getId()); // Obrero
+        Fecha fecha = new Fecha(); 
+        if (fechas == 0) {
+            listaObrasObrero = ObrasObreroDAO.consultarObrasObrerosFechaFin( // Se busca por acción FIN
+                            this.periodoInicio.getCalendar() != null // Si el usuario ingresó un periodo inicio se ingresa en el campo
+                            ? this.periodoInicio.getCalendar() : null,
+                            this.periodoFinal.getCalendar() != null // Si el usuario ingresó un periodo fin se ingresa en el campo
+                            ? this.periodoFinal.getCalendar() : null,
+                            activa,
+                            Integer.valueOf(this.txtDias.getText()) == 0 ? null : Integer.valueOf(this.txtDias.getText()),
+                            null, // Cualquier obra
+                            this.obrero.getId()); // Obrero
+        } else {
+            listaObrasObrero = ObrasObreroDAO.consultarObrasObrerosFechaInicio( // Se busca por acción FIN
+                            this.periodoInicio.getCalendar() != null // Si el usuario ingresó un periodo inicio se ingresa en el campo
+                            ? this.periodoInicio.getCalendar() : null,
+                            this.periodoFinal.getCalendar() != null // Si el usuario ingresó un periodo fin se ingresa en el campo
+                            ? this.periodoFinal.getCalendar() : null,
+                            activa,
+                            Integer.valueOf(this.txtDias.getText()) == 0 ? null : Integer.valueOf(this.txtDias.getText()),
+                            null, // Cualquier obra
+                            this.obrero.getId()); // Obrero
+        }
         DefaultTableModel modeloTablaPersonas = (DefaultTableModel) this.tblResultados.getModel();
         modeloTablaPersonas.setRowCount(0);
-        for (Persona persona : listaPersonas) {
-            Object[] filaNueva = {persona.getNombre() + " " + persona.getApellido_paterno() + " " + persona.getApellido_materno(), crypt.decrypt(persona.getRfc()), "           | Seleccionar |"};
+        for (ObrasObrero obrasObrero : listaObrasObrero) {
+            Object[] filaNueva = {obrasObrero.getId()
+                    , fecha.formatoFecha(obrasObrero.getFechaInicio())
+                    , fecha.formatoFecha(obrasObrero.getFechaFin())
+                    , obrasObrero.getActivo() == true ? "Activa" : "Inactiva"
+                    , obrasObrero.getDiasTrabajados() + " dia(s)"
+                    , obrasObrero.getObra().getId()};
             modeloTablaPersonas.addRow(filaNueva);
         }
     }
@@ -69,7 +95,7 @@ public class ConsultaObrasObrero extends javax.swing.JFrame {
         Separador2 = new javax.swing.JSeparator();
         cbxEstado = new javax.swing.JComboBox<>();
         cbxAccion = new javax.swing.JComboBox<>();
-        btnSalir = new javax.swing.JButton();
+        btnRegresar = new javax.swing.JButton();
         btnBuscar = new javax.swing.JButton();
         periodoInicio = new com.toedter.calendar.JDateChooser();
         periodoFinal = new com.toedter.calendar.JDateChooser();
@@ -86,22 +112,21 @@ public class ConsultaObrasObrero extends javax.swing.JFrame {
         lblEnUnPeriodo = new javax.swing.JLabel();
         lblEnEstado = new javax.swing.JLabel();
         lblConMinimo = new javax.swing.JLabel();
+        UObraLogoPeque = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("Consultar Obras - Obrero");
 
         tblResultados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+
             },
             new String [] {
                 "ID", "Fecha Inicio", "Fecha Fin", "Activa", "Dias Trabajados", "ID Obra"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Long.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class, java.lang.Integer.class, java.lang.Long.class
+                java.lang.Long.class, java.lang.Object.class, java.lang.Object.class, java.lang.String.class, java.lang.Integer.class, java.lang.Long.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false, false
@@ -115,6 +140,7 @@ public class ConsultaObrasObrero extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        tblResultados.setRequestFocusEnabled(false);
         ScrollPanel.setViewportView(tblResultados);
 
         cbxEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elija uno...", "Indistinto", "Activa", "Inactiva" }));
@@ -126,10 +152,10 @@ public class ConsultaObrasObrero extends javax.swing.JFrame {
 
         cbxAccion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elija uno...", "Iniciaron", "Terminaron" }));
 
-        btnSalir.setText("Salir");
-        btnSalir.addActionListener(new java.awt.event.ActionListener() {
+        btnRegresar.setText("Regresar");
+        btnRegresar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSalirActionPerformed(evt);
+                btnRegresarActionPerformed(evt);
             }
         });
 
@@ -173,6 +199,8 @@ public class ConsultaObrasObrero extends javax.swing.JFrame {
 
         lblConMinimo.setText("Con un mínimo de días trabajados de...");
 
+        UObraLogoPeque.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\UObraPeque.png")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -181,7 +209,7 @@ public class ConsultaObrasObrero extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnSalir)
+                        .addComponent(btnRegresar)
                         .addGap(248, 248, 248))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGap(21, 21, 21)
@@ -235,15 +263,20 @@ public class ConsultaObrasObrero extends javax.swing.JFrame {
                                                 .addGap(0, 12, Short.MAX_VALUE))))
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(btnBuscar)
-                                        .addGap(68, 68, 68)))))))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                .addComponent(btnBuscar)
+                                                .addGap(68, 68, 68))
+                                            .addComponent(UObraLogoPeque, javax.swing.GroupLayout.Alignment.TRAILING))))))))
                 .addGap(20, 20, 20))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addComponent(lblTitulo)
+                .addGap(11, 11, 11)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblTitulo)
+                    .addComponent(UObraLogoPeque))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -294,28 +327,43 @@ public class ConsultaObrasObrero extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(ScrollPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
-                .addComponent(btnSalir)
+                .addComponent(btnRegresar)
                 .addGap(15, 15, 15))
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
-        new PanelObrero(this.obrero).setVisible(true);
+    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
+        new PanelObrero(ObrerosDAO.consultarObrero(this.obrero.getId())).setVisible(true);
         this.dispose();
-    }//GEN-LAST:event_btnSalirActionPerformed
+    }//GEN-LAST:event_btnRegresarActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         try {
-            if (this.cbxAccion.getSelectedItem() == "Elija uno...") {
-                if (this.cbxEstado.getSelectedItem() == "Elija uno...") {
-                    if (this.cbxEstado.getSelectedItem() == "Activa" || this.cbxEstado.getSelectedItem() == "Indistinto") {
-                        
+            if (this.cbxAccion.getSelectedItem() != "Elija uno...") {
+                if (this.cbxEstado.getSelectedItem() != "Elija uno...") {
+                    if (this.cbxEstado.getSelectedItem() == "Activa") {
+                        if (this.cbxAccion.getSelectedItem() == "Iniciaron") {
+                            this.cargarTablaObrasObrero(true, 1);
+                        } else if (this.cbxAccion.getSelectedItem() == "Terminaron") {
+                            this.cargarTablaObrasObrero(true, 0);
+                        }
+                    } else if (this.cbxEstado.getSelectedItem() == "Indistinto") {
+                        if (this.cbxAccion.getSelectedItem() == "Iniciaron") {
+                            this.cargarTablaObrasObrero(null, 1);
+                        } else if (this.cbxAccion.getSelectedItem() == "Terminaron") {
+                            this.cargarTablaObrasObrero(null, 0);
+                        }
                     } else if (this.cbxEstado.getSelectedItem() == "Inactiva") {
                         Validadores valido = new Validadores();
                         if (valido.validarEntero(this.txtDias.getText())) {
-
+                            if (this.cbxAccion.getSelectedItem() == "Iniciaron") {
+                                this.cargarTablaObrasObrero(false, 1);
+                            } else if (this.cbxAccion.getSelectedItem() == "Terminaron") {
+                                this.cargarTablaObrasObrero(false, 0);
+                            }
                         } else {
                             JOptionPane.showMessageDialog(null, "Error: Ingrese días trabajados válidos. (Solamente números enteros)");
                         }
@@ -337,6 +385,7 @@ public class ConsultaObrasObrero extends javax.swing.JFrame {
             this.txtDias.setText("0");
         } else if (this.cbxEstado.getSelectedItem() == "Inactiva") {
             this.txtDias.setEditable(true);
+            this.txtDias.setText("1");
         }
     }//GEN-LAST:event_cbxEstadoFocusLost
 
@@ -344,8 +393,9 @@ public class ConsultaObrasObrero extends javax.swing.JFrame {
     private javax.swing.JScrollPane ScrollPanel;
     private javax.swing.JSeparator Separador1;
     private javax.swing.JSeparator Separador2;
+    private javax.swing.JLabel UObraLogoPeque;
     private javax.swing.JButton btnBuscar;
-    private javax.swing.JButton btnSalir;
+    private javax.swing.JButton btnRegresar;
     private javax.swing.JComboBox<String> cbxAccion;
     private javax.swing.JComboBox<String> cbxEstado;
     private javax.swing.JLabel lblAccion;

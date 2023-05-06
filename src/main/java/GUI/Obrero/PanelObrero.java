@@ -4,8 +4,11 @@
  */
 package GUI.Obrero;
 
+import DAOs.ObrerosDAO;
 import Dominio.Obreros;
 import GUI.Acceso.IniciarSesion;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -18,6 +21,7 @@ public class PanelObrero extends javax.swing.JFrame {
 
     // Atributo
     Obreros obrero;
+    ObrerosDAO ObrerosDAO = new ObrerosDAO();
     
     /**
      * Creates new form Obrero
@@ -25,13 +29,17 @@ public class PanelObrero extends javax.swing.JFrame {
      */
     public PanelObrero(Obreros obrero) {
         this.obrero = obrero;
+        initComponents();
+        Image image = Toolkit.getDefaultToolkit().getImage("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\Icono.png");
+        if (image != null) {
+            this.setIconImage(image);
+        }
         // Se ingresan los datos de obrero en el panel
         this.lblInsertarID.setText(this.obrero.id.toString());
         this.lblInsertarNombre.setText(this.obrero.nombre);
         this.lblInsertarApellidoPaterno.setText(this.obrero.apellidoPaterno);
         this.lblInsertarApellidoMaterno.setText(this.obrero.apellidoMaterno);
         this.lblInsertarSueldoDiario.setText(this.obrero.sueldoDiario.toString());
-        initComponents();
     }
 
     /**
@@ -56,6 +64,7 @@ public class PanelObrero extends javax.swing.JFrame {
         lblID = new javax.swing.JLabel();
         lbl$ = new javax.swing.JLabel();
         lblMXN = new javax.swing.JLabel();
+        UObraLogoPeque = new javax.swing.JLabel();
         Menu = new javax.swing.JMenuBar();
         MenuConsulta = new javax.swing.JMenu();
         mniConsultarPagos = new javax.swing.JMenuItem();
@@ -67,7 +76,8 @@ public class PanelObrero extends javax.swing.JFrame {
 
         jMenuItem3.setText("jMenuItem3");
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("Panel Obrero");
 
         btnCerrarSesion.setText("Cerrar Sesión");
         btnCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
@@ -80,10 +90,10 @@ public class PanelObrero extends javax.swing.JFrame {
         lblInsertarNombre.setText("nombre");
 
         lblInsertarApellidoPaterno.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        lblInsertarApellidoPaterno.setText("apellido paterno");
+        lblInsertarApellidoPaterno.setText("paterno");
 
         lblInsertarApellidoMaterno.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        lblInsertarApellidoMaterno.setText("apellido materno");
+        lblInsertarApellidoMaterno.setText("materno");
 
         lblInsertarID.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblInsertarID.setText("id");
@@ -105,6 +115,8 @@ public class PanelObrero extends javax.swing.JFrame {
 
         lblMXN.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblMXN.setText("MXN");
+
+        UObraLogoPeque.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\UObraPeque.png")); // NOI18N
 
         MenuConsulta.setText("Consulta");
 
@@ -156,70 +168,70 @@ public class PanelObrero extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(26, 26, 26)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(26, 26, 26)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(lblID)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(lblInsertarID)
-                                    .addGap(6, 6, 6))
-                                .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(lblInsertarNombre, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(lblSueldoDiaro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGap(12, 12, 12)
-                                .addComponent(lblInsertarApellidoPaterno, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(lblInsertarApellidoMaterno, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lbl$)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lblInsertarSueldoDiario, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(4, 4, 4)
-                        .addComponent(lblMXN)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnCerrarSesion)
-                        .addGap(18, 18, 18))))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblSueldoDiaro)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(lblInsertarNombre)
+                                        .addGap(8, 8, 8)
+                                        .addComponent(lblInsertarApellidoPaterno)
+                                        .addGap(8, 8, 8)
+                                        .addComponent(lblInsertarApellidoMaterno)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(lblID)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(lblInsertarID)))
+                                .addGap(6, 6, 6))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lbl$)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblInsertarSueldoDiario)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblMXN)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnCerrarSesion))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(UObraLogoPeque))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblTitulo)
-                    .addComponent(lblID)
-                    .addComponent(lblInsertarID))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblTitulo, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(UObraLogoPeque, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblInsertarNombre)
                     .addComponent(lblInsertarApellidoPaterno)
-                    .addComponent(lblInsertarApellidoMaterno))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(15, 15, 15)
-                        .addComponent(lblSueldoDiaro)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblInsertarSueldoDiario)
-                            .addComponent(lbl$)
-                            .addComponent(lblMXN))
-                        .addContainerGap(23, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnCerrarSesion)
-                        .addGap(14, 14, 14))))
+                    .addComponent(lblInsertarApellidoMaterno)
+                    .addComponent(lblID)
+                    .addComponent(lblInsertarID))
+                .addGap(15, 15, 15)
+                .addComponent(lblSueldoDiaro)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblInsertarSueldoDiario)
+                    .addComponent(lbl$)
+                    .addComponent(lblMXN)
+                    .addComponent(btnCerrarSesion))
+                .addContainerGap(11, Short.MAX_VALUE))
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
@@ -231,18 +243,18 @@ public class PanelObrero extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCerrarSesionActionPerformed
 
     private void mniConsultarPagosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniConsultarPagosActionPerformed
-        new PagosObrero(this.obrero).setVisible(true);
+        new PagosObrero(ObrerosDAO.consultarObrero(this.obrero.getId())).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_mniConsultarPagosActionPerformed
 
     private void mniConsultarObrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniConsultarObrasActionPerformed
-        new ConsultaObrasObrero(this.obrero).setVisible(true);
+        new ConsultaObrasObrero(ObrerosDAO.consultarObrero(this.obrero.getId())).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_mniConsultarObrasActionPerformed
 
     private void mniCambiarContrasenaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniCambiarContrasenaActionPerformed
         try {
-            new EditarContrasenaObrero(this.obrero).setVisible(true);
+            new EditarContrasenaObrero(ObrerosDAO.consultarObrero(this.obrero.getId())).setVisible(true);
             this.dispose();
         } catch (Exception ex) {
             Logger.getLogger(PanelObrero.class.getName()).log(Level.SEVERE, null, ex);
@@ -251,19 +263,19 @@ public class PanelObrero extends javax.swing.JFrame {
 
     private void mniCambiarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniCambiarUsuarioActionPerformed
         try {
-            new EditarUsuarioObrero(this.obrero).setVisible(true);
+            new EditarUsuarioObrero(ObrerosDAO.consultarObrero(this.obrero.getId())).setVisible(true);
             this.dispose();
         } catch (Exception ex) {
             Logger.getLogger(PanelObrero.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_mniCambiarUsuarioActionPerformed
 
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuBar Menu;
     private javax.swing.JMenu MenuConsulta;
     private javax.swing.JMenu MenuCuenta;
     private javax.swing.JSeparator Separador1;
+    private javax.swing.JLabel UObraLogoPeque;
     private javax.swing.JButton btnCerrarSesion;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JLabel lbl$;

@@ -123,4 +123,24 @@ public class Validadores {
         // Devuelve verdadero si la cadena coincide con el patrón
         return matcher.matches();
     }
+    
+    /**
+     * Método para validar que una cadena no tenga espacios.
+     * 
+     * @param string Cadena a validar.
+     * @return Verdadero si la cadena tiene el formato correcto, falso en caso
+     * contrario 
+     */
+    public boolean validarSinEspacios(String string) {
+        // Se remueven espacios en blanco
+        CharSequence cadena = string.trim();
+        // Expresión regular
+        String patron = "\\S+"; 
+        // Se crea un objeto de tipo pattern para verificar patrones
+        Pattern p = Pattern.compile(patron);
+        // Objeto de verificación
+        Matcher matcher = p.matcher(cadena);
+        // Devuelve verdadero si la cadena coincide con el patrón
+        return matcher.matches();
+    }
 }

@@ -4,6 +4,10 @@
 package Principal;
 
 import GUI.Acceso.IniciarSesion;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.net.URL;
+import javax.swing.ImageIcon;
 
 /**
  * Esta clase principal permite ejecutra el sistema UObra.

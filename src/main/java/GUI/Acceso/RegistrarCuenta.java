@@ -11,6 +11,8 @@ import Dominio.Clientes;
 import Dominio.Jefes;
 import Dominio.Obreros;
 import Herramientas.Validadores;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -21,18 +23,28 @@ import javax.swing.JOptionPane;
  */
 public class RegistrarCuenta extends javax.swing.JFrame {
 
+    // Atributos
+    Validadores valida = new Validadores();
+    JefesDAO JefesDAO = new JefesDAO();
+    ObrerosDAO ObrerosDAO = new ObrerosDAO();
+    ClientesDAO ClientesDAO = new ClientesDAO();
+
     /**
      * Creates new form RegistrarCuenta
      */
     public RegistrarCuenta() {
         initComponents();
+Image image = Toolkit.getDefaultToolkit().getImage("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\Icono.png");
+        if (image != null) {
+            this.setIconImage(image);
+        }
         this.cbxTipoUsuario.setSelectedItem("Elija uno...");
+        this.txtNombre.setText("");
         this.txtApellidoMaterno.setText("");
         this.txtApellidoPaterno.setText("");
-        this.txtContrasenia.setText("");
-        this.txtNombre.setText("");
-        this.txtTelefono.setText("");
         this.txtUsuario.setText("");
+        this.txtContrasenia.setText("");
+        this.txtTelefono.setText("(###) ###-####");
     }
 
     /**
@@ -65,6 +77,7 @@ public class RegistrarCuenta extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         lblInfoNombres = new javax.swing.JLabel();
         lblInfoUsuario = new javax.swing.JLabel();
+        UObraLogoPeque = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Registrar Cuenta");
@@ -112,29 +125,27 @@ public class RegistrarCuenta extends javax.swing.JFrame {
             }
         });
 
-        lblInfoNombres.setText("Nombres y Apellidos por separado");
+        lblInfoNombres.setText("Nombres/Apellidos por separado");
 
         lblInfoUsuario.setText("Ingrese un usuario único");
+
+        UObraLogoPeque.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\UObraPeque.png")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(14, 14, 14)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jSeparator1)
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(btnCancelar)
-                                .addGap(17, 17, 17))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(lblTitulo)
-                                .addGap(85, 85, 85))))))
+                        .addComponent(UObraLogoPeque)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnCancelar)
+                        .addGap(17, 17, 17))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
@@ -155,7 +166,7 @@ public class RegistrarCuenta extends javax.swing.JFrame {
                                     .addComponent(lblTelefono)
                                     .addComponent(lblContrasenia)
                                     .addComponent(lblUsuario))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(cbxTipoUsuario, 0, 189, Short.MAX_VALUE)
@@ -175,6 +186,10 @@ public class RegistrarCuenta extends javax.swing.JFrame {
                                 .addComponent(btnRegistrar)
                                 .addGap(108, 108, 108)))))
                 .addGap(29, 29, 29))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(lblTitulo)
+                .addGap(78, 78, 78))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -212,16 +227,19 @@ public class RegistrarCuenta extends javax.swing.JFrame {
                     .addComponent(lblContrasenia)
                     .addComponent(txtContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lblInfo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblTelefono)
-                    .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnRegistrar)
-                    .addComponent(btnCancelar))
-                .addGap(19, 19, 19))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(lblInfo)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblTelefono)
+                            .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnRegistrar)
+                            .addComponent(btnCancelar)))
+                    .addComponent(UObraLogoPeque, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         pack();
@@ -229,7 +247,7 @@ public class RegistrarCuenta extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        int i = JOptionPane.showConfirmDialog(this, "¿Seguro que deseas cancelar el registro? Los datos no se guardarán", "Advertencia", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        int i = JOptionPane.showConfirmDialog(this, "¿Seguro que deseas cancelar el registro? Los datos de registro no se guardarán", "Advertencia", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         if (i == JOptionPane.YES_OPTION) {
             this.dispose();
             new IniciarSesion().setVisible(true);
@@ -240,121 +258,124 @@ public class RegistrarCuenta extends javax.swing.JFrame {
         if (this.cbxTipoUsuario.getSelectedItem() == "Elija uno...") {
             JOptionPane.showMessageDialog(null, "Error: Elija un tipo de usuario válido para registro de cuenta.");
         } else if (this.cbxTipoUsuario.getSelectedItem() == "Obrero") {
-            Validadores valida = new Validadores();
-            ObrerosDAO obrerosDAO = new ObrerosDAO();
-            if (valida.validarNombre(this.txtNombre.getText())) {
-                if (valida.validarNombre(this.txtApellidoPaterno.getText())) {
-                    if (valida.validarNombre(this.txtApellidoMaterno.getText())) {
-                        try {
-                            if (!obrerosDAO.verificarUsuarioObrero(this.txtUsuario.getText())) {
-                                if (!this.txtContrasenia.getText().isBlank()) {
-                                    if (valida.validarTelefono(this.txtTelefono.getText())) {
-                                        // Se registra un obrero con los datos ingresados y con el salario mínimo, el cual puede ser posteriormente editado por un jefe
-                                        obrerosDAO.registrarObrero(new Obreros(this.txtNombre.getText(), this.txtApellidoPaterno.getText(), this.txtApellidoMaterno.getText(), this.txtTelefono.getText(), this.txtContrasenia.getText(), this.txtUsuario.getText(), (float) 200));
-                                        JOptionPane.showMessageDialog(null, "Se creó exitosamente la cuenta del obrero " + this.txtNombre.getText() + " " + this.txtApellidoPaterno.getText() + " " + this.txtApellidoMaterno.getText() + ". ☺");
-                                        this.dispose();
-                                        new IniciarSesion().setVisible(true);
+            if (valida.validarNombre(this.txtNombre.getText()) && !this.txtNombre.getText().isBlank() && valida.validarSinEspacios(this.txtNombre.getText())) {
+                if (valida.validarNombre(this.txtApellidoPaterno.getText()) && !this.txtApellidoPaterno.getText().isBlank() && valida.validarSinEspacios(this.txtApellidoPaterno.getText())) {
+                    if (valida.validarNombre(this.txtApellidoMaterno.getText()) && !this.txtApellidoMaterno.getText().isBlank() && valida.validarSinEspacios(this.txtApellidoMaterno.getText())) {
+                        if (valida.validarSinEspacios(this.txtUsuario.getText()) && !this.txtUsuario.getText().isBlank()) {
+                            try {
+                                if (!ObrerosDAO.verificarUsuarioObrero(this.txtUsuario.getText())) {
+                                    if (valida.validarSinEspacios(this.txtContrasenia.getText()) && !this.txtContrasenia.getText().isBlank()) {
+                                        if (valida.validarTelefono(this.txtTelefono.getText()) && !this.txtTelefono.getText().isBlank() && valida.validarSinEspacios(this.txtTelefono.getText())) {
+                                            // Se registra un obrero con los datos ingresados y con el salario mínimo, el cual puede ser posteriormente editado por un obrero
+                                            ObrerosDAO.registrarObrero(new Obreros(this.txtNombre.getText(), this.txtApellidoPaterno.getText(), this.txtApellidoMaterno.getText(), this.txtTelefono.getText(), this.txtContrasenia.getText(), this.txtUsuario.getText(), (float) 200.0));
+                                            JOptionPane.showMessageDialog(null, "Se creó exitosamente la cuenta del obrero " + this.txtNombre.getText() + " " + this.txtApellidoPaterno.getText() + " " + this.txtApellidoMaterno.getText() + ". ☺");
+                                            this.dispose();
+                                            new IniciarSesion().setVisible(true);
+                                        } else {
+                                            JOptionPane.showMessageDialog(null, "Error: Capture un número de teléfono válido. (Solamente números, siguiendo el formato especificado)");
+                                        }
                                     } else {
-                                        JOptionPane.showMessageDialog(null, "Error: Capture un número de teléfono válido. (Solamente números, siguiendo el formato especificado).");
+                                        JOptionPane.showMessageDialog(null, "Error: Llene correctamente el campo de contraseña. (No deje espacios en blanco)");
                                     }
                                 } else {
-                                    JOptionPane.showMessageDialog(null, "Error: Llene el campo de contraseña. (No deje espacios en blanco).");
+                                    JOptionPane.showMessageDialog(null, "Error: Elija un usuario distinto. (Usuario ya existente)");
                                 }
-
-                            } else {
-                                JOptionPane.showMessageDialog(null, "Error: Elija un usuario distinto. (Usuario ya existente).");
+                            } catch (Exception ex) {
+                                Logger.getLogger(RegistrarCuenta.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                        } catch (Exception ex) {
-                            Logger.getLogger(RegistrarCuenta.class.getName()).log(Level.SEVERE, null, ex);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Error: Ingrese un usuario sin espacios en blanco. (Usuario con espacios en blanco)");
                         }
                     } else {
-                        JOptionPane.showMessageDialog(null, "Error: Elija un apellido materno válido. (No incluye números ni símbolos).");
+                        JOptionPane.showMessageDialog(null, "Error: Elija un apellido materno válido. (No incluye números ni símbolos)");
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "Error: Elija un apellido paterno válido. (No incluye números ni símbolos).");
+                    JOptionPane.showMessageDialog(null, "Error: Elija un apellido paterno válido. (No incluye números ni símbolos)");
                 }
             } else {
-                JOptionPane.showMessageDialog(null, "Error: Elija un nombre(s) válidos. (No incluyen números ni símbolos).");
+                JOptionPane.showMessageDialog(null, "Error: Elija un nombre(s) válidos. (No incluyen números ni símbolos)");
             }
         } else if (this.cbxTipoUsuario.getSelectedItem() == "Jefe") {
-            Validadores valida = new Validadores();
-            JefesDAO jefesDAO = new JefesDAO();
-            if (valida.validarNombre(this.txtNombre.getText())) {
-                if (valida.validarNombre(this.txtApellidoPaterno.getText())) {
-                    if (valida.validarNombre(this.txtApellidoMaterno.getText())) {
-                        try {
-                            if (!jefesDAO.verificarUsuarioJefe(this.txtUsuario.getText())) {
-                                if (!this.txtContrasenia.getText().isBlank()) {
-                                    if (valida.validarTelefono(this.txtTelefono.getText())) {
-                                        // Se registra un jefe con los datos ingresados
-                                        jefesDAO.registrarJefe(new Jefes(this.txtNombre.getText(), this.txtApellidoPaterno.getText(), this.txtApellidoMaterno.getText(), this.txtTelefono.getText(), this.txtContrasenia.getText(), this.txtUsuario.getText()));
-                                        JOptionPane.showMessageDialog(null, "Se creó exitosamente la cuenta del jefe " + this.txtNombre.getText() + " " + this.txtApellidoPaterno.getText() + " " + this.txtApellidoMaterno.getText() + ". ☺");
-                                        this.dispose();
-                                        new IniciarSesion().setVisible(true);
+            if (valida.validarNombre(this.txtNombre.getText()) && !this.txtNombre.getText().isBlank() && valida.validarSinEspacios(this.txtNombre.getText())) {
+                if (valida.validarNombre(this.txtApellidoPaterno.getText()) && !this.txtApellidoPaterno.getText().isBlank() && valida.validarSinEspacios(this.txtApellidoPaterno.getText())) {
+                    if (valida.validarNombre(this.txtApellidoMaterno.getText()) && !this.txtApellidoMaterno.getText().isBlank() && valida.validarSinEspacios(this.txtApellidoMaterno.getText())) {
+                        if (valida.validarSinEspacios(this.txtUsuario.getText()) && !this.txtUsuario.getText().isBlank()) {
+                            try {
+                                if (!JefesDAO.verificarUsuarioJefe(this.txtUsuario.getText())) {
+                                    if (valida.validarSinEspacios(this.txtContrasenia.getText()) && !this.txtContrasenia.getText().isBlank()) {
+                                        if (valida.validarTelefono(this.txtTelefono.getText()) && !this.txtTelefono.getText().isBlank() && valida.validarSinEspacios(this.txtTelefono.getText())) {
+                                            // Se registra un jefe con los datos ingresados y con el salario mínimo, el cual puede ser posteriormente editado por un jefe
+                                            JefesDAO.registrarJefe(new Jefes(this.txtNombre.getText(), this.txtApellidoPaterno.getText(), this.txtApellidoMaterno.getText(), this.txtTelefono.getText(), this.txtContrasenia.getText(), this.txtUsuario.getText()));
+                                            JOptionPane.showMessageDialog(null, "Se creó exitosamente la cuenta del jefe " + this.txtNombre.getText() + " " + this.txtApellidoPaterno.getText() + " " + this.txtApellidoMaterno.getText() + ". ☺");
+                                            this.dispose();
+                                            new IniciarSesion().setVisible(true);
+                                        } else {
+                                            JOptionPane.showMessageDialog(null, "Error: Capture un número de teléfono válido. (Solamente números, siguiendo el formato especificado)");
+                                        }
                                     } else {
-                                        JOptionPane.showMessageDialog(null, "Error: Capture un número de teléfono válido. (Solamente números, siguiendo el formato especificado).");
+                                        JOptionPane.showMessageDialog(null, "Error: Llene correctamente el campo de contraseña. (No deje espacios en blanco)");
                                     }
                                 } else {
-                                    JOptionPane.showMessageDialog(null, "Error: Llene el campo de contraseña. (No deje espacios en blanco).");
+                                    JOptionPane.showMessageDialog(null, "Error: Elija un usuario distinto. (Usuario ya existente)");
                                 }
-
-                            } else {
-                                JOptionPane.showMessageDialog(null, "Error: Elija un usuario distinto. (Usuario ya existente).");
+                            } catch (Exception ex) {
+                                Logger.getLogger(RegistrarCuenta.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                        } catch (Exception ex) {
-                            Logger.getLogger(RegistrarCuenta.class.getName()).log(Level.SEVERE, null, ex);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Error: Ingrese un usuario sin espacios en blanco. (Usuario con espacios en blanco)");
                         }
                     } else {
-                        JOptionPane.showMessageDialog(null, "Error: Elija un apellido materno válido. (No incluye números ni símbolos).");
+                        JOptionPane.showMessageDialog(null, "Error: Elija un apellido materno válido. (No incluye números ni símbolos)");
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "Error: Elija un apellido paterno válido. (No incluye números ni símbolos).");
+                    JOptionPane.showMessageDialog(null, "Error: Elija un apellido paterno válido. (No incluye números ni símbolos)");
                 }
             } else {
-                JOptionPane.showMessageDialog(null, "Error: Elija un nombre(s) válidos. (No incluyen números ni símbolos).");
+                JOptionPane.showMessageDialog(null, "Error: Elija un nombre(s) válidos. (No incluyen números ni símbolos)");
             }
         } else if (this.cbxTipoUsuario.getSelectedItem() == "Cliente") {
-            Validadores valida = new Validadores();
-            ClientesDAO clientesDAO = new ClientesDAO();
-            if (valida.validarNombre(this.txtNombre.getText())) {
-                if (valida.validarNombre(this.txtApellidoPaterno.getText())) {
-                    if (valida.validarNombre(this.txtApellidoMaterno.getText())) {
-                        try {
-                            if (!clientesDAO.verificarUsuarioCliente(this.txtUsuario.getText())) {
-                                if (!this.txtContrasenia.getText().isBlank()) {
-                                    if (valida.validarTelefono(this.txtTelefono.getText())) {
-                                        // Se registra un cliente con los datos ingresados
-                                        clientesDAO.registrarCliente(new Clientes(this.txtNombre.getText(), this.txtApellidoPaterno.getText(), this.txtApellidoMaterno.getText(), this.txtTelefono.getText(), this.txtContrasenia.getText(), this.txtUsuario.getText()));
-                                        JOptionPane.showMessageDialog(null, "Se creó exitosamente la cuenta del cliente " + this.txtNombre.getText() + " " + this.txtApellidoPaterno.getText() + " " + this.txtApellidoMaterno.getText() + ". ☺");
-                                        this.dispose();
-                                        new IniciarSesion().setVisible(true);
+            if (valida.validarNombre(this.txtNombre.getText()) && !this.txtNombre.getText().isBlank() && valida.validarSinEspacios(this.txtNombre.getText())) {
+                if (valida.validarNombre(this.txtApellidoPaterno.getText()) && !this.txtApellidoPaterno.getText().isBlank() && valida.validarSinEspacios(this.txtApellidoPaterno.getText())) {
+                    if (valida.validarNombre(this.txtApellidoMaterno.getText()) && !this.txtApellidoMaterno.getText().isBlank() && valida.validarSinEspacios(this.txtApellidoMaterno.getText())) {
+                        if (valida.validarSinEspacios(this.txtUsuario.getText()) && !this.txtUsuario.getText().isBlank()) {
+                            try {
+                                if (!ClientesDAO.verificarUsuarioCliente(this.txtUsuario.getText())) {
+                                    if (valida.validarSinEspacios(this.txtContrasenia.getText()) && !this.txtContrasenia.getText().isBlank()) {
+                                        if (valida.validarTelefono(this.txtTelefono.getText()) && !this.txtTelefono.getText().isBlank() && valida.validarSinEspacios(this.txtTelefono.getText())) {
+                                            // Se registra un cliente con los datos ingresados y con el salario mínimo, el cual puede ser posteriormente editado por un cliente
+                                            ClientesDAO.registrarCliente(new Clientes(this.txtNombre.getText(), this.txtApellidoPaterno.getText(), this.txtApellidoMaterno.getText(), this.txtTelefono.getText(), this.txtContrasenia.getText(), this.txtUsuario.getText()));
+                                            JOptionPane.showMessageDialog(null, "Se creó exitosamente la cuenta del cliente " + this.txtNombre.getText() + " " + this.txtApellidoPaterno.getText() + " " + this.txtApellidoMaterno.getText() + ". ☺");
+                                            this.dispose();
+                                            new IniciarSesion().setVisible(true);
+                                        } else {
+                                            JOptionPane.showMessageDialog(null, "Error: Capture un número de teléfono válido. (Solamente números, siguiendo el formato especificado)");
+                                        }
                                     } else {
-                                        JOptionPane.showMessageDialog(null, "Error: Capture un número de teléfono válido. (Solamente números, siguiendo el formato especificado).");
+                                        JOptionPane.showMessageDialog(null, "Error: Llene correctamente el campo de contraseña. (No deje espacios en blanco)");
                                     }
                                 } else {
-                                    JOptionPane.showMessageDialog(null, "Error: Llene el campo de contraseña. (No deje espacios en blanco).");
+                                    JOptionPane.showMessageDialog(null, "Error: Elija un usuario distinto. (Usuario ya existente)");
                                 }
-
-                            } else {
-                                JOptionPane.showMessageDialog(null, "Error: Elija un usuario distinto. (Usuario ya existente).");
+                            } catch (Exception ex) {
+                                Logger.getLogger(RegistrarCuenta.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                        } catch (Exception ex) {
-                            Logger.getLogger(RegistrarCuenta.class.getName()).log(Level.SEVERE, null, ex);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Error: Ingrese un usuario sin espacios en blanco. (Usuario con espacios en blanco)");
                         }
                     } else {
-                        JOptionPane.showMessageDialog(null, "Error: Elija un apellido materno válido. (No incluye números ni símbolos).");
+                        JOptionPane.showMessageDialog(null, "Error: Elija un apellido materno válido. (No incluye números ni símbolos)");
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "Error: Elija un apellido paterno válido. (No incluye números ni símbolos).");
+                    JOptionPane.showMessageDialog(null, "Error: Elija un apellido paterno válido. (No incluye números ni símbolos)");
                 }
             } else {
-                JOptionPane.showMessageDialog(null, "Error: Elija un nombre(s) válidos. (No incluyen números ni símbolos).");
+                JOptionPane.showMessageDialog(null, "Error: Elija un nombre(s) válidos. (No incluyen números ni símbolos)");
             }
         }
     }//GEN-LAST:event_btnRegistrarActionPerformed
 
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel UObraLogoPeque;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnRegistrar;
     private javax.swing.JComboBox<String> cbxTipoUsuario;

@@ -4,7 +4,10 @@
  */
 package GUI.Obrero;
 
+import DAOs.ObrerosDAO;
 import Dominio.Obreros;
+import java.awt.Image;
+import java.awt.Toolkit;
 
 /**
  *
@@ -13,7 +16,8 @@ import Dominio.Obreros;
 public class NominaObrero extends javax.swing.JFrame {
 
     // Atributos
-    Obreros obrero = new Obreros();
+    Obreros obrero = new Obreros(); 
+    ObrerosDAO ObrerosDAO = new ObrerosDAO();
     
     /**
      * Creates new form NominaObrero
@@ -21,6 +25,13 @@ public class NominaObrero extends javax.swing.JFrame {
     public NominaObrero(Obreros obrero) {
         this.obrero = obrero;
         initComponents();
+        Image image = Toolkit.getDefaultToolkit().getImage("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\Icono.png");
+        if (image != null) {
+            this.setIconImage(image);
+        }
+        this.lblInsertarDias.setText(String.valueOf(obrero.getDiasTrabajados()));
+        this.lblInsertarPagar.setText(String.valueOf(obrero.getPagado()));
+        this.lblInsertarPorPagar.setText(String.valueOf(obrero.getPorPagar()));
     }
 
     /**
@@ -32,43 +43,165 @@ public class NominaObrero extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btnSalir = new javax.swing.JButton();
+        btnRegresar = new javax.swing.JButton();
+        Separador1 = new javax.swing.JSeparator();
+        lbl$1 = new javax.swing.JLabel();
+        lbl$2 = new javax.swing.JLabel();
+        lblMXN1 = new javax.swing.JLabel();
+        lblMXN2 = new javax.swing.JLabel();
+        UObraLogoPeque = new javax.swing.JLabel();
+        lblSueldoDiaro = new javax.swing.JLabel();
+        lblInsertarDias = new javax.swing.JLabel();
+        lblTitulo = new javax.swing.JLabel();
+        lblPorPagar = new javax.swing.JLabel();
+        lblPagado = new javax.swing.JLabel();
+        lblInsertarPorPagar = new javax.swing.JLabel();
+        lblInsertarPagar = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("Nómina Obrero");
 
-        btnSalir.setText("Salir");
-        btnSalir.addActionListener(new java.awt.event.ActionListener() {
+        btnRegresar.setText("Regresar");
+        btnRegresar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSalirActionPerformed(evt);
+                btnRegresarActionPerformed(evt);
             }
         });
+
+        lbl$1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lbl$1.setText("$");
+
+        lbl$2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lbl$2.setText("$");
+
+        lblMXN1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblMXN1.setText("MXN");
+
+        lblMXN2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblMXN2.setText("MXN");
+
+        UObraLogoPeque.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\UObraPeque.png")); // NOI18N
+
+        lblSueldoDiaro.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblSueldoDiaro.setText("Días trabajados:");
+
+        lblInsertarDias.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblInsertarDias.setText("dias");
+
+        lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblTitulo.setText("Nómina Obrero");
+
+        lblPorPagar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblPorPagar.setText("Por pagar:");
+
+        lblPagado.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblPagado.setText("Pagado:");
+
+        lblInsertarPorPagar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblInsertarPorPagar.setText("pagar");
+
+        lblInsertarPagar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblInsertarPagar.setText("paga");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(314, Short.MAX_VALUE)
-                .addComponent(btnSalir)
-                .addGap(14, 14, 14))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(19, 19, 19)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(lblPorPagar)
+                                            .addComponent(lblSueldoDiaro)
+                                            .addComponent(lblPagado))
+                                        .addGap(18, 18, 18)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(lblInsertarDias)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(lbl$1)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(lblInsertarPorPagar)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(lblMXN1))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(lbl$2)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(lblInsertarPagar)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(lblMXN2))))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(lblTitulo)
+                                        .addGap(56, 56, 56)
+                                        .addComponent(UObraLogoPeque))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(103, 103, 103)
+                                .addComponent(btnRegresar)))
+                        .addGap(0, 10, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(Separador1)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(263, Short.MAX_VALUE)
-                .addComponent(btnSalir)
-                .addGap(14, 14, 14))
+                .addContainerGap(11, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblTitulo)
+                    .addComponent(UObraLogoPeque))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblSueldoDiaro)
+                    .addComponent(lblInsertarDias))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblPorPagar)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lblInsertarPorPagar)
+                        .addComponent(lbl$1)
+                        .addComponent(lblMXN1)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblPagado)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lblInsertarPagar)
+                        .addComponent(lbl$2)
+                        .addComponent(lblMXN2)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                .addComponent(btnRegresar)
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
-        new PanelObrero(this.obrero).setVisible(true);
+    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
+        new PanelObrero(ObrerosDAO.consultarObrero(this.obrero.getId())).setVisible(true);
         this.dispose();
-    }//GEN-LAST:event_btnSalirActionPerformed
+    }//GEN-LAST:event_btnRegresarActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnSalir;
+    private javax.swing.JSeparator Separador1;
+    private javax.swing.JLabel UObraLogoPeque;
+    private javax.swing.JButton btnRegresar;
+    private javax.swing.JLabel lbl$1;
+    private javax.swing.JLabel lbl$2;
+    private javax.swing.JLabel lblInsertarDias;
+    private javax.swing.JLabel lblInsertarPagar;
+    private javax.swing.JLabel lblInsertarPorPagar;
+    private javax.swing.JLabel lblMXN1;
+    private javax.swing.JLabel lblMXN2;
+    private javax.swing.JLabel lblPagado;
+    private javax.swing.JLabel lblPorPagar;
+    private javax.swing.JLabel lblSueldoDiaro;
+    private javax.swing.JLabel lblTitulo;
     // End of variables declaration//GEN-END:variables
 }

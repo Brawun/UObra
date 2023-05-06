@@ -7,6 +7,8 @@ package GUI.Obrero;
 import DAOs.ObrerosDAO;
 import Dominio.Obreros;
 import Herramientas.Encriptador;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -19,16 +21,21 @@ public class EditarContrasenaObrero extends javax.swing.JFrame {
     
     // Atributos
     Obreros obrero = new Obreros();
+    ObrerosDAO ObrerosDAO = new ObrerosDAO();
     
     /**
      * Creates new form EditarContrasenaObrero
      */
     public EditarContrasenaObrero(Obreros obrero) throws Exception {
         Encriptador crypt = new Encriptador();
+        initComponents();
+        Image image = Toolkit.getDefaultToolkit().getImage("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\Icono.png");
+        if (image != null) {
+            this.setIconImage(image);
+        }
         this.obrero = obrero;
         this.lblInsertarContrasenia.setText(crypt.decrypt(obrero.getContrasena()));
         this.lblInsertarUsuario.setText(crypt.decrypt(obrero.getUsuario()));
-        initComponents();
     }
 
     /**
@@ -48,20 +55,23 @@ public class EditarContrasenaObrero extends javax.swing.JFrame {
         lblInsertarUsuario = new javax.swing.JLabel();
         lblInsertarContrasenia = new javax.swing.JLabel();
         lblNuevaContrasenia = new javax.swing.JLabel();
-        txtNuevaContrasenia = new javax.swing.JTextField();
         btnActualizar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
+        txtNuevaContrasenia = new javax.swing.JPasswordField();
+        chbVerContrasenia = new javax.swing.JCheckBox();
+        UObraLogoPeque = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("Editar Contraseña");
 
         lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lblTitulo.setText("Editar Contraseña");
 
         lblUsuarioActual.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        lblUsuarioActual.setText("Usuario actual");
+        lblUsuarioActual.setText("Usuario actual:");
 
         lblContraseniaActual.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        lblContraseniaActual.setText("Contraseña actual");
+        lblContraseniaActual.setText("Contraseña actual:");
 
         lblInsertarUsuario.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblInsertarUsuario.setText("usuario actual");
@@ -70,7 +80,7 @@ public class EditarContrasenaObrero extends javax.swing.JFrame {
         lblInsertarContrasenia.setText("contraseña actual");
 
         lblNuevaContrasenia.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        lblNuevaContrasenia.setText("Nueva contraseña");
+        lblNuevaContrasenia.setText("Nueva contraseña:");
 
         btnActualizar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnActualizar.setText("Actualizar");
@@ -87,47 +97,60 @@ public class EditarContrasenaObrero extends javax.swing.JFrame {
             }
         });
 
+        chbVerContrasenia.setText("👁");
+        chbVerContrasenia.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                chbVerContraseniaStateChanged(evt);
+            }
+        });
+
+        UObraLogoPeque.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\UObraPeque.png")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap(14, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(48, 48, 48)
-                        .addComponent(lblUsuarioActual)
-                        .addGap(18, 18, 18)
-                        .addComponent(lblInsertarUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(24, 24, 24)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(Separator2, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblContraseniaActual)
+                                .addGap(130, 130, 130)
+                                .addComponent(btnActualizar)
+                                .addGap(66, 66, 66)
+                                .addComponent(btnCancelar))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblNuevaContrasenia)
                                 .addGap(18, 18, 18)
-                                .addComponent(lblInsertarContrasenia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(Separator2, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtNuevaContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(chbVerContrasenia))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(layout.createSequentialGroup()
                                     .addComponent(lblTitulo)
-                                    .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                            .addGap(130, 130, 130)
-                                            .addComponent(btnActualizar)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(btnCancelar))
-                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                            .addComponent(lblNuevaContrasenia)
-                                            .addGap(18, 18, 18)
-                                            .addComponent(txtNuevaContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                .addGap(0, 0, Short.MAX_VALUE)))))
-                .addContainerGap(15, Short.MAX_VALUE))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(UObraLogoPeque))
+                                .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblUsuarioActual)
+                            .addComponent(lblContraseniaActual))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblInsertarUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lblInsertarContrasenia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addComponent(lblTitulo)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblTitulo)
+                    .addComponent(UObraLogoPeque))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -143,7 +166,8 @@ public class EditarContrasenaObrero extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblNuevaContrasenia)
-                    .addComponent(txtNuevaContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtNuevaContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(chbVerContrasenia))
                 .addGap(18, 18, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnActualizar)
@@ -152,40 +176,59 @@ public class EditarContrasenaObrero extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
         if (!this.txtNuevaContrasenia.getText().isBlank()) {
             try {
-                ObrerosDAO obrerosDAO = new ObrerosDAO();
-                obrerosDAO.editarContrasena(this.obrero.getId(), this.txtNuevaContrasenia.getText());
-                JOptionPane.showMessageDialog(null, "Se ha actualizado la contraseña exitosamente.");
-                new PanelObrero(this.obrero).setVisible(true);
-                this.dispose();
+                Encriptador crypt = new Encriptador();
+                if (!crypt.decrypt(this.obrero.getContrasena()).equals(new String(this.txtNuevaContrasenia.getPassword()))) {
+                    try {
+                        ObrerosDAO.editarContrasena(this.obrero.getId(), this.txtNuevaContrasenia.getText());
+                        JOptionPane.showMessageDialog(null, "Se ha actualizado la contraseña exitosamente.");
+                        new PanelObrero(ObrerosDAO.consultarObrero(this.obrero.getId())).setVisible(true);
+                        this.dispose();
+                    } catch (Exception ex) {
+                        Logger.getLogger(EditarContrasenaObrero.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Error: La nueva contraseña no puede ser la misma a la ya existente. (Intente con otra)");
+                }
             } catch (Exception ex) {
                 Logger.getLogger(EditarContrasenaObrero.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            JOptionPane.showMessageDialog(null, "Error: Ingrese una nueva contraseña. (Contraseña en blanco).");
+            JOptionPane.showMessageDialog(null, "Error: Ingrese una nueva contraseña. (Contraseña en blanco)");
         }
     }//GEN-LAST:event_btnActualizarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        new PanelObrero(this.obrero).setVisible(true);    
+        new PanelObrero(ObrerosDAO.consultarObrero(this.obrero.getId())).setVisible(true);    
         this.dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void chbVerContraseniaStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_chbVerContraseniaStateChanged
+        if (this.chbVerContrasenia.isSelected()) {
+            this.txtNuevaContrasenia.setEchoChar((char) 0);
+        } else {
+            this.txtNuevaContrasenia.setEchoChar('•');
+        }
+    }//GEN-LAST:event_chbVerContraseniaStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSeparator Separador1;
     private javax.swing.JSeparator Separator2;
+    private javax.swing.JLabel UObraLogoPeque;
     private javax.swing.JButton btnActualizar;
     private javax.swing.JButton btnCancelar;
+    private javax.swing.JCheckBox chbVerContrasenia;
     private javax.swing.JLabel lblContraseniaActual;
     private javax.swing.JLabel lblInsertarContrasenia;
     private javax.swing.JLabel lblInsertarUsuario;
     private javax.swing.JLabel lblNuevaContrasenia;
     private javax.swing.JLabel lblTitulo;
     private javax.swing.JLabel lblUsuarioActual;
-    private javax.swing.JTextField txtNuevaContrasenia;
+    private javax.swing.JPasswordField txtNuevaContrasenia;
     // End of variables declaration//GEN-END:variables
 }
