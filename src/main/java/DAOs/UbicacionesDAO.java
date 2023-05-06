@@ -261,7 +261,6 @@ public class UbicacionesDAO {
         EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
         EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        Encriptador crypt = new Encriptador();
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Ubicaciones> criteria = criteriaBuilder.createQuery(Ubicaciones.class);
         Root<Ubicaciones> root = criteria.from(Ubicaciones.class);

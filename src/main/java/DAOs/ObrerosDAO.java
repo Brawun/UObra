@@ -149,7 +149,7 @@ public class ObrerosDAO {
             entityManager.close();
             return obrero.getContrasena().equals(contrasenaEncriptada);
         } else {
-            throw new EntityNotFoundException("No se puede encontrar el obrero con usuario: " + usuario);
+            return false;
         }
     }
     
