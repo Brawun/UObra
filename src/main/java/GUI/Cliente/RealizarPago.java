@@ -4,8 +4,7 @@
  */
 package GUI.Cliente;
 
-import java.awt.Image;
-import java.awt.Toolkit;
+import Herramientas.Icono;
 
 /**
  *
@@ -18,10 +17,7 @@ public class RealizarPago extends javax.swing.JFrame {
      */
     public RealizarPago() {
         initComponents();
-                Image image = Toolkit.getDefaultToolkit().getImage("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\Icono.png");
-        if (image != null) {
-            this.setIconImage(image);
-        }
+        new Icono().insertarIcono(this);
     }
 
     /**

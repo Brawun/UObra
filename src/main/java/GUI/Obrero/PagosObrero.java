@@ -6,17 +6,17 @@ package GUI.Obrero;
 
 import DAOs.ObrerosDAO;
 import DAOs.PagosDAO;
-import Dominio.ObrasObrero;
 import Dominio.Obreros;
 import Dominio.Pagos;
 import Enumeradores.MetodoPago;
 import Herramientas.Fecha;
-import java.awt.Image;
-import java.awt.Toolkit;
+import Herramientas.Icono;
+import Herramientas.Validadores;
 import java.text.ParseException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -30,37 +30,36 @@ public class PagosObrero extends javax.swing.JFrame {
     ObrerosDAO ObrerosDAO = new ObrerosDAO();
 
     /**
-     * Creates new form PagosObrero
+     * Crea un nuevo frame PagosObrero
+     *
+     * @param obrero Obrero de cuenta iniciada
      */
     public PagosObrero(Obreros obrero) {
         this.obrero = obrero;
         initComponents();
+        new Icono().insertarIcono(this);
         this.txtMonto.setText("0");
-        Image image = Toolkit.getDefaultToolkit().getImage("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\Icono.png");
-        if (image != null) {
-            this.setIconImage(image);
-        }
     }
-    
+
     public void cargarTablaPagos() throws ParseException {
         Fecha fecha = new Fecha();
         List<Pagos> listaPagos = new PagosDAO().consultarPagos(
-                            this.periodoInicio.getCalendar() != null ? this.periodoInicio.getCalendar() : null,
-                            this.periodoFinal.getCalendar() != null ? this.periodoFinal.getCalendar() : null,
-                            MetodoPago.EFECTIVO,
-                            this.txtMonto.getText().equals("0") ? (float) 0 : Float.valueOf(this.txtMonto.getText()),
-                            new ObrerosDAO().consultarObrero(obrero.getId()),
-                            null,
-                            null);
-            DefaultTableModel modeloTablaPagos = (DefaultTableModel) this.tblPagos.getModel();
-            modeloTablaPagos.setRowCount(0);
-            for (Pagos pagos : listaPagos) {
-                Object[] filaNueva = {pagos.getId()
-                        , "$" + pagos.getMonto() + "MXN"
-                        , fecha.formatoFecha(pagos.getFecha())
-                        , pagos.getObra().getId()};
-                modeloTablaPagos.addRow(filaNueva);
-            }
+                this.periodoInicio.getCalendar() != null ? this.periodoInicio.getCalendar() : null,
+                this.periodoFinal.getCalendar() != null ? this.periodoFinal.getCalendar() : null,
+                MetodoPago.EFECTIVO,
+                this.txtMonto.getText().equals("0") ? (float) 0 : Float.valueOf(this.txtMonto.getText()),
+                new ObrerosDAO().consultarObrero(obrero.getId()),
+                null,
+                null);
+        DefaultTableModel modeloTablaPagos = (DefaultTableModel) this.tblPagos.getModel();
+        modeloTablaPagos.setRowCount(0);
+        for (Pagos pagos : listaPagos) {
+            Object[] filaNueva = {pagos.getId(),
+                 "$ " + pagos.getMonto() + " MXN",
+                 fecha.formatoFecha(pagos.getFecha()),
+                 pagos.getObra().getId()};
+            modeloTablaPagos.addRow(filaNueva);
+        }
     }
 
     /**
@@ -288,10 +287,23 @@ public class PagosObrero extends javax.swing.JFrame {
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         try {
-            if (this.txtMonto.getText().isBlank()) {
-                this.txtMonto.setText("0");
+            Validadores valido = new Validadores();
+            if (valido.validarFechas(this.periodoInicio.getCalendar(), this.periodoFinal.getCalendar())) {
+                if (this.txtMonto.getText().isBlank()) {
+                    this.txtMonto.setText("0.0");
+                } else if (!valido.validarFlotante(this.txtMonto.getText())) {
+                    this.txtMonto.setText(this.txtMonto.getText().trim() + ".0");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Error: Monto mínimo a buscar inválido. (Mal formato).", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                }
+                if (valido.validarFlotante(this.txtMonto.getText()) && valido.validarSinEspacios(this.txtMonto.getText())) {
+                    this.cargarTablaPagos();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Error: Monto mínimo a buscar inválido. (Con espacios).", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Error: La fecha inicial no puede ser después que la fecha final.", "¡Error!", JOptionPane.ERROR_MESSAGE);
             }
-            this.cargarTablaPagos();
         } catch (ParseException e) {
             Logger.getLogger(ConsultaObrasObrero.class.getName()).log(Level.SEVERE, null, e);
         }

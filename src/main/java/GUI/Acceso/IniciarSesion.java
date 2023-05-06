@@ -14,9 +14,8 @@ import GUI.Cliente.PanelCliente;
 import GUI.Insercion.InsercionMasiva;
 import GUI.Jefe.PanelJefe;
 import GUI.Obrero.PanelObrero;
+import Herramientas.Icono;
 import Herramientas.Insercion;
-import java.awt.Image;
-import java.awt.Toolkit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -35,10 +34,7 @@ public class IniciarSesion extends javax.swing.JFrame {
      */
     public IniciarSesion() {
         initComponents();
-        Image image = Toolkit.getDefaultToolkit().getImage("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\Icono.png");
-        if (image != null) {
-            this.setIconImage(image);
-        }
+        new Icono().insertarIcono(this);
     }
 
     /**
@@ -270,7 +266,7 @@ public class IniciarSesion extends javax.swing.JFrame {
 
     private void btnAceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarActionPerformed
         if (this.cbxTipoUsuario.getSelectedItem() == "Elija uno...") {
-            JOptionPane.showMessageDialog(null, "Error: Elija un tipo de usuario válido para inicio de sesión.");
+            JOptionPane.showMessageDialog(null, "Error: Elija un tipo de usuario válido para inicio de sesión.", "¡Error!", JOptionPane.ERROR_MESSAGE);
         } else if (this.cbxTipoUsuario.getSelectedItem() == "Obrero") {
             try {
                 ObrerosDAO ObrerosDAO = new ObrerosDAO();
@@ -281,7 +277,7 @@ public class IniciarSesion extends javax.swing.JFrame {
                     new PanelObrero(obrero).setVisible(true);
                     this.dispose();
                 } else {
-                    JOptionPane.showMessageDialog(null, "Error: Usuario o contraseña de obrero incorrectas (Intente de nuevo).");
+                    JOptionPane.showMessageDialog(null, "Error: Usuario o contraseña de obrero incorrectas (Intente de nuevo).", "¡Error!", JOptionPane.ERROR_MESSAGE);
                 }
             } catch (Exception ex) {
                 Logger.getLogger(IniciarSesion.class.getName()).log(Level.SEVERE, null, ex);
@@ -296,7 +292,7 @@ public class IniciarSesion extends javax.swing.JFrame {
                     new PanelJefe(jefe).setVisible(true);
                     this.dispose();
                 } else {
-                    JOptionPane.showMessageDialog(null, "Error: Usuario o contraseña de jefe incorrectas (Intente de nuevo).");
+                    JOptionPane.showMessageDialog(null, "Error: Usuario o contraseña de jefe incorrectas (Intente de nuevo).", "¡Error!", JOptionPane.ERROR_MESSAGE);
                 }
             } catch (Exception ex) {
                 Logger.getLogger(IniciarSesion.class.getName()).log(Level.SEVERE, null, ex);
@@ -311,7 +307,7 @@ public class IniciarSesion extends javax.swing.JFrame {
                     new PanelCliente(cliente).setVisible(true);
                     this.dispose();
                 } else {
-                    JOptionPane.showMessageDialog(null, "Error: Usuario o contraseña de cliente incorrectas (Intente de nuevo).");
+                    JOptionPane.showMessageDialog(null, "Error: Usuario o contraseña de cliente incorrectas (Intente de nuevo).", "¡Error!", JOptionPane.ERROR_MESSAGE);
                 }
             } catch (Exception ex) {
                 Logger.getLogger(IniciarSesion.class.getName()).log(Level.SEVERE, null, ex);
@@ -326,7 +322,8 @@ public class IniciarSesion extends javax.swing.JFrame {
                 + " - Guimel Naely Rubio Morillon \n"
                 + "\nProf. María de los Ángeles Germán \n"
                 + "Pruebas de Software ITSON "
-                + "☺");
+                + "☺"
+                , "Acerca de", JOptionPane.INFORMATION_MESSAGE);
         this.setVisible(true);
     }//GEN-LAST:event_mniAcercaDeActionPerformed
 
@@ -335,9 +332,9 @@ public class IniciarSesion extends javax.swing.JFrame {
         if (i == JOptionPane.YES_OPTION) {
             try {
                 if (new Insercion().EliminarBaseDeDatos()) {
-                    JOptionPane.showMessageDialog(null, "Se eliminó la base de datos correctamente.");
+                    JOptionPane.showMessageDialog(null, "Se eliminó la base de datos correctamente.", "Acción realizada", JOptionPane.INFORMATION_MESSAGE);
                 } else {
-                    JOptionPane.showMessageDialog(null, "No fue posible eliminar la base de datos.");
+                    JOptionPane.showMessageDialog(null, "No fue posible eliminar la base de datos.", "¡Error interno!", JOptionPane.ERROR_MESSAGE);
                 }
             } catch (Exception e) {
                 Logger.getLogger(IniciarSesion.class.getName()).log(Level.SEVERE, null, e);
@@ -367,12 +364,12 @@ public class IniciarSesion extends javax.swing.JFrame {
         if (this.contador == 0) {
             if (new Insercion().InsercionRapida()) {
                 this.contador = 1;
-                JOptionPane.showMessageDialog(null, "Se realizó la inserción rápida correctamente.");
+                JOptionPane.showMessageDialog(null, "Se realizó la inserción rápida correctamente.", "Acción realizada", JOptionPane.INFORMATION_MESSAGE);
             } else {
-                JOptionPane.showMessageDialog(null, "No se pudo realizar la inserción rápida.");
+                JOptionPane.showMessageDialog(null, "No se pudo realizar la inserción rápida.", "¡Error interno!", JOptionPane.ERROR_MESSAGE);
             }
         } else {
-            JOptionPane.showMessageDialog(null, "No se puede realizar la inserción rápida más de una vez.");
+            JOptionPane.showMessageDialog(null, "No se puede realizar la inserción rápida más de una vez.", "¡Error!", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_mniInsercionRapidaActionPerformed
 

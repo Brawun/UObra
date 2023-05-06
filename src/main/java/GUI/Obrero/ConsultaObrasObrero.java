@@ -30,7 +30,9 @@ public class ConsultaObrasObrero extends javax.swing.JFrame {
     ObrasObreroDAO ObrasObreroDAO = new ObrasObreroDAO();
 
     /**
-     * Creates new form ObrasObrero
+     * Crea un nuevo frame ObrasObrero
+     *
+     * @param obrero Obrero de cuenta iniciada
      */
     public ConsultaObrasObrero(Obreros obrero) {
         initComponents();
@@ -45,37 +47,37 @@ public class ConsultaObrasObrero extends javax.swing.JFrame {
 
     public void cargarTablaObrasObrero(Boolean activa, Integer fechas) throws Exception {
         List<ObrasObrero> listaObrasObrero;
-        Fecha fecha = new Fecha(); 
+        Fecha fecha = new Fecha();
         if (fechas == 0) {
             listaObrasObrero = ObrasObreroDAO.consultarObrasObrerosFechaFin( // Se busca por acción FIN
-                            this.periodoInicio.getCalendar() != null // Si el usuario ingresó un periodo inicio se ingresa en el campo
-                            ? this.periodoInicio.getCalendar() : null,
-                            this.periodoFinal.getCalendar() != null // Si el usuario ingresó un periodo fin se ingresa en el campo
-                            ? this.periodoFinal.getCalendar() : null,
-                            activa,
-                            Integer.valueOf(this.txtDias.getText()) == 0 ? null : Integer.valueOf(this.txtDias.getText()),
-                            null, // Cualquier obra
-                            this.obrero.getId()); // Obrero
+                    this.periodoInicio.getCalendar() != null // Si el usuario ingresó un periodo inicio se ingresa en el campo
+                    ? this.periodoInicio.getCalendar() : null,
+                    this.periodoFinal.getCalendar() != null // Si el usuario ingresó un periodo fin se ingresa en el campo
+                    ? this.periodoFinal.getCalendar() : null,
+                    activa,
+                    Integer.valueOf(this.txtDias.getText()) == 0 ? null : Integer.valueOf(this.txtDias.getText()),
+                    null, // Cualquier obra
+                    this.obrero.getId()); // Obrero
         } else {
             listaObrasObrero = ObrasObreroDAO.consultarObrasObrerosFechaInicio( // Se busca por acción FIN
-                            this.periodoInicio.getCalendar() != null // Si el usuario ingresó un periodo inicio se ingresa en el campo
-                            ? this.periodoInicio.getCalendar() : null,
-                            this.periodoFinal.getCalendar() != null // Si el usuario ingresó un periodo fin se ingresa en el campo
-                            ? this.periodoFinal.getCalendar() : null,
-                            activa,
-                            Integer.valueOf(this.txtDias.getText()) == 0 ? null : Integer.valueOf(this.txtDias.getText()),
-                            null, // Cualquier obra
-                            this.obrero.getId()); // Obrero
+                    this.periodoInicio.getCalendar() != null // Si el usuario ingresó un periodo inicio se ingresa en el campo
+                    ? this.periodoInicio.getCalendar() : null,
+                    this.periodoFinal.getCalendar() != null // Si el usuario ingresó un periodo fin se ingresa en el campo
+                    ? this.periodoFinal.getCalendar() : null,
+                    activa,
+                    Integer.valueOf(this.txtDias.getText()) == 0 ? null : Integer.valueOf(this.txtDias.getText()),
+                    null, // Cualquier obra
+                    this.obrero.getId()); // Obrero
         }
         DefaultTableModel modeloTablaPersonas = (DefaultTableModel) this.tblResultados.getModel();
         modeloTablaPersonas.setRowCount(0);
         for (ObrasObrero obrasObrero : listaObrasObrero) {
-            Object[] filaNueva = {obrasObrero.getId()
-                    , fecha.formatoFecha(obrasObrero.getFechaInicio())
-                    , fecha.formatoFecha(obrasObrero.getFechaFin())
-                    , obrasObrero.getActivo() == true ? "Activa" : "Inactiva"
-                    , obrasObrero.getDiasTrabajados() + " dia(s)"
-                    , obrasObrero.getObra().getId()};
+            Object[] filaNueva = {obrasObrero.getId(),
+                fecha.formatoFecha(obrasObrero.getFechaInicio()),
+                obrasObrero.getFechaFin() != null ? fecha.formatoFecha(obrasObrero.getFechaFin()) : "No aplica",
+                obrasObrero.getActivo() == true ? "Activa" : "Inactiva",
+                obrasObrero.getDiasTrabajados() + " dia(s)",
+                obrasObrero.getObra().getId()};
             modeloTablaPersonas.addRow(filaNueva);
         }
     }
@@ -342,37 +344,42 @@ public class ConsultaObrasObrero extends javax.swing.JFrame {
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         try {
-            if (this.cbxAccion.getSelectedItem() != "Elija uno...") {
-                if (this.cbxEstado.getSelectedItem() != "Elija uno...") {
-                    if (this.cbxEstado.getSelectedItem() == "Activa") {
-                        if (this.cbxAccion.getSelectedItem() == "Iniciaron") {
-                            this.cargarTablaObrasObrero(true, 1);
-                        } else if (this.cbxAccion.getSelectedItem() == "Terminaron") {
-                            this.cargarTablaObrasObrero(true, 0);
-                        }
-                    } else if (this.cbxEstado.getSelectedItem() == "Indistinto") {
-                        if (this.cbxAccion.getSelectedItem() == "Iniciaron") {
-                            this.cargarTablaObrasObrero(null, 1);
-                        } else if (this.cbxAccion.getSelectedItem() == "Terminaron") {
-                            this.cargarTablaObrasObrero(null, 0);
-                        }
-                    } else if (this.cbxEstado.getSelectedItem() == "Inactiva") {
-                        Validadores valido = new Validadores();
-                        if (valido.validarEntero(this.txtDias.getText())) {
+            Validadores valido = new Validadores();
+            if (valido.validarFechas(this.periodoInicio.getCalendar(), this.periodoFinal.getCalendar())) {
+                if (this.cbxAccion.getSelectedItem() != "Elija uno...") {
+                    if (this.cbxEstado.getSelectedItem() != "Elija uno...") {
+                        if (this.cbxEstado.getSelectedItem() == "Activa") {
                             if (this.cbxAccion.getSelectedItem() == "Iniciaron") {
-                                this.cargarTablaObrasObrero(false, 1);
+                                this.cargarTablaObrasObrero(true, 1);
                             } else if (this.cbxAccion.getSelectedItem() == "Terminaron") {
-                                this.cargarTablaObrasObrero(false, 0);
+                                this.cargarTablaObrasObrero(true, 0);
                             }
-                        } else {
-                            JOptionPane.showMessageDialog(null, "Error: Ingrese días trabajados válidos. (Solamente números enteros)");
+                        } else if (this.cbxEstado.getSelectedItem() == "Indistinto") {
+                            if (this.cbxAccion.getSelectedItem() == "Iniciaron") {
+                                this.cargarTablaObrasObrero(null, 1);
+                            } else if (this.cbxAccion.getSelectedItem() == "Terminaron") {
+                                this.cargarTablaObrasObrero(null, 0);
+                            }
+                        } else if (this.cbxEstado.getSelectedItem() == "Inactiva") {
+
+                            if (valido.validarEntero(this.txtDias.getText())) {
+                                if (this.cbxAccion.getSelectedItem() == "Iniciaron") {
+                                    this.cargarTablaObrasObrero(false, 1);
+                                } else if (this.cbxAccion.getSelectedItem() == "Terminaron") {
+                                    this.cargarTablaObrasObrero(false, 0);
+                                }
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Error: Ingrese días trabajados válidos. (Solamente números enteros)", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                            }
                         }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Error: Elija un estado de relación obra - obrero válido para la búsqueda dinámica.", "¡Error!", JOptionPane.ERROR_MESSAGE);
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "Error: Elija un estado de relación obra - obrero válido para la búsqueda dinámica.");
+                    JOptionPane.showMessageDialog(null, "Error: Elija un tipo de acción válido para la búsqueda dinámica.", "¡Error!", JOptionPane.ERROR_MESSAGE);
                 }
             } else {
-                JOptionPane.showMessageDialog(null, "Error: Elija un tipo de acción válido para la búsqueda dinámica.");
+                JOptionPane.showMessageDialog(null, "Error: La fecha inicial no puede ser después que la fecha final.", "¡Error!", JOptionPane.ERROR_MESSAGE);
             }
         } catch (Exception e) {
             Logger.getLogger(ConsultaObrasObrero.class.getName()).log(Level.SEVERE, null, e);

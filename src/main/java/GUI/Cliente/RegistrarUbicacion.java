@@ -4,6 +4,8 @@
  */
 package GUI.Cliente;
 
+import Herramientas.Icono;
+
 /**
  *
  * @author 52644
@@ -15,6 +17,7 @@ public class RegistrarUbicacion extends javax.swing.JFrame {
      */
     public RegistrarUbicacion() {
         initComponents();
+        new Icono().insertarIcono(this);
     }
 
     /**

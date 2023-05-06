@@ -4,6 +4,8 @@
  */
 package GUI.Cliente;
 
+import Herramientas.Icono;
+
 /**
  *
  * @author 52644
@@ -15,6 +17,7 @@ public class SolicitarObra extends javax.swing.JFrame {
      */
     public SolicitarObra() {
         initComponents();
+        new Icono().insertarIcono(this);
     }
 
     /**

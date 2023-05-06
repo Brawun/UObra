@@ -7,8 +7,7 @@ package GUI.Obrero;
 import DAOs.ObrerosDAO;
 import Dominio.Obreros;
 import GUI.Acceso.IniciarSesion;
-import java.awt.Image;
-import java.awt.Toolkit;
+import Herramientas.Icono;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -24,16 +23,14 @@ public class PanelObrero extends javax.swing.JFrame {
     ObrerosDAO ObrerosDAO = new ObrerosDAO();
     
     /**
-     * Creates new form Obrero
-     * @param obrero
+     * Crea un nuevo frame Obrero
+     * 
+     * @param obrero Obrero de cuenta iniciada
      */
     public PanelObrero(Obreros obrero) {
         this.obrero = obrero;
         initComponents();
-        Image image = Toolkit.getDefaultToolkit().getImage("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\Icono.png");
-        if (image != null) {
-            this.setIconImage(image);
-        }
+        new Icono().insertarIcono(this);
         // Se ingresan los datos de obrero en el panel
         this.lblInsertarID.setText(this.obrero.id.toString());
         this.lblInsertarNombre.setText(this.obrero.nombre);

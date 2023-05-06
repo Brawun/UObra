@@ -16,11 +16,13 @@ import java.awt.Toolkit;
 public class NominaObrero extends javax.swing.JFrame {
 
     // Atributos
-    Obreros obrero = new Obreros(); 
+    Obreros obrero = new Obreros();
     ObrerosDAO ObrerosDAO = new ObrerosDAO();
-    
+
     /**
-     * Creates new form NominaObrero
+     * Crea un nuevo frame NominaObrero
+     *
+     * @param obrero Obrero de cuenta iniciada
      */
     public NominaObrero(Obreros obrero) {
         this.obrero = obrero;

@@ -5,8 +5,8 @@
 package GUI.Insercion;
 
 import GUI.Acceso.IniciarSesion;
+import Herramientas.Icono;
 import Herramientas.Insercion;
-import java.awt.Toolkit;
 import javax.swing.JOptionPane;
 
 /**
@@ -23,7 +23,7 @@ public class InsercionMasiva extends javax.swing.JFrame {
      */
     public InsercionMasiva() {
         initComponents();
-        this.setIconImage(Toolkit.getDefaultToolkit().getImage("D:/Documentos/Word/ITSON/3er-4to Semestre/4°/Pruebas de Software/UObra/src/main/java/Multimedia/Icono.png"));
+        new Icono().insertarIcono(this);
     }
 
     /**

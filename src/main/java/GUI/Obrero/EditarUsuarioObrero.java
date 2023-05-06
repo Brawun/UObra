@@ -24,7 +24,10 @@ public class EditarUsuarioObrero extends javax.swing.JFrame {
     ObrerosDAO ObrerosDAO = new ObrerosDAO();
 
     /**
-     * Creates new form EditarUsuarioObrero
+     * Crea un nuevo frame EditarUsuarioObrero
+     *
+     * @param obrero Obrero de cuenta iniciada
+     * @throws Exception En caso que haya problemas con la desencriptación
      */
     public EditarUsuarioObrero(Obreros obrero) throws Exception {
         Encriptador crypt = new Encriptador();
@@ -184,13 +187,13 @@ public class EditarUsuarioObrero extends javax.swing.JFrame {
                         Logger.getLogger(EditarContrasenaObrero.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "Error: El nuevo usuario no puede ser el mismo al ya existente. (Intente con otro)");
+                    JOptionPane.showMessageDialog(null, "Error: El nuevo usuario no puede ser el mismo al ya existente. (Intente con otro)", "¡Error!", JOptionPane.ERROR_MESSAGE);
                 }
             } catch (Exception ex) {
                 Logger.getLogger(EditarUsuarioObrero.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            JOptionPane.showMessageDialog(null, "Error: Ingrese un nuevo usuario. (Usuario en blanco).");
+            JOptionPane.showMessageDialog(null, "Error: Ingrese un nuevo usuario. (Usuario en blanco).", "¡Error!", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnActualizarActionPerformed
 

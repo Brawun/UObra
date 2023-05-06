@@ -18,13 +18,16 @@ import javax.swing.JOptionPane;
  * @author 52644
  */
 public class EditarContrasenaObrero extends javax.swing.JFrame {
-    
+
     // Atributos
     Obreros obrero = new Obreros();
     ObrerosDAO ObrerosDAO = new ObrerosDAO();
-    
+
     /**
-     * Creates new form EditarContrasenaObrero
+     * Crea un nuevo frame EditarContrasenaObrero
+     * 
+     * @param obrero Obrero de cuenta iniciada
+     * @throws Exception En caso que haya problemas con la desencriptación 
      */
     public EditarContrasenaObrero(Obreros obrero) throws Exception {
         Encriptador crypt = new Encriptador();
@@ -193,18 +196,18 @@ public class EditarContrasenaObrero extends javax.swing.JFrame {
                         Logger.getLogger(EditarContrasenaObrero.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "Error: La nueva contraseña no puede ser la misma a la ya existente. (Intente con otra)");
+                    JOptionPane.showMessageDialog(null, "Error: La nueva contraseña no puede ser la misma a la ya existente. (Intente con otra)", "¡Error!", JOptionPane.ERROR_MESSAGE);
                 }
             } catch (Exception ex) {
                 Logger.getLogger(EditarContrasenaObrero.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            JOptionPane.showMessageDialog(null, "Error: Ingrese una nueva contraseña. (Contraseña en blanco)");
+            JOptionPane.showMessageDialog(null, "Error: Ingrese una nueva contraseña. (Contraseña en blanco)", "¡Error!", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnActualizarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        new PanelObrero(ObrerosDAO.consultarObrero(this.obrero.getId())).setVisible(true);    
+        new PanelObrero(ObrerosDAO.consultarObrero(this.obrero.getId())).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
