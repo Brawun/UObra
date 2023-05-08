@@ -243,10 +243,13 @@ public class RegistrarCuenta extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        this.setVisible(false);
         int i = JOptionPane.showConfirmDialog(this, "¿Seguro que deseas cancelar el registro? Los datos de registro no se guardarán", "Advertencia", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         if (i == JOptionPane.YES_OPTION) {
             this.dispose();
             new IniciarSesion().setVisible(true);
+        } else {
+            this.setVisible(true);
         }
     }//GEN-LAST:event_btnCancelarActionPerformed
 

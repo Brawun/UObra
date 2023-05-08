@@ -127,9 +127,10 @@ public class PagosDAO {
         }
 
         criteria.where(predicates.toArray(new Predicate[0]));
+        List<Pagos> pagos = entityManager.createQuery(criteria).getResultList();
         entityManager.getTransaction().commit();
         entityManager.close();
-        return entityManager.createQuery(criteria).getResultList();
+        return pagos;
     }
 
     // Métodos drivers para búsqueda dinámica

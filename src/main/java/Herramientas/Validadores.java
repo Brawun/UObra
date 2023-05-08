@@ -94,7 +94,28 @@ public class Validadores {
         // Se remueven espacios en blanco
         CharSequence cadena = flotante.trim();
         // Expresión regular
-        String patron = "^[0-9]*\\.?[0-9]+$";
+        String patron = "^[0-9]*\\.[0-9]+([eE][-+]?[0-9]+)?$";
+        // Se crea un objeto de tipo pattern para verificar patrones
+        Pattern p = Pattern.compile(patron);
+        // Objeto de verificación
+        Matcher matcher = p.matcher(cadena);
+        // Devuelve verdadero si la cadena coincide con el patrón
+        return matcher.matches();
+    }
+
+    /**
+     * Método para validar numeros, se verifica que sea un número de longuitud
+     * indeterminada.
+     *
+     * @param numero Numero a validar.
+     * @return Verdadero si el numero tiene el formato correcto, falso en caso
+     * contrario
+     */
+    public boolean validarNumero(String numero) {
+        // Se remueven espacios en blanco
+        CharSequence cadena = numero.trim();
+        // Expresión regular
+        String patron = "^\\d*\\.?\\d+$";
         // Se crea un objeto de tipo pattern para verificar patrones
         Pattern p = Pattern.compile(patron);
         // Objeto de verificación
@@ -126,6 +147,33 @@ public class Validadores {
     }
 
     /**
+     * Método para recortar el signo de + de una cadena.
+     *
+     * @param cadena Cadena a recortar signo.
+     * @return Cadena sin el signo de más.
+     */
+    public String recortarSignoMas(String cadena) {
+        if (cadena.startsWith("+")) {
+            return cadena.substring(1);
+        } else {
+            return cadena;
+        }
+    }
+
+    /**
+     * Busca todas las ocurrencias de la cadena dada (en este caso, una coma) y
+     * las reemplaza con la cadena de reemplazo especificada (en este caso, una
+     * cadena vacía). Este método devuelve una nueva cadena que es la entrada
+     * original sin todas las comas.
+     *
+     * @param entrada Cadena entrante a la que se le retirarán todas las comas.
+     * @return Cadena sin comas.
+     */
+    public String recortarComas(String entrada) {
+        return entrada.replace(",", "");
+    }
+
+    /**
      * Método para validar que una cadena no tenga espacios.
      *
      * @param string Cadena a validar.
@@ -146,13 +194,13 @@ public class Validadores {
     }
 
     /**
-     * El método "validarFechas" en Java toma dos parámetros de tipo Calendar: 
-     * "fechaInicial" y "fechaFinal". Utiliza el método "before" de la clase 
-     * Calendar para verificar si "fechaInicial" es anterior a "fechaFinal". 
-     * 
+     * El método "validarFechas" en Java toma dos parámetros de tipo Calendar:
+     * "fechaInicial" y "fechaFinal". Utiliza el método "before" de la clase
+     * Calendar para verificar si "fechaInicial" es anterior a "fechaFinal".
+     *
      * @param fechaInicial Fecha inicial que tiene que ser antes
      * @param fechaFinal Fecha final que tiene que ser después
-     * @return Si "fechaInicial" es anterior a "fechaFinal", el método devuelve 
+     * @return Si "fechaInicial" es anterior a "fechaFinal", el método devuelve
      * true; de lo contrario, devuelve false.
      */
     public boolean validarFechas(Calendar fechaInicial, Calendar fechaFinal) {

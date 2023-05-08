@@ -269,9 +269,10 @@ public class PlanosDAO {
         }
 
         criteria.where(predicates.toArray(new Predicate[0]));
+        List<Planos> planos = entityManager.createQuery(criteria).getResultList();
         entityManager.getTransaction().commit();
         entityManager.close();
-        return entityManager.createQuery(criteria).getResultList();
+        return planos;
     }
 
     // Regresa una lista de planos que hayan sido realizados dentro del periodo
@@ -310,9 +311,10 @@ public class PlanosDAO {
         }
 
         criteria.where(predicates.toArray(new Predicate[0]));
+        List<Planos> planos = entityManager.createQuery(criteria).getResultList();
         entityManager.getTransaction().commit();
         entityManager.close();
-        return entityManager.createQuery(criteria).getResultList();
+        return planos;
     }
 
     // Métodos drivers para búsqueda dinámica

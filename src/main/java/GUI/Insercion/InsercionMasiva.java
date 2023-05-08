@@ -19,7 +19,7 @@ public class InsercionMasiva extends javax.swing.JFrame {
     Insercion insercion = new Insercion();
 
     /**
-     * Creates new form InsercionMasiva
+     * Creates new form insercionMasiva
      */
     public InsercionMasiva() {
         initComponents();
@@ -213,12 +213,12 @@ public class InsercionMasiva extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnInsertarObrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInsertarObrasActionPerformed
-////        if (insercion.InsercionMasivaObras()) {
+////        if (insercion.insercionMasivaObras()) {
 ////            JOptionPane.showMessageDialog(null, "Se realizó la inserción masiva de obras correctamente.");
 ////        } else {
 ////            JOptionPane.showMessageDialog(null, "No se pudo realizar la inserción masiva de obras.");
 ////        }
-        insercion.InsercionMasivaObras();
+        insercion.insercionMasivaObras();
     }//GEN-LAST:event_btnInsertarObrasActionPerformed
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
@@ -227,7 +227,7 @@ public class InsercionMasiva extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSalirActionPerformed
 
     private void btnInsertarClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInsertarClientesActionPerformed
-        if (insercion.InsercionMasivaClientes()) {
+        if (insercion.insercionMasivaClientes()) {
             JOptionPane.showMessageDialog(null, "Se realizó la inserción masiva de clientes correctamente.");
         } else {
             JOptionPane.showMessageDialog(null, "No se pudo realizar la inserción masiva de clientes.");
@@ -235,7 +235,7 @@ public class InsercionMasiva extends javax.swing.JFrame {
     }//GEN-LAST:event_btnInsertarClientesActionPerformed
 
     private void btnInsertarJefesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInsertarJefesActionPerformed
-        if (insercion.InsercionMasivaJefes()) {
+        if (insercion.insercionMasivaJefes()) {
             JOptionPane.showMessageDialog(null, "Se realizó la inserción masiva de jefes correctamente.");
         } else {
             JOptionPane.showMessageDialog(null, "No se pudo realizar la inserción masiva de jefes.");
@@ -243,7 +243,7 @@ public class InsercionMasiva extends javax.swing.JFrame {
     }//GEN-LAST:event_btnInsertarJefesActionPerformed
 
     private void btnInsertarObrerosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInsertarObrerosActionPerformed
-        if (insercion.InsercionMasivaObreros()) {
+        if (insercion.insercionMasivaObreros()) {
             JOptionPane.showMessageDialog(null, "Se realizó la inserción masiva de obreros correctamente.");
         } else {
             JOptionPane.showMessageDialog(null, "No se pudo realizar la inserción masiva de obreros.");
@@ -251,57 +251,57 @@ public class InsercionMasiva extends javax.swing.JFrame {
     }//GEN-LAST:event_btnInsertarObrerosActionPerformed
 
     private void btnInsertarUbicacionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInsertarUbicacionesActionPerformed
-////        if (insercion.InsercionMasivaUbicaciones()) {
+////        if (insercion.insercionMasivaUbicaciones()) {
 ////            JOptionPane.showMessageDialog(null, "Se realizó la inserción masiva de ubicaciones correctamente.");
 ////        } else {
 ////            JOptionPane.showMessageDialog(null, "No se pudo realizar la inserción masiva de ubicaciones.");
 ////        }
-        insercion.InsercionMasivaUbicaciones();
+        insercion.insercionMasivaUbicaciones();
     }//GEN-LAST:event_btnInsertarUbicacionesActionPerformed
 
     private void btnInsertarPermisosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInsertarPermisosActionPerformed
-////        if (insercion.InsercionMasivaPermisos()) {
+////        if (insercion.insercionMasivaPermisos()) {
 ////            JOptionPane.showMessageDialog(null, "Se realizó la inserción masiva de permisos correctamente.");
 ////        } else {
 ////            JOptionPane.showMessageDialog(null, "No se pudo realizar la inserción masiva de permisos.");
 ////        }
-        insercion.InsercionMasivaPermisos();
+        insercion.insercionMasivaPermisos();
     }//GEN-LAST:event_btnInsertarPermisosActionPerformed
 
     private void btnInsertarPlanosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInsertarPlanosActionPerformed
-////        if (insercion.InsercionMasivaPlanos()) {
+////        if (insercion.insercionMasivaPlanos()) {
 ////            JOptionPane.showMessageDialog(null, "Se realizó la inserción masiva de planos correctamente.");
 ////        } else {
 ////            JOptionPane.showMessageDialog(null, "No se pudo realizar la inserción masiva de planos.");
 ////        }
-        insercion.InsercionMasivaPlanos();
+        insercion.insercionMasivaPlanos();
     }//GEN-LAST:event_btnInsertarPlanosActionPerformed
 
     private void btnInsertarObrasObreroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInsertarObrasObreroActionPerformed
-////        if (insercion.InsercionMasivaObrasObrero()) {
+////        if (insercion.insercionMasivaObrasObrero()) {
 ////            JOptionPane.showMessageDialog(null, "Se realizó la inserción masiva de obras - obrero correctamente.");
 ////        } else {
 ////            JOptionPane.showMessageDialog(null, "No se pudo realizar la inserción masiva de obras - obrero.");
 ////        }
-        insercion.InsercionMasivaObrasObrero();
+        insercion.insercionMasivaObrasObrero();
     }//GEN-LAST:event_btnInsertarObrasObreroActionPerformed
 
     private void btnInsertarFacturasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInsertarFacturasActionPerformed
-////        if (insercion.InsercionMasivaFacturas()) {
+////        if (insercion.insercionMasivaFacturas()) {
 ////            JOptionPane.showMessageDialog(null, "Se realizó la inserción masiva de facturas correctamente.");
 ////        } else {
 ////            JOptionPane.showMessageDialog(null, "No se pudo realizar la inserción masiva de facturas.");
 ////        }
-        insercion.InsercionMasivaFacturas();
+        insercion.insercionMasivaFacturas();
     }//GEN-LAST:event_btnInsertarFacturasActionPerformed
 
     private void btnInsertarPagosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInsertarPagosActionPerformed
-////        if (insercion.InsercionMasivaPagos()) {
+////        if (insercion.insercionMasivaPagos()) {
 ////            JOptionPane.showMessageDialog(null, "Se realizó la inserción masiva de pagos correctamente.");
 ////        } else {
 ////            JOptionPane.showMessageDialog(null, "No se pudo realizar la inserción masiva de pagos.");
 ////        }
-        insercion.InsercionMasivaPagos();
+        insercion.insercionMasivaPagos();
     }//GEN-LAST:event_btnInsertarPagosActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

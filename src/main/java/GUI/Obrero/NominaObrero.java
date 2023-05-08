@@ -6,8 +6,7 @@ package GUI.Obrero;
 
 import DAOs.ObrerosDAO;
 import Dominio.Obreros;
-import java.awt.Image;
-import java.awt.Toolkit;
+import Herramientas.Icono;
 
 /**
  *
@@ -27,10 +26,7 @@ public class NominaObrero extends javax.swing.JFrame {
     public NominaObrero(Obreros obrero) {
         this.obrero = obrero;
         initComponents();
-        Image image = Toolkit.getDefaultToolkit().getImage("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\Icono.png");
-        if (image != null) {
-            this.setIconImage(image);
-        }
+        new Icono().insertarIcono(this);
         this.lblInsertarDias.setText(String.valueOf(obrero.getDiasTrabajados()));
         this.lblInsertarPagar.setText(String.valueOf(obrero.getPagado()));
         this.lblInsertarPorPagar.setText(String.valueOf(obrero.getPorPagar()));

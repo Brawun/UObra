@@ -9,9 +9,8 @@ import DAOs.ObrerosDAO;
 import Dominio.ObrasObrero;
 import Dominio.Obreros;
 import Herramientas.Fecha;
+import Herramientas.Icono;
 import Herramientas.Validadores;
-import java.awt.Image;
-import java.awt.Toolkit;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,10 +35,7 @@ public class ConsultaObrasObrero extends javax.swing.JFrame {
      */
     public ConsultaObrasObrero(Obreros obrero) {
         initComponents();
-        Image image = Toolkit.getDefaultToolkit().getImage("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\Icono.png");
-        if (image != null) {
-            this.setIconImage(image);
-        }
+        new Icono().insertarIcono(this);
         this.obrero = obrero;
         this.txtDias.setEditable(true);
         this.txtDias.setText("0");

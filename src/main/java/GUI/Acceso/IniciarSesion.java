@@ -258,9 +258,12 @@ public class IniciarSesion extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
+        this.setVisible(false);
         int i = JOptionPane.showConfirmDialog(this, "¿Seguro que desea salir?", "Advertencia", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         if (i == JOptionPane.YES_OPTION) {
             this.dispose();
+        } else {
+            this.setVisible(true);
         }
     }//GEN-LAST:event_btnSalirActionPerformed
 
@@ -362,7 +365,7 @@ public class IniciarSesion extends javax.swing.JFrame {
 
     private void mniInsercionRapidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniInsercionRapidaActionPerformed
         if (this.contador == 0) {
-            if (new Insercion().InsercionRapida()) {
+            if (new Insercion().insercionRapida()) {
                 this.contador = 1;
                 JOptionPane.showMessageDialog(null, "Se realizó la inserción rápida correctamente.", "Acción realizada", JOptionPane.INFORMATION_MESSAGE);
             } else {

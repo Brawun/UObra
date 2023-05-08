@@ -246,9 +246,10 @@ public class PermisosDAO {
         }
 
         criteria.where(predicates.toArray(new Predicate[0]));
+        List<Permisos> permisos = entityManager.createQuery(criteria).getResultList();
         entityManager.getTransaction().commit();
         entityManager.close();
-        return entityManager.createQuery(criteria).getResultList();
+        return permisos;
     }
 
     // Regresa una lista de permisos que hayan sido concedidos dentro del periodo
@@ -283,9 +284,10 @@ public class PermisosDAO {
         }
 
         criteria.where(predicates.toArray(new Predicate[0]));
+        List<Permisos> permisos = entityManager.createQuery(criteria).getResultList();
         entityManager.getTransaction().commit();
         entityManager.close();
-        return entityManager.createQuery(criteria).getResultList();
+        return permisos;
     }
 
     // Métodos drivers para búsqueda dinámica

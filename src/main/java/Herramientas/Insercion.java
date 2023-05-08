@@ -1,32 +1,13 @@
 /**
- * Insercion.java
+ * insercion.java
  */
 package Herramientas;
 
-import DAOs.ClientesDAO;
-import DAOs.JefesDAO;
-import DAOs.ObrasDAO;
-import DAOs.ObrerosDAO;
-import Dominio.Clientes;
-import Dominio.Facturas;
-import Dominio.Jefes;
-import Dominio.Obras;
-import Dominio.ObrasObrero;
-import Dominio.Obreros;
-import Dominio.Pagos;
-import Dominio.Permisos;
-import Dominio.Planos;
-import Dominio.Ubicaciones;
-import Enumeradores.Escala;
-import Enumeradores.MetodoPago;
-import Enumeradores.TipoPermiso;
-import Enumeradores.TipoPlano;
-import Enumeradores.TipoUbicacion;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaDelete;
+import DAOs.*;
+import Dominio.*;
+import Enumeradores.*;
+import javax.persistence.*;
+import javax.persistence.criteria.*;
 
 /**
  * Esta clase permite encapsular herramientas útiles a la hora de querer
@@ -115,204 +96,220 @@ public class Insercion {
      * @return Verdadero si se pudo realizar la inserción rápida falso en caso
      * contrario.
      */
-    public boolean InsercionRapida() {
+    public boolean insercionRapida() {
         try {
-            entityManager.getTransaction().begin();
-            // Se crean las entidades tipo cliente, jefe y obrero
-            Clientes cliente = new Clientes("Brandon", "Figueroa", "Ugalde", "(644) 124-9359", "contraseña", "BrandonF");
-            Jefes jefe = new Jefes("Naely", "Rubio", "Morillon", "(622) 173-2685", "contraseña", "NaelyR");
-            Obreros obrero1 = new Obreros("Bob", "el", "Constructor", "(544) 152-5932", "contraseña", "BobC", (float) 200.0);
-            Obreros obrero2 = new Obreros("Juan", "José", "García", "(242) 450-2404", "contraseña", "JuanG", (float) 200.0);
-            Obreros obrero3 = new Obreros("Mario", "Mendez", "Aguirre", "(534) 542-3413", "contraseña", "MarioM", (float) 200.0);
-            // Se persisten
-            entityManager.persist(cliente);
-            entityManager.persist(jefe);
-            entityManager.persist(obrero1);
-            entityManager.persist(obrero2);
-            entityManager.persist(obrero3);
-            entityManager.getTransaction().commit();
-            entityManager.close();
-
-            entityManager.getTransaction().begin();
-            // Se crean las entidades tipo factura y obra
-            Facturas factura1 = new Facturas((float) 1000.0, "Pago Materiales", JefesDAO.consultarJefe(1L));
-            Facturas factura2 = new Facturas((float) 500.0, "Gasolina", JefesDAO.consultarJefe(1L));
-            Facturas factura3 = new Facturas((float) 1800.0, "Nómina", JefesDAO.consultarJefe(1L));
-            Facturas factura4 = new Facturas((float) 300.0, "Agua", JefesDAO.consultarJefe(1L));
-            Facturas factura5 = new Facturas((float) 1200.0, "Gastos Mensuales", JefesDAO.consultarJefe(1L));
-            Facturas factura6 = new Facturas((float) 800.0, "Servicio Troca", JefesDAO.consultarJefe(1L));
-            Obras obra1 = new Obras((float) 10000.0, (float) 30000.0, "Hotel Centro", ClientesDAO.consultarCliente(1L));
-            Obras obra2 = new Obras((float) 1500.0, (float) 12000.0, "Remodelación", ClientesDAO.consultarCliente(1L));
-            Obras obra3 = new Obras((float) 1200.0, (float) 8000.0, "Estacionamiento", ClientesDAO.consultarCliente(1L));
-            Obras obra4 = new Obras((float) 2000.0, (float) 4000.0, "Pared", ClientesDAO.consultarCliente(1L));
-            Obras obra5 = new Obras((float) 3000.0, (float) 20000.0, "Casa", ClientesDAO.consultarCliente(1L));
-            Obras obra6 = new Obras((float) 10000.0, (float) 40000.0, "Mansión", ClientesDAO.consultarCliente(1L));
-            // Se persisten
-            entityManager.persist(factura1);
-            entityManager.persist(factura2);
-            entityManager.persist(factura3);
-            entityManager.persist(factura4);
-            entityManager.persist(factura5);
-            entityManager.persist(factura6);
-            entityManager.persist(obra1);
-            entityManager.persist(obra2);
-            entityManager.persist(obra3);
-            entityManager.persist(obra4);
-            entityManager.persist(obra5);
-            entityManager.persist(obra6);
-            entityManager.getTransaction().commit();
-            entityManager.close();
-
-            entityManager.getTransaction().begin();
-            // Se crean entidades de relación obra - obrero
-            // Obrero 1
-            ObrasObrero obraObrero1 = new ObrasObrero(ObrerosDAO.consultarObrero(1L), ObrasDAO.consultarObra(1L));
-            ObrasObrero obraObrero2 = new ObrasObrero(ObrerosDAO.consultarObrero(1L), ObrasDAO.consultarObra(2L));
-            ObrasObrero obraObrero3 = new ObrasObrero(ObrerosDAO.consultarObrero(1L), ObrasDAO.consultarObra(3L));
-            ObrasObrero obraObrero4 = new ObrasObrero(ObrerosDAO.consultarObrero(1L), ObrasDAO.consultarObra(4L));
-            ObrasObrero obraObrero5 = new ObrasObrero(ObrerosDAO.consultarObrero(1L), ObrasDAO.consultarObra(5L));
-            ObrasObrero obraObrero6 = new ObrasObrero(ObrerosDAO.consultarObrero(1L), ObrasDAO.consultarObra(6L));
-            // Obrero 2
-            ObrasObrero obraObrero7 = new ObrasObrero(ObrerosDAO.consultarObrero(2L), ObrasDAO.consultarObra(1L));
-            ObrasObrero obraObrero8 = new ObrasObrero(ObrerosDAO.consultarObrero(2L), ObrasDAO.consultarObra(2L));
-            ObrasObrero obraObrero9 = new ObrasObrero(ObrerosDAO.consultarObrero(2L), ObrasDAO.consultarObra(3L));
-            ObrasObrero obraObrero10 = new ObrasObrero(ObrerosDAO.consultarObrero(2L), ObrasDAO.consultarObra(4L));
-            ObrasObrero obraObrero11 = new ObrasObrero(ObrerosDAO.consultarObrero(2L), ObrasDAO.consultarObra(5L));
-            ObrasObrero obraObrero12 = new ObrasObrero(ObrerosDAO.consultarObrero(2L), ObrasDAO.consultarObra(6L));
-            // Obrero 3
-            ObrasObrero obraObrero13 = new ObrasObrero(ObrerosDAO.consultarObrero(3L), ObrasDAO.consultarObra(1L));
-            ObrasObrero obraObrero14 = new ObrasObrero(ObrerosDAO.consultarObrero(3L), ObrasDAO.consultarObra(2L));
-            ObrasObrero obraObrero15 = new ObrasObrero(ObrerosDAO.consultarObrero(3L), ObrasDAO.consultarObra(3L));
-            ObrasObrero obraObrero16 = new ObrasObrero(ObrerosDAO.consultarObrero(3L), ObrasDAO.consultarObra(4L));
-            ObrasObrero obraObrero17 = new ObrasObrero(ObrerosDAO.consultarObrero(3L), ObrasDAO.consultarObra(5L));
-            ObrasObrero obraObrero18 = new ObrasObrero(ObrerosDAO.consultarObrero(3L), ObrasDAO.consultarObra(6L));
-            // Se persisten
-            entityManager.persist(obraObrero1);
-            entityManager.persist(obraObrero2);
-            entityManager.persist(obraObrero3);
-            entityManager.persist(obraObrero4);
-            entityManager.persist(obraObrero5);
-            entityManager.persist(obraObrero6);
-            entityManager.persist(obraObrero7);
-            entityManager.persist(obraObrero8);
-            entityManager.persist(obraObrero9);
-            entityManager.persist(obraObrero10);
-            entityManager.persist(obraObrero11);
-            entityManager.persist(obraObrero12);
-            entityManager.persist(obraObrero13);
-            entityManager.persist(obraObrero14);
-            entityManager.persist(obraObrero15);
-            entityManager.persist(obraObrero16);
-            entityManager.persist(obraObrero17);
-            entityManager.persist(obraObrero18);
-            entityManager.getTransaction().commit();
-            entityManager.close();
-
-            entityManager.getTransaction().begin();
-            // Se crean entidades de tipo permiso, plano y ubicación
-            // Permisos de iniciación
-            Permisos permiso1 = new Permisos("152321", TipoPermiso.INICIACION, fecha.crearFecha(15, 10, 2022), JefesDAO.consultarJefe(1L));
-            Permisos permiso2 = new Permisos("243112", TipoPermiso.INICIACION, fecha.crearFecha(20, 2, 2022), JefesDAO.consultarJefe(1L));
-            Permisos permiso3 = new Permisos("513353", TipoPermiso.INICIACION, fecha.crearFecha(30, 1, 2022), JefesDAO.consultarJefe(1L));
-            // Permisos de finalización
-            Permisos permiso4 = new Permisos("532313", TipoPermiso.FINALIZACION, fecha.crearFecha(19, 8, 2022), JefesDAO.consultarJefe(1L));
-            Permisos permiso5 = new Permisos("795311", TipoPermiso.FINALIZACION, fecha.crearFecha(4, 4, 2022), JefesDAO.consultarJefe(1L));
-            Permisos permiso6 = new Permisos("462244", TipoPermiso.FINALIZACION, fecha.crearFecha(8, 6, 2022), JefesDAO.consultarJefe(1L));
-            // Planos de desague 
-            Planos plano1 = new Planos("123424", TipoPlano.DESAGUE, Escala.UNO_100, fecha.crearFecha(15, 10, 2002), JefesDAO.consultarJefe(1L));
-            Planos plano2 = new Planos("543233", TipoPlano.DESAGUE, Escala.UNO_1000, fecha.crearFecha(15, 10, 2002), JefesDAO.consultarJefe(1L));
-            // Planos de ejecucion
-            Planos plano3 = new Planos("242312", TipoPlano.EJECUCION, Escala.UNO_2000, fecha.crearFecha(15, 10, 2002), JefesDAO.consultarJefe(1L));
-            Planos plano4 = new Planos("594203", TipoPlano.EJECUCION, Escala.UNO_2500, fecha.crearFecha(15, 10, 2002), JefesDAO.consultarJefe(1L));
-            // Planos de electricidad
-            Planos plano5 = new Planos("423244", TipoPlano.ELECTRICO, Escala.UNO_500, fecha.crearFecha(15, 10, 2002), JefesDAO.consultarJefe(1L));
-            Planos plano6 = new Planos("491302", TipoPlano.ELECTRICO, Escala.UNO_5000, fecha.crearFecha(15, 10, 2002), JefesDAO.consultarJefe(1L));
-            // Planos de ubicacion
-            Planos plano7 = new Planos("924002", TipoPlano.UBICACION, Escala.UNO_100, fecha.crearFecha(15, 10, 2002), JefesDAO.consultarJefe(1L));
-            Planos plano8 = new Planos("845024", TipoPlano.UBICACION, Escala.UNO_500, fecha.crearFecha(15, 10, 2002), JefesDAO.consultarJefe(1L));
-            Planos plano9 = new Planos("723933", TipoPlano.UBICACION, Escala.UNO_1000, fecha.crearFecha(15, 10, 2002), JefesDAO.consultarJefe(1L));
-            Planos plano10 = new Planos("499222", TipoPlano.UBICACION, Escala.UNO_2500, fecha.crearFecha(15, 10, 2002), JefesDAO.consultarJefe(1L));
-            // Ubicaciones
-            Ubicaciones ubicacion1 = new Ubicaciones("Calle del Olivo, 23, 29004 Málaga, España", TipoUbicacion.TERRENO, (float) 120.0, (float) 110.0, ClientesDAO.consultarCliente(1L));
-            Ubicaciones ubicacion2 = new Ubicaciones("1830 SW 17th Ave, Miami, FL 33145, Estados Unidos", TipoUbicacion.TERRENO, (float) 150.0, (float) 140.0, ClientesDAO.consultarCliente(1L));
-            Ubicaciones ubicacion3 = new Ubicaciones("27A, Jalan SS 4d/2, Ss 4d, 47301 Petaling Jaya, Selangor, Malasia", TipoUbicacion.TERRENO, (float) 200.0, (float) 200.0, ClientesDAO.consultarCliente(1L));
-            Ubicaciones ubicacion4 = new Ubicaciones("1207 N Charles St, Baltimore, MD 21201, Estados Unidos", TipoUbicacion.TERRENO, (float) 180.0, (float) 150.0, ClientesDAO.consultarCliente(1L));
-            Ubicaciones ubicacion5 = new Ubicaciones("5-5-1 Tsukumo, Sanda, Hyogo 669-1335, Japón", TipoUbicacion.TERRENO, (float) 110.0, (float) 220.0, ClientesDAO.consultarCliente(1L));
-            Ubicaciones ubicacion6 = new Ubicaciones("111 W 57th St, New York, NY 10019, Estados Unidos", TipoUbicacion.SOLAR, (float) 240.0, (float) 210.0, ClientesDAO.consultarCliente(1L));
-            // Se persisten
-            entityManager.persist(permiso1);
-            entityManager.persist(permiso2);
-            entityManager.persist(permiso3);
-            entityManager.persist(permiso4);
-            entityManager.persist(permiso5);
-            entityManager.persist(permiso6);
-            entityManager.persist(plano1);
-            entityManager.persist(plano2);
-            entityManager.persist(plano3);
-            entityManager.persist(plano4);
-            entityManager.persist(plano5);
-            entityManager.persist(plano6);
-            entityManager.persist(plano7);
-            entityManager.persist(plano8);
-            entityManager.persist(plano9);
-            entityManager.persist(plano10);
-            entityManager.persist(ubicacion1);
-            entityManager.persist(ubicacion2);
-            entityManager.persist(ubicacion3);
-            entityManager.persist(ubicacion4);
-            entityManager.persist(ubicacion5);
-            entityManager.persist(ubicacion6);
-            entityManager.getTransaction().commit();
-            entityManager.close();
-
-//            entityManager.getTransaction().begin();
-//            // Se crean las entidades tipo pago
-//            // Credito
-//            Pagos pago1 = new Pagos((float) 1000.0, MetodoPago.CREDITO, ObrasDAO.consultarObra(1L), ClientesDAO.consultarCliente(1L));
-//            Pagos pago2 = new Pagos((float) 2000.0, MetodoPago.CREDITO, ObrasDAO.consultarObra(2L), ClientesDAO.consultarCliente(1L));
-//            Pagos pago3 = new Pagos((float) 2400.0, MetodoPago.CREDITO, ObrasDAO.consultarObra(3L), ClientesDAO.consultarCliente(1L));
-//            Pagos pago4 = new Pagos((float) 2850.0, MetodoPago.CREDITO, ObrasDAO.consultarObra(4L), ClientesDAO.consultarCliente(1L));
-//            Pagos pago5 = new Pagos((float) 1900.0, MetodoPago.CREDITO, ObrasDAO.consultarObra(5L), ClientesDAO.consultarCliente(1L));
-//            Pagos pago6 = new Pagos((float) 200.0, MetodoPago.CREDITO, ObrasDAO.consultarObra(6L), ClientesDAO.consultarCliente(1L));
-//            // Debito
-//            Pagos pago7 = new Pagos((float) 500.0, MetodoPago.DEBITO, ObrasDAO.consultarObra(1L), ClientesDAO.consultarCliente(1L));
-//            Pagos pago8 = new Pagos((float) 800.0, MetodoPago.DEBITO, ObrasDAO.consultarObra(2L), ClientesDAO.consultarCliente(1L));
-//            Pagos pago9 = new Pagos((float) 700.0, MetodoPago.DEBITO, ObrasDAO.consultarObra(3L), ClientesDAO.consultarCliente(1L));
-//            Pagos pago10 = new Pagos((float) 300.0, MetodoPago.DEBITO, ObrasDAO.consultarObra(4L), ClientesDAO.consultarCliente(1L));
-//            Pagos pago11 = new Pagos((float) 100.0, MetodoPago.DEBITO, ObrasDAO.consultarObra(5L), ClientesDAO.consultarCliente(1L));
-//            Pagos pago12 = new Pagos((float) 900.0, MetodoPago.DEBITO, ObrasDAO.consultarObra(6L), ClientesDAO.consultarCliente(1L));
-//            // En caso que el método de pago del pago sea por efectivo se registra a que obrero se le entregó el pago
-//            Pagos pago13 = new Pagos((float) 1200.0, MetodoPago.EFECTIVO, ObrerosDAO.consultarObrero(1L), ObrasDAO.consultarObra(1L), ClientesDAO.consultarCliente(1L));
-//            Pagos pago14 = new Pagos((float) 1100.0, MetodoPago.EFECTIVO, ObrerosDAO.consultarObrero(2L), ObrasDAO.consultarObra(2L), ClientesDAO.consultarCliente(1L));
-//            Pagos pago15 = new Pagos((float) 660.0, MetodoPago.EFECTIVO, ObrerosDAO.consultarObrero(3L), ObrasDAO.consultarObra(3L), ClientesDAO.consultarCliente(1L));
-//            Pagos pago16 = new Pagos((float) 1330.0, MetodoPago.EFECTIVO, ObrerosDAO.consultarObrero(1L), ObrasDAO.consultarObra(4L), ClientesDAO.consultarCliente(1L));
-//            Pagos pago17 = new Pagos((float) 1080.0, MetodoPago.EFECTIVO, ObrerosDAO.consultarObrero(2L), ObrasDAO.consultarObra(5L), ClientesDAO.consultarCliente(1L));
-//            Pagos pago18 = new Pagos((float) 440.0, MetodoPago.EFECTIVO, ObrerosDAO.consultarObrero(3L), ObrasDAO.consultarObra(6L), ClientesDAO.consultarCliente(1L));
-//            // Se persisten las entidades tipo pago
-//            entityManager.persist(pago1);
-//            entityManager.persist(pago2);
-//            entityManager.persist(pago3);
-//            entityManager.persist(pago4);
-//            entityManager.persist(pago5);
-//            entityManager.persist(pago6);
-//            entityManager.persist(pago7);
-//            entityManager.persist(pago8);
-//            entityManager.persist(pago9);
-//            entityManager.persist(pago10);
-//            entityManager.persist(pago11);
-//            entityManager.persist(pago12);
-//            entityManager.persist(pago13);
-//            entityManager.persist(pago14);
-//            entityManager.persist(pago15);
-//            entityManager.persist(pago16);
-//            entityManager.persist(pago17);
-//            entityManager.persist(pago18);
-//            entityManager.getTransaction().commit();
-//            entityManager.close();
+            this.insercionRapidaUsuario();
+            this.insercionRapidaFacturasYObras();
+            this.insercionRapidaObrasObrero();
+            this.insercionRapidaPermisosPlanosYUbicaciones();
+            this.insercionRapidaPagos();
             return true;
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public void insercionRapidaUsuario() {
+        entityManager.getTransaction().begin();
+        // Se crean las entidades tipo cliente, jefe y obrero
+        Clientes cliente = new Clientes("Brandon", "Figueroa", "Ugalde", "(644) 124-9359", "contraseña", "BrandonF");
+        Jefes jefe = new Jefes("Naely", "Rubio", "Morillon", "(622) 173-2685", "contraseña", "NaelyR");
+        Obreros obrero1 = new Obreros("Bob", "el", "Constructor", "(544) 152-5932", "contraseña", "BobC", (float) 200.0);
+        Obreros obrero2 = new Obreros("Juan", "José", "García", "(242) 450-2404", "contraseña", "JuanG", (float) 200.0);
+        Obreros obrero3 = new Obreros("Mario", "Mendez", "Aguirre", "(534) 542-3413", "contraseña", "MarioM", (float) 200.0);
+        // Se persisten
+        entityManager.persist(cliente);
+        entityManager.persist(jefe);
+        entityManager.persist(obrero1);
+        entityManager.persist(obrero2);
+        entityManager.persist(obrero3);
+        entityManager.getTransaction().commit();
+        entityManager.close();
+    }
+
+    public void insercionRapidaFacturasYObras() {
+        entityManager.getTransaction().begin();
+        // Se crean las entidades tipo factura y obra
+        Facturas factura1 = new Facturas((float) 1000.0, "Pago Materiales", JefesDAO.consultarJefe(1L));
+        Facturas factura2 = new Facturas((float) 500.0, "Gasolina", JefesDAO.consultarJefe(1L));
+        Facturas factura3 = new Facturas((float) 1800.0, "Nómina", JefesDAO.consultarJefe(1L));
+        Facturas factura4 = new Facturas((float) 300.0, "Agua", JefesDAO.consultarJefe(1L));
+        Facturas factura5 = new Facturas((float) 1200.0, "Gastos Mensuales", JefesDAO.consultarJefe(1L));
+        Facturas factura6 = new Facturas((float) 800.0, "Servicio Troca", JefesDAO.consultarJefe(1L));
+        Obras obra1 = new Obras((float) 10000.0, (float) 30000.0, "Hotel Centro", ClientesDAO.consultarCliente(1L));
+        Obras obra2 = new Obras((float) 1500.0, (float) 12000.0, "Remodelación", ClientesDAO.consultarCliente(1L));
+        Obras obra3 = new Obras((float) 1200.0, (float) 8000.0, "Estacionamiento", ClientesDAO.consultarCliente(1L));
+        Obras obra4 = new Obras((float) 2000.0, (float) 4000.0, "Pared", ClientesDAO.consultarCliente(1L));
+        Obras obra5 = new Obras((float) 3000.0, (float) 20000.0, "Casa", ClientesDAO.consultarCliente(1L));
+        Obras obra6 = new Obras((float) 10000.0, (float) 40000.0, "Mansión", ClientesDAO.consultarCliente(1L));
+        // Se persisten
+        entityManager.persist(factura1);
+        entityManager.persist(factura2);
+        entityManager.persist(factura3);
+        entityManager.persist(factura4);
+        entityManager.persist(factura5);
+        entityManager.persist(factura6);
+        entityManager.persist(obra1);
+        entityManager.persist(obra2);
+        entityManager.persist(obra3);
+        entityManager.persist(obra4);
+        entityManager.persist(obra5);
+        entityManager.persist(obra6);
+        entityManager.getTransaction().commit();
+        entityManager.close();
+    }
+
+    public void insercionRapidaObrasObrero() {
+        entityManager.getTransaction().begin();
+        // Se crean entidades de relación obra - obrero
+        // Obrero 1
+        ObrasObrero obraObrero1 = new ObrasObrero(ObrerosDAO.consultarObrero(1L), ObrasDAO.consultarObra(1L));
+        ObrasObrero obraObrero2 = new ObrasObrero(ObrerosDAO.consultarObrero(1L), ObrasDAO.consultarObra(2L));
+        ObrasObrero obraObrero3 = new ObrasObrero(ObrerosDAO.consultarObrero(1L), ObrasDAO.consultarObra(3L));
+        ObrasObrero obraObrero4 = new ObrasObrero(ObrerosDAO.consultarObrero(1L), ObrasDAO.consultarObra(4L));
+        ObrasObrero obraObrero5 = new ObrasObrero(ObrerosDAO.consultarObrero(1L), ObrasDAO.consultarObra(5L));
+        ObrasObrero obraObrero6 = new ObrasObrero(ObrerosDAO.consultarObrero(1L), ObrasDAO.consultarObra(6L));
+        // Obrero 2
+        ObrasObrero obraObrero7 = new ObrasObrero(ObrerosDAO.consultarObrero(2L), ObrasDAO.consultarObra(1L));
+        ObrasObrero obraObrero8 = new ObrasObrero(ObrerosDAO.consultarObrero(2L), ObrasDAO.consultarObra(2L));
+        ObrasObrero obraObrero9 = new ObrasObrero(ObrerosDAO.consultarObrero(2L), ObrasDAO.consultarObra(3L));
+        ObrasObrero obraObrero10 = new ObrasObrero(ObrerosDAO.consultarObrero(2L), ObrasDAO.consultarObra(4L));
+        ObrasObrero obraObrero11 = new ObrasObrero(ObrerosDAO.consultarObrero(2L), ObrasDAO.consultarObra(5L));
+        ObrasObrero obraObrero12 = new ObrasObrero(ObrerosDAO.consultarObrero(2L), ObrasDAO.consultarObra(6L));
+        // Obrero 3
+        ObrasObrero obraObrero13 = new ObrasObrero(ObrerosDAO.consultarObrero(3L), ObrasDAO.consultarObra(1L));
+        ObrasObrero obraObrero14 = new ObrasObrero(ObrerosDAO.consultarObrero(3L), ObrasDAO.consultarObra(2L));
+        ObrasObrero obraObrero15 = new ObrasObrero(ObrerosDAO.consultarObrero(3L), ObrasDAO.consultarObra(3L));
+        ObrasObrero obraObrero16 = new ObrasObrero(ObrerosDAO.consultarObrero(3L), ObrasDAO.consultarObra(4L));
+        ObrasObrero obraObrero17 = new ObrasObrero(ObrerosDAO.consultarObrero(3L), ObrasDAO.consultarObra(5L));
+        ObrasObrero obraObrero18 = new ObrasObrero(ObrerosDAO.consultarObrero(3L), ObrasDAO.consultarObra(6L));
+        // Se persisten
+        entityManager.persist(obraObrero1);
+        entityManager.persist(obraObrero2);
+        entityManager.persist(obraObrero3);
+        entityManager.persist(obraObrero4);
+        entityManager.persist(obraObrero5);
+        entityManager.persist(obraObrero6);
+        entityManager.persist(obraObrero7);
+        entityManager.persist(obraObrero8);
+        entityManager.persist(obraObrero9);
+        entityManager.persist(obraObrero10);
+        entityManager.persist(obraObrero11);
+        entityManager.persist(obraObrero12);
+        entityManager.persist(obraObrero13);
+        entityManager.persist(obraObrero14);
+        entityManager.persist(obraObrero15);
+        entityManager.persist(obraObrero16);
+        entityManager.persist(obraObrero17);
+        entityManager.persist(obraObrero18);
+        entityManager.getTransaction().commit();
+        entityManager.close();
+    }
+
+    public void insercionRapidaPermisosPlanosYUbicaciones() {
+        entityManager.getTransaction().begin();
+        // Se crean entidades de tipo permiso, plano y ubicación
+        // Permisos de iniciación
+        Permisos permiso1 = new Permisos("152321", TipoPermiso.INICIACION, fecha.crearFecha(15, 10, 2022), JefesDAO.consultarJefe(1L));
+        Permisos permiso2 = new Permisos("243112", TipoPermiso.INICIACION, fecha.crearFecha(20, 2, 2022), JefesDAO.consultarJefe(1L));
+        Permisos permiso3 = new Permisos("513353", TipoPermiso.INICIACION, fecha.crearFecha(30, 1, 2022), JefesDAO.consultarJefe(1L));
+        // Permisos de finalización
+        Permisos permiso4 = new Permisos("532313", TipoPermiso.FINALIZACION, fecha.crearFecha(19, 8, 2022), JefesDAO.consultarJefe(1L));
+        Permisos permiso5 = new Permisos("795311", TipoPermiso.FINALIZACION, fecha.crearFecha(4, 4, 2022), JefesDAO.consultarJefe(1L));
+        Permisos permiso6 = new Permisos("462244", TipoPermiso.FINALIZACION, fecha.crearFecha(8, 6, 2022), JefesDAO.consultarJefe(1L));
+        // Planos de desague 
+        Planos plano1 = new Planos("123424", TipoPlano.DESAGUE, Escala.UNO_100, fecha.crearFecha(15, 10, 2002), JefesDAO.consultarJefe(1L));
+        Planos plano2 = new Planos("543233", TipoPlano.DESAGUE, Escala.UNO_1000, fecha.crearFecha(15, 10, 2002), JefesDAO.consultarJefe(1L));
+        // Planos de ejecucion
+        Planos plano3 = new Planos("242312", TipoPlano.EJECUCION, Escala.UNO_2000, fecha.crearFecha(15, 10, 2002), JefesDAO.consultarJefe(1L));
+        Planos plano4 = new Planos("594203", TipoPlano.EJECUCION, Escala.UNO_2500, fecha.crearFecha(15, 10, 2002), JefesDAO.consultarJefe(1L));
+        // Planos de electricidad
+        Planos plano5 = new Planos("423244", TipoPlano.ELECTRICO, Escala.UNO_500, fecha.crearFecha(15, 10, 2002), JefesDAO.consultarJefe(1L));
+        Planos plano6 = new Planos("491302", TipoPlano.ELECTRICO, Escala.UNO_5000, fecha.crearFecha(15, 10, 2002), JefesDAO.consultarJefe(1L));
+        // Planos de ubicacion
+        Planos plano7 = new Planos("924002", TipoPlano.UBICACION, Escala.UNO_100, fecha.crearFecha(15, 10, 2002), JefesDAO.consultarJefe(1L));
+        Planos plano8 = new Planos("845024", TipoPlano.UBICACION, Escala.UNO_500, fecha.crearFecha(15, 10, 2002), JefesDAO.consultarJefe(1L));
+        Planos plano9 = new Planos("723933", TipoPlano.UBICACION, Escala.UNO_1000, fecha.crearFecha(15, 10, 2002), JefesDAO.consultarJefe(1L));
+        Planos plano10 = new Planos("499222", TipoPlano.UBICACION, Escala.UNO_2500, fecha.crearFecha(15, 10, 2002), JefesDAO.consultarJefe(1L));
+        // Ubicaciones
+        Ubicaciones ubicacion1 = new Ubicaciones("Calle del Olivo, 23, 29004 Málaga, España", TipoUbicacion.TERRENO, (float) 120.0, (float) 110.0, ClientesDAO.consultarCliente(1L));
+        Ubicaciones ubicacion2 = new Ubicaciones("1830 SW 17th Ave, Miami, FL 33145, Estados Unidos", TipoUbicacion.TERRENO, (float) 150.0, (float) 140.0, ClientesDAO.consultarCliente(1L));
+        Ubicaciones ubicacion3 = new Ubicaciones("27A, Jalan SS 4d/2, Ss 4d, 47301 Petaling Jaya, Selangor, Malasia", TipoUbicacion.TERRENO, (float) 200.0, (float) 200.0, ClientesDAO.consultarCliente(1L));
+        Ubicaciones ubicacion4 = new Ubicaciones("1207 N Charles St, Baltimore, MD 21201, Estados Unidos", TipoUbicacion.TERRENO, (float) 180.0, (float) 150.0, ClientesDAO.consultarCliente(1L));
+        Ubicaciones ubicacion5 = new Ubicaciones("5-5-1 Tsukumo, Sanda, Hyogo 669-1335, Japón", TipoUbicacion.TERRENO, (float) 110.0, (float) 220.0, ClientesDAO.consultarCliente(1L));
+        Ubicaciones ubicacion6 = new Ubicaciones("111 W 57th St, New York, NY 10019, Estados Unidos", TipoUbicacion.SOLAR, (float) 240.0, (float) 210.0, ClientesDAO.consultarCliente(1L));
+        // Se persisten
+        entityManager.persist(permiso1);
+        entityManager.persist(permiso2);
+        entityManager.persist(permiso3);
+        entityManager.persist(permiso4);
+        entityManager.persist(permiso5);
+        entityManager.persist(permiso6);
+        entityManager.persist(plano1);
+        entityManager.persist(plano2);
+        entityManager.persist(plano3);
+        entityManager.persist(plano4);
+        entityManager.persist(plano5);
+        entityManager.persist(plano6);
+        entityManager.persist(plano7);
+        entityManager.persist(plano8);
+        entityManager.persist(plano9);
+        entityManager.persist(plano10);
+        entityManager.persist(ubicacion1);
+        entityManager.persist(ubicacion2);
+        entityManager.persist(ubicacion3);
+        entityManager.persist(ubicacion4);
+        entityManager.persist(ubicacion5);
+        entityManager.persist(ubicacion6);
+        entityManager.getTransaction().commit();
+        entityManager.close();
+    }
+
+    public void insercionRapidaPagos() {
+        entityManager.getTransaction().begin();
+        // Se crean las entidades tipo pago
+        // Credito
+        Pagos pago1 = new Pagos((float) 1000.0, MetodoPago.CREDITO, ObrasDAO.consultarObra(1L), ClientesDAO.consultarCliente(1L));
+        Pagos pago2 = new Pagos((float) 2000.0, MetodoPago.CREDITO, ObrasDAO.consultarObra(2L), ClientesDAO.consultarCliente(1L));
+        Pagos pago3 = new Pagos((float) 2400.0, MetodoPago.CREDITO, ObrasDAO.consultarObra(3L), ClientesDAO.consultarCliente(1L));
+        Pagos pago4 = new Pagos((float) 2850.0, MetodoPago.CREDITO, ObrasDAO.consultarObra(4L), ClientesDAO.consultarCliente(1L));
+        Pagos pago5 = new Pagos((float) 1900.0, MetodoPago.CREDITO, ObrasDAO.consultarObra(5L), ClientesDAO.consultarCliente(1L));
+        Pagos pago6 = new Pagos((float) 200.0, MetodoPago.CREDITO, ObrasDAO.consultarObra(6L), ClientesDAO.consultarCliente(1L));
+        // Debito
+        Pagos pago7 = new Pagos((float) 500.0, MetodoPago.DEBITO, ObrasDAO.consultarObra(1L), ClientesDAO.consultarCliente(1L));
+        Pagos pago8 = new Pagos((float) 800.0, MetodoPago.DEBITO, ObrasDAO.consultarObra(2L), ClientesDAO.consultarCliente(1L));
+        Pagos pago9 = new Pagos((float) 700.0, MetodoPago.DEBITO, ObrasDAO.consultarObra(3L), ClientesDAO.consultarCliente(1L));
+        Pagos pago10 = new Pagos((float) 300.0, MetodoPago.DEBITO, ObrasDAO.consultarObra(4L), ClientesDAO.consultarCliente(1L));
+        Pagos pago11 = new Pagos((float) 100.0, MetodoPago.DEBITO, ObrasDAO.consultarObra(5L), ClientesDAO.consultarCliente(1L));
+        Pagos pago12 = new Pagos((float) 900.0, MetodoPago.DEBITO, ObrasDAO.consultarObra(6L), ClientesDAO.consultarCliente(1L));
+        // En caso que el método de pago del pago sea por efectivo se registra a que obrero se le entregó el pago
+        Pagos pago13 = new Pagos((float) 1200.0, MetodoPago.EFECTIVO, ObrerosDAO.consultarObrero(1L), ObrasDAO.consultarObra(1L), ClientesDAO.consultarCliente(1L));
+        Pagos pago14 = new Pagos((float) 1100.0, MetodoPago.EFECTIVO, ObrerosDAO.consultarObrero(2L), ObrasDAO.consultarObra(2L), ClientesDAO.consultarCliente(1L));
+        Pagos pago15 = new Pagos((float) 660.0, MetodoPago.EFECTIVO, ObrerosDAO.consultarObrero(3L), ObrasDAO.consultarObra(3L), ClientesDAO.consultarCliente(1L));
+        Pagos pago16 = new Pagos((float) 1330.0, MetodoPago.EFECTIVO, ObrerosDAO.consultarObrero(1L), ObrasDAO.consultarObra(4L), ClientesDAO.consultarCliente(1L));
+        Pagos pago17 = new Pagos((float) 1080.0, MetodoPago.EFECTIVO, ObrerosDAO.consultarObrero(2L), ObrasDAO.consultarObra(5L), ClientesDAO.consultarCliente(1L));
+        Pagos pago18 = new Pagos((float) 440.0, MetodoPago.EFECTIVO, ObrerosDAO.consultarObrero(3L), ObrasDAO.consultarObra(6L), ClientesDAO.consultarCliente(1L));
+        // Se persisten las entidades tipo pago
+        entityManager.persist(pago1);
+        entityManager.persist(pago2);
+        entityManager.persist(pago3);
+        entityManager.persist(pago4);
+        entityManager.persist(pago5);
+        entityManager.persist(pago6);
+        entityManager.persist(pago7);
+        entityManager.persist(pago8);
+        entityManager.persist(pago9);
+        entityManager.persist(pago10);
+        entityManager.persist(pago11);
+        entityManager.persist(pago12);
+        entityManager.persist(pago13);
+        entityManager.persist(pago14);
+        entityManager.persist(pago15);
+        entityManager.persist(pago16);
+        entityManager.persist(pago17);
+        entityManager.persist(pago18);
+        entityManager.getTransaction().commit();
+        entityManager.close();
     }
 
     /**
@@ -321,7 +318,7 @@ public class Insercion {
      * @return Verdadero si se pudo realizar la inserción falso en caso
      * contrario.
      */
-    public boolean InsercionMasivaClientes() {
+    public boolean insercionMasivaClientes() {
         try {
             entityManager.getTransaction().begin();
             // Se crean las entidades tipo cliente
@@ -360,7 +357,7 @@ public class Insercion {
      * @return Verdadero si se pudo realizar la inserción falso en caso
      * contrario.
      */
-    public boolean InsercionMasivaJefes() {
+    public boolean insercionMasivaJefes() {
         try {
             entityManager.getTransaction().begin();
             // Se crean las entidades tipo jefe
@@ -399,7 +396,7 @@ public class Insercion {
      * @return Verdadero si se pudo realizar la inserción falso en caso
      * contrario.
      */
-    public boolean InsercionMasivaObreros() {
+    public boolean insercionMasivaObreros() {
         try {
             entityManager.getTransaction().begin();
             // Se crean las entidades tipo obrero
@@ -438,7 +435,7 @@ public class Insercion {
      * @return Verdadero si se pudo realizar la inserción falso en caso
      * contrario.
      */
-    public void InsercionMasivaFacturas() {
+    public void insercionMasivaFacturas() {
 ////        try {
         entityManager.getTransaction().begin();
         // Se crean las entidades tipo factura
@@ -497,7 +494,7 @@ public class Insercion {
      * @return Verdadero si se pudo realizar la inserción falso en caso
      * contrario.
      */
-    public void InsercionMasivaObras() {
+    public void insercionMasivaObras() {
 ////        try {
         entityManager.getTransaction().begin();
         // Se crean las entidades tipo obra
@@ -556,7 +553,7 @@ public class Insercion {
      * @return Verdadero si se pudo realizar la inserción falso en caso
      * contrario.
      */
-    public void InsercionMasivaObrasObrero() {
+    public void insercionMasivaObrasObrero() {
 ////        try {
         entityManager.getTransaction().begin();
         // Se crean las entidades tipo obraObrero
@@ -665,7 +662,7 @@ public class Insercion {
      * @return Verdadero si se pudo realizar la inserción falso en caso
      * contrario.
      */
-    public void InsercionMasivaPagos() {
+    public void insercionMasivaPagos() {
 ////        try {
         entityManager.getTransaction().begin();
         // Se crean las entidades tipo pago
@@ -691,7 +688,7 @@ public class Insercion {
      * @return Verdadero si se pudo realizar la inserción falso en caso
      * contrario.
      */
-    public void InsercionMasivaPermisos() {
+    public void insercionMasivaPermisos() {
 ////        try {
         entityManager.getTransaction().begin();
         // Se crean las entidades tipo permiso
@@ -730,7 +727,7 @@ public class Insercion {
      * @return Verdadero si se pudo realizar la inserción falso en caso
      * contrario.
      */
-    public void InsercionMasivaPlanos() {
+    public void insercionMasivaPlanos() {
 ////        try {
         entityManager.getTransaction().begin();
         // Se crean las entidades tipo plano
@@ -773,7 +770,7 @@ public class Insercion {
      * @return Verdadero si se pudo realizar la inserción falso en caso
      * contrario.
      */
-    public void InsercionMasivaUbicaciones() {
+    public void insercionMasivaUbicaciones() {
 ////        try {
         entityManager.getTransaction().begin();
         // Se crean las entidades tipo ubicacion

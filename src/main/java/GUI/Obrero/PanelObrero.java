@@ -65,8 +65,8 @@ public class PanelObrero extends javax.swing.JFrame {
         Menu = new javax.swing.JMenuBar();
         MenuConsulta = new javax.swing.JMenu();
         mniConsultarPagos = new javax.swing.JMenuItem();
-        minConsultarNomina = new javax.swing.JMenuItem();
         mniConsultarObras = new javax.swing.JMenuItem();
+        mniConsultarNomina = new javax.swing.JMenuItem();
         MenuCuenta = new javax.swing.JMenu();
         mniCambiarContrasena = new javax.swing.JMenuItem();
         mniCambiarUsuario = new javax.swing.JMenuItem();
@@ -125,9 +125,6 @@ public class PanelObrero extends javax.swing.JFrame {
         });
         MenuConsulta.add(mniConsultarPagos);
 
-        minConsultarNomina.setText("Consultar Nómina");
-        MenuConsulta.add(minConsultarNomina);
-
         mniConsultarObras.setText("Consultar Obras");
         mniConsultarObras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -135,6 +132,14 @@ public class PanelObrero extends javax.swing.JFrame {
             }
         });
         MenuConsulta.add(mniConsultarObras);
+
+        mniConsultarNomina.setText("Consultar Nómina");
+        mniConsultarNomina.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mniConsultarNominaActionPerformed(evt);
+            }
+        });
+        MenuConsulta.add(mniConsultarNomina);
 
         Menu.add(MenuConsulta);
 
@@ -174,9 +179,9 @@ public class PanelObrero extends javax.swing.JFrame {
                                     .addComponent(lblSueldoDiaro)
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(lblInsertarNombre)
-                                        .addGap(8, 8, 8)
+                                        .addGap(6, 6, 6)
                                         .addComponent(lblInsertarApellidoPaterno)
-                                        .addGap(8, 8, 8)
+                                        .addGap(7, 7, 7)
                                         .addComponent(lblInsertarApellidoMaterno)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(lblID)
@@ -232,10 +237,13 @@ public class PanelObrero extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
-        int i = JOptionPane.showConfirmDialog(this, "¿Seguro que desea salir?", "Advertencia", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        this.setVisible(false);
+        int i = JOptionPane.showConfirmDialog(this, "¿Seguro que desea cerrar sesión?", "Advertencia", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         if (i == JOptionPane.YES_OPTION) {
-            new IniciarSesion().setVisible(true);
             this.dispose();
+            new IniciarSesion().setVisible(true);
+        } else {
+            this.setVisible(true);
         }
     }//GEN-LAST:event_btnCerrarSesionActionPerformed
 
@@ -267,6 +275,11 @@ public class PanelObrero extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_mniCambiarUsuarioActionPerformed
 
+    private void mniConsultarNominaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniConsultarNominaActionPerformed
+        new NominaObrero(ObrerosDAO.consultarObrero(this.obrero.getId())).setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_mniConsultarNominaActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuBar Menu;
     private javax.swing.JMenu MenuConsulta;
@@ -285,9 +298,9 @@ public class PanelObrero extends javax.swing.JFrame {
     private javax.swing.JLabel lblMXN;
     private javax.swing.JLabel lblSueldoDiaro;
     private javax.swing.JLabel lblTitulo;
-    private javax.swing.JMenuItem minConsultarNomina;
     private javax.swing.JMenuItem mniCambiarContrasena;
     private javax.swing.JMenuItem mniCambiarUsuario;
+    private javax.swing.JMenuItem mniConsultarNomina;
     private javax.swing.JMenuItem mniConsultarObras;
     private javax.swing.JMenuItem mniConsultarPagos;
     // End of variables declaration//GEN-END:variables

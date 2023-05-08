@@ -247,9 +247,10 @@ public class UbicacionesDAO {
         }
 
         criteria.where(predicates.toArray(new Predicate[0]));
+        List<Ubicaciones> ubicaciones = entityManager.createQuery(criteria).getResultList();
         entityManager.getTransaction().commit();
         entityManager.close();
-        return entityManager.createQuery(criteria).getResultList();
+        return ubicaciones;
     }
 
     // Regresa una lista de ubicaciones que hayan sido ocupadas dentro del 
@@ -311,9 +312,10 @@ public class UbicacionesDAO {
         }
 
         criteria.where(predicates.toArray(new Predicate[0]));
+        List<Ubicaciones> ubicaciones = entityManager.createQuery(criteria).getResultList();
         entityManager.getTransaction().commit();
         entityManager.close();
-        return entityManager.createQuery(criteria).getResultList();
+        return ubicaciones;
     }
 
     // Métodos drivers para búsqueda dinámica

@@ -7,8 +7,7 @@ package GUI.Obrero;
 import DAOs.ObrerosDAO;
 import Dominio.Obreros;
 import Herramientas.Encriptador;
-import java.awt.Image;
-import java.awt.Toolkit;
+import Herramientas.Icono;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -32,10 +31,7 @@ public class EditarUsuarioObrero extends javax.swing.JFrame {
     public EditarUsuarioObrero(Obreros obrero) throws Exception {
         Encriptador crypt = new Encriptador();
         initComponents();
-        Image image = Toolkit.getDefaultToolkit().getImage("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\Icono.png");
-        if (image != null) {
-            this.setIconImage(image);
-        }
+        new Icono().insertarIcono(this);
         this.obrero = obrero;
         this.lblInsertarContrasenia.setText(crypt.decrypt(obrero.getContrasena()));
         this.lblInsertarUsuario.setText(crypt.decrypt(obrero.getUsuario()));

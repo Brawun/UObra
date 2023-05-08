@@ -38,7 +38,7 @@ public class PagosObrero extends javax.swing.JFrame {
         this.obrero = obrero;
         initComponents();
         new Icono().insertarIcono(this);
-        this.txtMonto.setText("0");
+        this.txtMonto.setText("0.0");
     }
 
     public void cargarTablaPagos() throws ParseException {
@@ -55,9 +55,9 @@ public class PagosObrero extends javax.swing.JFrame {
         modeloTablaPagos.setRowCount(0);
         for (Pagos pagos : listaPagos) {
             Object[] filaNueva = {pagos.getId(),
-                 "$ " + pagos.getMonto() + " MXN",
-                 fecha.formatoFecha(pagos.getFecha()),
-                 pagos.getObra().getId()};
+                "$ " + pagos.getMonto() + " MXN",
+                fecha.formatoFecha(pagos.getFecha()),
+                pagos.getObra().getId()};
             modeloTablaPagos.addRow(filaNueva);
         }
     }
@@ -286,26 +286,45 @@ public class PagosObrero extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRegresarActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        try {
-            Validadores valido = new Validadores();
+        Validadores valido = new Validadores();
+        if (this.periodoInicio.getCalendar() != null && this.periodoFinal.getCalendar() != null) {
             if (valido.validarFechas(this.periodoInicio.getCalendar(), this.periodoFinal.getCalendar())) {
                 if (this.txtMonto.getText().isBlank()) {
                     this.txtMonto.setText("0.0");
-                } else if (!valido.validarFlotante(this.txtMonto.getText())) {
-                    this.txtMonto.setText(this.txtMonto.getText().trim() + ".0");
                 } else {
-                    JOptionPane.showMessageDialog(null, "Error: Monto mínimo a buscar inválido. (Mal formato).", "¡Error!", JOptionPane.ERROR_MESSAGE);
-                }
-                if (valido.validarFlotante(this.txtMonto.getText()) && valido.validarSinEspacios(this.txtMonto.getText())) {
-                    this.cargarTablaPagos();
-                } else {
-                    JOptionPane.showMessageDialog(null, "Error: Monto mínimo a buscar inválido. (Con espacios).", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                    this.txtMonto.setText(this.txtMonto.getText().trim());
+                    this.txtMonto.setText(valido.recortarComas(this.txtMonto.getText()));
+                    if (valido.validarSinEspacios(this.txtMonto.getText())) {
+                        this.txtMonto.setText(valido.recortarSignoMas(this.txtMonto.getText()));
+                        if (!valido.validarNumero(this.txtMonto.getText())) {
+                            JOptionPane.showMessageDialog(null, "Error: Ingrese un número en el monto. (No caracteres ni numeros negativos).", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                        } else if (!valido.validarFlotante(this.txtMonto.getText())) {
+                            this.txtMonto.setText(this.txtMonto.getText().concat(".0"));
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Error: Ingrese un monto válido. (Sin espacios).", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Error: La fecha inicial no puede ser después que la fecha final.", "¡Error!", JOptionPane.ERROR_MESSAGE);
             }
-        } catch (ParseException e) {
-            Logger.getLogger(ConsultaObrasObrero.class.getName()).log(Level.SEVERE, null, e);
+        } else {
+            if (this.txtMonto.getText().isBlank()) {
+                this.txtMonto.setText("0.0");
+            } else {
+                this.txtMonto.setText(this.txtMonto.getText().trim());
+                this.txtMonto.setText(valido.recortarComas(this.txtMonto.getText()));
+                if (valido.validarSinEspacios(this.txtMonto.getText())) {
+                    this.txtMonto.setText(valido.recortarSignoMas(this.txtMonto.getText()));
+                    if (!valido.validarNumero(this.txtMonto.getText())) {
+                        JOptionPane.showMessageDialog(null, "Error: Ingrese un número en el monto. (No caracteres ni numeros negativos).", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                    } else if (!valido.validarFlotante(this.txtMonto.getText())) {
+                        this.txtMonto.setText(this.txtMonto.getText().concat(".0"));
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Error: Ingrese un monto válido. (Sin espacios).", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                }
+            }
         }
     }//GEN-LAST:event_btnBuscarActionPerformed
 

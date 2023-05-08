@@ -24,6 +24,7 @@ public class Icono {
      * @param frame Frame al que se le insertará la icono personalizado.
      */
     public void insertarIcono(JFrame frame) {
+        // Image image = Toolkit.getDefaultToolkit().getImage("C:\\Users\\naely\\Downloads\\Itson\\6to Semestre\\Pruebas de software\\UC3\\UObras\\UObra\\src\\main\\java\\Multimedia\\Icono.png");
         Image image = Toolkit.getDefaultToolkit().getImage("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\Icono.png");
         if (image != null) {
             frame.setIconImage(image);
