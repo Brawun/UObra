@@ -4,20 +4,75 @@
  */
 package GUI.Cliente;
 
+import DAOs.ClientesDAO;
+import DAOs.ObrasDAO;
+import Dominio.Clientes;
+import Dominio.Obras;
+import Herramientas.Fecha;
 import Herramientas.Icono;
+import Herramientas.Validadores;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author 52644
  */
 public class ConsultarObras extends javax.swing.JFrame {
+    
+    // Atributos
+    Clientes cliente = new Clientes();
+    ClientesDAO ClientesDAO = new ClientesDAO();
+    ObrasDAO ObrasDAO = new ObrasDAO();
+
 
     /**
      * Creates new form ConsultarObras
      */
-    public ConsultarObras() {
+    public ConsultarObras(Clientes cliente) {
+        this.cliente = cliente;
         initComponents();
         new Icono().insertarIcono(this);
+    }
+    
+    public void cargarTablaObras(Boolean activa, Integer fechas) throws Exception {
+        List<Obras> listaObras;
+        Fecha fecha = new Fecha();
+        if (fechas == 0) {
+            listaObras = ObrasDAO.consultarObrassFechaFin( // Se busca por acción FIN
+                    this.periodoInicio.getCalendar() != null // Si el usuario ingresó un periodo inicio se ingresa en el campo
+                    ? this.periodoInicio.getCalendar() : null,
+                    this.periodoFinal.getCalendar() != null // Si el usuario ingresó un periodo fin se ingresa en el campo
+                    ? this.periodoFinal.getCalendar() : null,
+                    activa,
+                    Integer.valueOf(this.txtDias.getText()) == 0 ? null : Integer.valueOf(this.txtDias.getText()),
+                    null, // Cualquier obra
+                    this.obrero.getId()); // Obrero
+        } else {
+            listaObras = ObrasDAO.consultarObrassFechaInicio( // Se busca por acción FIN
+                    this.periodoInicio.getCalendar() != null // Si el usuario ingresó un periodo inicio se ingresa en el campo
+                    ? this.periodoInicio.getCalendar() : null,
+                    this.periodoFinal.getCalendar() != null // Si el usuario ingresó un periodo fin se ingresa en el campo
+                    ? this.periodoFinal.getCalendar() : null,
+                    activa,
+                    Integer.valueOf(this.txtDias.getText()) == 0 ? null : Integer.valueOf(this.txtDias.getText()),
+                    null, // Cualquier obra
+                    this.obrero.getId()); // Obrero
+        }
+        DefaultTableModel modeloTablaPersonas = (DefaultTableModel) this.tblResultados.getModel();
+        modeloTablaPersonas.setRowCount(0);
+        for (Obras obrasObrero : listaObras) {
+            Object[] filaNueva = {obrasObrero.getId(),
+                fecha.formatoFecha(obrasObrero.getFechaInicio()),
+                obrasObrero.getFechaFin() != null ? fecha.formatoFecha(obrasObrero.getFechaFin()) : "No aplica",
+                obrasObrero.getActivo() == true ? "Activa" : "Inactiva",
+                obrasObrero.getDiasTrabajados() + " dia(s)",
+                obrasObrero.getObra().getId()};
+            modeloTablaPersonas.addRow(filaNueva);
+        }
     }
 
     /**
@@ -29,23 +84,271 @@ public class ConsultarObras extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        cbxEstado = new javax.swing.JComboBox<>();
+        lblEstado = new javax.swing.JLabel();
+        cbxAccion = new javax.swing.JComboBox<>();
+        UObraLogoPeque = new javax.swing.JLabel();
+        lblDias = new javax.swing.JLabel();
+        lblResultado = new javax.swing.JLabel();
+        lblAccion = new javax.swing.JLabel();
+        lblQue = new javax.swing.JLabel();
+        lblEnUnPeriodo = new javax.swing.JLabel();
+        lblEnEstado = new javax.swing.JLabel();
+        btnRegresar = new javax.swing.JButton();
+        lblConMinimo = new javax.swing.JLabel();
+        btnBuscar = new javax.swing.JButton();
+        periodoInicio = new com.toedter.calendar.JDateChooser();
+        periodoFinal = new com.toedter.calendar.JDateChooser();
+        ScrollPanel = new javax.swing.JScrollPane();
+        tblResultados = new javax.swing.JTable();
+        lblTitulo = new javax.swing.JLabel();
+        lblFechaInicio = new javax.swing.JLabel();
+        Separador1 = new javax.swing.JSeparator();
+        lblBusqueda = new javax.swing.JLabel();
+        Separador2 = new javax.swing.JSeparator();
+        lblFechaFin = new javax.swing.JLabel();
+        cbxEstado1 = new javax.swing.JComboBox<>();
+        lblEstado1 = new javax.swing.JLabel();
+        lblEnEstado1 = new javax.swing.JLabel();
+        lbl$ = new javax.swing.JLabel();
+        lblMXN = new javax.swing.JLabel();
+        txtMonto = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        cbxEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elija uno...", "Indistinto", "En espera", "Desarrollo", "Teminada" }));
+        cbxEstado.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                cbxEstadoFocusLost(evt);
+            }
+        });
+        getContentPane().add(cbxEstado, new org.netbeans.lib.awtextra.AbsoluteConstraints(413, 99, 211, -1));
+
+        lblEstado.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblEstado.setText("Estado:");
+        getContentPane().add(lblEstado, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 102, -1, -1));
+
+        cbxAccion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elija uno...", "Solicitada", "Iniciada", "Terminada" }));
+        getContentPane().add(cbxAccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(115, 94, 199, -1));
+
+        UObraLogoPeque.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\UObraPeque.png")); // NOI18N
+        getContentPane().add(UObraLogoPeque, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 11, -1, -1));
+
+        lblDias.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblDias.setText("Costo:");
+        getContentPane().add(lblDias, new org.netbeans.lib.awtextra.AbsoluteConstraints(364, 212, -1, -1));
+
+        lblResultado.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblResultado.setText("Resultado:");
+        getContentPane().add(lblResultado, new org.netbeans.lib.awtextra.AbsoluteConstraints(21, 310, -1, -1));
+
+        lblAccion.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblAccion.setText("Acción:");
+        getContentPane().add(lblAccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(68, 97, -1, -1));
+
+        lblQue.setText("Obra que haya sido...");
+        getContentPane().add(lblQue, new org.netbeans.lib.awtextra.AbsoluteConstraints(115, 78, -1, -1));
+
+        lblEnUnPeriodo.setText("En un periodo de...");
+        getContentPane().add(lblEnUnPeriodo, new org.netbeans.lib.awtextra.AbsoluteConstraints(115, 131, -1, -1));
+
+        lblEnEstado.setText("Se encuentren en estado...");
+        getContentPane().add(lblEnEstado, new org.netbeans.lib.awtextra.AbsoluteConstraints(413, 78, -1, -1));
+
+        btnRegresar.setText("Regresar");
+        btnRegresar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegresarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnRegresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(402, 574, -1, -1));
+
+        lblConMinimo.setText("Con un costo total mínimo de...");
+        getContentPane().add(lblConMinimo, new org.netbeans.lib.awtextra.AbsoluteConstraints(411, 187, -1, -1));
+
+        btnBuscar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnBuscar.setText("Buscar");
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(411, 249, -1, -1));
+        getContentPane().add(periodoInicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(115, 153, 199, -1));
+        getContentPane().add(periodoFinal, new org.netbeans.lib.awtextra.AbsoluteConstraints(115, 209, 199, -1));
+
+        tblResultados.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Nombre", "Estado", "Costo Total", "Deuda", "Pagada", "Fecha Solicitada", "Fecha Inicio", "Fecha Fin"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Long.class, java.lang.String.class, java.lang.Object.class, java.lang.Float.class, java.lang.Float.class, java.lang.Boolean.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblResultados.setRequestFocusEnabled(false);
+        ScrollPanel.setViewportView(tblResultados);
+
+        getContentPane().add(ScrollPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(21, 338, 843, 218));
+
+        lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblTitulo.setText("Obras");
+        getContentPane().add(lblTitulo, new org.netbeans.lib.awtextra.AbsoluteConstraints(21, 14, -1, -1));
+
+        lblFechaInicio.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblFechaInicio.setText("Fecha inicio:");
+        getContentPane().add(lblFechaInicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(41, 153, -1, -1));
+        getContentPane().add(Separador1, new org.netbeans.lib.awtextra.AbsoluteConstraints(21, 40, 843, 10));
+
+        lblBusqueda.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblBusqueda.setText("Búsqueda Dinámica:");
+        getContentPane().add(lblBusqueda, new org.netbeans.lib.awtextra.AbsoluteConstraints(21, 56, -1, -1));
+        getContentPane().add(Separador2, new org.netbeans.lib.awtextra.AbsoluteConstraints(21, 284, 843, 10));
+
+        lblFechaFin.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblFechaFin.setText("Fecha fin:");
+        getContentPane().add(lblFechaFin, new org.netbeans.lib.awtextra.AbsoluteConstraints(55, 215, -1, -1));
+
+        cbxEstado1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elija uno...", "Indistinto", "Pagadas", "No pagadas" }));
+        cbxEstado1.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                cbxEstado1FocusLost(evt);
+            }
+        });
+        getContentPane().add(cbxEstado1, new org.netbeans.lib.awtextra.AbsoluteConstraints(411, 153, 213, -1));
+
+        lblEstado1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblEstado1.setText("Deuda:");
+        getContentPane().add(lblEstado1, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 156, -1, -1));
+
+        lblEnEstado1.setText("Que económicamente estén...");
+        getContentPane().add(lblEnEstado1, new org.netbeans.lib.awtextra.AbsoluteConstraints(411, 131, -1, -1));
+
+        lbl$.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lbl$.setText("$");
+        getContentPane().add(lbl$, new org.netbeans.lib.awtextra.AbsoluteConstraints(418, 209, -1, -1));
+
+        lblMXN.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblMXN.setText("MXN");
+        getContentPane().add(lblMXN, new org.netbeans.lib.awtextra.AbsoluteConstraints(592, 209, -1, -1));
+        getContentPane().add(txtMonto, new org.netbeans.lib.awtextra.AbsoluteConstraints(432, 209, 148, -1));
+
+        jLabel1.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\ImagenObra.png")); // NOI18N
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 50, 210, 220));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void cbxEstadoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cbxEstadoFocusLost
+        if (this.cbxEstado.getSelectedItem() == "Activa" || this.cbxEstado.getSelectedItem() == "Indistinto") {
+            this.txtDias.setEditable(false);
+            this.txtDias.setText("0");
+        } else if (this.cbxEstado.getSelectedItem() == "Inactiva") {
+            this.txtDias.setEditable(true);
+            this.txtDias.setText("1");
+        }
+    }//GEN-LAST:event_cbxEstadoFocusLost
+
+    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
+        new PanelCliente(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnRegresarActionPerformed
+
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        try {
+            Validadores valido = new Validadores();
+            if (valido.validarFechas(this.periodoInicio.getCalendar(), this.periodoFinal.getCalendar())) {
+                if (this.cbxAccion.getSelectedItem() != "Elija uno...") {
+                    if (this.cbxEstado.getSelectedItem() != "Elija uno...") {
+                        if (this.cbxEstado.getSelectedItem() == "Activa") {
+                            if (this.cbxAccion.getSelectedItem() == "Iniciaron") {
+                                this.cargarTablaObrasCliente(true, 1);
+                            } else if (this.cbxAccion.getSelectedItem() == "Terminaron") {
+                                this.cargarTablaObrasCliente(true, 0);
+                            }
+                        } else if (this.cbxEstado.getSelectedItem() == "Indistinto") {
+                            if (this.cbxAccion.getSelectedItem() == "Iniciaron") {
+                                this.cargarTablaObrasCliente(null, 1);
+                            } else if (this.cbxAccion.getSelectedItem() == "Terminaron") {
+                                this.cargarTablaObrasCliente(null, 0);
+                            }
+                        } else if (this.cbxEstado.getSelectedItem() == "Inactiva") {
+
+                            if (valido.validarEntero(this.txtDias.getText())) {
+                                if (this.cbxAccion.getSelectedItem() == "Iniciaron") {
+                                    this.cargarTablaObrasCliente(false, 1);
+                                } else if (this.cbxAccion.getSelectedItem() == "Terminaron") {
+                                    this.cargarTablaObrasCliente(false, 0);
+                                }
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Error: Ingrese días trabajados válidos. (Solamente números enteros)", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Error: Elija un estado de relación obra - cliente válido para la búsqueda dinámica.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Error: Elija un tipo de acción válido para la búsqueda dinámica.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Error: La fecha inicial no puede ser después que la fecha final.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+            Logger.getLogger(ConsultaObrasCliente.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void cbxEstado1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cbxEstado1FocusLost
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbxEstado1FocusLost
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JScrollPane ScrollPanel;
+    private javax.swing.JSeparator Separador1;
+    private javax.swing.JSeparator Separador2;
+    private javax.swing.JLabel UObraLogoPeque;
+    private javax.swing.JButton btnBuscar;
+    private javax.swing.JButton btnRegresar;
+    private javax.swing.JComboBox<String> cbxAccion;
+    private javax.swing.JComboBox<String> cbxEstado;
+    private javax.swing.JComboBox<String> cbxEstado1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel lbl$;
+    private javax.swing.JLabel lblAccion;
+    private javax.swing.JLabel lblBusqueda;
+    private javax.swing.JLabel lblConMinimo;
+    private javax.swing.JLabel lblDias;
+    private javax.swing.JLabel lblEnEstado;
+    private javax.swing.JLabel lblEnEstado1;
+    private javax.swing.JLabel lblEnUnPeriodo;
+    private javax.swing.JLabel lblEstado;
+    private javax.swing.JLabel lblEstado1;
+    private javax.swing.JLabel lblFechaFin;
+    private javax.swing.JLabel lblFechaInicio;
+    private javax.swing.JLabel lblMXN;
+    private javax.swing.JLabel lblQue;
+    private javax.swing.JLabel lblResultado;
+    private javax.swing.JLabel lblTitulo;
+    private com.toedter.calendar.JDateChooser periodoFinal;
+    private com.toedter.calendar.JDateChooser periodoInicio;
+    private javax.swing.JTable tblResultados;
+    private javax.swing.JTextField txtMonto;
     // End of variables declaration//GEN-END:variables
 }

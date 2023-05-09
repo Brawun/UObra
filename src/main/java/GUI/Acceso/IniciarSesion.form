@@ -11,6 +11,9 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="mniInsercion">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="2" name="D:\Documentos\Word\ITSON\3er-4to Semestre\4&#xb0;\Pruebas de Software\UObra\src\main\java\Multimedia\MenuInsercion.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Inserci&#xf3;n Masiva"/>
               </Properties>
               <Events>
@@ -19,6 +22,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="mniInsercionRapida">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="2" name="D:\Documentos\Word\ITSON\3er-4to Semestre\4&#xb0;\Pruebas de Software\UObra\src\main\java\Multimedia\MenuInsercionRapida.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Inserci&#xf3;n R&#xe1;pida"/>
               </Properties>
               <Events>
@@ -27,6 +33,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="mniEliminarBD">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="2" name="D:\Documentos\Word\ITSON\3er-4to Semestre\4&#xb0;\Pruebas de Software\UObra\src\main\java\Multimedia\MenuEliminarBase.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Eliminar Base de Datos"/>
               </Properties>
               <Events>
@@ -42,10 +51,27 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="mniAcercaDe">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="2" name="D:\Documentos\Word\ITSON\3er-4to Semestre\4&#xb0;\Pruebas de Software\UObra\src\main\java\Multimedia\MenuAcercaDe.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Acerca de"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mniAcercaDeActionPerformed"/>
+              </Events>
+            </MenuItem>
+          </SubComponents>
+        </Menu>
+        <Menu class="javax.swing.JMenu" name="MenuOculto">
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="enter">
+              <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="ENTER"/>
+                </Property>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="enterActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>

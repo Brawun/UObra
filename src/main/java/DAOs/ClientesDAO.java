@@ -212,6 +212,21 @@ public class ClientesDAO {
             throw new EntityNotFoundException("No se puede encontrar el cliente con ID: " + id);
         }
     }
+    
+    public void sumarInversionTotalCliente(Long id, Float monto) {
+        if (verificarCliente(id)) {
+            EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+            EntityManager entityManager = managerFactory.createEntityManager();
+            entityManager.getTransaction().begin();
+            Clientes cliente = consultarCliente(id);
+            cliente.setInversionTotal(cliente.getInversionTotal() + monto);
+            entityManager.merge(cliente);
+            entityManager.getTransaction().commit();
+            entityManager.close();
+        } else {
+            throw new EntityNotFoundException("No se puede encontrar el cliente con ID: " + id);
+        }
+    }
 
     // Restar a la deuda del cliente el monto dado
     public void restarDeudaCliente(Long id, Float monto) {

@@ -117,6 +117,7 @@ public class PanelObrero extends javax.swing.JFrame {
 
         MenuConsulta.setText("Consulta");
 
+        mniConsultarPagos.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuDinero.png")); // NOI18N
         mniConsultarPagos.setText("Consultar Pagos");
         mniConsultarPagos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -125,6 +126,7 @@ public class PanelObrero extends javax.swing.JFrame {
         });
         MenuConsulta.add(mniConsultarPagos);
 
+        mniConsultarObras.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuCasco.png")); // NOI18N
         mniConsultarObras.setText("Consultar Obras");
         mniConsultarObras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -133,6 +135,7 @@ public class PanelObrero extends javax.swing.JFrame {
         });
         MenuConsulta.add(mniConsultarObras);
 
+        mniConsultarNomina.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuLupa.png")); // NOI18N
         mniConsultarNomina.setText("Consultar Nómina");
         mniConsultarNomina.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -145,6 +148,7 @@ public class PanelObrero extends javax.swing.JFrame {
 
         MenuCuenta.setText("Cuenta");
 
+        mniCambiarContrasena.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuEngrane.png")); // NOI18N
         mniCambiarContrasena.setText("Cambiar contraseña");
         mniCambiarContrasena.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -153,6 +157,7 @@ public class PanelObrero extends javax.swing.JFrame {
         });
         MenuCuenta.add(mniCambiarContrasena);
 
+        mniCambiarUsuario.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuCuenta.png")); // NOI18N
         mniCambiarUsuario.setText("Cambiar usuario");
         mniCambiarUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

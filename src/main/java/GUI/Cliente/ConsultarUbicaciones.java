@@ -12,16 +12,16 @@ import Herramientas.Icono;
  *
  * @author 52644
  */
-public class RealizarPago extends javax.swing.JFrame {
+public class ConsultarUbicaciones extends javax.swing.JFrame {
     
     // Atributos
     Clientes cliente = new Clientes();
     ClientesDAO ClientesDAO = new ClientesDAO();
 
     /**
-     * Creates new form RealizarPago
+     * Creates new form ConsultarUbicaciones
      */
-    public RealizarPago(Clientes cliente) {
+    public ConsultarUbicaciones(Clientes cliente) {
         initComponents();
         new Icono().insertarIcono(this);
     }
@@ -50,7 +50,6 @@ public class RealizarPago extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables

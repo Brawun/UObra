@@ -4,8 +4,13 @@
  */
 package GUI.Cliente;
 
+import DAOs.ClientesDAO;
 import Dominio.Clientes;
+import GUI.Acceso.IniciarSesion;
 import Herramientas.Icono;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -15,6 +20,7 @@ public class PanelCliente extends javax.swing.JFrame {
 
     // Atributos
     Clientes cliente;
+    ClientesDAO ClientesDAO = new ClientesDAO();
     
     /**
      * Creates new form Comprador
@@ -23,6 +29,12 @@ public class PanelCliente extends javax.swing.JFrame {
         this.cliente = cliente;
         initComponents();
         new Icono().insertarIcono(this);
+        this.lblInsertarID.setText(this.cliente.getId().toString());
+        this.lblInsertarNombre.setText(this.cliente.getNombre());
+        this.lblInsertarApellidoPaterno.setText(this.cliente.getApellidoPaterno());
+        this.lblInsertarApellidoMaterno.setText(this.cliente.getApellidoMaterno());
+        this.lblInsertarInversion.setText(String.valueOf(this.cliente.getInversionTotal()));
+        this.lblInsertarDeuda.setText(String.valueOf(this.cliente.getDeudaTotal()));
     }
 
     /**
@@ -35,134 +47,376 @@ public class PanelCliente extends javax.swing.JFrame {
     private void initComponents() {
 
         btnCerrarSesion = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        jSeparator1 = new javax.swing.JSeparator();
-        lblClienteNo = new javax.swing.JLabel();
-        lblInversionTotal = new javax.swing.JLabel();
-        jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
+        Separador1 = new javax.swing.JSeparator();
+        lblInsertarApellidoMaterno = new javax.swing.JLabel();
+        lblInsertarID = new javax.swing.JLabel();
+        lblInsertarInversion = new javax.swing.JLabel();
+        lblTitulo = new javax.swing.JLabel();
+        UObraLogoPeque = new javax.swing.JLabel();
+        lblInversion = new javax.swing.JLabel();
+        lblID = new javax.swing.JLabel();
+        lbl$1 = new javax.swing.JLabel();
+        lblMXN1 = new javax.swing.JLabel();
+        lblInsertarNombre = new javax.swing.JLabel();
+        lblInsertarApellidoPaterno = new javax.swing.JLabel();
+        lblInsertarDeuda = new javax.swing.JLabel();
+        lblDeuda = new javax.swing.JLabel();
+        lbl$2 = new javax.swing.JLabel();
+        lblMXN2 = new javax.swing.JLabel();
+        Menu = new javax.swing.JMenuBar();
+        MenuObras = new javax.swing.JMenu();
+        mniConsultarObras = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
-        jMenuItem3 = new javax.swing.JMenuItem();
-        jMenuItem4 = new javax.swing.JMenuItem();
+        mniSolicitarObra = new javax.swing.JMenuItem();
+        MenuPagos = new javax.swing.JMenu();
+        mniConsultarPagos = new javax.swing.JMenuItem();
+        mniRealizarPago = new javax.swing.JMenuItem();
+        MenuUbicaciones = new javax.swing.JMenu();
+        mniConsultarUbicaciones = new javax.swing.JMenuItem();
+        mniRegistrarUbicacion = new javax.swing.JMenuItem();
+        MenuCuenta = new javax.swing.JMenu();
+        mniCambiarContrasena = new javax.swing.JMenuItem();
+        mniCambiarUsuario = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Comprador");
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("Panel Cliente");
+        setPreferredSize(new java.awt.Dimension(338, 174));
 
-        btnCerrarSesion.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnCerrarSesion.setText("Cerrar Sesion");
+        btnCerrarSesion.setText("Cerrar Sesión");
         btnCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCerrarSesionActionPerformed(evt);
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel1.setText("Sistema UObra - Comprador");
+        lblInsertarApellidoMaterno.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblInsertarApellidoMaterno.setText("materno");
 
-        lblClienteNo.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lblClienteNo.setText("ID:");
+        lblInsertarID.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblInsertarID.setText("id");
 
-        lblInversionTotal.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lblInversionTotal.setText("Inversión Total:");
+        lblInsertarInversion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblInsertarInversion.setText("inversion");
 
-        jMenu1.setText("Obras");
+        lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblTitulo.setText("Panel Obrero");
 
-        jMenuItem1.setText("Consultar Obras");
-        jMenu1.add(jMenuItem1);
+        UObraLogoPeque.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\UObraPeque.png")); // NOI18N
 
-        jMenuItem2.setText("Solicitar Obra");
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+        lblInversion.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblInversion.setText("Inversión total:");
+
+        lblID.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblID.setText("- ID:");
+
+        lbl$1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lbl$1.setText("$");
+
+        lblMXN1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblMXN1.setText("MXN");
+
+        lblInsertarNombre.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblInsertarNombre.setText("nombre");
+
+        lblInsertarApellidoPaterno.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblInsertarApellidoPaterno.setText("paterno");
+
+        lblInsertarDeuda.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblInsertarDeuda.setText("deuda");
+
+        lblDeuda.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblDeuda.setText("Deuda actual:");
+
+        lbl$2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lbl$2.setText("$");
+
+        lblMXN2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblMXN2.setText("MXN");
+
+        MenuObras.setText("Obras");
+
+        mniConsultarObras.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuCasco.png")); // NOI18N
+        mniConsultarObras.setText("Consultar Obras");
+        mniConsultarObras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
+                mniConsultarObrasActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem2);
+        MenuObras.add(mniConsultarObras);
 
-        jMenuBar1.add(jMenu1);
-
-        jMenu2.setText("Ubicaciones");
-
-        jMenuItem3.setText("Consultar Ubicaciones");
-        jMenu2.add(jMenuItem3);
-
-        jMenuItem4.setText("Registrar Ubicación");
-        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItem1.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuLupa.png")); // NOI18N
+        jMenuItem1.setText("Consultar Por Nombre");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem4ActionPerformed(evt);
+                jMenuItem1ActionPerformed(evt);
             }
         });
-        jMenu2.add(jMenuItem4);
+        MenuObras.add(jMenuItem1);
 
-        jMenuBar1.add(jMenu2);
+        mniSolicitarObra.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuPregunta.png")); // NOI18N
+        mniSolicitarObra.setText("Solicitar Obra");
+        mniSolicitarObra.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mniSolicitarObraActionPerformed(evt);
+            }
+        });
+        MenuObras.add(mniSolicitarObra);
 
-        setJMenuBar(jMenuBar1);
+        Menu.add(MenuObras);
+
+        MenuPagos.setText("Pagos");
+
+        mniConsultarPagos.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuLupa.png")); // NOI18N
+        mniConsultarPagos.setText("Consultar Pagos");
+        mniConsultarPagos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mniConsultarPagosActionPerformed(evt);
+            }
+        });
+        MenuPagos.add(mniConsultarPagos);
+
+        mniRealizarPago.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuDinero.png")); // NOI18N
+        mniRealizarPago.setText("Realizar Pago");
+        mniRealizarPago.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mniRealizarPagoActionPerformed(evt);
+            }
+        });
+        MenuPagos.add(mniRealizarPago);
+
+        Menu.add(MenuPagos);
+
+        MenuUbicaciones.setText("Ubicaciones");
+
+        mniConsultarUbicaciones.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuUbicacion.png")); // NOI18N
+        mniConsultarUbicaciones.setText("Consultar Ubicaciones");
+        mniConsultarUbicaciones.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mniConsultarUbicacionesActionPerformed(evt);
+            }
+        });
+        MenuUbicaciones.add(mniConsultarUbicaciones);
+
+        mniRegistrarUbicacion.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuRegistro.png")); // NOI18N
+        mniRegistrarUbicacion.setText("Registrar Ubicación");
+        mniRegistrarUbicacion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mniRegistrarUbicacionActionPerformed(evt);
+            }
+        });
+        MenuUbicaciones.add(mniRegistrarUbicacion);
+
+        Menu.add(MenuUbicaciones);
+
+        MenuCuenta.setText("Cuenta");
+
+        mniCambiarContrasena.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuEngrane.png")); // NOI18N
+        mniCambiarContrasena.setText("Cambiar contraseña");
+        mniCambiarContrasena.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mniCambiarContrasenaActionPerformed(evt);
+            }
+        });
+        MenuCuenta.add(mniCambiarContrasena);
+
+        mniCambiarUsuario.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuCuenta.png")); // NOI18N
+        mniCambiarUsuario.setText("Cambiar usuario");
+        mniCambiarUsuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mniCambiarUsuarioActionPerformed(evt);
+            }
+        });
+        MenuCuenta.add(mniCambiarUsuario);
+
+        Menu.add(MenuCuenta);
+
+        setJMenuBar(Menu);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(btnCerrarSesion)
-                .addGap(15, 15, 15))
             .addGroup(layout.createSequentialGroup()
-                .addGap(15, 15, 15)
+                .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblInversionTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblClienteNo, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addContainerGap(45, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblInversion)
+                            .addComponent(lblDeuda))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lbl$1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblInsertarInversion)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblMXN1)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lbl$2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblInsertarDeuda)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblMXN2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
+                                .addComponent(btnCerrarSesion))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(UObraLogoPeque)
+                        .addGap(1, 1, 1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblInsertarNombre)
+                        .addGap(6, 6, 6)
+                        .addComponent(lblInsertarApellidoPaterno)
+                        .addGap(7, 7, 7)
+                        .addComponent(lblInsertarApellidoMaterno)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblID)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblInsertarID)))
+                .addGap(14, 14, 14))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addComponent(Separador1)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addComponent(jLabel1)
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblTitulo, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(UObraLogoPeque, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblClienteNo)
-                .addGap(35, 35, 35)
-                .addComponent(lblInversionTotal)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
-                .addComponent(btnCerrarSesion)
-                .addGap(16, 16, 16))
+                .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblInsertarNombre)
+                    .addComponent(lblInsertarApellidoPaterno)
+                    .addComponent(lblInsertarApellidoMaterno)
+                    .addComponent(lblID)
+                    .addComponent(lblInsertarID))
+                .addGap(15, 15, 15)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblInversion)
+                    .addComponent(lblInsertarInversion)
+                    .addComponent(lbl$1)
+                    .addComponent(lblMXN1))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblDeuda)
+                            .addComponent(lblInsertarDeuda)
+                            .addComponent(lbl$2)
+                            .addComponent(lblMXN2))
+                        .addGap(17, 17, 17))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(btnCerrarSesion)
+                        .addContainerGap(15, Short.MAX_VALUE))))
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
+    private void mniSolicitarObraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniSolicitarObraActionPerformed
+        new SolicitarObra(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
         this.dispose();
+    }//GEN-LAST:event_mniSolicitarObraActionPerformed
+
+    private void mniRegistrarUbicacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniRegistrarUbicacionActionPerformed
+        new RegistrarUbicacion(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_mniRegistrarUbicacionActionPerformed
+
+    private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
+        this.setVisible(false);
+        int i = JOptionPane.showConfirmDialog(this, "¿Seguro que desea cerrar sesión?", "Advertencia", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        if (i == JOptionPane.YES_OPTION) {
+            this.dispose();
+            new IniciarSesion().setVisible(true);
+        } else {
+            this.setVisible(true);
+        }
     }//GEN-LAST:event_btnCerrarSesionActionPerformed
 
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        SolicitarObra solicitarObra = new SolicitarObra();
-        solicitarObra.setVisible(true);
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
+    private void mniCambiarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniCambiarUsuarioActionPerformed
+        try {
+            new EditarUsuarioCliente(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
+            this.dispose();
+        } catch (Exception ex) {
+            Logger.getLogger(PanelCliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_mniCambiarUsuarioActionPerformed
 
-    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-        RegistrarUbicacion registrarUbicacion = new RegistrarUbicacion();
-        registrarUbicacion.setVisible(true);
-    }//GEN-LAST:event_jMenuItem4ActionPerformed
+    private void mniConsultarObrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniConsultarObrasActionPerformed
+        new ConsultarObras(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_mniConsultarObrasActionPerformed
+
+    private void mniConsultarPagosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniConsultarPagosActionPerformed
+        new ConsultarPagos(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_mniConsultarPagosActionPerformed
+
+    private void mniRealizarPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniRealizarPagoActionPerformed
+        new RealizarPago(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_mniRealizarPagoActionPerformed
+
+    private void mniConsultarUbicacionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniConsultarUbicacionesActionPerformed
+        new ConsultarUbicaciones(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_mniConsultarUbicacionesActionPerformed
+
+    private void mniCambiarContrasenaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniCambiarContrasenaActionPerformed
+        try {
+            new EditarContrasenaCliente(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
+            this.dispose();
+        } catch (Exception ex) {
+            Logger.getLogger(PanelCliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_mniCambiarContrasenaActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        new ConsultarObrasNombre(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuBar Menu;
+    private javax.swing.JMenu MenuCuenta;
+    private javax.swing.JMenu MenuObras;
+    private javax.swing.JMenu MenuPagos;
+    private javax.swing.JMenu MenuUbicaciones;
+    private javax.swing.JSeparator Separador1;
+    private javax.swing.JLabel UObraLogoPeque;
     private javax.swing.JButton btnCerrarSesion;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
-    private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JLabel lblClienteNo;
-    private javax.swing.JLabel lblInversionTotal;
+    private javax.swing.JLabel lbl$1;
+    private javax.swing.JLabel lbl$2;
+    private javax.swing.JLabel lblDeuda;
+    private javax.swing.JLabel lblID;
+    private javax.swing.JLabel lblInsertarApellidoMaterno;
+    private javax.swing.JLabel lblInsertarApellidoPaterno;
+    private javax.swing.JLabel lblInsertarDeuda;
+    private javax.swing.JLabel lblInsertarID;
+    private javax.swing.JLabel lblInsertarInversion;
+    private javax.swing.JLabel lblInsertarNombre;
+    private javax.swing.JLabel lblInversion;
+    private javax.swing.JLabel lblMXN1;
+    private javax.swing.JLabel lblMXN2;
+    private javax.swing.JLabel lblTitulo;
+    private javax.swing.JMenuItem mniCambiarContrasena;
+    private javax.swing.JMenuItem mniCambiarUsuario;
+    private javax.swing.JMenuItem mniConsultarObras;
+    private javax.swing.JMenuItem mniConsultarPagos;
+    private javax.swing.JMenuItem mniConsultarUbicaciones;
+    private javax.swing.JMenuItem mniRealizarPago;
+    private javax.swing.JMenuItem mniRegistrarUbicacion;
+    private javax.swing.JMenuItem mniSolicitarObra;
     // End of variables declaration//GEN-END:variables
 }

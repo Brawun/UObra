@@ -56,7 +56,10 @@ public class Clientes implements Serializable {
     
     @Column(name = "DeudaTotal", nullable = true)
     private Float deudaTotal = (float) 0;
-
+    
+    @Column(name = "InversionTotal", nullable = false)
+    private Float inversionTotal = (float) 0;
+    
     // Un cliente puede solicitar muchas obras
     @OneToMany(mappedBy = "cliente", cascade = {CascadeType.REMOVE})
     private List<Obras> obras;
@@ -164,6 +167,14 @@ public class Clientes implements Serializable {
 
     public void setDeudaTotal(Float deudaTotal) {
         this.deudaTotal = deudaTotal;
+    }
+
+    public Float getInversionTotal() {
+        return inversionTotal;
+    }
+
+    public void setInversionTotal(Float inversionTotal) {
+        this.inversionTotal = inversionTotal;
     }
 
     public List<Obras> getObras() {

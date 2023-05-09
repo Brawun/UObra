@@ -102,6 +102,7 @@ public class ObrasDAO {
                 obra.setFechaInicio(fecha.fechaAhora());
                 // Se le suma la deuda a cliente al iniciar la obra
                 ClientesDAO.sumarDeudaCliente(obra.getCliente().getId(), obra.getCostoTotal());
+                ClientesDAO.sumarInversionTotalCliente(obra.getCliente().getId(), obra.getCostoTotal());
                 entityManager.merge(obra);
                 entityManager.getTransaction().commit();
                 entityManager.close();
@@ -655,6 +656,7 @@ public class ObrasDAO {
         TypedQuery<Obras> query;
         EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
         EntityManager entityManager = managerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
         // BUSQUEDA POR 6 CAMPOS
         if (periodoInicio != null
                 && periodoFin != null
@@ -1842,6 +1844,7 @@ public class ObrasDAO {
         TypedQuery<Obras> query;
         EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
         EntityManager entityManager = managerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
         // BUSQUEDA POR 6 CAMPOS
         if (periodoInicio != null
                 && periodoFin != null
@@ -3029,6 +3032,7 @@ public class ObrasDAO {
         TypedQuery<Obras> query;
         EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
         EntityManager entityManager = managerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
         // BUSQUEDA POR 6 CAMPOS
         if (periodoInicio != null
                 && periodoFin != null
@@ -4207,6 +4211,20 @@ public class ObrasDAO {
         } else {
             throw new Exception("No se pudo realizar la búsqueda dinámica de obras");
         }
+    }
+
+    public List<Obras> consultarObrasPorNombre(String nombre) {
+        TypedQuery<Obras> query;
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
+        String jpql = "SELECT o FROM Obras o WHERE o.nombre LIKE CONCAT('%',:nombre,'%')";
+        query = entityManager.createQuery(jpql, Obras.class);
+        query.setParameter("nombre", nombre);
+        List<Obras> obras = query.getResultList();
+        entityManager.getTransaction().commit();
+        entityManager.close();
+        return obras;
     }
 
     // Métodos drivers para búsqueda dinámica

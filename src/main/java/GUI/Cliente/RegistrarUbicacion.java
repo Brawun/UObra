@@ -4,6 +4,8 @@
  */
 package GUI.Cliente;
 
+import DAOs.ClientesDAO;
+import Dominio.Clientes;
 import Herramientas.Icono;
 
 /**
@@ -11,11 +13,15 @@ import Herramientas.Icono;
  * @author 52644
  */
 public class RegistrarUbicacion extends javax.swing.JFrame {
+    
+    // Atributos
+    Clientes cliente = new Clientes();
+    ClientesDAO ClientesDAO = new ClientesDAO();
 
     /**
      * Creates new form RegistrarUbicación
      */
-    public RegistrarUbicacion() {
+    public RegistrarUbicacion(Clientes cliente) {
         initComponents();
         new Icono().insertarIcono(this);
     }

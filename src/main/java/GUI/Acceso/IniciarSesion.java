@@ -16,6 +16,7 @@ import GUI.Jefe.PanelJefe;
 import GUI.Obrero.PanelObrero;
 import Herramientas.Icono;
 import Herramientas.Insercion;
+import java.awt.event.KeyEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -35,6 +36,7 @@ public class IniciarSesion extends javax.swing.JFrame {
     public IniciarSesion() {
         initComponents();
         new Icono().insertarIcono(this);
+        this.enter.validate();
     }
 
     /**
@@ -69,6 +71,8 @@ public class IniciarSesion extends javax.swing.JFrame {
         mniEliminarBD = new javax.swing.JMenuItem();
         MenuExtras = new javax.swing.JMenu();
         mniAcercaDe = new javax.swing.JMenuItem();
+        MenuOculto = new javax.swing.JMenu();
+        enter = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("UObra Inicio de Sesión");
@@ -127,6 +131,7 @@ public class IniciarSesion extends javax.swing.JFrame {
 
         MenuHerramientas.setText("Herramientas");
 
+        mniInsercion.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuInsercion.png")); // NOI18N
         mniInsercion.setText("Inserción Masiva");
         mniInsercion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -135,6 +140,7 @@ public class IniciarSesion extends javax.swing.JFrame {
         });
         MenuHerramientas.add(mniInsercion);
 
+        mniInsercionRapida.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuInsercionRapida.png")); // NOI18N
         mniInsercionRapida.setText("Inserción Rápida");
         mniInsercionRapida.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -143,6 +149,7 @@ public class IniciarSesion extends javax.swing.JFrame {
         });
         MenuHerramientas.add(mniInsercionRapida);
 
+        mniEliminarBD.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuEliminarBase.png")); // NOI18N
         mniEliminarBD.setText("Eliminar Base de Datos");
         mniEliminarBD.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -155,6 +162,7 @@ public class IniciarSesion extends javax.swing.JFrame {
 
         MenuExtras.setText("Extras");
 
+        mniAcercaDe.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuAcercaDe.png")); // NOI18N
         mniAcercaDe.setText("Acerca de");
         mniAcercaDe.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -164,6 +172,16 @@ public class IniciarSesion extends javax.swing.JFrame {
         MenuExtras.add(mniAcercaDe);
 
         Menu.add(MenuExtras);
+
+        enter.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ENTER, 0));
+        enter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                enterActionPerformed(evt);
+            }
+        });
+        MenuOculto.add(enter);
+
+        Menu.add(MenuOculto);
 
         setJMenuBar(Menu);
 
@@ -325,8 +343,8 @@ public class IniciarSesion extends javax.swing.JFrame {
                 + " - Guimel Naely Rubio Morillon \n"
                 + "\nProf. María de los Ángeles Germán \n"
                 + "Pruebas de Software ITSON "
-                + "☺"
-                , "Acerca de", JOptionPane.INFORMATION_MESSAGE);
+                + "☺",
+                 "Acerca de", JOptionPane.INFORMATION_MESSAGE);
         this.setVisible(true);
     }//GEN-LAST:event_mniAcercaDeActionPerformed
 
@@ -376,16 +394,22 @@ public class IniciarSesion extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_mniInsercionRapidaActionPerformed
 
+    private void enterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterActionPerformed
+        this.btnAceptar.doClick();
+    }//GEN-LAST:event_enterActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuBar Menu;
     private javax.swing.JMenu MenuExtras;
     private javax.swing.JMenu MenuHerramientas;
+    private javax.swing.JMenu MenuOculto;
     private javax.swing.JLabel UObraLogo;
     private javax.swing.JButton btnAceptar;
     private javax.swing.JButton btnRegistrarCuenta;
     private javax.swing.JButton btnSalir;
     private javax.swing.JComboBox<String> cbxTipoUsuario;
     private javax.swing.JCheckBox chbVerContrasenia;
+    private javax.swing.JMenuItem enter;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

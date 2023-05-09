@@ -16,6 +16,9 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="mniConsultarPagos">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="2" name="D:\Documentos\Word\ITSON\3er-4to Semestre\4&#xb0;\Pruebas de Software\UObra\src\main\java\Multimedia\MenuDinero.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Consultar Pagos"/>
               </Properties>
               <Events>
@@ -24,6 +27,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="mniConsultarObras">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="2" name="D:\Documentos\Word\ITSON\3er-4to Semestre\4&#xb0;\Pruebas de Software\UObra\src\main\java\Multimedia\MenuCasco.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Consultar Obras"/>
               </Properties>
               <Events>
@@ -32,6 +38,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="mniConsultarNomina">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="2" name="D:\Documentos\Word\ITSON\3er-4to Semestre\4&#xb0;\Pruebas de Software\UObra\src\main\java\Multimedia\MenuLupa.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Consultar N&#xf3;mina"/>
               </Properties>
               <Events>
@@ -47,6 +56,9 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="mniCambiarContrasena">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="2" name="D:\Documentos\Word\ITSON\3er-4to Semestre\4&#xb0;\Pruebas de Software\UObra\src\main\java\Multimedia\MenuEngrane.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Cambiar contrase&#xf1;a"/>
               </Properties>
               <Events>
@@ -55,6 +67,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="mniCambiarUsuario">
               <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="2" name="D:\Documentos\Word\ITSON\3er-4to Semestre\4&#xb0;\Pruebas de Software\UObra\src\main\java\Multimedia\MenuCuenta.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Cambiar usuario"/>
               </Properties>
               <Events>

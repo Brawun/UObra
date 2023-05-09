@@ -1400,6 +1400,7 @@ public class ObrasObreroDAO {
         TypedQuery<ObrasObrero> query;
         EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
         EntityManager entityManager = managerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
         // BUSQUEDA POR 6 CAMPOS
         if (periodoInicio != null
                 && periodoFin != null

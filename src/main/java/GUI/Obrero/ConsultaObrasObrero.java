@@ -65,8 +65,8 @@ public class ConsultaObrasObrero extends javax.swing.JFrame {
                     null, // Cualquier obra
                     this.obrero.getId()); // Obrero
         }
-        DefaultTableModel modeloTablaPersonas = (DefaultTableModel) this.tblResultados.getModel();
-        modeloTablaPersonas.setRowCount(0);
+        DefaultTableModel modeloTablaObrasObrero = (DefaultTableModel) this.tblResultados.getModel();
+        modeloTablaObrasObrero.setRowCount(0);
         for (ObrasObrero obrasObrero : listaObrasObrero) {
             Object[] filaNueva = {obrasObrero.getId(),
                 fecha.formatoFecha(obrasObrero.getFechaInicio()),
@@ -74,7 +74,7 @@ public class ConsultaObrasObrero extends javax.swing.JFrame {
                 obrasObrero.getActivo() == true ? "Activa" : "Inactiva",
                 obrasObrero.getDiasTrabajados() + " dia(s)",
                 obrasObrero.getObra().getId()};
-            modeloTablaPersonas.addRow(filaNueva);
+            modeloTablaObrasObrero.addRow(filaNueva);
         }
     }
 
@@ -115,6 +115,8 @@ public class ConsultaObrasObrero extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Consultar Obras - Obrero");
 
+        tblResultados.setBackground(new java.awt.Color(255, 255, 255));
+        tblResultados.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         tblResultados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -189,13 +191,13 @@ public class ConsultaObrasObrero extends javax.swing.JFrame {
         lblAccion.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblAccion.setText("Acción:");
 
-        lblQue.setText("Que...");
+        lblQue.setText("Obra - Obrero que haya...");
 
         lblEnUnPeriodo.setText("En un periodo de...");
 
         lblEnEstado.setText("Se encuentren en estado...");
 
-        lblConMinimo.setText("Con un mínimo de días trabajados de...");
+        lblConMinimo.setText("Mínimo de días trabajados de...");
 
         UObraLogoPeque.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\UObraPeque.png")); // NOI18N
 
@@ -203,130 +205,143 @@ public class ConsultaObrasObrero extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnRegresar)
-                        .addGap(248, 248, 248))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGap(21, 21, 21)
+                        .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 581, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(41, 41, 41)
+                        .addComponent(lblBusqueda))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addComponent(Separador2, javax.swing.GroupLayout.PREFERRED_SIZE, 581, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addComponent(lblResultado))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addComponent(ScrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 581, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(278, 278, 278)
+                        .addComponent(btnRegresar)))
+                .addGap(20, 22, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(104, 104, 104)
+                        .addComponent(lblEnUnPeriodo))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addComponent(lblFechaInicio)
+                        .addGap(6, 6, 6)
+                        .addComponent(periodoInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(57, 57, 57)
+                        .addComponent(lblAccion)
+                        .addGap(6, 6, 6)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(ScrollPanel, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(Separador1)
-                            .addComponent(Separador2, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addGap(9, 9, 9)
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                    .addComponent(lblFechaFin)
-                                                    .addComponent(lblFechaInicio)))
-                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                                .addGap(6, 6, 6)
-                                                .addComponent(lblAccion)))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(periodoInicio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(cbxAccion, javax.swing.GroupLayout.Alignment.TRAILING, 0, 195, Short.MAX_VALUE)
-                                            .addComponent(lblEnUnPeriodo)
-                                            .addComponent(periodoFinal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(lblTitulo)
-                                            .addComponent(lblResultado)
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                .addComponent(lblQue)
-                                                .addComponent(lblBusqueda)))
-                                        .addGap(0, 0, Short.MAX_VALUE)))
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addGap(32, 32, 32)
-                                                .addComponent(lblEstado))
-                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(lblDias)))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(cbxEstado, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(txtDias)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(lblEnEstado)
-                                                    .addComponent(lblConMinimo))
-                                                .addGap(0, 12, Short.MAX_VALUE))))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                                .addComponent(btnBuscar)
-                                                .addGap(68, 68, 68))
-                                            .addComponent(UObraLogoPeque, javax.swing.GroupLayout.Alignment.TRAILING))))))))
-                .addGap(20, 20, 20))
+                            .addComponent(lblQue)
+                            .addComponent(cbxAccion, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(44, 44, 44)
+                        .addComponent(lblFechaFin)
+                        .addGap(6, 6, 6)
+                        .addComponent(periodoFinal, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(14, 14, 14)
+                            .addComponent(lblDias)
+                            .addGap(12, 12, 12)
+                            .addComponent(txtDias, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(53, 53, 53)
+                            .addComponent(lblEnEstado))
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(lblEstado)
+                            .addGap(12, 12, 12)
+                            .addComponent(cbxEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(104, 104, 104)
+                            .addComponent(btnBuscar)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(lblConMinimo)
+                        .addGap(10, 10, 10)))
+                .addGap(52, 52, 52))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addComponent(lblTitulo)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(UObraLogoPeque)
+                .addGap(30, 30, 30))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addGap(11, 11, 11)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblTitulo)
-                    .addComponent(UObraLogoPeque))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(lblTitulo))
+                    .addComponent(UObraLogoPeque, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGap(6, 6, 6)
                 .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(6, 6, 6)
                 .addComponent(lblBusqueda)
-                .addGap(5, 5, 5)
+                .addGap(7, 7, 7)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblQue)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(9, 9, 9)
+                                .addComponent(lblAccion))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addComponent(cbxAccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(18, 18, 18)
+                        .addComponent(lblEnUnPeriodo)
+                        .addGap(8, 8, 8)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addComponent(lblFechaInicio))
+                            .addComponent(periodoInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addComponent(lblFechaFin))
+                            .addComponent(periodoFinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lblEnEstado)
                         .addGap(5, 5, 5)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblEstado)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(3, 3, 3)
+                                .addComponent(lblEstado))
                             .addComponent(cbxEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(21, 21, 21)
-                        .addComponent(lblConMinimo)
+                        .addComponent(lblConMinimo, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblDias)
-                            .addComponent(txtDias, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblQue)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(73, 73, 73)
-                                .addComponent(periodoInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(lblAccion)
-                                    .addComponent(cbxAccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(18, 18, 18)
-                                        .addComponent(lblEnUnPeriodo)
-                                        .addGap(27, 27, 27))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(lblFechaInicio)))))))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnBuscar)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(lblFechaFin)
-                        .addComponent(periodoFinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
+                                .addGap(3, 3, 3)
+                                .addComponent(lblDias))
+                            .addComponent(txtDias, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(btnBuscar)))
+                .addGap(19, 19, 19)
                 .addComponent(Separador2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(9, 9, 9)
                 .addComponent(lblResultado)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(ScrollPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
+                .addGap(12, 12, 12)
+                .addComponent(ScrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnRegresar)
-                .addGap(15, 15, 15))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         pack();
@@ -341,7 +356,7 @@ public class ConsultaObrasObrero extends javax.swing.JFrame {
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         try {
             Validadores valido = new Validadores();
-            if (valido.validarFechas(this.periodoInicio.getCalendar(), this.periodoFinal.getCalendar())) {
+            if (this.periodoInicio.getCalendar() != null && this.periodoFinal.getCalendar() != null) {
                 if (this.cbxAccion.getSelectedItem() != "Elija uno...") {
                     if (this.cbxEstado.getSelectedItem() != "Elija uno...") {
                         if (this.cbxEstado.getSelectedItem() == "Activa") {
@@ -375,7 +390,42 @@ public class ConsultaObrasObrero extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "Error: Elija un tipo de acción válido para la búsqueda dinámica.", "¡Error!", JOptionPane.ERROR_MESSAGE);
                 }
             } else {
-                JOptionPane.showMessageDialog(null, "Error: La fecha inicial no puede ser después que la fecha final.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                if (valido.validarFechas(this.periodoInicio.getCalendar(), this.periodoFinal.getCalendar())) {
+                    if (this.cbxAccion.getSelectedItem() != "Elija uno...") {
+                        if (this.cbxEstado.getSelectedItem() != "Elija uno...") {
+                            if (this.cbxEstado.getSelectedItem() == "Activa") {
+                                if (this.cbxAccion.getSelectedItem() == "Iniciaron") {
+                                    this.cargarTablaObrasObrero(true, 1);
+                                } else if (this.cbxAccion.getSelectedItem() == "Terminaron") {
+                                    this.cargarTablaObrasObrero(true, 0);
+                                }
+                            } else if (this.cbxEstado.getSelectedItem() == "Indistinto") {
+                                if (this.cbxAccion.getSelectedItem() == "Iniciaron") {
+                                    this.cargarTablaObrasObrero(null, 1);
+                                } else if (this.cbxAccion.getSelectedItem() == "Terminaron") {
+                                    this.cargarTablaObrasObrero(null, 0);
+                                }
+                            } else if (this.cbxEstado.getSelectedItem() == "Inactiva") {
+
+                                if (valido.validarEntero(this.txtDias.getText())) {
+                                    if (this.cbxAccion.getSelectedItem() == "Iniciaron") {
+                                        this.cargarTablaObrasObrero(false, 1);
+                                    } else if (this.cbxAccion.getSelectedItem() == "Terminaron") {
+                                        this.cargarTablaObrasObrero(false, 0);
+                                    }
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "Error: Ingrese días trabajados válidos. (Solamente números enteros)", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                                }
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Error: Elija un estado de relación obra - obrero válido para la búsqueda dinámica.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Error: Elija un tipo de acción válido para la búsqueda dinámica.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Error: La fecha inicial no puede ser después que la fecha final.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                }
             }
         } catch (Exception e) {
             Logger.getLogger(ConsultaObrasObrero.class.getName()).log(Level.SEVERE, null, e);

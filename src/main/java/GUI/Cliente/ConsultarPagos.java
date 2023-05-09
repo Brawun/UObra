@@ -12,16 +12,16 @@ import Herramientas.Icono;
  *
  * @author 52644
  */
-public class RealizarPago extends javax.swing.JFrame {
+public class ConsultarPagos extends javax.swing.JFrame {
     
     // Atributos
     Clientes cliente = new Clientes();
     ClientesDAO ClientesDAO = new ClientesDAO();
 
     /**
-     * Creates new form RealizarPago
+     * Creates new form ConsultarPagos
      */
-    public RealizarPago(Clientes cliente) {
+    public ConsultarPagos(Clientes cliente) {
         initComponents();
         new Icono().insertarIcono(this);
     }

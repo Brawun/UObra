@@ -2596,6 +2596,7 @@ public class FacturasDAO {
         if (descripcion != null) {
             EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
             EntityManager entityManager = managerFactory.createEntityManager();
+            entityManager.getTransaction().begin();
             TypedQuery<Facturas> query;
             String jpql = "SELECT f FROM Facturas f WHERE "
                     + "f.descripcion LIKE CONCAT('%',:descripcion,'%')";
@@ -2616,6 +2617,7 @@ public class FacturasDAO {
                 && jefeId != null) {
             EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
             EntityManager entityManager = managerFactory.createEntityManager();
+            entityManager.getTransaction().begin();
             TypedQuery<Facturas> query;
             String jpql = "SELECT f FROM Facturas f WHERE "
                     + "f.descripcion LIKE CONCAT('%',:descripcion,'%') "
@@ -2640,6 +2642,7 @@ public class FacturasDAO {
                 && periodoFin != null) {
             EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
             EntityManager entityManager = managerFactory.createEntityManager();
+            entityManager.getTransaction().begin();
             TypedQuery<Facturas> query;
             String jpql = "SELECT f FROM Facturas f WHERE "
                     + "f.descripcion LIKE CONCAT('%',:descripcion,'%') "
