@@ -23,7 +23,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author 52644
  */
-public class PagosObrero extends javax.swing.JFrame {
+public class ConsultarPagosObrero extends javax.swing.JFrame {
 
     // Atributos
     Obreros obrero = new Obreros();
@@ -34,7 +34,7 @@ public class PagosObrero extends javax.swing.JFrame {
      *
      * @param obrero Obrero de cuenta iniciada
      */
-    public PagosObrero(Obreros obrero) {
+    public ConsultarPagosObrero(Obreros obrero) {
         this.obrero = obrero;
         initComponents();
         new Icono().insertarIcono(this);
@@ -94,12 +94,17 @@ public class PagosObrero extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Pagos Obrero");
+        setResizable(false);
 
         lblBusqueda.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblBusqueda.setText("Búsqueda Dinámica:");
 
+        ScrollPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
         ScrollPanel.setToolTipText("");
+        ScrollPanel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
+        tblPagos.setBackground(new java.awt.Color(255, 255, 255));
+        tblPagos.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         tblPagos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -109,7 +114,7 @@ public class PagosObrero extends javax.swing.JFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Long.class, java.lang.Float.class, java.lang.Object.class, java.lang.Long.class
+                java.lang.Long.class, java.lang.Float.class, java.lang.String.class, java.lang.Long.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false
@@ -127,6 +132,8 @@ public class PagosObrero extends javax.swing.JFrame {
         ScrollPanel.setViewportView(tblPagos);
 
         btnRegresar.setText("Regresar");
+        btnRegresar.setToolTipText("Regresar a Panel Obrero");
+        btnRegresar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnRegresar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRegresarActionPerformed(evt);
@@ -150,11 +157,20 @@ public class PagosObrero extends javax.swing.JFrame {
 
         btnBuscar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnBuscar.setText("Buscar");
+        btnBuscar.setToolTipText("Buscar Pagos");
+        btnBuscar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBuscarActionPerformed(evt);
             }
         });
+
+        periodoInicio.setToolTipText("Periodo inicio");
+
+        periodoFinal.setToolTipText("Periodo fin");
+
+        txtMonto.setToolTipText("Ingrese números decimales");
+        txtMonto.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
 
         lblFechaInicio.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblFechaInicio.setText("Fecha inicio:");
@@ -244,12 +260,9 @@ public class PagosObrero extends javax.swing.JFrame {
                         .addComponent(lblEnUnPeriodo)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblFechaInicio)
-                                .addGap(11, 11, 11))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(periodoInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, Short.MAX_VALUE))))
+                            .addComponent(lblFechaInicio)
+                            .addComponent(periodoInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(lblConMinimo)

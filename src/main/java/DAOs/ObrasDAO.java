@@ -4213,14 +4213,15 @@ public class ObrasDAO {
         }
     }
 
-    public List<Obras> consultarObrasPorNombre(String nombre) {
+    public List<Obras> consultarObrasPorNombre(String nombre, Long clienteId) {
         TypedQuery<Obras> query;
         EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
         EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
-        String jpql = "SELECT o FROM Obras o WHERE o.nombre LIKE CONCAT('%',:nombre,'%')";
+        String jpql = "SELECT o FROM Obras o WHERE o.nombre LIKE CONCAT('%',:nombre,'%') AND o.cliente.id = :clienteId";
         query = entityManager.createQuery(jpql, Obras.class);
         query.setParameter("nombre", nombre);
+        query.setParameter("clienteId", clienteId);
         List<Obras> obras = query.getResultList();
         entityManager.getTransaction().commit();
         entityManager.close();

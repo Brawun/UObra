@@ -67,7 +67,9 @@ public class IniciarSesion extends javax.swing.JFrame {
         Menu = new javax.swing.JMenuBar();
         MenuHerramientas = new javax.swing.JMenu();
         mniInsercion = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
         mniInsercionRapida = new javax.swing.JMenuItem();
+        jSeparator3 = new javax.swing.JPopupMenu.Separator();
         mniEliminarBD = new javax.swing.JMenuItem();
         MenuExtras = new javax.swing.JMenu();
         mniAcercaDe = new javax.swing.JMenuItem();
@@ -76,8 +78,12 @@ public class IniciarSesion extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("UObra Inicio de Sesión");
+        setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        setResizable(false);
 
         btnSalir.setText("Salir");
+        btnSalir.setToolTipText("Salir del sistema");
+        btnSalir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnSalir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSalirActionPerformed(evt);
@@ -85,25 +91,44 @@ public class IniciarSesion extends javax.swing.JFrame {
         });
 
         chbVerContrasenia.setText("👁");
+        chbVerContrasenia.setToolTipText("Ver contraseña");
+        chbVerContrasenia.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         chbVerContrasenia.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 chbVerContraseniaStateChanged(evt);
             }
         });
+        chbVerContrasenia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chbVerContraseniaActionPerformed(evt);
+            }
+        });
 
         lblTipoUsuario.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lblTipoUsuario.setText("Tipo de Usuario");
+        lblTipoUsuario.setText("Tipo de Usuario:");
 
         cbxTipoUsuario.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elija uno...", "Obrero", "Jefe", "Cliente" }));
+        cbxTipoUsuario.setToolTipText("Elija un tipo de usuario");
+        cbxTipoUsuario.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         lblUsuario.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lblUsuario.setText("Usuario");
+        lblUsuario.setText("Usuario:");
+
+        txtUsuario.setToolTipText("Max. 20 caracteres");
+        txtUsuario.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        txtUsuario.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtUsuarioKeyTyped(evt);
+            }
+        });
 
         lblContrasenia.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lblContrasenia.setText("Contraseña");
+        lblContrasenia.setText("Contraseña:");
 
         btnAceptar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnAceptar.setText("Acceder");
+        btnAceptar.setToolTipText("Acceder a cuenta");
+        btnAceptar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnAceptar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAceptarActionPerformed(evt);
@@ -117,9 +142,19 @@ public class IniciarSesion extends javax.swing.JFrame {
         lblTítulo.setText("Inicio de Sesión");
 
         btnRegistrarCuenta.setText("Registro");
+        btnRegistrarCuenta.setToolTipText("Registrar nueva cuenta");
+        btnRegistrarCuenta.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnRegistrarCuenta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRegistrarCuentaActionPerformed(evt);
+            }
+        });
+
+        txtContrasenia.setToolTipText("Max. 20 caracteres");
+        txtContrasenia.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        txtContrasenia.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtContraseniaKeyTyped(evt);
             }
         });
 
@@ -130,27 +165,33 @@ public class IniciarSesion extends javax.swing.JFrame {
         jLabel3.setText("Ingrese su contraseña");
 
         MenuHerramientas.setText("Herramientas");
+        MenuHerramientas.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         mniInsercion.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuInsercion.png")); // NOI18N
         mniInsercion.setText("Inserción Masiva");
+        mniInsercion.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         mniInsercion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniInsercionActionPerformed(evt);
             }
         });
         MenuHerramientas.add(mniInsercion);
+        MenuHerramientas.add(jSeparator2);
 
         mniInsercionRapida.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuInsercionRapida.png")); // NOI18N
         mniInsercionRapida.setText("Inserción Rápida");
+        mniInsercionRapida.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         mniInsercionRapida.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniInsercionRapidaActionPerformed(evt);
             }
         });
         MenuHerramientas.add(mniInsercionRapida);
+        MenuHerramientas.add(jSeparator3);
 
         mniEliminarBD.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuEliminarBase.png")); // NOI18N
         mniEliminarBD.setText("Eliminar Base de Datos");
+        mniEliminarBD.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         mniEliminarBD.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniEliminarBDActionPerformed(evt);
@@ -161,9 +202,11 @@ public class IniciarSesion extends javax.swing.JFrame {
         Menu.add(MenuHerramientas);
 
         MenuExtras.setText("Extras");
+        MenuExtras.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         mniAcercaDe.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuAcercaDe.png")); // NOI18N
         mniAcercaDe.setText("Acerca de");
+        mniAcercaDe.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         mniAcercaDe.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniAcercaDeActionPerformed(evt);
@@ -210,35 +253,36 @@ public class IniciarSesion extends javax.swing.JFrame {
                         .addGap(16, 16, 16))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblTipoUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(24, 24, 24)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(lblContrasenia)
-                                            .addComponent(lblUsuario))))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(cbxTipoUsuario, 0, 226, Short.MAX_VALUE)
-                                            .addComponent(txtUsuario)
-                                            .addComponent(txtContrasenia))
-                                        .addGap(18, 18, 18)
-                                        .addComponent(chbVerContrasenia))
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel3)))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(136, 136, 136)
-                                .addComponent(UObraLogo)))
+                                .addComponent(UObraLogo))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(lblTipoUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addGap(24, 24, 24)
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                .addComponent(lblContrasenia)
+                                                .addComponent(lblUsuario))))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                .addComponent(cbxTipoUsuario, 0, 226, Short.MAX_VALUE)
+                                                .addComponent(txtUsuario)
+                                                .addComponent(txtContrasenia))
+                                            .addGap(18, 18, 18)
+                                            .addComponent(chbVerContrasenia))
+                                        .addComponent(jLabel2)
+                                        .addComponent(jLabel3)))
+                                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addContainerGap(24, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(12, Short.MAX_VALUE)
+                .addContainerGap(13, Short.MAX_VALUE)
                 .addComponent(UObraLogo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -261,9 +305,9 @@ public class IniciarSesion extends javax.swing.JFrame {
                     .addComponent(lblContrasenia)
                     .addComponent(chbVerContrasenia)
                     .addComponent(txtContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, 20, Short.MAX_VALUE)
                 .addComponent(btnAceptar)
-                .addGap(18, 18, 18)
+                .addGap(21, 21, 21)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSalir)
                     .addComponent(btnRegistrarCuenta)
@@ -398,6 +442,22 @@ public class IniciarSesion extends javax.swing.JFrame {
         this.btnAceptar.doClick();
     }//GEN-LAST:event_enterActionPerformed
 
+    private void txtUsuarioKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUsuarioKeyTyped
+        if (txtUsuario.getText().length() >= 50) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtUsuarioKeyTyped
+
+    private void txtContraseniaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtContraseniaKeyTyped
+        if (txtContrasenia.getText().length() >= 50) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtContraseniaKeyTyped
+
+    private void chbVerContraseniaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chbVerContraseniaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_chbVerContraseniaActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuBar Menu;
     private javax.swing.JMenu MenuExtras;
@@ -414,6 +474,8 @@ public class IniciarSesion extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JLabel lblContrasenia;
     private javax.swing.JLabel lblTipoUsuario;
     private javax.swing.JLabel lblTítulo;

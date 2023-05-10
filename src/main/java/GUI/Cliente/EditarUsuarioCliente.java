@@ -8,6 +8,7 @@ import DAOs.ClientesDAO;
 import Dominio.Clientes;
 import Herramientas.Encriptador;
 import Herramientas.Icono;
+import Herramientas.Validadores;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -61,6 +62,14 @@ public class EditarUsuarioCliente extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Editar Usuario");
+        setResizable(false);
+
+        txtNuevoUsuario.setToolTipText("Max. 20 caracteres");
+        txtNuevoUsuario.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNuevoUsuarioKeyTyped(evt);
+            }
+        });
 
         lblNuevoUsuario.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lblNuevoUsuario.setText("Nuevo usuario:");
@@ -82,6 +91,7 @@ public class EditarUsuarioCliente extends javax.swing.JFrame {
 
         btnActualizar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnActualizar.setText("Actualizar");
+        btnActualizar.setToolTipText("Actualizar usuario");
         btnActualizar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnActualizarActionPerformed(evt);
@@ -89,6 +99,7 @@ public class EditarUsuarioCliente extends javax.swing.JFrame {
         });
 
         btnCancelar.setText("Cancelar");
+        btnCancelar.setToolTipText("Cancelar cambio de usuario");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCancelarActionPerformed(evt);
@@ -170,7 +181,9 @@ public class EditarUsuarioCliente extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
-        if (!this.txtNuevoUsuario.getText().isBlank()) {
+        Validadores valida = new Validadores();
+        this.txtNuevoUsuario.setText(this.txtNuevoUsuario.getText().trim());
+        if (!this.txtNuevoUsuario.getText().isBlank() && valida.validarSinEspacios(this.txtNuevoUsuario.getText())) {
             try {
                 Encriptador crypt = new Encriptador();
                 if (!crypt.decrypt(this.cliente.getUsuario()).equals(this.txtNuevoUsuario.getText())) {
@@ -197,6 +210,12 @@ public class EditarUsuarioCliente extends javax.swing.JFrame {
         new PanelCliente(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void txtNuevoUsuarioKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNuevoUsuarioKeyTyped
+        if (txtNuevoUsuario.getText().length() >= 20) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtNuevoUsuarioKeyTyped
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSeparator Separador1;

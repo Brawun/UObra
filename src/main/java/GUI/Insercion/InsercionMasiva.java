@@ -47,9 +47,12 @@ public class InsercionMasiva extends javax.swing.JFrame {
         btnInsertarPlanos = new javax.swing.JButton();
         btnInsertarUbicaciones = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JSeparator();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Inserción Masiva");
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        setResizable(false);
 
         lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         lblTitulo.setText("Inserción Masiva");
@@ -72,6 +75,7 @@ public class InsercionMasiva extends javax.swing.JFrame {
 
         btnInsertarObreros.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnInsertarObreros.setText("Insertar Obreros");
+        btnInsertarObreros.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnInsertarObreros.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnInsertarObrerosActionPerformed(evt);
@@ -80,6 +84,7 @@ public class InsercionMasiva extends javax.swing.JFrame {
 
         btnInsertarObras.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnInsertarObras.setText("Insertar Obras");
+        btnInsertarObras.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnInsertarObras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnInsertarObrasActionPerformed(evt);
@@ -97,6 +102,7 @@ public class InsercionMasiva extends javax.swing.JFrame {
         btnInsertarObrasObrero.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnInsertarObrasObrero.setForeground(new java.awt.Color(204, 0, 0));
         btnInsertarObrasObrero.setText("Insertar Obras - Obrero");
+        btnInsertarObrasObrero.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnInsertarObrasObrero.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnInsertarObrasObreroActionPerformed(evt);
@@ -122,6 +128,7 @@ public class InsercionMasiva extends javax.swing.JFrame {
 
         btnInsertarPlanos.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnInsertarPlanos.setText("Insertar Planos");
+        btnInsertarPlanos.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnInsertarPlanos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnInsertarPlanosActionPerformed(evt);
@@ -130,6 +137,7 @@ public class InsercionMasiva extends javax.swing.JFrame {
 
         btnInsertarUbicaciones.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnInsertarUbicaciones.setText("Insertar Ubicaciones");
+        btnInsertarUbicaciones.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnInsertarUbicaciones.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnInsertarUbicacionesActionPerformed(evt);
@@ -138,6 +146,8 @@ public class InsercionMasiva extends javax.swing.JFrame {
 
         btnSalir.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnSalir.setText("Salir");
+        btnSalir.setToolTipText("Salir de Inserción Masiva");
+        btnSalir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnSalir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSalirActionPerformed(evt);
@@ -174,6 +184,10 @@ public class InsercionMasiva extends javax.swing.JFrame {
                         .addGap(150, 150, 150)
                         .addComponent(lblTitulo)))
                 .addContainerGap(14, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jSeparator1)
+                .addContainerGap())
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnInsertarClientes, btnInsertarFacturas, btnInsertarJefes, btnInsertarObras, btnInsertarObrasObrero, btnInsertarObreros, btnInsertarPagos, btnInsertarPermisos, btnInsertarPlanos, btnInsertarUbicaciones});
@@ -183,7 +197,9 @@ public class InsercionMasiva extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(11, 11, 11)
                 .addComponent(lblTitulo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(7, 7, 7)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnInsertarClientes)
                     .addComponent(btnInsertarObras))
@@ -205,7 +221,7 @@ public class InsercionMasiva extends javax.swing.JFrame {
                     .addComponent(btnInsertarPagos))
                 .addGap(18, 18, 18)
                 .addComponent(btnSalir)
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         pack();
@@ -316,6 +332,7 @@ public class InsercionMasiva extends javax.swing.JFrame {
     private javax.swing.JButton btnInsertarPlanos;
     private javax.swing.JButton btnInsertarUbicaciones;
     private javax.swing.JButton btnSalir;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel lblTitulo;
     // End of variables declaration//GEN-END:variables
 }

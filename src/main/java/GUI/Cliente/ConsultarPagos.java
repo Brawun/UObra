@@ -5,8 +5,14 @@
 package GUI.Cliente;
 
 import DAOs.ClientesDAO;
+import DAOs.PagosDAO;
 import Dominio.Clientes;
+import Dominio.Pagos;
+import Herramientas.Fecha;
 import Herramientas.Icono;
+import java.text.ParseException;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -17,14 +23,34 @@ public class ConsultarPagos extends javax.swing.JFrame {
     // Atributos
     Clientes cliente = new Clientes();
     ClientesDAO ClientesDAO = new ClientesDAO();
+    PagosDAO PagosDAO = new PagosDAO();
 
     /**
      * Creates new form ConsultarPagos
      */
-    public ConsultarPagos(Clientes cliente) {
+    public ConsultarPagos(Clientes cliente) throws Exception {
+        this.cliente = cliente;
         initComponents();
         new Icono().insertarIcono(this);
+        cargarTablaPagos();
     }
+    
+    public void cargarTablaPagos() throws ParseException, Exception {
+        List<Pagos> listaPagos;
+        Fecha fecha = new Fecha();
+        listaPagos = PagosDAO.consultarPagosCliente(this.cliente.getId());
+        DefaultTableModel modeloTablaPagos = (DefaultTableModel) this.tblResultados.getModel();
+        modeloTablaPagos.setRowCount(0);
+        for (Pagos pagos : listaPagos) {
+            Object[] filaNueva = {pagos.getId(),
+                "$ " + pagos.getMonto() + " MXN",
+                fecha.formatoFecha(pagos.getFecha()),
+                pagos.getMetodoPago().toString(),
+                pagos.getObra().getId(),
+                pagos.getObrero() != null ? pagos.getObrero().getId().toString() : "No aplica"};
+            modeloTablaPagos.addRow(filaNueva);
+        }
+    } 
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -35,23 +61,126 @@ public class ConsultarPagos extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        ScrollPanel = new javax.swing.JScrollPane();
+        tblResultados = new javax.swing.JTable();
+        Separador1 = new javax.swing.JSeparator();
+        btnRegresar = new javax.swing.JButton();
+        lblTitulo = new javax.swing.JLabel();
+        lblPagos = new javax.swing.JLabel();
+        UObraLogoPeque = new javax.swing.JLabel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("Consultar Pagos");
+        setResizable(false);
+
+        ScrollPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+        ScrollPanel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        tblResultados.setBackground(new java.awt.Color(255, 255, 255));
+        tblResultados.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        tblResultados.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Monto", "Fecha", "Método de pago", "ID Obra", "ID Obrero"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Long.class, java.lang.Float.class, java.lang.String.class, java.lang.String.class, java.lang.Long.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblResultados.setRequestFocusEnabled(false);
+        ScrollPanel.setViewportView(tblResultados);
+
+        btnRegresar.setText("Regresar");
+        btnRegresar.setToolTipText("Regresar a Panel Cliente");
+        btnRegresar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegresarActionPerformed(evt);
+            }
+        });
+
+        lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblTitulo.setText("Pagos");
+
+        lblPagos.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblPagos.setText("Pagos realizados:");
+
+        UObraLogoPeque.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\UObraPeque.png")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addComponent(lblTitulo)
+                        .addGap(709, 709, 709)
+                        .addComponent(UObraLogoPeque))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 843, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addComponent(lblPagos))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addComponent(ScrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 843, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(402, 402, 402)
+                        .addComponent(btnRegresar)))
+                .addGap(20, 20, 20))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(11, 11, 11)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(lblTitulo))
+                    .addComponent(UObraLogoPeque))
+                .addGap(6, 6, 6)
+                .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(6, 6, 6)
+                .addComponent(lblPagos)
+                .addGap(18, 18, 18)
+                .addComponent(ScrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnRegresar)
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
+        new PanelCliente(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnRegresarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JScrollPane ScrollPanel;
+    private javax.swing.JSeparator Separador1;
+    private javax.swing.JLabel UObraLogoPeque;
+    private javax.swing.JButton btnRegresar;
+    private javax.swing.JLabel lblPagos;
+    private javax.swing.JLabel lblTitulo;
+    private javax.swing.JTable tblResultados;
     // End of variables declaration//GEN-END:variables
 }

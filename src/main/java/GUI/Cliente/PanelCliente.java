@@ -66,23 +66,32 @@ public class PanelCliente extends javax.swing.JFrame {
         Menu = new javax.swing.JMenuBar();
         MenuObras = new javax.swing.JMenu();
         mniConsultarObras = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
         jMenuItem1 = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
         mniSolicitarObra = new javax.swing.JMenuItem();
         MenuPagos = new javax.swing.JMenu();
         mniConsultarPagos = new javax.swing.JMenuItem();
+        jSeparator3 = new javax.swing.JPopupMenu.Separator();
         mniRealizarPago = new javax.swing.JMenuItem();
         MenuUbicaciones = new javax.swing.JMenu();
         mniConsultarUbicaciones = new javax.swing.JMenuItem();
+        jSeparator4 = new javax.swing.JPopupMenu.Separator();
         mniRegistrarUbicacion = new javax.swing.JMenuItem();
         MenuCuenta = new javax.swing.JMenu();
         mniCambiarContrasena = new javax.swing.JMenuItem();
+        jSeparator5 = new javax.swing.JPopupMenu.Separator();
         mniCambiarUsuario = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Panel Cliente");
-        setPreferredSize(new java.awt.Dimension(338, 174));
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        setMinimumSize(null);
+        setResizable(false);
 
         btnCerrarSesion.setText("Cerrar Sesión");
+        btnCerrarSesion.setToolTipText("Cerrar Sesión");
+        btnCerrarSesion.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCerrarSesionActionPerformed(evt);
@@ -134,27 +143,33 @@ public class PanelCliente extends javax.swing.JFrame {
         lblMXN2.setText("MXN");
 
         MenuObras.setText("Obras");
+        MenuObras.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         mniConsultarObras.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuCasco.png")); // NOI18N
         mniConsultarObras.setText("Consultar Obras");
+        mniConsultarObras.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         mniConsultarObras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniConsultarObrasActionPerformed(evt);
             }
         });
         MenuObras.add(mniConsultarObras);
+        MenuObras.add(jSeparator1);
 
         jMenuItem1.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuLupa.png")); // NOI18N
         jMenuItem1.setText("Consultar Por Nombre");
+        jMenuItem1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem1ActionPerformed(evt);
             }
         });
         MenuObras.add(jMenuItem1);
+        MenuObras.add(jSeparator2);
 
         mniSolicitarObra.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuPregunta.png")); // NOI18N
         mniSolicitarObra.setText("Solicitar Obra");
+        mniSolicitarObra.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         mniSolicitarObra.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniSolicitarObraActionPerformed(evt);
@@ -165,18 +180,22 @@ public class PanelCliente extends javax.swing.JFrame {
         Menu.add(MenuObras);
 
         MenuPagos.setText("Pagos");
+        MenuPagos.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         mniConsultarPagos.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuLupa.png")); // NOI18N
         mniConsultarPagos.setText("Consultar Pagos");
+        mniConsultarPagos.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         mniConsultarPagos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniConsultarPagosActionPerformed(evt);
             }
         });
         MenuPagos.add(mniConsultarPagos);
+        MenuPagos.add(jSeparator3);
 
         mniRealizarPago.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuDinero.png")); // NOI18N
         mniRealizarPago.setText("Realizar Pago");
+        mniRealizarPago.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         mniRealizarPago.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniRealizarPagoActionPerformed(evt);
@@ -187,18 +206,22 @@ public class PanelCliente extends javax.swing.JFrame {
         Menu.add(MenuPagos);
 
         MenuUbicaciones.setText("Ubicaciones");
+        MenuUbicaciones.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         mniConsultarUbicaciones.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuUbicacion.png")); // NOI18N
         mniConsultarUbicaciones.setText("Consultar Ubicaciones");
+        mniConsultarUbicaciones.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         mniConsultarUbicaciones.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniConsultarUbicacionesActionPerformed(evt);
             }
         });
         MenuUbicaciones.add(mniConsultarUbicaciones);
+        MenuUbicaciones.add(jSeparator4);
 
         mniRegistrarUbicacion.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuRegistro.png")); // NOI18N
         mniRegistrarUbicacion.setText("Registrar Ubicación");
+        mniRegistrarUbicacion.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         mniRegistrarUbicacion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniRegistrarUbicacionActionPerformed(evt);
@@ -209,18 +232,22 @@ public class PanelCliente extends javax.swing.JFrame {
         Menu.add(MenuUbicaciones);
 
         MenuCuenta.setText("Cuenta");
+        MenuCuenta.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         mniCambiarContrasena.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuEngrane.png")); // NOI18N
         mniCambiarContrasena.setText("Cambiar contraseña");
+        mniCambiarContrasena.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         mniCambiarContrasena.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniCambiarContrasenaActionPerformed(evt);
             }
         });
         MenuCuenta.add(mniCambiarContrasena);
+        MenuCuenta.add(jSeparator5);
 
         mniCambiarUsuario.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuCuenta.png")); // NOI18N
         mniCambiarUsuario.setText("Cambiar usuario");
+        mniCambiarUsuario.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         mniCambiarUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mniCambiarUsuarioActionPerformed(evt);
@@ -240,82 +267,89 @@ public class PanelCliente extends javax.swing.JFrame {
                 .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lblInversion)
-                            .addComponent(lblDeuda))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lbl$1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblInsertarInversion)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblMXN1)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lbl$2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblInsertarDeuda)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblMXN2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
-                                .addComponent(btnCerrarSesion))))
-                    .addGroup(layout.createSequentialGroup()
                         .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(UObraLogoPeque)
-                        .addGap(1, 1, 1))
+                        .addGap(23, 23, 23))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblInsertarNombre)
-                        .addGap(6, 6, 6)
-                        .addComponent(lblInsertarApellidoPaterno)
-                        .addGap(7, 7, 7)
-                        .addComponent(lblInsertarApellidoMaterno)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lblID)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lblInsertarID)))
-                .addGap(14, 14, 14))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblInsertarNombre)
+                                .addGap(6, 6, 6)
+                                .addComponent(lblInsertarApellidoPaterno))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(lblInversion)
+                                .addComponent(lblDeuda)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(7, 7, 7)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblInsertarApellidoMaterno)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(lbl$1)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lblInsertarInversion, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lblMXN1))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addComponent(lbl$2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblInsertarDeuda, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblMXN2)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(lblID)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lblInsertarID))
+                            .addComponent(btnCerrarSesion, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addGap(24, 24, 24))))
             .addGroup(layout.createSequentialGroup()
                 .addGap(14, 14, 14)
                 .addComponent(Separador1)
-                .addContainerGap())
+                .addGap(12, 12, 12))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblTitulo, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(UObraLogoPeque, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblTitulo)
+                    .addComponent(UObraLogoPeque, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblInsertarNombre)
-                    .addComponent(lblInsertarApellidoPaterno)
-                    .addComponent(lblInsertarApellidoMaterno)
-                    .addComponent(lblID)
-                    .addComponent(lblInsertarID))
-                .addGap(15, 15, 15)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblInversion)
-                    .addComponent(lblInsertarInversion)
-                    .addComponent(lbl$1)
-                    .addComponent(lblMXN1))
-                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblDeuda)
-                            .addComponent(lblInsertarDeuda)
-                            .addComponent(lbl$2)
-                            .addComponent(lblMXN2))
-                        .addGap(17, 17, 17))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(btnCerrarSesion)
-                        .addContainerGap(15, Short.MAX_VALUE))))
+                            .addComponent(lblInsertarNombre)
+                            .addComponent(lblInsertarApellidoPaterno)
+                            .addComponent(lblInsertarApellidoMaterno))
+                        .addGap(15, 15, 15)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblInversion)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(lblDeuda)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(lblInsertarDeuda)
+                                        .addComponent(lbl$2)
+                                        .addComponent(lblMXN2)
+                                        .addComponent(btnCerrarSesion))))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(lblInsertarInversion)
+                                .addComponent(lbl$1)
+                                .addComponent(lblMXN1))))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lblID)
+                        .addComponent(lblInsertarID)))
+                .addGap(22, 22, 22))
         );
+
+        getAccessibleContext().setAccessibleDescription("");
 
         pack();
         setLocationRelativeTo(null);
@@ -357,8 +391,12 @@ public class PanelCliente extends javax.swing.JFrame {
     }//GEN-LAST:event_mniConsultarObrasActionPerformed
 
     private void mniConsultarPagosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniConsultarPagosActionPerformed
-        new ConsultarPagos(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
-        this.dispose();
+        try {
+            new ConsultarPagos(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
+            this.dispose();
+        } catch (Exception ex) {
+            Logger.getLogger(PanelCliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_mniConsultarPagosActionPerformed
 
     private void mniRealizarPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniRealizarPagoActionPerformed
@@ -367,8 +405,12 @@ public class PanelCliente extends javax.swing.JFrame {
     }//GEN-LAST:event_mniRealizarPagoActionPerformed
 
     private void mniConsultarUbicacionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniConsultarUbicacionesActionPerformed
-        new ConsultarUbicaciones(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
-        this.dispose();
+        try {
+            new ConsultarUbicaciones(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
+            this.dispose();
+        } catch (Exception ex) {
+            Logger.getLogger(PanelCliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_mniConsultarUbicacionesActionPerformed
 
     private void mniCambiarContrasenaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniCambiarContrasenaActionPerformed
@@ -396,6 +438,11 @@ public class PanelCliente extends javax.swing.JFrame {
     private javax.swing.JLabel UObraLogoPeque;
     private javax.swing.JButton btnCerrarSesion;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JPopupMenu.Separator jSeparator3;
+    private javax.swing.JPopupMenu.Separator jSeparator4;
+    private javax.swing.JPopupMenu.Separator jSeparator5;
     private javax.swing.JLabel lbl$1;
     private javax.swing.JLabel lbl$2;
     private javax.swing.JLabel lblDeuda;

@@ -8,6 +8,7 @@ import DAOs.ClientesDAO;
 import Dominio.Clientes;
 import Herramientas.Encriptador;
 import Herramientas.Icono;
+import Herramientas.Validadores;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -62,6 +63,7 @@ public class EditarContrasenaCliente extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Editar Contraseña");
+        setResizable(false);
 
         lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lblTitulo.setText("Editar Contraseña");
@@ -83,6 +85,8 @@ public class EditarContrasenaCliente extends javax.swing.JFrame {
 
         btnActualizar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnActualizar.setText("Actualizar");
+        btnActualizar.setToolTipText("Actualizar contraseña");
+        btnActualizar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnActualizar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnActualizarActionPerformed(evt);
@@ -90,13 +94,24 @@ public class EditarContrasenaCliente extends javax.swing.JFrame {
         });
 
         btnCancelar.setText("Cancelar");
+        btnCancelar.setToolTipText("Cancelar cambio de contraseña");
+        btnCancelar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCancelarActionPerformed(evt);
             }
         });
 
+        txtNuevaContrasenia.setToolTipText("Max. 20 caracteres");
+        txtNuevaContrasenia.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNuevaContraseniaKeyTyped(evt);
+            }
+        });
+
         chbVerContrasenia.setText("👁");
+        chbVerContrasenia.setToolTipText("Ver contraseña");
+        chbVerContrasenia.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         chbVerContrasenia.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 chbVerContraseniaStateChanged(evt);
@@ -179,7 +194,9 @@ public class EditarContrasenaCliente extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
-        if (!this.txtNuevaContrasenia.getText().isBlank()) {
+        Validadores valida = new Validadores();
+        this.txtNuevaContrasenia.setText(this.txtNuevaContrasenia.getText().trim());
+        if (!this.txtNuevaContrasenia.getText().isBlank() && valida.validarSinEspacios(this.txtNuevaContrasenia.getText()) ) {
             try {
                 Encriptador crypt = new Encriptador();
                 if (!crypt.decrypt(this.cliente.getContrasena()).equals(new String(this.txtNuevaContrasenia.getPassword()))) {
@@ -214,6 +231,12 @@ public class EditarContrasenaCliente extends javax.swing.JFrame {
             this.txtNuevaContrasenia.setEchoChar('•');
         }
     }//GEN-LAST:event_chbVerContraseniaStateChanged
+
+    private void txtNuevaContraseniaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNuevaContraseniaKeyTyped
+        if (txtNuevaContrasenia.getText().length() >= 20) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtNuevaContraseniaKeyTyped
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSeparator Separador1;

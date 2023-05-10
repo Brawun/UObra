@@ -8,6 +8,7 @@ import DAOs.ObrerosDAO;
 import Dominio.Obreros;
 import Herramientas.Encriptador;
 import Herramientas.Icono;
+import Herramientas.Validadores;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -83,6 +84,8 @@ public class EditarContrasenaObrero extends javax.swing.JFrame {
 
         btnActualizar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnActualizar.setText("Actualizar");
+        btnActualizar.setToolTipText("Actualizar contraseña");
+        btnActualizar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnActualizar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnActualizarActionPerformed(evt);
@@ -90,13 +93,25 @@ public class EditarContrasenaObrero extends javax.swing.JFrame {
         });
 
         btnCancelar.setText("Cancelar");
+        btnCancelar.setToolTipText("Cancelar cambio de contraseña");
+        btnCancelar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCancelarActionPerformed(evt);
             }
         });
 
+        txtNuevaContrasenia.setToolTipText("Max. 20 caracteres");
+        txtNuevaContrasenia.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        txtNuevaContrasenia.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNuevaContraseniaKeyTyped(evt);
+            }
+        });
+
         chbVerContrasenia.setText("👁");
+        chbVerContrasenia.setToolTipText("Ver contraseña");
+        chbVerContrasenia.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         chbVerContrasenia.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 chbVerContraseniaStateChanged(evt);
@@ -179,12 +194,14 @@ public class EditarContrasenaObrero extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
-        if (!this.txtNuevaContrasenia.getText().isBlank()) {
+        Validadores valida = new Validadores();
+        this.txtNuevaContrasenia.setText(this.txtNuevaContrasenia.getText().trim());
+        if (!this.txtNuevaContrasenia.getText().isBlank() && valida.validarSinEspacios(this.txtNuevaContrasenia.getText()) ) {
             try {
                 Encriptador crypt = new Encriptador();
                 if (!crypt.decrypt(this.obrero.getContrasena()).equals(new String(this.txtNuevaContrasenia.getPassword()))) {
                     try {
-                        ObrerosDAO.editarContrasena(this.obrero.getId(), this.txtNuevaContrasenia.getText());
+                        ObrerosDAO.editarContrasena((Long) this.obrero.getId(), this.txtNuevaContrasenia.getText());
                         JOptionPane.showMessageDialog(null, "Se ha actualizado la contraseña exitosamente.");
                         new PanelObrero(ObrerosDAO.consultarObrero(this.obrero.getId())).setVisible(true);
                         this.dispose();
@@ -198,7 +215,7 @@ public class EditarContrasenaObrero extends javax.swing.JFrame {
                 Logger.getLogger(EditarContrasenaObrero.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            JOptionPane.showMessageDialog(null, "Error: Ingrese una nueva contraseña. (Contraseña en blanco)", "¡Error!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error: Ingrese una nueva contraseña. (Contraseña en blanco o con espacios)", "¡Error!", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnActualizarActionPerformed
 
@@ -214,6 +231,12 @@ public class EditarContrasenaObrero extends javax.swing.JFrame {
             this.txtNuevaContrasenia.setEchoChar('•');
         }
     }//GEN-LAST:event_chbVerContraseniaStateChanged
+
+    private void txtNuevaContraseniaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNuevaContraseniaKeyTyped
+        if (txtNuevaContrasenia.getText().length() >= 20) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtNuevaContraseniaKeyTyped
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSeparator Separador1;

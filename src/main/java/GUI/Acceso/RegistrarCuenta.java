@@ -77,37 +77,91 @@ public class RegistrarCuenta extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Registrar Cuenta");
+        setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        setResizable(false);
 
         cbxTipoUsuario.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elija uno...", "Obrero", "Jefe", "Cliente" }));
+        cbxTipoUsuario.setToolTipText("Elija un tipo de usuario");
+        cbxTipoUsuario.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lblTitulo.setText("Registrar una nueva cuenta");
 
         lblTipoUsuario.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lblTipoUsuario.setText("Tipo de Usuario");
+        lblTipoUsuario.setText("Tipo de Usuario:");
 
         lblNombre.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lblNombre.setText("Nombre");
+        lblNombre.setText("Nombre:");
 
         lblApellidoPaterno.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lblApellidoPaterno.setText("Apellido paterno");
+        lblApellidoPaterno.setText("Apellido paterno:");
 
         lblApellidoMaterno.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lblApellidoMaterno.setText("Apellido materno");
+        lblApellidoMaterno.setText("Apellido materno:");
 
         lblUsuario.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lblUsuario.setText("Usuario");
+        lblUsuario.setText("Usuario:");
 
         lblContrasenia.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lblContrasenia.setText("Contraseña");
+        lblContrasenia.setText("Contraseña:");
 
         lblTelefono.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lblTelefono.setText("Teléfono");
+        lblTelefono.setText("Teléfono:");
 
         lblInfo.setText("Formato: (###) ###-####");
 
+        txtNombre.setToolTipText("No utilice símbolos ni letras");
+        txtNombre.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        txtNombre.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNombreKeyTyped(evt);
+            }
+        });
+
+        txtApellidoMaterno.setToolTipText("No utilice símbolos ni letras");
+        txtApellidoMaterno.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        txtApellidoMaterno.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtApellidoMaternoKeyTyped(evt);
+            }
+        });
+
+        txtApellidoPaterno.setToolTipText("No utilice símbolos ni letras");
+        txtApellidoPaterno.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        txtApellidoPaterno.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtApellidoPaternoKeyTyped(evt);
+            }
+        });
+
+        txtContrasenia.setToolTipText("Max. 20 caracteres");
+        txtContrasenia.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        txtContrasenia.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtContraseniaKeyTyped(evt);
+            }
+        });
+
+        txtUsuario.setToolTipText("Max. 20 caracteres");
+        txtUsuario.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        txtUsuario.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtUsuarioKeyTyped(evt);
+            }
+        });
+
+        txtTelefono.setToolTipText("Max. 14 caracteres");
+        txtTelefono.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        txtTelefono.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtTelefonoKeyTyped(evt);
+            }
+        });
+
         btnRegistrar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnRegistrar.setText("Registrar");
+        btnRegistrar.setToolTipText("Registrar nueva cuenta");
+        btnRegistrar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnRegistrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRegistrarActionPerformed(evt);
@@ -115,6 +169,8 @@ public class RegistrarCuenta extends javax.swing.JFrame {
         });
 
         btnCancelar.setText("Cancelar");
+        btnCancelar.setToolTipText("Cancelar registro");
+        btnCancelar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCancelarActionPerformed(evt);
@@ -162,7 +218,7 @@ public class RegistrarCuenta extends javax.swing.JFrame {
                                     .addComponent(lblTelefono)
                                     .addComponent(lblContrasenia)
                                     .addComponent(lblUsuario))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(cbxTipoUsuario, 0, 189, Short.MAX_VALUE)
@@ -258,8 +314,8 @@ public class RegistrarCuenta extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Error: Elija un tipo de usuario válido para registro de cuenta.", "¡Error!", JOptionPane.ERROR_MESSAGE);
         } else if (this.cbxTipoUsuario.getSelectedItem() == "Obrero") {
             if (valida.validarNombre(this.txtNombre.getText()) && !this.txtNombre.getText().isBlank()) {
-                if (valida.validarNombre(this.txtApellidoPaterno.getText()) && !this.txtApellidoPaterno.getText().isBlank() && valida.validarSinEspacios(this.txtApellidoPaterno.getText())) {
-                    if (valida.validarNombre(this.txtApellidoMaterno.getText()) && !this.txtApellidoMaterno.getText().isBlank() && valida.validarSinEspacios(this.txtApellidoMaterno.getText())) {
+                if (valida.validarNombre(this.txtApellidoPaterno.getText()) && !this.txtApellidoPaterno.getText().isBlank()) {
+                    if (valida.validarNombre(this.txtApellidoMaterno.getText()) && !this.txtApellidoMaterno.getText().isBlank()) {
                         if (valida.validarSinEspacios(this.txtUsuario.getText()) && !this.txtUsuario.getText().isBlank()) {
                             try {
                                 if (!ObrerosDAO.verificarUsuarioObrero(this.txtUsuario.getText())) {
@@ -296,8 +352,8 @@ public class RegistrarCuenta extends javax.swing.JFrame {
             }
         } else if (this.cbxTipoUsuario.getSelectedItem() == "Jefe") {
             if (valida.validarNombre(this.txtNombre.getText()) && !this.txtNombre.getText().isBlank()) {
-                if (valida.validarNombre(this.txtApellidoPaterno.getText()) && !this.txtApellidoPaterno.getText().isBlank() && valida.validarSinEspacios(this.txtApellidoPaterno.getText())) {
-                    if (valida.validarNombre(this.txtApellidoMaterno.getText()) && !this.txtApellidoMaterno.getText().isBlank() && valida.validarSinEspacios(this.txtApellidoMaterno.getText())) {
+                if (valida.validarNombre(this.txtApellidoPaterno.getText()) && !this.txtApellidoPaterno.getText().isBlank()) {
+                    if (valida.validarNombre(this.txtApellidoMaterno.getText()) && !this.txtApellidoMaterno.getText().isBlank()) {
                         if (valida.validarSinEspacios(this.txtUsuario.getText()) && !this.txtUsuario.getText().isBlank()) {
                             try {
                                 if (!JefesDAO.verificarUsuarioJefe(this.txtUsuario.getText())) {
@@ -334,8 +390,8 @@ public class RegistrarCuenta extends javax.swing.JFrame {
             }
         } else if (this.cbxTipoUsuario.getSelectedItem() == "Cliente") {
             if (valida.validarNombre(this.txtNombre.getText()) && !this.txtNombre.getText().isBlank()) {
-                if (valida.validarNombre(this.txtApellidoPaterno.getText()) && !this.txtApellidoPaterno.getText().isBlank() && valida.validarSinEspacios(this.txtApellidoPaterno.getText())) {
-                    if (valida.validarNombre(this.txtApellidoMaterno.getText()) && !this.txtApellidoMaterno.getText().isBlank() && valida.validarSinEspacios(this.txtApellidoMaterno.getText())) {
+                if (valida.validarNombre(this.txtApellidoPaterno.getText()) && !this.txtApellidoPaterno.getText().isBlank()) {
+                    if (valida.validarNombre(this.txtApellidoMaterno.getText()) && !this.txtApellidoMaterno.getText().isBlank()) {
                         if (valida.validarSinEspacios(this.txtUsuario.getText()) && !this.txtUsuario.getText().isBlank()) {
                             try {
                                 if (!ClientesDAO.verificarUsuarioCliente(this.txtUsuario.getText())) {
@@ -372,6 +428,42 @@ public class RegistrarCuenta extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_btnRegistrarActionPerformed
+
+    private void txtTelefonoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTelefonoKeyTyped
+        if (txtTelefono.getText().length() >= 14) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtTelefonoKeyTyped
+
+    private void txtUsuarioKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUsuarioKeyTyped
+        if (txtUsuario.getText().length() >= 20) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtUsuarioKeyTyped
+
+    private void txtContraseniaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtContraseniaKeyTyped
+        if (txtContrasenia.getText().length() >= 20) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtContraseniaKeyTyped
+
+    private void txtNombreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreKeyTyped
+        if (txtNombre.getText().length() >= 50) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtNombreKeyTyped
+
+    private void txtApellidoPaternoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtApellidoPaternoKeyTyped
+        if (txtApellidoPaterno.getText().length() >= 50) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtApellidoPaternoKeyTyped
+
+    private void txtApellidoMaternoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtApellidoMaternoKeyTyped
+        if (txtApellidoMaterno.getText().length() >= 50) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtApellidoMaternoKeyTyped
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel UObraLogoPeque;

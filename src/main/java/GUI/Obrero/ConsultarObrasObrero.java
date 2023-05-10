@@ -21,7 +21,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author 52644
  */
-public class ConsultaObrasObrero extends javax.swing.JFrame {
+public class ConsultarObrasObrero extends javax.swing.JFrame {
 
     // Atributos
     Obreros obrero = new Obreros();
@@ -33,7 +33,7 @@ public class ConsultaObrasObrero extends javax.swing.JFrame {
      *
      * @param obrero Obrero de cuenta iniciada
      */
-    public ConsultaObrasObrero(Obreros obrero) {
+    public ConsultarObrasObrero(Obreros obrero) {
         initComponents();
         new Icono().insertarIcono(this);
         this.obrero = obrero;
@@ -114,6 +114,11 @@ public class ConsultaObrasObrero extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Consultar Obras - Obrero");
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        setResizable(false);
+
+        ScrollPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+        ScrollPanel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         tblResultados.setBackground(new java.awt.Color(255, 255, 255));
         tblResultados.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -126,7 +131,7 @@ public class ConsultaObrasObrero extends javax.swing.JFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Long.class, java.lang.Object.class, java.lang.Object.class, java.lang.String.class, java.lang.Integer.class, java.lang.Long.class
+                java.lang.Long.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Long.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false, false
@@ -144,15 +149,21 @@ public class ConsultaObrasObrero extends javax.swing.JFrame {
         ScrollPanel.setViewportView(tblResultados);
 
         cbxEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elija uno...", "Indistinto", "Activa", "Inactiva" }));
+        cbxEstado.setToolTipText("Elija un estado");
+        cbxEstado.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         cbxEstado.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 cbxEstadoFocusLost(evt);
             }
         });
 
-        cbxAccion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elija uno...", "Iniciaron", "Terminaron" }));
+        cbxAccion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elija uno...", "Iniciado", "Terminado" }));
+        cbxAccion.setToolTipText("Elija una acción");
+        cbxAccion.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         btnRegresar.setText("Regresar");
+        btnRegresar.setToolTipText("Regresar a Panel Obrero");
+        btnRegresar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnRegresar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRegresarActionPerformed(evt);
@@ -161,11 +172,20 @@ public class ConsultaObrasObrero extends javax.swing.JFrame {
 
         btnBuscar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnBuscar.setText("Buscar");
+        btnBuscar.setToolTipText("Buscar Obras - Obrero");
+        btnBuscar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBuscarActionPerformed(evt);
             }
         });
+
+        periodoInicio.setToolTipText("Periodo inicio");
+
+        periodoFinal.setToolTipText("Periodo fin");
+
+        txtDias.setToolTipText("Ingrese números enteros");
+        txtDias.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
 
         lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lblTitulo.setText("Obras - Obrero");
@@ -209,12 +229,6 @@ public class ConsultaObrasObrero extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(21, 21, 21)
-                        .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 581, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(41, 41, 41)
-                        .addComponent(lblBusqueda))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
                         .addComponent(Separador2, javax.swing.GroupLayout.PREFERRED_SIZE, 581, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(21, 21, 21)
@@ -224,18 +238,18 @@ public class ConsultaObrasObrero extends javax.swing.JFrame {
                         .addComponent(ScrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 581, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(278, 278, 278)
-                        .addComponent(btnRegresar)))
+                        .addComponent(btnRegresar))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblBusqueda)
+                            .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 581, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(20, 22, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(104, 104, 104)
                         .addComponent(lblEnUnPeriodo))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(30, 30, 30)
-                        .addComponent(lblFechaInicio)
-                        .addGap(6, 6, 6)
-                        .addComponent(periodoInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(57, 57, 57)
                         .addComponent(lblAccion)
@@ -244,10 +258,16 @@ public class ConsultaObrasObrero extends javax.swing.JFrame {
                             .addComponent(lblQue)
                             .addComponent(cbxAccion, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(44, 44, 44)
-                        .addComponent(lblFechaFin)
-                        .addGap(6, 6, 6)
-                        .addComponent(periodoFinal, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(30, 30, 30)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblFechaInicio)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(14, 14, 14)
+                                .addComponent(lblFechaFin)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(periodoInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(periodoFinal, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -304,17 +324,13 @@ public class ConsultaObrasObrero extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(lblEnUnPeriodo)
                         .addGap(8, 8, 8)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(lblFechaInicio))
-                            .addComponent(periodoInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(periodoInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblFechaInicio))
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(lblFechaFin))
-                            .addComponent(periodoFinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(periodoFinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblFechaFin)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lblEnEstado)
                         .addGap(5, 5, 5)
@@ -360,23 +376,23 @@ public class ConsultaObrasObrero extends javax.swing.JFrame {
                 if (this.cbxAccion.getSelectedItem() != "Elija uno...") {
                     if (this.cbxEstado.getSelectedItem() != "Elija uno...") {
                         if (this.cbxEstado.getSelectedItem() == "Activa") {
-                            if (this.cbxAccion.getSelectedItem() == "Iniciaron") {
+                            if (this.cbxAccion.getSelectedItem() == "Iniciado") {
                                 this.cargarTablaObrasObrero(true, 1);
-                            } else if (this.cbxAccion.getSelectedItem() == "Terminaron") {
+                            } else if (this.cbxAccion.getSelectedItem() == "Terminado") {
                                 this.cargarTablaObrasObrero(true, 0);
                             }
                         } else if (this.cbxEstado.getSelectedItem() == "Indistinto") {
-                            if (this.cbxAccion.getSelectedItem() == "Iniciaron") {
+                            if (this.cbxAccion.getSelectedItem() == "Iniciado") {
                                 this.cargarTablaObrasObrero(null, 1);
-                            } else if (this.cbxAccion.getSelectedItem() == "Terminaron") {
+                            } else if (this.cbxAccion.getSelectedItem() == "Terminado") {
                                 this.cargarTablaObrasObrero(null, 0);
                             }
                         } else if (this.cbxEstado.getSelectedItem() == "Inactiva") {
 
                             if (valido.validarEntero(this.txtDias.getText())) {
-                                if (this.cbxAccion.getSelectedItem() == "Iniciaron") {
+                                if (this.cbxAccion.getSelectedItem() == "Iniciado") {
                                     this.cargarTablaObrasObrero(false, 1);
-                                } else if (this.cbxAccion.getSelectedItem() == "Terminaron") {
+                                } else if (this.cbxAccion.getSelectedItem() == "Terminado") {
                                     this.cargarTablaObrasObrero(false, 0);
                                 }
                             } else {
@@ -390,45 +406,41 @@ public class ConsultaObrasObrero extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "Error: Elija un tipo de acción válido para la búsqueda dinámica.", "¡Error!", JOptionPane.ERROR_MESSAGE);
                 }
             } else {
-                if (valido.validarFechas(this.periodoInicio.getCalendar(), this.periodoFinal.getCalendar())) {
-                    if (this.cbxAccion.getSelectedItem() != "Elija uno...") {
-                        if (this.cbxEstado.getSelectedItem() != "Elija uno...") {
-                            if (this.cbxEstado.getSelectedItem() == "Activa") {
-                                if (this.cbxAccion.getSelectedItem() == "Iniciaron") {
-                                    this.cargarTablaObrasObrero(true, 1);
-                                } else if (this.cbxAccion.getSelectedItem() == "Terminaron") {
-                                    this.cargarTablaObrasObrero(true, 0);
-                                }
-                            } else if (this.cbxEstado.getSelectedItem() == "Indistinto") {
-                                if (this.cbxAccion.getSelectedItem() == "Iniciaron") {
-                                    this.cargarTablaObrasObrero(null, 1);
-                                } else if (this.cbxAccion.getSelectedItem() == "Terminaron") {
-                                    this.cargarTablaObrasObrero(null, 0);
-                                }
-                            } else if (this.cbxEstado.getSelectedItem() == "Inactiva") {
-
-                                if (valido.validarEntero(this.txtDias.getText())) {
-                                    if (this.cbxAccion.getSelectedItem() == "Iniciaron") {
-                                        this.cargarTablaObrasObrero(false, 1);
-                                    } else if (this.cbxAccion.getSelectedItem() == "Terminaron") {
-                                        this.cargarTablaObrasObrero(false, 0);
-                                    }
-                                } else {
-                                    JOptionPane.showMessageDialog(null, "Error: Ingrese días trabajados válidos. (Solamente números enteros)", "¡Error!", JOptionPane.ERROR_MESSAGE);
-                                }
+                if (this.cbxAccion.getSelectedItem() != "Elija uno...") {
+                    if (this.cbxEstado.getSelectedItem() != "Elija uno...") {
+                        if (this.cbxEstado.getSelectedItem() == "Activa") {
+                            if (this.cbxAccion.getSelectedItem() == "Iniciado") {
+                                this.cargarTablaObrasObrero(true, 1);
+                            } else if (this.cbxAccion.getSelectedItem() == "Terminado") {
+                                this.cargarTablaObrasObrero(true, 0);
                             }
-                        } else {
-                            JOptionPane.showMessageDialog(null, "Error: Elija un estado de relación obra - obrero válido para la búsqueda dinámica.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                        } else if (this.cbxEstado.getSelectedItem() == "Indistinto") {
+                            if (this.cbxAccion.getSelectedItem() == "Iniciado") {
+                                this.cargarTablaObrasObrero(null, 1);
+                            } else if (this.cbxAccion.getSelectedItem() == "Terminado") {
+                                this.cargarTablaObrasObrero(null, 0);
+                            }
+                        } else if (this.cbxEstado.getSelectedItem() == "Inactiva") {
+
+                            if (valido.validarEntero(this.txtDias.getText())) {
+                                if (this.cbxAccion.getSelectedItem() == "Iniciado") {
+                                    this.cargarTablaObrasObrero(false, 1);
+                                } else if (this.cbxAccion.getSelectedItem() == "Terminado") {
+                                    this.cargarTablaObrasObrero(false, 0);
+                                }
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Error: Ingrese días trabajados válidos. (Solamente números enteros)", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                            }
                         }
                     } else {
-                        JOptionPane.showMessageDialog(null, "Error: Elija un tipo de acción válido para la búsqueda dinámica.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Error: Elija un estado de relación obra - obrero válido para la búsqueda dinámica.", "¡Error!", JOptionPane.ERROR_MESSAGE);
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "Error: La fecha inicial no puede ser después que la fecha final.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Error: Elija un tipo de acción válido para la búsqueda dinámica.", "¡Error!", JOptionPane.ERROR_MESSAGE);
                 }
             }
         } catch (Exception e) {
-            Logger.getLogger(ConsultaObrasObrero.class.getName()).log(Level.SEVERE, null, e);
+            Logger.getLogger(ConsultarObrasObrero.class.getName()).log(Level.SEVERE, null, e);
         }
     }//GEN-LAST:event_btnBuscarActionPerformed
 
