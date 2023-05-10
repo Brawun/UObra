@@ -335,7 +335,7 @@ public class RegistrarUbicacion extends javax.swing.JFrame {
                         }
                         // Se determina tipo de ubicación
                         TipoUbicacion tipo;
-                        if (cbxTipo.getSelectedItem() == "Salor") {
+                        if (cbxTipo.getSelectedItem() == "Solar") {
                             tipo = TipoUbicacion.SOLAR;
                         } else {
                             tipo = TipoUbicacion.TERRENO;

@@ -55,19 +55,19 @@ public class Jefes implements Serializable {
     public String usuario;
 
     // Un jefe puede registrar muchas facturas
-    @OneToMany(mappedBy = "jefe", cascade = {CascadeType.REMOVE})
+    @OneToMany(mappedBy = "jefe")
     private List<Facturas> facturas;
 
     // Un jefe puede aceptar muchas obras
-    @OneToMany(mappedBy = "jefe", cascade = {CascadeType.REMOVE})
+    @OneToMany(mappedBy = "jefe")
     private List<Obras> obras;
 
     // Un jefe puede registrar muchos permisos
-    @OneToMany(mappedBy = "jefe", cascade = {CascadeType.REMOVE})
+    @OneToMany(mappedBy = "jefe")
     private List<Permisos> permisos;
 
     // Un jefe puede registrar muchos planos
-    @OneToMany(mappedBy = "jefe", cascade = {CascadeType.REMOVE})
+    @OneToMany(mappedBy = "jefe")
     private List<Planos> planos;
 
     public Jefes() {

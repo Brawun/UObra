@@ -61,15 +61,15 @@ public class Clientes implements Serializable {
     private Float inversionTotal = (float) 0;
     
     // Un cliente puede solicitar muchas obras
-    @OneToMany(mappedBy = "cliente", cascade = {CascadeType.REMOVE})
+    @OneToMany(mappedBy = "cliente")
     private List<Obras> obras;
 
     // Un cliente puede registrar muchas ubicaciones
-    @OneToMany(mappedBy = "cliente", cascade = {CascadeType.REMOVE})
+    @OneToMany(mappedBy = "cliente")
     private List<Ubicaciones> ubicaciones;
     
     // Un cliente puede realizar muchos pagos
-    @OneToMany(mappedBy = "cliente", cascade = {CascadeType.REMOVE})
+    @OneToMany(mappedBy = "cliente")
     private List<Pagos> pagos;
 
     public Clientes() {
