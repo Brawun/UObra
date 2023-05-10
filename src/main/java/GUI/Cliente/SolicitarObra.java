@@ -5,25 +5,80 @@
 package GUI.Cliente;
 
 import DAOs.ClientesDAO;
+import DAOs.ObrasDAO;
+import DAOs.UbicacionesDAO;
 import Dominio.Clientes;
+import Dominio.Obras;
+import Dominio.Ubicaciones;
+import Herramientas.Fecha;
 import Herramientas.Icono;
+import Herramientas.Validadores;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author 52644
  */
 public class SolicitarObra extends javax.swing.JFrame {
-    
+
     // Atributos
     Clientes cliente = new Clientes();
+    Ubicaciones ubicacion = new Ubicaciones();
+    ObrasDAO ObrasDAO = new ObrasDAO();
     ClientesDAO ClientesDAO = new ClientesDAO();
+    UbicacionesDAO UbicacionesDAO = new UbicacionesDAO();
+    Fecha fecha = new Fecha();
+    List<Ubicaciones> listaUbicaciones;
+    List<Ubicaciones> ubicaciones;
 
     /**
      * Creates new form SolicitarObra
      */
     public SolicitarObra(Clientes cliente) {
         initComponents();
+        this.cliente = cliente;
+        this.ubicacion = null;
         new Icono().insertarIcono(this);
+        this.lblInsertarArea.setText("");
+        this.lblInsertarDireccion.setText("");
+        this.lblInsertarFecha.setText("");
+        this.lblInsertarID.setText("");
+        this.txtInversion.setText("0.0");
+        this.txtNombre.setText("Mi obra");
+    }
+
+    public void cargarTablaUbicaciones() throws Exception {
+        listaUbicaciones = UbicacionesDAO.consultarUbicacionesCliente(this.cliente.getId());
+        DefaultTableModel modeloTablaPersonas = (DefaultTableModel) this.tblUbicaciones.getModel();
+        modeloTablaPersonas.setRowCount(0);
+        for (Ubicaciones ubicaciones : listaUbicaciones) {
+            Object[] filaNueva = {ubicaciones.getId(),
+                ubicaciones.getDisponible() == true ? "Disponible" : "No disponible",
+                ubicaciones.getDireccion(),
+                ubicaciones.getTipo().toString(),
+                ubicaciones.getArea().toString() + " m²",
+                fecha.formatoFecha(ubicaciones.getFechaRegistro()),
+                ubicaciones.getFechaOcupacion() != null ? fecha.formatoFecha(ubicaciones.getFechaOcupacion()) : "No aplica",
+                "| Seleccionar |"};
+            modeloTablaPersonas.addRow(filaNueva);
+        }
+    }
+
+    public int obtenerFila() {
+        try {
+            int fila = tblUbicaciones.getSelectedRow();
+            if (fila == -1) {
+                JOptionPane.showMessageDialog(null, "Error: Seleccione una ubicación. (De la tabla 'Ubicaciones registradas').", "¡Error!", JOptionPane.ERROR_MESSAGE);
+            }
+            return fila;
+        } catch (Exception e) {
+            Logger.getLogger(ConsultarUbicaciones.class.getName()).log(Level.SEVERE, null, e);
+            return -1;
+        }
     }
 
     /**
@@ -35,100 +90,384 @@ public class SolicitarObra extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jLabel6 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        ScrollPanel = new javax.swing.JScrollPane();
+        tblUbicaciones = new javax.swing.JTable();
+        txtNombre = new javax.swing.JTextField();
+        txtInversion = new javax.swing.JTextField();
+        Separador = new javax.swing.JSeparator();
+        btnSolicitar = new javax.swing.JButton();
+        btnCancelar = new javax.swing.JButton();
+        btnAceptarSeleccion = new javax.swing.JButton();
+        lblInversionInicial = new javax.swing.JLabel();
+        lblTitulo = new javax.swing.JLabel();
+        UObraLogoPeque = new javax.swing.JLabel();
+        lblMXN = new javax.swing.JLabel();
+        lblNombre = new javax.swing.JLabel();
+        lbl$ = new javax.swing.JLabel();
+        lblInsertarDireccion = new javax.swing.JLabel();
+        lblInsertarArea = new javax.swing.JLabel();
+        lblDireccion = new javax.swing.JLabel();
+        lblUbicaciones = new javax.swing.JLabel();
+        lblArea = new javax.swing.JLabel();
+        lblFechaRegistrada = new javax.swing.JLabel();
+        lblIDObra = new javax.swing.JLabel();
+        lblInsertarID = new javax.swing.JLabel();
+        lblInsertarFecha = new javax.swing.JLabel();
+        lblInstrucción = new javax.swing.JLabel();
+        lblUbicacionSeleccionada = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("Solicitar Obra");
+        setResizable(false);
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel1.setText("Solicitar obra");
+        ScrollPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
+        ScrollPanel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel4.setText("ID de obra:");
+        tblUbicaciones.setBackground(new java.awt.Color(255, 255, 255));
+        tblUbicaciones.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        tblUbicaciones.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
 
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel5.setText("Nombre:");
+            },
+            new String [] {
+                "ID", "Disponible", "Dirección", "Tipo", "Área", "Fecha registro", "Fecha ocupación", "Opciones"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Long.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Float.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
 
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel6.setText("Inversión inicial:");
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
 
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jButton1.setText("Registrar");
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblUbicaciones.setRequestFocusEnabled(false);
+        ScrollPanel.setViewportView(tblUbicaciones);
 
-        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jButton2.setText("Cancelar");
+        txtNombre.setToolTipText("Max. 30 caracteres");
+        txtNombre.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNombreKeyTyped(evt);
+            }
+        });
+
+        txtInversion.setToolTipText("Ingrese números decimales");
+        txtInversion.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        txtInversion.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtInversionKeyTyped(evt);
+            }
+        });
+
+        btnSolicitar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnSolicitar.setText("Solicitar");
+        btnSolicitar.setToolTipText("Solicitar obra");
+        btnSolicitar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnSolicitar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSolicitarActionPerformed(evt);
+            }
+        });
+
+        btnCancelar.setText("Cancelar");
+        btnCancelar.setToolTipText("Cancelar solictud de obra");
+        btnCancelar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        btnAceptarSeleccion.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnAceptarSeleccion.setText("Aceptar selección");
+        btnAceptarSeleccion.setToolTipText("Acepta la selección del primer elemento elegido");
+        btnAceptarSeleccion.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAceptarSeleccion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAceptarSeleccionActionPerformed(evt);
+            }
+        });
+
+        lblInversionInicial.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblInversionInicial.setText("Inversión inicial:");
+
+        lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblTitulo.setText("Solicitar Obra");
+
+        UObraLogoPeque.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\UObraPeque.png")); // NOI18N
+
+        lblMXN.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblMXN.setText("MXN");
+
+        lblNombre.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblNombre.setText("Nombre:");
+
+        lbl$.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lbl$.setText("$");
+
+        lblInsertarDireccion.setText("dirección");
+
+        lblInsertarArea.setText("area");
+
+        lblDireccion.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblDireccion.setText("Dirección:");
+
+        lblUbicaciones.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblUbicaciones.setText("Ubicaciones registradas:");
+
+        lblArea.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblArea.setText("Área:");
+
+        lblFechaRegistrada.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblFechaRegistrada.setText("Fecha registrada:");
+
+        lblIDObra.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblIDObra.setText("ID:");
+
+        lblInsertarID.setText("id");
+
+        lblInsertarFecha.setText("fecha");
+
+        lblInstrucción.setText("Seleccione una ubicación para ser asignada a esta obra");
+
+        lblUbicacionSeleccionada.setText("Ubicación seleccionada:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(21, 21, 21)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(37, 37, 37))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addGap(50, 50, 50)
-                        .addComponent(jButton2)
-                        .addGap(23, 23, 23))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(125, 125, 125))))
+                            .addComponent(ScrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 843, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(16, 16, 16)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblNombre, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(lblInversionInicial, javax.swing.GroupLayout.Alignment.TRAILING))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(lbl$)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtInversion, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lblMXN))
+                                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblInstrucción)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(lblUbicacionSeleccionada)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(lblArea)
+                                            .addComponent(lblIDObra, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(18, 18, 18)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(lblInsertarID)
+                                            .addComponent(lblInsertarArea))
+                                        .addGap(35, 35, 35)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(lblFechaRegistrada)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(lblInsertarFecha))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(lblDireccion)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(lblInsertarDireccion)))))))
+                        .addContainerGap(12, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblUbicaciones)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnAceptarSeleccion)
+                        .addGap(21, 21, 21))))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(Separador, javax.swing.GroupLayout.PREFERRED_SIZE, 862, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(9, 9, 9)
+                .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(UObraLogoPeque)
+                .addGap(28, 28, 28))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnSolicitar)
+                .addGap(286, 286, 286)
+                .addComponent(btnCancelar)
+                .addGap(24, 24, 24))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addComponent(jLabel1)
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblTitulo)
+                    .addComponent(UObraLogoPeque))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(Separador, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblNombre)
+                            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtInversion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbl$)
+                            .addComponent(lblMXN)
+                            .addComponent(lblInversionInicial)))
+                    .addComponent(lblInstrucción, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(29, 29, 29)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblUbicacionSeleccionada, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblIDObra)
+                            .addComponent(lblInsertarID, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblFechaRegistrada)
+                            .addComponent(lblInsertarFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblInsertarArea, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblArea)
+                            .addComponent(lblDireccion)
+                            .addComponent(lblInsertarDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblUbicaciones)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(ScrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnAceptarSeleccion))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addGap(26, 26, 26))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnSolicitar)
+                    .addComponent(btnCancelar))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void txtInversionKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtInversionKeyTyped
+        if (txtInversion.getText().length() >= 12) {
+            evt.consume();
+        }
+        char c = evt.getKeyChar();
+        if (Character.isLetter(c)) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtInversionKeyTyped
+
+    private void btnAceptarSeleccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarSeleccionActionPerformed
+        try {
+            int fila = obtenerFila();
+            if (fila != -1) {
+                this.ubicacion = UbicacionesDAO.consultarUbicacion((Long) tblUbicaciones.getValueAt(fila, 0));
+                this.lblInsertarArea.setText(ubicacion.getArea().toString() + " m²");
+                this.lblInsertarDireccion.setText(ubicacion.getDireccion());
+                this.lblInsertarFecha.setText(fecha.formatoFecha(ubicacion.getFechaRegistro()));
+                this.lblInsertarID.setText(ubicacion.getId().toString());
+            }
+        } catch (Exception e) {
+            Logger.getLogger(ConsultarUbicaciones.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }//GEN-LAST:event_btnAceptarSeleccionActionPerformed
+
+    private void btnSolicitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSolicitarActionPerformed
+        if (!txtNombre.getText().isBlank()) {
+            if (!txtInversion.getText().isBlank()) {
+                if (this.ubicacion != null) {
+                    Validadores valido = new Validadores();
+                    if (this.txtNombre.getText().length() > 30) {
+                        this.txtNombre.setText(this.txtNombre.getText().substring(0, 30));
+                    }
+                    if (this.txtInversion.getText().length() > 12) {
+                        this.txtInversion.setText(this.txtInversion.getText().substring(0, 12));
+                    }
+                    this.txtNombre.setText(this.txtNombre.getText().trim());
+                    // Se formatea inversion
+                    this.txtInversion.setText(this.txtInversion.getText().trim());
+                    this.txtInversion.setText(valido.recortarComas(this.txtInversion.getText()));
+                    if (valido.validarSinEspacios(this.txtInversion.getText())) {
+                        this.txtInversion.setText(valido.recortarSignoMas(this.txtInversion.getText()));
+                        if (!valido.validarNumero(this.txtInversion.getText())) {
+                            JOptionPane.showMessageDialog(null, "Error: Ingrese números en el largo de ubicación. (No caracteres ni numeros negativos).", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                        } else if (!valido.validarFlotante(this.txtInversion.getText())) {
+                            this.txtInversion.setText(this.txtInversion.getText().concat(".0"));
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Error: Ingrese una inversión válida. (Sin espacios).", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                    }
+                    // Se crea el objeto obra a persistir
+                    ubicaciones.add(this.ubicacion);
+                    Obras obra = new Obras(
+                            Float.valueOf(txtInversion.getText()),
+                            txtNombre.getText(),
+                            this.cliente,
+                            ubicaciones);
+                    Long id = ObrasDAO.registrarObra(obra);
+                    if (id != null) {
+                        Fecha fecha = new Fecha();
+                        JOptionPane.showMessageDialog(null,
+                                "Se solicitó exitosamente la obra con nombre \n"
+                                + obra.getNombre() + " con una inversión inicial de $" + obra.getInversion() + " MXN"
+                                + "\n - ID: " + id + ". ☺", "Registro de ubicación exitoso", JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Error interno: Ocurrió un errror al querer solicitar la obra.", "¡Error interno!", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Error: Seleccione una ubicación a la cual se le asignará esta obra.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Error: Ingrese una inversión válida.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Error: Ingrese un nombre de obra válido.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnSolicitarActionPerformed
+
+    private void txtNombreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreKeyTyped
+        if (txtNombre.getText().length() >= 30) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtNombreKeyTyped
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
+    private javax.swing.JScrollPane ScrollPanel;
+    private javax.swing.JSeparator Separador;
+    private javax.swing.JLabel UObraLogoPeque;
+    private javax.swing.JButton btnAceptarSeleccion;
+    private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnSolicitar;
+    private javax.swing.JLabel lbl$;
+    private javax.swing.JLabel lblArea;
+    private javax.swing.JLabel lblDireccion;
+    private javax.swing.JLabel lblFechaRegistrada;
+    private javax.swing.JLabel lblIDObra;
+    private javax.swing.JLabel lblInsertarArea;
+    private javax.swing.JLabel lblInsertarDireccion;
+    private javax.swing.JLabel lblInsertarFecha;
+    private javax.swing.JLabel lblInsertarID;
+    private javax.swing.JLabel lblInstrucción;
+    private javax.swing.JLabel lblInversionInicial;
+    private javax.swing.JLabel lblMXN;
+    private javax.swing.JLabel lblNombre;
+    private javax.swing.JLabel lblTitulo;
+    private javax.swing.JLabel lblUbicacionSeleccionada;
+    private javax.swing.JLabel lblUbicaciones;
+    private javax.swing.JTable tblUbicaciones;
+    private javax.swing.JTextField txtInversion;
+    private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
 }

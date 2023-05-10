@@ -59,6 +59,7 @@ public class EditarUsuarioCliente extends javax.swing.JFrame {
         btnActualizar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         UObraLogoPeque = new javax.swing.JLabel();
+        ImagenUsuario = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Editar Usuario");
@@ -108,6 +109,8 @@ public class EditarUsuarioCliente extends javax.swing.JFrame {
 
         UObraLogoPeque.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\UObraPeque.png")); // NOI18N
 
+        ImagenUsuario.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\ImagenUsuario.png")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -135,7 +138,7 @@ public class EditarUsuarioCliente extends javax.swing.JFrame {
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(UObraLogoPeque))
                                 .addComponent(Separador1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addContainerGap(12, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(lblUsuarioActual)
@@ -143,8 +146,10 @@ public class EditarUsuarioCliente extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblInsertarUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblInsertarContrasenia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap(12, Short.MAX_VALUE))
+                            .addComponent(lblInsertarContrasenia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ImagenUsuario)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -156,13 +161,16 @@ public class EditarUsuarioCliente extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblUsuarioActual)
-                    .addComponent(lblInsertarUsuario))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblContraseniaActual)
-                    .addComponent(lblInsertarContrasenia))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblUsuarioActual)
+                            .addComponent(lblInsertarUsuario))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblContraseniaActual)
+                            .addComponent(lblInsertarContrasenia)))
+                    .addComponent(ImagenUsuario))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(Separator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -188,8 +196,11 @@ public class EditarUsuarioCliente extends javax.swing.JFrame {
                 Encriptador crypt = new Encriptador();
                 if (!crypt.decrypt(this.cliente.getUsuario()).equals(this.txtNuevoUsuario.getText())) {
                     try {
+                        if (this.txtNuevoUsuario.getText().length() > 20) {
+                            this.txtNuevoUsuario.setText(this.txtNuevoUsuario.getText().substring(0, 20));
+                        }
                         ClientesDAO.editarUsuario(this.cliente.getId(), this.txtNuevoUsuario.getText());
-                        JOptionPane.showMessageDialog(null, "Se ha actualizado el usuario exitosamente.");
+                        JOptionPane.showMessageDialog(null, "Se ha actualizado el usuario exitosamente.", "Actualización exitosa", JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
                         new PanelCliente(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
                         this.dispose();
                     } catch (Exception ex) {
@@ -218,6 +229,7 @@ public class EditarUsuarioCliente extends javax.swing.JFrame {
     }//GEN-LAST:event_txtNuevoUsuarioKeyTyped
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel ImagenUsuario;
     private javax.swing.JSeparator Separador1;
     private javax.swing.JSeparator Separator2;
     private javax.swing.JLabel UObraLogoPeque;

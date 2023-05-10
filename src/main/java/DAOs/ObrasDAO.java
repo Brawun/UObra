@@ -3,7 +3,6 @@
  */
 package DAOs;
 
-import Dominio.Clientes;
 import Dominio.Obras;
 import Dominio.ObrasObrero;
 import Dominio.Obreros;
@@ -50,13 +49,14 @@ public class ObrasDAO {
     UbicacionesDAO UbicacionesDAO = new UbicacionesDAO();
 
     // Métodos de acceso
-    public void registrarObra(Obras obra) {
+    public Long registrarObra(Obras obra) {
         EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
         EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.persist(obra);
         entityManager.getTransaction().commit();
         entityManager.close();
+        return obra.getId();
     }
 
     public void eliminarObra(Long id) {
@@ -123,10 +123,8 @@ public class ObrasDAO {
             Obras obra = consultarObra(id);
             // Se verifica si la obra en particular tiene permiso de finalización
             if (PermisosDAO.verificarPermisoFinalizacion(obra)) {
-                obra.setEstado(EstadoObra.DESARROLLO);
-                obra.setFechaInicio(fecha.fechaAhora());
-                // Se le suma la deuda a cliente al iniciar la obra
-                ClientesDAO.sumarDeudaCliente(obra.getCliente().getId(), obra.getCostoTotal());
+                obra.setEstado(EstadoObra.TERMINADA);
+                obra.setFechaFin(fecha.fechaAhora());
                 entityManager.merge(obra);
                 entityManager.getTransaction().commit();
                 entityManager.close();
@@ -404,7 +402,7 @@ public class ObrasDAO {
             // Objetos
             Obras obra = consultarObra(id);
             // Se agrega el pago a la obra en particular
-            // obra.getPagos().add(pago);
+            obra.getPagos().add(pago);
             // Se elimina a la deuda el pago realizado
             obra.setDeuda(obra.getDeuda() - pago.getMonto());
             if (obra.getDeuda() <= (float) 0) {

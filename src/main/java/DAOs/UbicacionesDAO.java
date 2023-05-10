@@ -37,13 +37,14 @@ public class UbicacionesDAO {
     Fecha fecha = new Fecha();
 
     // Métodos de acceso
-    public void registrarUbicacion(Ubicaciones ubicacion) {
+    public Long registrarUbicacion(Ubicaciones ubicacion) {
         EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
         EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.persist(ubicacion);
         entityManager.getTransaction().commit();
         entityManager.close();
+        return ubicacion.getId();
     }
 
     public void ocuparUbicacion(Long id) {

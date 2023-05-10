@@ -6,6 +6,7 @@ package DAOs;
 import Dominio.Facturas;
 import Enumeradores.EstadoFactura;
 import Enumeradores.MetodoPago;
+import Herramientas.Fecha;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -26,13 +27,14 @@ import javax.persistence.TypedQuery;
 public class FacturasDAO {
 
     // Métodos de acceso
-    public void registrarFactura(Facturas factura) {
+    public Facturas registrarFactura(Facturas factura) {
         EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
         EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.persist(factura);
         entityManager.getTransaction().commit();
         entityManager.close();
+        return factura;
     }
 
     public void eliminarFactura(Long id) {
@@ -49,12 +51,14 @@ public class FacturasDAO {
         }
     }
 
-    public void pagarFactura(Long id) {
+    public void pagarFactura(Long id, MetodoPago metodo) {
         if (verificarFactura(id)) {
             EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
             EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Facturas factura = consultarFactura(id);
+            factura.setFechaPagada(new Fecha().fechaAhora());
+            factura.setMetodoPago(metodo);
             factura.setEstado(EstadoFactura.PAGADA);
             entityManager.merge(factura);
             entityManager.getTransaction().commit();

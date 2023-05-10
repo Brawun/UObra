@@ -321,9 +321,31 @@ public class RegistrarCuenta extends javax.swing.JFrame {
                                 if (!ObrerosDAO.verificarUsuarioObrero(this.txtUsuario.getText())) {
                                     if (valida.validarSinEspacios(this.txtContrasenia.getText()) && !this.txtContrasenia.getText().isBlank()) {
                                         if (valida.validarTelefono(this.txtTelefono.getText()) && !this.txtTelefono.getText().isBlank()) {
+                                            if (this.txtContrasenia.getText().length() > 20) {
+                                                this.txtContrasenia.setText(this.txtContrasenia.getText().substring(0, 20));
+                                            }
+                                            if (this.txtUsuario.getText().length() > 20) {
+                                                this.txtUsuario.setText(this.txtUsuario.getText().substring(0, 20));
+                                            }
+                                            if (this.txtNombre.getText().length() > 50) {
+                                                this.txtNombre.setText(this.txtNombre.getText().substring(0, 50));
+                                            }
+                                            if (this.txtApellidoMaterno.getText().length() > 50) {
+                                                this.txtApellidoMaterno.setText(this.txtApellidoMaterno.getText().substring(0, 50));
+                                            }
+                                            if (this.txtApellidoPaterno.getText().length() > 50) {
+                                                this.txtApellidoPaterno.setText(this.txtApellidoPaterno.getText().substring(0, 50));
+                                            }
+                                            if (this.txtTelefono.getText().length() > 14) {
+                                                this.txtTelefono.setText(this.txtTelefono.getText().substring(0, 14));
+                                            }
                                             // Se registra un obrero con los datos ingresados y con el salario mínimo, el cual puede ser posteriormente editado por un obrero
-                                            ObrerosDAO.registrarObrero(new Obreros(this.txtNombre.getText(), this.txtApellidoPaterno.getText(), this.txtApellidoMaterno.getText(), this.txtTelefono.getText(), this.txtContrasenia.getText(), this.txtUsuario.getText(), (float) 200.0));
-                                            JOptionPane.showMessageDialog(null, "Se creó exitosamente la cuenta del obrero " + this.txtNombre.getText() + " " + this.txtApellidoPaterno.getText() + " " + this.txtApellidoMaterno.getText() + ". ☺", "Registro de obrero exitoso", JOptionPane.INFORMATION_MESSAGE);
+                                            Long id = ObrerosDAO.registrarObrero(new Obreros(this.txtNombre.getText(), this.txtApellidoPaterno.getText(), this.txtApellidoMaterno.getText(), this.txtTelefono.getText(), this.txtContrasenia.getText(), this.txtUsuario.getText(), (float) 200.0));
+                                            if (id != null) {
+                                                JOptionPane.showMessageDialog(null, "Se creó exitosamente la cuenta del obrero " + this.txtNombre.getText() + " " + this.txtApellidoPaterno.getText() + " " + this.txtApellidoMaterno.getText() + " - ID: " + id + ". ☺", "Registro de obrero exitoso", JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
+                                            } else {
+                                                JOptionPane.showMessageDialog(null, "Error interno: Ocurrió un errror al querer registrar la cuenta de obrero.", "¡Error interno!", JOptionPane.ERROR_MESSAGE);
+                                            }
                                             this.dispose();
                                             new IniciarSesion().setVisible(true);
                                         } else {
@@ -359,9 +381,31 @@ public class RegistrarCuenta extends javax.swing.JFrame {
                                 if (!JefesDAO.verificarUsuarioJefe(this.txtUsuario.getText())) {
                                     if (valida.validarSinEspacios(this.txtContrasenia.getText()) && !this.txtContrasenia.getText().isBlank()) {
                                         if (valida.validarTelefono(this.txtTelefono.getText()) && !this.txtTelefono.getText().isBlank()) {
+                                            if (this.txtContrasenia.getText().length() > 20) {
+                                                this.txtContrasenia.setText(this.txtContrasenia.getText().substring(0, 20));
+                                            }
+                                            if (this.txtUsuario.getText().length() > 20) {
+                                                this.txtUsuario.setText(this.txtUsuario.getText().substring(0, 20));
+                                            }
+                                            if (this.txtNombre.getText().length() > 50) {
+                                                this.txtNombre.setText(this.txtNombre.getText().substring(0, 50));
+                                            }
+                                            if (this.txtApellidoMaterno.getText().length() > 50) {
+                                                this.txtApellidoMaterno.setText(this.txtApellidoMaterno.getText().substring(0, 50));
+                                            }
+                                            if (this.txtApellidoPaterno.getText().length() > 50) {
+                                                this.txtApellidoPaterno.setText(this.txtApellidoPaterno.getText().substring(0, 50));
+                                            }
+                                            if (this.txtTelefono.getText().length() > 14) {
+                                                this.txtTelefono.setText(this.txtTelefono.getText().substring(0, 14));
+                                            }
                                             // Se registra un jefe con los datos ingresados y con el salario mínimo, el cual puede ser posteriormente editado por un jefe
-                                            JefesDAO.registrarJefe(new Jefes(this.txtNombre.getText(), this.txtApellidoPaterno.getText(), this.txtApellidoMaterno.getText(), this.txtTelefono.getText(), this.txtContrasenia.getText(), this.txtUsuario.getText()));
-                                            JOptionPane.showMessageDialog(null, "Se creó exitosamente la cuenta del jefe " + this.txtNombre.getText() + " " + this.txtApellidoPaterno.getText() + " " + this.txtApellidoMaterno.getText() + ". ☺", "Registro de jefe exitoso", JOptionPane.INFORMATION_MESSAGE);
+                                            Long id = JefesDAO.registrarJefe(new Jefes(this.txtNombre.getText(), this.txtApellidoPaterno.getText(), this.txtApellidoMaterno.getText(), this.txtTelefono.getText(), this.txtContrasenia.getText(), this.txtUsuario.getText()));
+                                            if (id != null) {
+                                                JOptionPane.showMessageDialog(null, "Se creó exitosamente la cuenta del jefe " + this.txtNombre.getText() + " " + this.txtApellidoPaterno.getText() + " " + this.txtApellidoMaterno.getText() + " - ID: " + id + ". ☺", "Registro de jefe exitoso", JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
+                                            } else {
+                                                JOptionPane.showMessageDialog(null, "Error interno: Ocurrió un errror al querer registrar la cuenta de jefe.", "¡Error interno!", JOptionPane.ERROR_MESSAGE);
+                                            }
                                             this.dispose();
                                             new IniciarSesion().setVisible(true);
                                         } else {
@@ -397,9 +441,31 @@ public class RegistrarCuenta extends javax.swing.JFrame {
                                 if (!ClientesDAO.verificarUsuarioCliente(this.txtUsuario.getText())) {
                                     if (valida.validarSinEspacios(this.txtContrasenia.getText()) && !this.txtContrasenia.getText().isBlank()) {
                                         if (valida.validarTelefono(this.txtTelefono.getText()) && !this.txtTelefono.getText().isBlank()) {
+                                            if (this.txtContrasenia.getText().length() > 20) {
+                                                this.txtContrasenia.setText(this.txtContrasenia.getText().substring(0, 20));
+                                            }
+                                            if (this.txtUsuario.getText().length() > 20) {
+                                                this.txtUsuario.setText(this.txtUsuario.getText().substring(0, 20));
+                                            }
+                                            if (this.txtNombre.getText().length() > 50) {
+                                                this.txtNombre.setText(this.txtNombre.getText().substring(0, 50));
+                                            }
+                                            if (this.txtApellidoMaterno.getText().length() > 50) {
+                                                this.txtApellidoMaterno.setText(this.txtApellidoMaterno.getText().substring(0, 50));
+                                            }
+                                            if (this.txtApellidoPaterno.getText().length() > 50) {
+                                                this.txtApellidoPaterno.setText(this.txtApellidoPaterno.getText().substring(0, 50));
+                                            }
+                                            if (this.txtTelefono.getText().length() > 14) {
+                                                this.txtTelefono.setText(this.txtTelefono.getText().substring(0, 14));
+                                            }
                                             // Se registra un cliente con los datos ingresados y con el salario mínimo, el cual puede ser posteriormente editado por un cliente
-                                            ClientesDAO.registrarCliente(new Clientes(this.txtNombre.getText(), this.txtApellidoPaterno.getText(), this.txtApellidoMaterno.getText(), this.txtTelefono.getText(), this.txtContrasenia.getText(), this.txtUsuario.getText()));
-                                            JOptionPane.showMessageDialog(null, "Se creó exitosamente la cuenta del cliente " + this.txtNombre.getText() + " " + this.txtApellidoPaterno.getText() + " " + this.txtApellidoMaterno.getText() + ". ☺", "Registro de cliente exitoso", JOptionPane.INFORMATION_MESSAGE);
+                                            Long id = ClientesDAO.registrarCliente(new Clientes(this.txtNombre.getText(), this.txtApellidoPaterno.getText(), this.txtApellidoMaterno.getText(), this.txtTelefono.getText(), this.txtContrasenia.getText(), this.txtUsuario.getText()));
+                                            if (id != null) {
+                                                JOptionPane.showMessageDialog(null, "Se creó exitosamente la cuenta del cliente " + this.txtNombre.getText() + " " + this.txtApellidoPaterno.getText() + " " + this.txtApellidoMaterno.getText() + " - ID: " + id + ". ☺", "Registro de cliente exitoso", JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
+                                            } else {
+                                                JOptionPane.showMessageDialog(null, "Error interno: Ocurrió un errror al querer registrar la cuenta de cliente.", "¡Error interno!", JOptionPane.ERROR_MESSAGE);
+                                            }
                                             this.dispose();
                                             new IniciarSesion().setVisible(true);
                                         } else {
@@ -433,6 +499,10 @@ public class RegistrarCuenta extends javax.swing.JFrame {
         if (txtTelefono.getText().length() >= 14) {
             evt.consume();
         }
+        char c = evt.getKeyChar();
+        if (Character.isLetter(c)) {
+            evt.consume();
+        }
     }//GEN-LAST:event_txtTelefonoKeyTyped
 
     private void txtUsuarioKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUsuarioKeyTyped
@@ -451,16 +521,28 @@ public class RegistrarCuenta extends javax.swing.JFrame {
         if (txtNombre.getText().length() >= 50) {
             evt.consume();
         }
+        char c = evt.getKeyChar();
+        if (!Character.isLetter(c)) {
+            evt.consume();
+        }
     }//GEN-LAST:event_txtNombreKeyTyped
 
     private void txtApellidoPaternoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtApellidoPaternoKeyTyped
         if (txtApellidoPaterno.getText().length() >= 50) {
             evt.consume();
         }
+        char c = evt.getKeyChar();
+        if (!Character.isLetter(c)) {
+            evt.consume();
+        }
     }//GEN-LAST:event_txtApellidoPaternoKeyTyped
 
     private void txtApellidoMaternoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtApellidoMaternoKeyTyped
         if (txtApellidoMaterno.getText().length() >= 50) {
+            evt.consume();
+        }
+        char c = evt.getKeyChar();
+        if (!Character.isLetter(c)) {
             evt.consume();
         }
     }//GEN-LAST:event_txtApellidoMaternoKeyTyped

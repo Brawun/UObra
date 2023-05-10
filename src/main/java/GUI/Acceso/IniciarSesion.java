@@ -321,7 +321,7 @@ public class IniciarSesion extends javax.swing.JFrame {
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
         this.setVisible(false);
-        int i = JOptionPane.showConfirmDialog(this, "¿Seguro que desea salir?", "Advertencia", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        int i = JOptionPane.showConfirmDialog(this, "¿Seguro que desea salir?", "Advertencia", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, new Icono().obtenerIcono());
         if (i == JOptionPane.YES_OPTION) {
             this.dispose();
         } else {
@@ -334,6 +334,13 @@ public class IniciarSesion extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Error: Elija un tipo de usuario válido para inicio de sesión.", "¡Error!", JOptionPane.ERROR_MESSAGE);
         } else if (this.cbxTipoUsuario.getSelectedItem() == "Obrero") {
             try {
+                if (this.txtContrasenia.getText().length() > 20) {
+                    this.txtContrasenia.setText(this.txtContrasenia.getText().substring(0, 20));
+
+                }
+                if (this.txtContrasenia.getText().length() > 20) {
+                    this.txtUsuario.setText(this.txtUsuario.getText().substring(0, 20));
+                }
                 ObrerosDAO ObrerosDAO = new ObrerosDAO();
                 String usuario = this.txtUsuario.getText().trim();
                 String contrasena = new String(this.txtContrasenia.getPassword());
@@ -349,6 +356,13 @@ public class IniciarSesion extends javax.swing.JFrame {
             }
         } else if (this.cbxTipoUsuario.getSelectedItem() == "Jefe") {
             try {
+                if (this.txtContrasenia.getText().length() > 20) {
+                    this.txtContrasenia.setText(this.txtContrasenia.getText().substring(0, 20));
+
+                }
+                if (this.txtContrasenia.getText().length() > 20) {
+                    this.txtUsuario.setText(this.txtUsuario.getText().substring(0, 20));
+                }
                 JefesDAO JefesDAO = new JefesDAO();
                 String usuario = this.txtUsuario.getText().trim();
                 String contrasena = new String(this.txtContrasenia.getPassword());
@@ -364,6 +378,13 @@ public class IniciarSesion extends javax.swing.JFrame {
             }
         } else if (this.cbxTipoUsuario.getSelectedItem() == "Cliente") {
             try {
+                if (this.txtContrasenia.getText().length() > 20) {
+                    this.txtContrasenia.setText(this.txtContrasenia.getText().substring(0, 20));
+
+                }
+                if (this.txtContrasenia.getText().length() > 20) {
+                    this.txtUsuario.setText(this.txtUsuario.getText().substring(0, 20));
+                }
                 ClientesDAO ClientesDAO = new ClientesDAO();
                 String usuario = this.txtUsuario.getText().trim();
                 String contrasena = new String(this.txtContrasenia.getPassword());
@@ -388,7 +409,7 @@ public class IniciarSesion extends javax.swing.JFrame {
                 + "\nProf. María de los Ángeles Germán \n"
                 + "Pruebas de Software ITSON "
                 + "☺",
-                 "Acerca de", JOptionPane.INFORMATION_MESSAGE);
+                "Acerca de", JOptionPane.INFORMATION_MESSAGE);
         this.setVisible(true);
     }//GEN-LAST:event_mniAcercaDeActionPerformed
 
@@ -443,13 +464,13 @@ public class IniciarSesion extends javax.swing.JFrame {
     }//GEN-LAST:event_enterActionPerformed
 
     private void txtUsuarioKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUsuarioKeyTyped
-        if (txtUsuario.getText().length() >= 50) {
+        if (txtUsuario.getText().length() >= 20) {
             evt.consume();
         }
     }//GEN-LAST:event_txtUsuarioKeyTyped
 
     private void txtContraseniaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtContraseniaKeyTyped
-        if (txtContrasenia.getText().length() >= 50) {
+        if (txtContrasenia.getText().length() >= 20) {
             evt.consume();
         }
     }//GEN-LAST:event_txtContraseniaKeyTyped

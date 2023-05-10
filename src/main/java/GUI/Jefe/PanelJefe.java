@@ -4,19 +4,21 @@
  */
 package GUI.Jefe;
 
+import DAOs.JefesDAO;
 import Dominio.Jefes;
-import GUI.Jefe.Facturas.ConsultarFacturas;
+import GUI.Acceso.IniciarSesion;
 import GUI.Jefe.Facturas.PagarFactura;
 import GUI.Jefe.Facturas.RegistrarFactura;
+import GUI.Jefe.Jefes.ConsultarDeudores;
 import GUI.Jefe.Obras.IniciarObra;
 import GUI.Jefe.Obras.TerminarObra;
 import GUI.Jefe.Obreros.AgregarObrero;
-import GUI.Jefe.Obreros.EliminarObrero;
-import GUI.Jefe.Permisos.ConsultarPermisos;
 import GUI.Jefe.Permisos.RegistrarPermiso;
-import GUI.Jefe.Planos.AsignarPlano;
-import GUI.Jefe.Planos.ConsultarPlanos;
 import GUI.Jefe.Planos.RegistrarPlano;
+import Herramientas.Icono;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -26,6 +28,7 @@ public class PanelJefe extends javax.swing.JFrame {
 
     // Atributos
     Jefes jefe;
+    JefesDAO JefesDAO = new JefesDAO();
     
     /**
      * Creates new form JefeObra
@@ -34,6 +37,7 @@ public class PanelJefe extends javax.swing.JFrame {
     public PanelJefe(Jefes jefe) {
         this.jefe = jefe;
         initComponents();
+        new Icono().insertarIcono(this);
     }
 
     /**
@@ -46,385 +50,371 @@ public class PanelJefe extends javax.swing.JFrame {
     private void initComponents() {
 
         jSeparator3 = new javax.swing.JSeparator();
-        jLabel1 = new javax.swing.JLabel();
-        jSeparator1 = new javax.swing.JSeparator();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jLabel7 = new javax.swing.JLabel();
-        jSeparator2 = new javax.swing.JSeparator();
-        jSeparator4 = new javax.swing.JSeparator();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        jSeparator5 = new javax.swing.JSeparator();
-        jLabel9 = new javax.swing.JLabel();
-        jButton7 = new javax.swing.JButton();
-        jButton8 = new javax.swing.JButton();
-        jSeparator6 = new javax.swing.JSeparator();
-        jLabel10 = new javax.swing.JLabel();
-        jButton10 = new javax.swing.JButton();
-        jButton11 = new javax.swing.JButton();
-        jSeparator7 = new javax.swing.JSeparator();
-        jLabel11 = new javax.swing.JLabel();
-        jButton12 = new javax.swing.JButton();
-        jButton13 = new javax.swing.JButton();
-        jButton14 = new javax.swing.JButton();
+        lblInsertarNombre = new javax.swing.JLabel();
+        Separador1 = new javax.swing.JSeparator();
+        lblInsertarApellidoPaterno = new javax.swing.JLabel();
+        lblInsertarApellidoMaterno = new javax.swing.JLabel();
+        lblInsertarID = new javax.swing.JLabel();
+        lblTitulo = new javax.swing.JLabel();
+        UObraLogoPeque = new javax.swing.JLabel();
+        lblID = new javax.swing.JLabel();
+        btnCerrarSesion1 = new javax.swing.JButton();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        mniConsultarDeudores = new javax.swing.JMenuItem();
+        jMenu3 = new javax.swing.JMenu();
+        mniAgregarObreroObra = new javax.swing.JMenuItem();
+        jMenu4 = new javax.swing.JMenu();
+        mniIniciarObra = new javax.swing.JMenuItem();
+        jSeparator5 = new javax.swing.JPopupMenu.Separator();
+        mniTerminarObra = new javax.swing.JMenuItem();
+        jMenu5 = new javax.swing.JMenu();
+        mniRegistrarPermiso = new javax.swing.JMenuItem();
+        jMenu6 = new javax.swing.JMenu();
+        mniRegistrarPlano = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
+        mniRegistrarFactura = new javax.swing.JMenuItem();
+        jSeparator6 = new javax.swing.JPopupMenu.Separator();
+        mniPagarFactura = new javax.swing.JMenuItem();
+        MenuCuenta = new javax.swing.JMenu();
+        mniCambiarContrasena = new javax.swing.JMenuItem();
+        jSeparator4 = new javax.swing.JPopupMenu.Separator();
+        mniCambiarUsuario = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Jefe");
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("Panel Jefe");
 
-        jLabel1.setText("Sistema UObras - Jefe de Obra ");
+        lblInsertarNombre.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblInsertarNombre.setText("nombre");
 
-        jLabel2.setText("Jefe de obra ");
+        lblInsertarApellidoPaterno.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblInsertarApellidoPaterno.setText("paterno");
 
-        jLabel3.setText("Obras trabajadas");
+        lblInsertarApellidoMaterno.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblInsertarApellidoMaterno.setText("materno");
 
-        jButton1.setText("Agregar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        lblInsertarID.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblInsertarID.setText("id");
+
+        lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblTitulo.setText("Panel Jefe");
+
+        UObraLogoPeque.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\UObraPeque.png")); // NOI18N
+
+        lblID.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblID.setText("- ID:");
+
+        btnCerrarSesion1.setText("Cerrar Sesión");
+        btnCerrarSesion1.setToolTipText("Cerrar Sesión");
+        btnCerrarSesion1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnCerrarSesion1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnCerrarSesion1ActionPerformed(evt);
             }
         });
 
-        jLabel5.setText("Agregar un nuevo obrero");
+        jMenu1.setText("Clientes");
 
-        jLabel6.setText("Eliminar un obrero");
-
-        jButton2.setText("Eliminar");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        mniConsultarDeudores.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuLupa.png")); // NOI18N
+        mniConsultarDeudores.setText("Consultar Deudores");
+        mniConsultarDeudores.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                mniConsultarDeudoresActionPerformed(evt);
             }
         });
+        jMenu1.add(mniConsultarDeudores);
 
-        jButton3.setText("Salir");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        jMenuBar1.add(jMenu1);
+
+        jMenu3.setText("Obreros");
+
+        mniAgregarObreroObra.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuCasco.png")); // NOI18N
+        mniAgregarObreroObra.setText("Agregar Obrero Obra");
+        mniAgregarObreroObra.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                mniAgregarObreroObraActionPerformed(evt);
             }
         });
+        jMenu3.add(mniAgregarObreroObra);
 
-        jLabel7.setText("Facturación");
+        jMenuBar1.add(jMenu3);
 
-        jButton4.setText("Registrar Factura");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        jMenu4.setText("Obras");
+
+        mniIniciarObra.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuInsercionRapida.png")); // NOI18N
+        mniIniciarObra.setText("Iniciar Obra");
+        mniIniciarObra.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                mniIniciarObraActionPerformed(evt);
             }
         });
+        jMenu4.add(mniIniciarObra);
+        jMenu4.add(jSeparator5);
 
-        jButton5.setText("Pagar Factura");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        mniTerminarObra.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuPregunta.png")); // NOI18N
+        mniTerminarObra.setText("Terminar Obra");
+        mniTerminarObra.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                mniTerminarObraActionPerformed(evt);
             }
         });
+        jMenu4.add(mniTerminarObra);
 
-        jButton6.setText("Facturas");
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
+        jMenuBar1.add(jMenu4);
+
+        jMenu5.setText("Permisos");
+
+        mniRegistrarPermiso.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuRegistro.png")); // NOI18N
+        mniRegistrarPermiso.setText("Registrar Permiso");
+        mniRegistrarPermiso.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
+                mniRegistrarPermisoActionPerformed(evt);
             }
         });
+        jMenu5.add(mniRegistrarPermiso);
 
-        jLabel9.setText("Permisos");
+        jMenuBar1.add(jMenu5);
 
-        jButton7.setText("Permisos");
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
+        jMenu6.setText("Planos");
+
+        mniRegistrarPlano.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuRegistro.png")); // NOI18N
+        mniRegistrarPlano.setText("Registrar Plano");
+        mniRegistrarPlano.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
+                mniRegistrarPlanoActionPerformed(evt);
             }
         });
+        jMenu6.add(mniRegistrarPlano);
 
-        jButton8.setText("Registrar Permiso");
-        jButton8.addActionListener(new java.awt.event.ActionListener() {
+        jMenuBar1.add(jMenu6);
+
+        jMenu2.setText("Facturas");
+
+        mniRegistrarFactura.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuRegistro.png")); // NOI18N
+        mniRegistrarFactura.setText("Registrar Factura");
+        mniRegistrarFactura.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton8ActionPerformed(evt);
+                mniRegistrarFacturaActionPerformed(evt);
             }
         });
+        jMenu2.add(mniRegistrarFactura);
+        jMenu2.add(jSeparator6);
 
-        jLabel10.setText("Obras");
-
-        jButton10.setText("Iniciar obra");
-        jButton10.addActionListener(new java.awt.event.ActionListener() {
+        mniPagarFactura.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuDinero.png")); // NOI18N
+        mniPagarFactura.setText("Pagar Factura");
+        mniPagarFactura.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton10ActionPerformed(evt);
+                mniPagarFacturaActionPerformed(evt);
             }
         });
+        jMenu2.add(mniPagarFactura);
 
-        jButton11.setText("Terminar Obra");
-        jButton11.addActionListener(new java.awt.event.ActionListener() {
+        jMenuBar1.add(jMenu2);
+
+        MenuCuenta.setText("Cuenta");
+        MenuCuenta.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        mniCambiarContrasena.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuEngrane.png")); // NOI18N
+        mniCambiarContrasena.setText("Cambiar contraseña");
+        mniCambiarContrasena.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        mniCambiarContrasena.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton11ActionPerformed(evt);
+                mniCambiarContrasenaActionPerformed(evt);
             }
         });
+        MenuCuenta.add(mniCambiarContrasena);
+        MenuCuenta.add(jSeparator4);
 
-        jLabel11.setText("Planos");
-
-        jButton12.setText("Asingar Plano");
-        jButton12.addActionListener(new java.awt.event.ActionListener() {
+        mniCambiarUsuario.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuCuenta.png")); // NOI18N
+        mniCambiarUsuario.setText("Cambiar usuario");
+        mniCambiarUsuario.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        mniCambiarUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton12ActionPerformed(evt);
+                mniCambiarUsuarioActionPerformed(evt);
             }
         });
+        MenuCuenta.add(mniCambiarUsuario);
 
-        jButton13.setText("Planos");
-        jButton13.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton13ActionPerformed(evt);
-            }
-        });
+        jMenuBar1.add(MenuCuenta);
 
-        jButton14.setText("Registrar Plano");
-        jButton14.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton14ActionPerformed(evt);
-            }
-        });
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(11, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 435, Short.MAX_VALUE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addComponent(jLabel1)
-                            .addGap(264, 264, 264))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addComponent(jButton3)
-                            .addGap(15, 15, 15)))))
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(30, 30, 30)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jSeparator7)
-                            .addComponent(jSeparator6)
-                            .addComponent(jSeparator5, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(16, 16, 16)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(23, 23, 23)
-                                        .addComponent(jButton4)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jButton5))
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(jSeparator2, javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
-                                        .addComponent(jSeparator4)
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addGap(20, 20, 20)
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(jLabel2)
-                                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addGap(23, 23, 23)
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGap(32, 32, 32)
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(jButton2)
-                                                .addComponent(jButton1)))))
-                                .addGap(0, 0, Short.MAX_VALUE))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(48, 48, 48)
+                        .addGap(12, 12, 12)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(jButton7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE))
-                                .addGap(35, 35, 35)
-                                .addComponent(jButton8))
+                                .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(UObraLogoPeque)
+                                .addGap(11, 11, 11))
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(jButton10, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(35, 35, 35)
-                                .addComponent(jButton11)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                                .addComponent(lblInsertarNombre)
+                                .addGap(6, 6, 6)
+                                .addComponent(lblInsertarApellidoPaterno)
+                                .addGap(7, 7, 7)
+                                .addComponent(lblInsertarApellidoMaterno)
+                                .addGap(38, 38, 38)
+                                .addComponent(lblID)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lblInsertarID)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 105, Short.MAX_VALUE)
+                                .addComponent(btnCerrarSesion1)
+                                .addGap(14, 14, 14))))
+                    .addComponent(Separador1))
                 .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(52, 52, 52)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton13, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(23, 23, 23)
-                        .addComponent(jButton14)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton12))
-                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(jLabel1)
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblTitulo)
+                    .addComponent(UObraLogoPeque, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(21, 21, 21)
-                .addComponent(jLabel2)
-                .addGap(40, 40, 40)
-                .addComponent(jLabel3)
-                .addGap(27, 27, 27)
-                .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton6)
-                    .addComponent(jButton4)
-                    .addComponent(jButton5))
-                .addGap(24, 24, 24)
-                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jLabel5))
+                .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(jButton2))
-                .addGap(18, 18, 18)
-                .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel9)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton7)
-                    .addComponent(jButton8))
-                .addGap(18, 18, 18)
-                .addComponent(jSeparator6, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel10)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton10)
-                    .addComponent(jButton11))
-                .addGap(18, 18, 18)
-                .addComponent(jSeparator7, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel11)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton13)
-                    .addComponent(jButton14)
-                    .addComponent(jButton12))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
-                .addComponent(jButton3)
-                .addGap(12, 12, 12))
+                    .addComponent(lblInsertarNombre)
+                    .addComponent(lblInsertarApellidoPaterno)
+                    .addComponent(lblInsertarApellidoMaterno)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lblID)
+                        .addComponent(lblInsertarID)
+                        .addComponent(btnCerrarSesion1)))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        AgregarObrero agregarObrero = new AgregarObrero();
-        agregarObrero.setVisible(true);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void btnCerrarSesion1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesion1ActionPerformed
+        this.setVisible(false);
+        int i = JOptionPane.showConfirmDialog(this, "¿Seguro que desea cerrar sesión?", "Advertencia", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        if (i == JOptionPane.YES_OPTION) {
+            this.dispose();
+            new IniciarSesion().setVisible(true);
+        } else {
+            this.setVisible(true);
+        }
+    }//GEN-LAST:event_btnCerrarSesion1ActionPerformed
 
-    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-        RegistrarPermiso registrarPermiso = new RegistrarPermiso();
-        registrarPermiso.setVisible(true);
-    }//GEN-LAST:event_jButton8ActionPerformed
+    private void mniCambiarContrasenaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniCambiarContrasenaActionPerformed
+        try {
+            new EditarContrasenaJefe(JefesDAO.consultarJefe(this.jefe.getId())).setVisible(true);
+            this.dispose();
+        } catch (Exception ex) {
+            Logger.getLogger(PanelJefe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_mniCambiarContrasenaActionPerformed
 
-    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
-        TerminarObra terminarObra = new TerminarObra();
-        terminarObra.setVisible(true);
-    }//GEN-LAST:event_jButton11ActionPerformed
+    private void mniCambiarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniCambiarUsuarioActionPerformed
+        try {
+            new EditarUsuarioJefe(JefesDAO.consultarJefe(this.jefe.getId())).setVisible(true);
+            this.dispose();
+        } catch (Exception ex) {
+            Logger.getLogger(PanelJefe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_mniCambiarUsuarioActionPerformed
 
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        ConsultarFacturas consultarFacturas = new ConsultarFacturas();
-        consultarFacturas.setVisible(true);
-    }//GEN-LAST:event_jButton6ActionPerformed
+    private void mniConsultarDeudoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniConsultarDeudoresActionPerformed
+        try {
+            new ConsultarDeudores(JefesDAO.consultarJefe(this.jefe.getId())).setVisible(true);
+            this.dispose();
+        } catch (Exception ex) {
+            Logger.getLogger(PanelJefe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_mniConsultarDeudoresActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        RegistrarFactura registrarFactura = new RegistrarFactura();
-        registrarFactura.setVisible(true);
-    }//GEN-LAST:event_jButton4ActionPerformed
+    private void mniAgregarObreroObraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniAgregarObreroObraActionPerformed
+        try {
+            new AgregarObrero(JefesDAO.consultarJefe(this.jefe.getId())).setVisible(true);
+            this.dispose();
+        } catch (Exception ex) {
+            Logger.getLogger(PanelJefe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_mniAgregarObreroObraActionPerformed
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        PagarFactura pagarFactura = new PagarFactura();
-        pagarFactura.setVisible(true);
-    }//GEN-LAST:event_jButton5ActionPerformed
+    private void mniIniciarObraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniIniciarObraActionPerformed
+        try {
+            new IniciarObra(JefesDAO.consultarJefe(this.jefe.getId())).setVisible(true);
+            this.dispose();
+        } catch (Exception ex) {
+            Logger.getLogger(PanelJefe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_mniIniciarObraActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        EliminarObrero eliminarObrero = new EliminarObrero();
-        eliminarObrero.setVisible(true);
-    }//GEN-LAST:event_jButton2ActionPerformed
+    private void mniTerminarObraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniTerminarObraActionPerformed
+        try {
+            new TerminarObra(JefesDAO.consultarJefe(this.jefe.getId())).setVisible(true);
+            this.dispose();
+        } catch (Exception ex) {
+            Logger.getLogger(PanelJefe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_mniTerminarObraActionPerformed
 
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        ConsultarPermisos consultarPermisos = new ConsultarPermisos();
-        consultarPermisos.setVisible(true);
-    }//GEN-LAST:event_jButton7ActionPerformed
-
-    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
-        IniciarObra iniciarObra = new IniciarObra();
-        iniciarObra.setVisible(true);
-    }//GEN-LAST:event_jButton10ActionPerformed
-
-    private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
-        ConsultarPlanos consultarPlanos = new ConsultarPlanos();
-        consultarPlanos.setVisible(true);
-    }//GEN-LAST:event_jButton13ActionPerformed
-
-    private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
-        RegistrarPlano registrarPlano = new RegistrarPlano();
-        registrarPlano.setVisible(true);
-    }//GEN-LAST:event_jButton14ActionPerformed
-
-    private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
-        AsignarPlano asignarPlano = new AsignarPlano();
-        asignarPlano.setVisible(true);
-    }//GEN-LAST:event_jButton12ActionPerformed
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void mniRegistrarPermisoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniRegistrarPermisoActionPerformed
+        new RegistrarPermiso(JefesDAO.consultarJefe(this.jefe.getId())).setVisible(true);
         this.dispose();
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_mniRegistrarPermisoActionPerformed
+
+    private void mniRegistrarPlanoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniRegistrarPlanoActionPerformed
+        new RegistrarPlano(JefesDAO.consultarJefe(this.jefe.getId())).setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_mniRegistrarPlanoActionPerformed
+
+    private void mniRegistrarFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniRegistrarFacturaActionPerformed
+        new RegistrarFactura(JefesDAO.consultarJefe(this.jefe.getId())).setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_mniRegistrarFacturaActionPerformed
+
+    private void mniPagarFacturaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniPagarFacturaActionPerformed
+        try {
+            new PagarFactura(JefesDAO.consultarJefe(this.jefe.getId())).setVisible(true);
+            this.dispose();
+        } catch (Exception ex) {
+            Logger.getLogger(PanelJefe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_mniPagarFacturaActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton10;
-    private javax.swing.JButton jButton11;
-    private javax.swing.JButton jButton12;
-    private javax.swing.JButton jButton13;
-    private javax.swing.JButton jButton14;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JMenu MenuCuenta;
+    private javax.swing.JSeparator Separador1;
+    private javax.swing.JLabel UObraLogoPeque;
+    private javax.swing.JButton btnCerrarSesion1;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenu jMenu4;
+    private javax.swing.JMenu jMenu5;
+    private javax.swing.JMenu jMenu6;
+    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JSeparator jSeparator3;
-    private javax.swing.JSeparator jSeparator4;
-    private javax.swing.JSeparator jSeparator5;
-    private javax.swing.JSeparator jSeparator6;
-    private javax.swing.JSeparator jSeparator7;
+    private javax.swing.JPopupMenu.Separator jSeparator4;
+    private javax.swing.JPopupMenu.Separator jSeparator5;
+    private javax.swing.JPopupMenu.Separator jSeparator6;
+    private javax.swing.JLabel lblID;
+    private javax.swing.JLabel lblInsertarApellidoMaterno;
+    private javax.swing.JLabel lblInsertarApellidoPaterno;
+    private javax.swing.JLabel lblInsertarID;
+    private javax.swing.JLabel lblInsertarNombre;
+    private javax.swing.JLabel lblTitulo;
+    private javax.swing.JMenuItem mniAgregarObreroObra;
+    private javax.swing.JMenuItem mniCambiarContrasena;
+    private javax.swing.JMenuItem mniCambiarUsuario;
+    private javax.swing.JMenuItem mniConsultarDeudores;
+    private javax.swing.JMenuItem mniIniciarObra;
+    private javax.swing.JMenuItem mniPagarFactura;
+    private javax.swing.JMenuItem mniRegistrarFactura;
+    private javax.swing.JMenuItem mniRegistrarPermiso;
+    private javax.swing.JMenuItem mniRegistrarPlano;
+    private javax.swing.JMenuItem mniTerminarObra;
     // End of variables declaration//GEN-END:variables
 }

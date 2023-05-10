@@ -4,17 +4,47 @@
  */
 package GUI.Jefe.Permisos;
 
+import DAOs.ClientesDAO;
+import DAOs.ObrasDAO;
+import DAOs.ObrerosDAO;
+import DAOs.PermisosDAO;
+import Dominio.Clientes;
+import Dominio.Jefes;
+import Dominio.Obras;
+import Dominio.Permisos;
+import Enumeradores.TipoPermiso;
+import GUI.Cliente.PanelCliente;
+import Herramientas.Encriptador;
+import Herramientas.Fecha;
+import Herramientas.Icono;
+import Herramientas.Validadores;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author 52644
  */
 public class RegistrarPermiso extends javax.swing.JFrame {
 
+    // Atributos
+    Jefes jefe;
+    Clientes cliente = new Clientes();
+    Fecha fecha = new Fecha();
+    ClientesDAO ClientesDAO = new ClientesDAO();
+    PermisosDAO PermisosDAO = new PermisosDAO();
+    Validadores valido = new Validadores();
+    Encriptador crypt = new Encriptador();
+
     /**
      * Creates new form RegistrarPermiso
      */
-    public RegistrarPermiso() {
+    public RegistrarPermiso(Jefes jefe) {
+        this.jefe = jefe;
         initComponents();
+        new Icono().insertarIcono(this);
+        this.txtFolio.setText("######");
     }
 
     /**
@@ -26,37 +56,80 @@ public class RegistrarPermiso extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel7 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        lblFolio = new javax.swing.JLabel();
+        lblTipoPermiso = new javax.swing.JLabel();
+        Separador1 = new javax.swing.JSeparator();
+        cbxTipo = new javax.swing.JComboBox<>();
+        lblTitulo = new javax.swing.JLabel();
+        lblDireccion = new javax.swing.JLabel();
+        btnRegistrar = new javax.swing.JButton();
+        UObraLogoPeque = new javax.swing.JLabel();
+        lblTipo = new javax.swing.JLabel();
+        btnCancelar = new javax.swing.JButton();
+        lblFechaConcesado = new javax.swing.JLabel();
+        txtFolio = new javax.swing.JTextField();
+        lblBusqueda = new javax.swing.JLabel();
+        fechaConcesion = new com.toedter.calendar.JDateChooser();
+        lblFechaConcesion = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("Registrar Permiso");
+        setResizable(false);
 
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel7.setText("Registrar Permiso");
+        lblFolio.setText("Folio del permiso....");
 
-        jButton2.setText("Regresar");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        lblTipoPermiso.setText("Elija un tipo de permiso...");
+
+        cbxTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elija uno...", "Iniciación", "Finalización" }));
+        cbxTipo.setToolTipText("Elija un tipo de permiso");
+        cbxTipo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblTitulo.setText("Registrar Permiso");
+
+        lblDireccion.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblDireccion.setText("Folio:");
+
+        btnRegistrar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnRegistrar.setText("Registrar");
+        btnRegistrar.setToolTipText("Registrar permiso");
+        btnRegistrar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnRegistrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btnRegistrarActionPerformed(evt);
             }
         });
 
-        jLabel3.setText("Folio");
+        UObraLogoPeque.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\UObraPeque.png")); // NOI18N
 
-        jLabel4.setText("Fecha concesión ");
+        lblTipo.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblTipo.setText("Tipo:");
 
-        jLabel6.setText("Tipo");
+        btnCancelar.setText("Cancelar");
+        btnCancelar.setToolTipText("Cancelar el registro de permiso");
+        btnCancelar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Iniciacion", "Finalizacion" }));
+        lblFechaConcesado.setText("Ingrese una fecha de concesión...");
 
-        jButton1.setText("Registrar");
+        txtFolio.setToolTipText("Max. 6 caracteres");
+        txtFolio.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtFolioKeyTyped(evt);
+            }
+        });
+
+        lblBusqueda.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblBusqueda.setText("Registro:");
+
+        fechaConcesion.setToolTipText("Periodo inicio");
+
+        lblFechaConcesion.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblFechaConcesion.setText("Fecha concesión:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -65,70 +138,157 @@ public class RegistrarPermiso extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(105, 105, 105)
-                        .addComponent(jButton2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton1))
+                        .addGap(18, 18, 18)
+                        .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(94, 94, 94)
+                        .addComponent(UObraLogoPeque))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(28, 28, 28)
+                        .addGap(21, 21, 21)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel6)
-                                .addGap(18, 18, 18)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel7)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
-                                        .addComponent(jTextField3)))))))
-                .addContainerGap(36, Short.MAX_VALUE))
+                                .addGap(131, 131, 131)
+                                .addComponent(btnRegistrar)
+                                .addGap(42, 42, 42)
+                                .addComponent(btnCancelar))
+                            .addComponent(lblBusqueda)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(lblTipo)
+                                    .addComponent(lblFechaConcesion)
+                                    .addComponent(lblDireccion))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(lblFolio)
+                                    .addComponent(lblFechaConcesado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(txtFolio)
+                                    .addComponent(lblTipoPermiso, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(fechaConcesion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(cbxTipo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(34, 34, 34)
-                .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblTitulo)
+                    .addComponent(UObraLogoPeque))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblBusqueda)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblFolio)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                    .addComponent(txtFolio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblDireccion))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblTipoPermiso)
+                .addGap(2, 2, 2)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(68, 68, 68)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addGap(31, 31, 31))
+                    .addComponent(cbxTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblTipo))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblFechaConcesado)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblFechaConcesion)
+                        .addGap(26, 26, 26)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnCancelar)
+                            .addComponent(btnRegistrar)))
+                    .addComponent(fechaConcesion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        this.dispose();
-    }//GEN-LAST:event_jButton2ActionPerformed
+    private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
+        if (this.cbxTipo.getSelectedItem() != "Elija uno...") {
+            if (this.fechaConcesion.getCalendar() != null) {
+                if (valido.validarFechas(this.fechaConcesion.getCalendar(), fecha.fechaAhora())) {
+                    if (this.txtFolio.getText().length() > 6) {
+                        this.txtFolio.setText(this.txtFolio.getText().substring(0, 6));
+                    }
+                    TipoPermiso tipo;
+                    if (this.cbxTipo.getSelectedItem() == "Iniciación") {
+                        tipo = TipoPermiso.INICIACION;
+                    } else {
+                        tipo = TipoPermiso.FINALIZACION;
+                    }
+                    Permisos permiso = new Permisos(
+                            txtFolio.getText(),
+                            tipo,
+                            fechaConcesion.getCalendar(),
+                            this.jefe);
+                    Permisos permisoRegistrado = PermisosDAO.registrarPermiso(permiso);
+                    if (permisoRegistrado.getId() != null) {
+                        try {
+                            JOptionPane.showMessageDialog(null,
+                                    "Se realizó exitosamente el registro de permiso de folio " + crypt.decrypt(permisoRegistrado.getFolio())
+                                    + " con fecha de concesión el " + fecha.formatoFecha(permisoRegistrado.getFechaConcesion())
+                                    + "\n - ID: " + permisoRegistrado.getId() + ". ☺", "Registro de permiso exitoso", JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
+                        } catch (Exception ex) {
+                            Logger.getLogger(RegistrarPermiso.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Error interno: Ocurrió un errror al querer registrar el permiso.", "¡Error interno!", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Error: La fecha de concesión no puede ser después que la fecha actual.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Error: Ingrese una fecha de concesión.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Error: Seleccione un tipo de permiso válido.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnRegistrarActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        this.setVisible(false);
+        int i = JOptionPane.showConfirmDialog(this, "¿Seguro que deseas cancelar el registro de permiso? Los datos de registro no se guardarán", "Advertencia", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        if (i == JOptionPane.YES_OPTION) {
+            this.dispose();
+            new PanelCliente(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
+        } else {
+            this.setVisible(true);
+        }
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void txtFolioKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFolioKeyTyped
+        if (txtFolio.getText().length() >= 6) {
+            evt.consume();
+        }
+        char c = evt.getKeyChar();
+        if (Character.isLetter(c) || !Character.isDigit(c)) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtFolioKeyTyped
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JSeparator Separador1;
+    private javax.swing.JLabel UObraLogoPeque;
+    private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnRegistrar;
+    private javax.swing.JComboBox<String> cbxTipo;
+    private com.toedter.calendar.JDateChooser fechaConcesion;
+    private javax.swing.JLabel lblBusqueda;
+    private javax.swing.JLabel lblDireccion;
+    private javax.swing.JLabel lblFechaConcesado;
+    private javax.swing.JLabel lblFechaConcesion;
+    private javax.swing.JLabel lblFolio;
+    private javax.swing.JLabel lblTipo;
+    private javax.swing.JLabel lblTipoPermiso;
+    private javax.swing.JLabel lblTitulo;
+    private javax.swing.JTextField txtFolio;
     // End of variables declaration//GEN-END:variables
 }

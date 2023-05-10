@@ -29,6 +29,8 @@ public class PanelCliente extends javax.swing.JFrame {
         this.cliente = cliente;
         initComponents();
         new Icono().insertarIcono(this);
+        // FUNCIÓN POR AGREGAR
+        this.mniAgregarUbicacionObra.setVisible(false);
         this.lblInsertarID.setText(this.cliente.getId().toString());
         this.lblInsertarNombre.setText(this.cliente.getNombre());
         this.lblInsertarApellidoPaterno.setText(this.cliente.getApellidoPaterno());
@@ -67,7 +69,7 @@ public class PanelCliente extends javax.swing.JFrame {
         MenuObras = new javax.swing.JMenu();
         mniConsultarObras = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        mniConsultarObrasNombre = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         mniSolicitarObra = new javax.swing.JMenuItem();
         MenuPagos = new javax.swing.JMenu();
@@ -78,6 +80,8 @@ public class PanelCliente extends javax.swing.JFrame {
         mniConsultarUbicaciones = new javax.swing.JMenuItem();
         jSeparator4 = new javax.swing.JPopupMenu.Separator();
         mniRegistrarUbicacion = new javax.swing.JMenuItem();
+        jSeparator6 = new javax.swing.JPopupMenu.Separator();
+        mniAgregarUbicacionObra = new javax.swing.JMenuItem();
         MenuCuenta = new javax.swing.JMenu();
         mniCambiarContrasena = new javax.swing.JMenuItem();
         jSeparator5 = new javax.swing.JPopupMenu.Separator();
@@ -156,15 +160,15 @@ public class PanelCliente extends javax.swing.JFrame {
         MenuObras.add(mniConsultarObras);
         MenuObras.add(jSeparator1);
 
-        jMenuItem1.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuLupa.png")); // NOI18N
-        jMenuItem1.setText("Consultar Por Nombre");
-        jMenuItem1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        mniConsultarObrasNombre.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuLupa.png")); // NOI18N
+        mniConsultarObrasNombre.setText("Consultar Por Nombre");
+        mniConsultarObrasNombre.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        mniConsultarObrasNombre.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                mniConsultarObrasNombreActionPerformed(evt);
             }
         });
-        MenuObras.add(jMenuItem1);
+        MenuObras.add(mniConsultarObrasNombre);
         MenuObras.add(jSeparator2);
 
         mniSolicitarObra.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuPregunta.png")); // NOI18N
@@ -228,6 +232,16 @@ public class PanelCliente extends javax.swing.JFrame {
             }
         });
         MenuUbicaciones.add(mniRegistrarUbicacion);
+        MenuUbicaciones.add(jSeparator6);
+
+        mniAgregarUbicacionObra.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuInsercion.png")); // NOI18N
+        mniAgregarUbicacionObra.setText("Agregar Ubicación Obra");
+        mniAgregarUbicacionObra.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mniAgregarUbicacionObraActionPerformed(evt);
+            }
+        });
+        MenuUbicaciones.add(mniAgregarUbicacionObra);
 
         Menu.add(MenuUbicaciones);
 
@@ -400,8 +414,12 @@ public class PanelCliente extends javax.swing.JFrame {
     }//GEN-LAST:event_mniConsultarPagosActionPerformed
 
     private void mniRealizarPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniRealizarPagoActionPerformed
-        new RealizarPago(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
-        this.dispose();
+        try {
+            new RealizarPago(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
+            this.dispose();
+        } catch (Exception ex) {
+            Logger.getLogger(PanelCliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_mniRealizarPagoActionPerformed
 
     private void mniConsultarUbicacionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniConsultarUbicacionesActionPerformed
@@ -422,10 +440,15 @@ public class PanelCliente extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_mniCambiarContrasenaActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void mniConsultarObrasNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniConsultarObrasNombreActionPerformed
         new ConsultarObrasNombre(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
         this.dispose();
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_mniConsultarObrasNombreActionPerformed
+
+    private void mniAgregarUbicacionObraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniAgregarUbicacionObraActionPerformed
+        new AgregarUbicacionObra(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_mniAgregarUbicacionObraActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -437,12 +460,12 @@ public class PanelCliente extends javax.swing.JFrame {
     private javax.swing.JSeparator Separador1;
     private javax.swing.JLabel UObraLogoPeque;
     private javax.swing.JButton btnCerrarSesion;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JPopupMenu.Separator jSeparator4;
     private javax.swing.JPopupMenu.Separator jSeparator5;
+    private javax.swing.JPopupMenu.Separator jSeparator6;
     private javax.swing.JLabel lbl$1;
     private javax.swing.JLabel lbl$2;
     private javax.swing.JLabel lblDeuda;
@@ -457,9 +480,11 @@ public class PanelCliente extends javax.swing.JFrame {
     private javax.swing.JLabel lblMXN1;
     private javax.swing.JLabel lblMXN2;
     private javax.swing.JLabel lblTitulo;
+    private javax.swing.JMenuItem mniAgregarUbicacionObra;
     private javax.swing.JMenuItem mniCambiarContrasena;
     private javax.swing.JMenuItem mniCambiarUsuario;
     private javax.swing.JMenuItem mniConsultarObras;
+    private javax.swing.JMenuItem mniConsultarObrasNombre;
     private javax.swing.JMenuItem mniConsultarPagos;
     private javax.swing.JMenuItem mniConsultarUbicaciones;
     private javax.swing.JMenuItem mniRealizarPago;

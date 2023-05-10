@@ -2,25 +2,42 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package GUI.Jefe.Clientes;
+package GUI.Cliente;
+
+import DAOs.ClientesDAO;
+import DAOs.ObrasDAO;
+import DAOs.ObrerosDAO;
+import DAOs.PagosDAO;
+import Dominio.Clientes;
+import Dominio.Obras;
+import Herramientas.Fecha;
+import Herramientas.Icono;
+import Herramientas.Validadores;
 
 /**
  *
  * @author 52644
  */
-public class ConsultarClientesAdeudo extends javax.swing.JFrame {
+public class AgregarUbicacionObra extends javax.swing.JFrame {
+    
+    // Atributos
+    Clientes cliente = new Clientes();
+    Fecha fecha = new Fecha();
+    ClientesDAO ClientesDAO = new ClientesDAO();
+    ObrasDAO ObrasDAO = new ObrasDAO();
+    ObrerosDAO ObrerosDAO = new ObrerosDAO();
+    PagosDAO PagosDAO = new PagosDAO();
+    Validadores valido = new Validadores();
+    Obras obra;
 
     /**
-     * consultar de forma rápida los clientes que aún tienen adeudo pendiente 
-     * con nosotros y su número de teléfono para poder comunicarnos con ellos
-     * y realizar el cobro correspondiente.
+     * Creates new form AgregarUbicacionObra
      */
-    
-    /**
-     * Creates new form ConsultarClientes
-     */
-    public ConsultarClientesAdeudo() {
+    public AgregarUbicacionObra(Clientes cliente) {
+        this.cliente = cliente;
+        this.obra = null;
         initComponents();
+        new Icono().insertarIcono(this);
     }
 
     /**
@@ -47,7 +64,6 @@ public class ConsultarClientesAdeudo extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables

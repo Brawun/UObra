@@ -30,13 +30,14 @@ public class ObrasObreroDAO {
     Fecha fecha = new Fecha();
 
     // Métodos de acceso
-    public void registrarObraObrero(ObrasObrero obrasObrero) {
+    public Long registrarObraObrero(ObrasObrero obrasObrero) {
         EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
         EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.persist(obrasObrero);
         entityManager.getTransaction().commit();
         entityManager.close();
+        return obrasObrero.getId();
     }
 
     public void eliminarObrasObrero(Long id) {

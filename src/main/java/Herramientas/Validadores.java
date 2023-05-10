@@ -174,6 +174,17 @@ public class Validadores {
     }
 
     /**
+     * 
+     * @param cadena
+     * @return 
+     */
+    public String obtenerNumeros(String cadena) {
+        // Utiliza una expresión regular para eliminar todo lo que no sean números
+        String numeros = cadena.replaceAll("[^0-9]", "");
+        return numeros;
+    }
+
+    /**
      * Método para validar que una cadena no tenga espacios.
      *
      * @param string Cadena a validar.

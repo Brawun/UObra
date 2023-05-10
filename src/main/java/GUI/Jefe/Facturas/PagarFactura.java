@@ -4,17 +4,45 @@
  */
 package GUI.Jefe.Facturas;
 
+import DAOs.ClientesDAO;
+import DAOs.FacturasDAO;
+import Dominio.Clientes;
+import Dominio.Facturas;
+import Dominio.Jefes;
+import Enumeradores.EstadoFactura;
+import Enumeradores.MetodoPago;
+import GUI.Cliente.PanelCliente;
+import Herramientas.Icono;
+import Herramientas.Validadores;
+import java.util.List;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author naely
  */
 public class PagarFactura extends javax.swing.JFrame {
 
+    // Atributos
+    Jefes jefe;
+    Clientes cliente = new Clientes();
+    ClientesDAO ClientesDAO = new ClientesDAO();
+    FacturasDAO FacturasDAO = new FacturasDAO();
+    Validadores valido = new Validadores();
+
     /**
      * Creates new form PagoFactura
      */
-    public PagarFactura() {
+    public PagarFactura(Jefes jefe) throws Exception {
+        this.jefe = jefe;
         initComponents();
+        new Icono().insertarIcono(this);
+        List<Facturas> facturas = FacturasDAO.consultarFacturasFechaCreada(null, null, EstadoFactura.PENDIENTE, MetodoPago.NO_APLICA, null, this.jefe.getId());
+        for (Facturas factura : facturas) {
+            this.cbxUnaFactura.addItem(
+                    "Factura: " + factura.getDescripcion()
+                    + " - ID: " + factura.getId());
+        }
     }
 
     /**
@@ -26,99 +54,198 @@ public class PagarFactura extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        jSeparator1 = new javax.swing.JSeparator();
-        jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnCancelar = new javax.swing.JButton();
+        lblFactura = new javax.swing.JLabel();
+        lblBusqueda = new javax.swing.JLabel();
+        UObraLogoPeque = new javax.swing.JLabel();
+        btnPagar = new javax.swing.JButton();
+        lblTitulo = new javax.swing.JLabel();
+        cbxUnaFactura = new javax.swing.JComboBox<>();
+        Separador1 = new javax.swing.JSeparator();
+        lblElijaFactura = new javax.swing.JLabel();
+        lblMetodoPago = new javax.swing.JLabel();
+        lblElijaMetodo = new javax.swing.JLabel();
+        cbxMetodoPago = new javax.swing.JComboBox<>();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Pagar Factura");
+        setResizable(false);
 
-        jLabel1.setText("Sistema UObreros - Pago de Facturas");
-
-        jLabel2.setText("Folio Factura ");
-
-        jLabel3.setText("Monto");
-
-        jButton1.setText("Regresar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnCancelar.setText("Cancelar");
+        btnCancelar.setToolTipText("Cancelar pago de factura");
+        btnCancelar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnCancelarActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Pagar");
+        lblFactura.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblFactura.setText("Factura:");
+
+        lblBusqueda.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblBusqueda.setText("Registro:");
+
+        UObraLogoPeque.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\UObraPeque.png")); // NOI18N
+
+        btnPagar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnPagar.setText("Pagar");
+        btnPagar.setToolTipText("Pagar factura");
+        btnPagar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnPagar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPagarActionPerformed(evt);
+            }
+        });
+
+        lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblTitulo.setText("Pagar Factura");
+
+        cbxUnaFactura.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elija una..." }));
+        cbxUnaFactura.setToolTipText("Elija un tipo de permiso");
+        cbxUnaFactura.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        lblElijaFactura.setText("Elija una factura...");
+
+        lblMetodoPago.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblMetodoPago.setText("Método de pago:");
+
+        lblElijaMetodo.setText("Elija un método de pago...");
+
+        cbxMetodoPago.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elija uno...", "Efectivo", "Débito", "Crédito" }));
+        cbxMetodoPago.setToolTipText("Elija un tipo de permiso");
+        cbxMetodoPago.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnPagar)
+                .addGap(42, 42, 42)
+                .addComponent(btnCancelar)
+                .addGap(23, 23, 23))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(19, 19, 19)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
-                                .addComponent(jSeparator1))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jTextField1)
-                                    .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)))))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(59, 59, 59)
-                        .addComponent(jButton1)
-                        .addGap(46, 46, 46)
-                        .addComponent(jButton2)))
-                .addContainerGap(19, Short.MAX_VALUE))
+                        .addComponent(lblFactura)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblElijaFactura)
+                            .addComponent(cbxUnaFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addComponent(lblBusqueda))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(lblMetodoPago)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblElijaMetodo)
+                            .addComponent(cbxMetodoPago, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(94, 94, 94)
+                        .addComponent(UObraLogoPeque))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addComponent(jLabel1)
+                .addGap(15, 15, 15)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblTitulo)
+                    .addComponent(UObraLogoPeque))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblBusqueda)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblElijaFactura)
+                .addGap(2, 2, 2)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbxUnaFactura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblFactura))
                 .addGap(18, 18, 18)
+                .addComponent(lblElijaMetodo)
+                .addGap(2, 2, 2)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(29, 29, 29)
+                    .addComponent(cbxMetodoPago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblMetodoPago))
+                .addGap(21, 21, 21)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(50, 50, 50)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addContainerGap(34, Short.MAX_VALUE))
+                    .addComponent(btnCancelar)
+                    .addComponent(btnPagar))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         pack();
-        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        this.dispose();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        this.setVisible(false);
+        int i = JOptionPane.showConfirmDialog(this, "¿Seguro que deseas cancelar el registro de permiso? Los datos de registro no se guardarán", "Advertencia", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        if (i == JOptionPane.YES_OPTION) {
+            this.dispose();
+            new PanelCliente(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
+        } else {
+            this.setVisible(true);
+        }
+    }//GEN-LAST:event_btnCancelarActionPerformed
 
-   
+    private void btnPagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPagarActionPerformed
+        if (this.cbxUnaFactura.getSelectedItem() != "Elija una...") {
+            if (this.cbxMetodoPago.getSelectedItem() != "Elija uno...") {
+                MetodoPago metodo;
+                if (cbxMetodoPago.getSelectedItem() == "Débito") {
+                    metodo = MetodoPago.DEBITO;
+                } else if (cbxMetodoPago.getSelectedItem() == "Crédito") {
+                    metodo = MetodoPago.CREDITO;
+                } else {
+                    metodo = MetodoPago.EFECTIVO;
+                }
+                // Factura
+                String facturaElegida = this.cbxUnaFactura.getSelectedItem().toString();
+                String idElegido = facturaElegida.substring(facturaElegida.length(), 3);
+                idElegido = valido.obtenerNumeros(idElegido);
+                Long id = Long.valueOf(idElegido);
+                Facturas factura = FacturasDAO.consultarFactura(id);
+                if (factura != null) {
+                    FacturasDAO.pagarFactura(id, metodo);
+                    JOptionPane.showMessageDialog(null,
+                            "Se realizó exitosamente el la paga de la factura " + factura.getDescripcion()
+                            + " con un monto de $ " + factura.getMonto() + " MXN"
+                            + "\n - ID: " + factura.getId() + ". ☺", "Pago de factura exitoso", JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
+                } else {
+                    JOptionPane.showMessageDialog(null, "Error interno: Ocurrió un errror al querer pagar la factura.", "¡Error interno!", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Error: Seleccione un método de pago válido.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Error: Seleccione una factura válida.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnPagarActionPerformed
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JSeparator Separador1;
+    private javax.swing.JLabel UObraLogoPeque;
+    private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnPagar;
+    private javax.swing.JComboBox<String> cbxMetodoPago;
+    private javax.swing.JComboBox<String> cbxUnaFactura;
+    private javax.swing.JLabel lblBusqueda;
+    private javax.swing.JLabel lblElijaFactura;
+    private javax.swing.JLabel lblElijaMetodo;
+    private javax.swing.JLabel lblFactura;
+    private javax.swing.JLabel lblMetodoPago;
+    private javax.swing.JLabel lblTitulo;
     // End of variables declaration//GEN-END:variables
 }

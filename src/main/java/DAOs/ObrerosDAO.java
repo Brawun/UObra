@@ -186,13 +186,14 @@ public class ObrerosDAO {
     }
 
     // Métodos de acceso
-    public void registrarObrero(Obreros obrero) {
+    public Long registrarObrero(Obreros obrero) {
         EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
         EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.persist(obrero);
         entityManager.getTransaction().commit();
         entityManager.close();
+        return obrero.getId();
     }
     
     public void agregarPagoObrero(Long id, Pagos pago) {
@@ -201,7 +202,7 @@ public class ObrerosDAO {
         if (verificarObrero(id)) {
             entityManager.getTransaction().begin();
             Obreros obrero = consultarObrero(id);
-            //obrero.getPagos().add(pago);
+            obrero.getPagos().add(pago);
             entityManager.merge(obrero);
             entityManager.getTransaction().commit();
             entityManager.close();

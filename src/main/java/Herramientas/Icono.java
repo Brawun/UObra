@@ -5,6 +5,7 @@ package Herramientas;
 
 import java.awt.Image;
 import java.awt.Toolkit;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 /**
@@ -29,5 +30,10 @@ public class Icono {
         if (image != null) {
             frame.setIconImage(image);
         }
+    }
+    
+    public ImageIcon obtenerIcono() {
+        ImageIcon icono = new ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\Icono.png");
+        return icono;
     }
 }

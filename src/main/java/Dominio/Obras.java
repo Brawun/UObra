@@ -47,7 +47,7 @@ public class Obras implements Serializable {
     EstadoObra estado = EstadoObra.EN_ESPERA;
 
     @Column(name = "CostoArranque", nullable = false)
-    private Float costoArranque;
+    private Float costoArranque = (float) 0.0;
 
     @Column(name = "Inversion", nullable = false)
     private Float inversion;
@@ -180,6 +180,13 @@ public class Obras implements Serializable {
         this.cliente = cliente;
     }
 
+    public Obras(Float inversion, String nombre, Clientes cliente, List<Ubicaciones> ubicaciones) {
+        this.inversion = inversion;
+        this.nombre = nombre;
+        this.cliente = cliente;
+        this.ubicaciones = ubicaciones;
+    }
+    
     public Obras(Float costoArranque, Float inversion, String nombre) {
         this.costoArranque = costoArranque;
         this.inversion = inversion;
@@ -349,6 +356,6 @@ public class Obras implements Serializable {
 
     @Override
     public String toString() {
-        return "Obras{" + "id=" + id + ", estado=" + estado + ", costoArranque=" + costoArranque + ", inversion=" + inversion + ", costoTotal=" + costoTotal + ", deuda=" + deuda + ", estaPagada=" + estaPagada + ", nombre=" + nombre + ", fechaSolicitada=" + fechaSolicitada + ", cliente=" + cliente.getId() + '}';
+        return "Obras{" + "id=" + id + ", estado=" + estado + ", costoArranque=" + costoArranque + ", inversion=" + inversion + ", costoTotal=" + costoTotal + ", deuda=" + deuda + ", estaPagada=" + estaPagada + ", nombre=" + nombre + ", fechaSolicitada=" + fechaSolicitada + ", pagos=" + pagos + ", cliente=" + cliente.getId() + '}';
     }
 }

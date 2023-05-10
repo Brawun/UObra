@@ -31,13 +31,14 @@ import javax.persistence.criteria.Root;
 public class PlanosDAO {
 
     // Métodos de acceso
-    public void registrarPlano(Planos plano) {
+    public Planos registrarPlano(Planos plano) {
         EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
         EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.persist(plano);
         entityManager.getTransaction().commit();
         entityManager.close();
+        return plano;
     }
 
     public void editarFechaRealizacionPlano(Long id, Calendar fechaRealizacion) {

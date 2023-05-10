@@ -294,7 +294,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="lblInstrucci&#xf3;n">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Seleccione una obra para poder saber en qu&#xe9; ubicaciones ha sido o est&#xe1; siendo utilizada"/>
+        <Property name="text" type="java.lang.String" value="Seleccione una ubicaci&#xf3;n para poder saber en qu&#xe9; obras ha sido o est&#xe1; siendo utilizada"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="lblUbicacionSeleccionada">

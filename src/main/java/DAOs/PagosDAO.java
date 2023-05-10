@@ -31,13 +31,14 @@ import javax.persistence.criteria.Root;
 public class PagosDAO {
 
     // Métodos de acceso
-    public void registrarPago(Pagos pago) {
+    public Pagos registrarPago(Pagos pago) {
         EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
         EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.persist(pago);
         entityManager.getTransaction().commit();
         entityManager.close();
+        return pago;
     }
 
     public void eliminarPago(Long id) {

@@ -31,13 +31,14 @@ import javax.persistence.criteria.Root;
 public class PermisosDAO {
 
     // Métodos de acceso
-    public void registrarPermiso(Permisos permiso) {
+    public Permisos registrarPermiso(Permisos permiso) {
         EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
         EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.persist(permiso);
         entityManager.getTransaction().commit();
         entityManager.close();
+        return permiso;
     }
 
     public void editarTipoPermiso(Long id, TipoPermiso tipo) {

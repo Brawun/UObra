@@ -257,6 +257,7 @@ public class ConsultarObrasNombre extends javax.swing.JFrame {
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         try {
+            this.txtNombre.setText(this.txtNombre.getText().trim());
             this.cargarTablaObras();
         } catch (Exception ex) {
             Logger.getLogger(ConsultarObrasNombre.class.getName()).log(Level.SEVERE, null, ex);

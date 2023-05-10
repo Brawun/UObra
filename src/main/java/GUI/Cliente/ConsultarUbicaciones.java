@@ -222,7 +222,7 @@ public class ConsultarUbicaciones extends javax.swing.JFrame {
         lblUtilizadasObras.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblUtilizadasObras.setText("Ubicación utilizada en siguientes obras:");
 
-        lblInstrucción.setText("Seleccione una obra para poder saber en qué ubicaciones ha sido o está siendo utilizada");
+        lblInstrucción.setText("Seleccione una ubicación para poder saber en qué obras ha sido o está siendo utilizada");
 
         lblUbicacionSeleccionada.setText("Ubicación seleccionada:");
 

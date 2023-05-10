@@ -183,13 +183,14 @@ public class JefesDAO {
     }
 
     // Métodos de acceso
-    public void registrarJefe(Jefes jefe) {
+    public Long registrarJefe(Jefes jefe) {
         EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
         EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.persist(jefe);
         entityManager.getTransaction().commit();
         entityManager.close();
+        return jefe.getId();
     }
 
     public void eliminarJefe(Long id) {

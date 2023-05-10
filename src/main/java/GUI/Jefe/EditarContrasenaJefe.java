@@ -2,10 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package GUI.Cliente;
+package GUI.Jefe;
 
-import DAOs.ClientesDAO;
-import Dominio.Clientes;
+import GUI.Jefe.*;
+import DAOs.JefesDAO;
+import Dominio.Jefes;
 import Herramientas.Encriptador;
 import Herramientas.Icono;
 import Herramientas.Validadores;
@@ -17,25 +18,25 @@ import javax.swing.JOptionPane;
  *
  * @author 52644
  */
-public class EditarContrasenaCliente extends javax.swing.JFrame {
+public class EditarContrasenaJefe extends javax.swing.JFrame {
 
     // Atributos
-    Clientes cliente = new Clientes();
-    ClientesDAO ClientesDAO = new ClientesDAO();
+    Jefes Jefe = new Jefes();
+    JefesDAO JefesDAO = new JefesDAO();
 
     /**
-     * Crea un nuevo frame EditarContrasenaCliente
-     *
-     * @param cliente Cliente de cuenta iniciada
-     * @throws Exception En caso que haya problemas con la desencriptación
+     * Crea un nuevo frame EditarContrasenaJefe
+     * 
+     * @param Jefe Jefe de cuenta iniciada
+     * @throws Exception En caso que haya problemas con la desencriptación 
      */
-    public EditarContrasenaCliente(Clientes cliente) throws Exception {
+    public EditarContrasenaJefe(Jefes Jefe) throws Exception {
         Encriptador crypt = new Encriptador();
         initComponents();
         new Icono().insertarIcono(this);
-        this.cliente = cliente;
-        this.lblInsertarContrasenia.setText(crypt.decrypt(cliente.getContrasena()));
-        this.lblInsertarUsuario.setText(crypt.decrypt(cliente.getUsuario()));
+        this.Jefe = Jefe;
+        this.lblInsertarContrasenia.setText(crypt.decrypt(Jefe.getContrasena()));
+        this.lblInsertarUsuario.setText(crypt.decrypt(Jefe.getUsuario()));
     }
 
     /**
@@ -64,7 +65,6 @@ public class EditarContrasenaCliente extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Editar Contraseña");
-        setResizable(false);
 
         lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lblTitulo.setText("Editar Contraseña");
@@ -104,6 +104,7 @@ public class EditarContrasenaCliente extends javax.swing.JFrame {
         });
 
         txtNuevaContrasenia.setToolTipText("Max. 20 caracteres");
+        txtNuevaContrasenia.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         txtNuevaContrasenia.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txtNuevaContraseniaKeyTyped(evt);
@@ -128,73 +129,85 @@ public class EditarContrasenaCliente extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(14, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(Separator2, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(130, 130, 130)
-                                .addComponent(btnActualizar)
-                                .addGap(66, 66, 66)
-                                .addComponent(btnCancelar))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblNuevaContrasenia)
-                                .addGap(18, 18, 18)
-                                .addComponent(txtNuevaContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(chbVerContrasenia))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(lblTitulo)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(UObraLogoPeque))
-                                .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(12, Short.MAX_VALUE))
+                        .addGap(14, 14, 14)
+                        .addComponent(lblTitulo)
+                        .addGap(151, 151, 151)
+                        .addComponent(UObraLogoPeque))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lblUsuarioActual)
-                            .addComponent(lblContraseniaActual))
-                        .addGap(18, 18, 18)
+                        .addGap(14, 14, 14)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblInsertarUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblInsertarContrasenia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ImagenCandado)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(lblContraseniaActual)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(144, 144, 144)
+                                .addComponent(lblInsertarContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(24, 24, 24)
+                                        .addComponent(lblUsuarioActual))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(144, 144, 144)
+                                        .addComponent(lblInsertarUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(ImagenCandado))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addComponent(Separator2, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addComponent(lblNuevaContrasenia)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtNuevaContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(12, 12, 12)
+                        .addComponent(chbVerContrasenia))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(144, 144, 144)
+                        .addComponent(btnActualizar)
+                        .addGap(66, 66, 66)
+                        .addComponent(btnCancelar)))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(6, 6, 6)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblTitulo)
                     .addComponent(UObraLogoPeque))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGap(6, 6, 6)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(42, 42, 42)
+                        .addComponent(lblContraseniaActual))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(16, 16, 16)
+                        .addComponent(lblUsuarioActual))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(16, 16, 16)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblUsuarioActual)
-                            .addComponent(lblInsertarUsuario))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblContraseniaActual)
-                            .addComponent(lblInsertarContrasenia)))
-                    .addComponent(ImagenCandado))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(Separator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblInsertarUsuario)
+                            .addComponent(ImagenCandado)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(42, 42, 42)
+                        .addComponent(lblInsertarContrasenia))
+                    .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(Separator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(6, 6, 6)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblNuevaContrasenia)
                     .addComponent(txtNuevaContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(chbVerContrasenia))
-                .addGap(18, 18, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addComponent(chbVerContrasenia)))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnActualizar)
                     .addComponent(btnCancelar))
-                .addGap(16, 16, 16))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
 
         pack();
@@ -204,34 +217,34 @@ public class EditarContrasenaCliente extends javax.swing.JFrame {
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
         Validadores valida = new Validadores();
         this.txtNuevaContrasenia.setText(this.txtNuevaContrasenia.getText().trim());
-        if (!this.txtNuevaContrasenia.getText().isBlank() && valida.validarSinEspacios(this.txtNuevaContrasenia.getText())) {
+        if (!this.txtNuevaContrasenia.getText().isBlank() && valida.validarSinEspacios(this.txtNuevaContrasenia.getText()) ) {
             try {
                 Encriptador crypt = new Encriptador();
-                if (!crypt.decrypt(this.cliente.getContrasena()).equals(new String(this.txtNuevaContrasenia.getPassword()))) {
+                if (!crypt.decrypt(this.Jefe.getContrasena()).equals(new String(this.txtNuevaContrasenia.getPassword()))) {
                     try {
                         if (this.txtNuevaContrasenia.getText().length() > 20) {
                             this.txtNuevaContrasenia.setText(this.txtNuevaContrasenia.getText().substring(0, 20));
                         }
-                        ClientesDAO.editarContrasena(this.cliente.getId(), this.txtNuevaContrasenia.getText());
+                        JefesDAO.editarContrasena((Long) this.Jefe.getId(), this.txtNuevaContrasenia.getText());
                         JOptionPane.showMessageDialog(null, "Se ha actualizado la contraseña exitosamente.", "Actualización exitosa", JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
-                        new PanelCliente(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
+                        new PanelJefe(JefesDAO.consultarJefe(this.Jefe.getId())).setVisible(true);
                         this.dispose();
                     } catch (Exception ex) {
-                        Logger.getLogger(EditarContrasenaCliente.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(EditarContrasenaJefe.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 } else {
                     JOptionPane.showMessageDialog(null, "Error: La nueva contraseña no puede ser la misma a la ya existente. (Intente con otra)", "¡Error!", JOptionPane.ERROR_MESSAGE);
                 }
             } catch (Exception ex) {
-                Logger.getLogger(EditarContrasenaCliente.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(EditarContrasenaJefe.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            JOptionPane.showMessageDialog(null, "Error: Ingrese una nueva contraseña. (Contraseña en blanco)", "¡Error!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error: Ingrese una nueva contraseña. (Contraseña en blanco o con espacios)", "¡Error!", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnActualizarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        new PanelCliente(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
+        new PanelJefe(JefesDAO.consultarJefe(this.Jefe.getId())).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed
 

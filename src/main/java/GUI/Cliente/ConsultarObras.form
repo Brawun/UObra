@@ -355,6 +355,9 @@
       <Properties>
         <Property name="toolTipText" type="java.lang.String" value="Ingrese n&#xfa;meros decimales"/>
       </Properties>
+      <Events>
+        <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtCostoTotalKeyTyped"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="UObraLogoPeque">
       <Properties>

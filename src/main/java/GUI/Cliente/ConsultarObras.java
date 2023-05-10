@@ -229,6 +229,11 @@ public class ConsultarObras extends javax.swing.JFrame {
         periodoFinal.setToolTipText("Periodo fin");
 
         txtCostoTotal.setToolTipText("Ingrese números decimales");
+        txtCostoTotal.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCostoTotalKeyTyped(evt);
+            }
+        });
 
         UObraLogoPeque.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\UObraPeque.png")); // NOI18N
 
@@ -446,7 +451,7 @@ public class ConsultarObras extends javax.swing.JFrame {
                     if (this.cbxAccion.getSelectedItem() != "Elija uno...") {
                         if (this.cbxEstado.getSelectedItem() != "Elija uno...") {
                             if (this.cbxEconomia.getSelectedItem() != "Elija uno...") {
-                                // Se valida y formatea el campo de monto
+                                // Se valida y formatea el campo de costo total
                                 if (this.txtCostoTotal.getText().isBlank()) {
                                     this.txtCostoTotal.setText("0.0");
                                 } else {
@@ -487,7 +492,7 @@ public class ConsultarObras extends javax.swing.JFrame {
                 if (this.cbxAccion.getSelectedItem() != "Elija uno...") {
                     if (this.cbxEstado.getSelectedItem() != "Elija uno...") {
                         if (this.cbxEconomia.getSelectedItem() != "Elija uno...") {
-                            // Se valida y formatea el campo de monto
+                            // Se valida y formatea el campo de costo total
                             if (this.txtCostoTotal.getText().isBlank()) {
                                 this.txtCostoTotal.setText("0.0");
                             } else {
@@ -526,6 +531,16 @@ public class ConsultarObras extends javax.swing.JFrame {
             Logger.getLogger(ConsultarObras.class.getName()).log(Level.SEVERE, null, e);
         }
     }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void txtCostoTotalKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCostoTotalKeyTyped
+        if (txtCostoTotal.getText().length() >= 12) {
+            evt.consume();
+        }
+        char c = evt.getKeyChar();
+        if (Character.isLetter(c)) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtCostoTotalKeyTyped
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

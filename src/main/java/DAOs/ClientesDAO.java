@@ -188,13 +188,14 @@ public class ClientesDAO {
     }
 
     // Métodos de acceso
-    public void registrarCliente(Clientes cliente) {
+    public Long registrarCliente(Clientes cliente) {
         EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
         EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.persist(cliente);
         entityManager.getTransaction().commit();
         entityManager.close();
+        return cliente.getId();
     }
 
     // Sumar a la deuda del cliente el monto dado

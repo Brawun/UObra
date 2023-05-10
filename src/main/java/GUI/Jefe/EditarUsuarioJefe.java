@@ -2,10 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package GUI.Obrero;
+package GUI.Jefe;
 
-import DAOs.ObrerosDAO;
-import Dominio.Obreros;
+import GUI.Jefe.*;
+import DAOs.JefesDAO;
+import Dominio.Jefes;
 import Herramientas.Encriptador;
 import Herramientas.Icono;
 import Herramientas.Validadores;
@@ -17,25 +18,25 @@ import javax.swing.JOptionPane;
  *
  * @author 52644
  */
-public class EditarUsuarioObrero extends javax.swing.JFrame {
+public class EditarUsuarioJefe extends javax.swing.JFrame {
 
     // Atributos
-    Obreros obrero = new Obreros();
-    ObrerosDAO ObrerosDAO = new ObrerosDAO();
+    Jefes Jefe = new Jefes();
+    JefesDAO JefesDAO = new JefesDAO();
 
     /**
-     * Crea un nuevo frame EditarUsuarioObrero
+     * Crea un nuevo frame EditarUsuarioJefe
      *
-     * @param obrero Obrero de cuenta iniciada
+     * @param Jefe Jefe de cuenta iniciada
      * @throws Exception En caso que haya problemas con la desencriptación
      */
-    public EditarUsuarioObrero(Obreros obrero) throws Exception {
+    public EditarUsuarioJefe(Jefes Jefe) throws Exception {
         Encriptador crypt = new Encriptador();
         initComponents();
         new Icono().insertarIcono(this);
-        this.obrero = obrero;
-        this.lblInsertarContrasenia.setText(crypt.decrypt(obrero.getContrasena()));
-        this.lblInsertarUsuario.setText(crypt.decrypt(obrero.getUsuario()));
+        this.Jefe = Jefe;
+        this.lblInsertarContrasenia.setText(crypt.decrypt(Jefe.getContrasena()));
+        this.lblInsertarUsuario.setText(crypt.decrypt(Jefe.getUsuario()));
     }
 
     /**
@@ -115,40 +116,43 @@ public class EditarUsuarioObrero extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addComponent(lblTitulo)
-                .addGap(176, 176, 176)
-                .addComponent(UObraLogoPeque))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(14, 14, 14)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(24, 24, 24)
-                        .addComponent(lblUsuarioActual))
-                    .addComponent(lblContraseniaActual))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblInsertarUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblInsertarContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(14, 14, 14)
+                        .addComponent(lblTitulo)
+                        .addGap(176, 176, 176)
+                        .addComponent(UObraLogoPeque))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(142, 142, 142)
-                        .addComponent(ImagenUsuario))))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addComponent(Separator2, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(39, 39, 39)
-                .addComponent(lblNuevoUsuario)
-                .addGap(18, 18, 18)
-                .addComponent(txtNuevoUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(144, 144, 144)
-                .addComponent(btnActualizar)
-                .addGap(67, 67, 67)
-                .addComponent(btnCancelar))
+                        .addGap(14, 14, 14)
+                        .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(24, 24, 24)
+                                .addComponent(lblUsuarioActual))
+                            .addComponent(lblContraseniaActual))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblInsertarUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblInsertarContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(142, 142, 142)
+                                .addComponent(ImagenUsuario))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addComponent(Separator2, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(39, 39, 39)
+                        .addComponent(lblNuevoUsuario)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtNuevoUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(144, 144, 144)
+                        .addComponent(btnActualizar)
+                        .addGap(67, 67, 67)
+                        .addComponent(btnCancelar)))
+                .addContainerGap(13, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -182,7 +186,8 @@ public class EditarUsuarioObrero extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnActualizar)
-                    .addComponent(btnCancelar)))
+                    .addComponent(btnCancelar))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
 
         pack();
@@ -195,23 +200,23 @@ public class EditarUsuarioObrero extends javax.swing.JFrame {
         if (!this.txtNuevoUsuario.getText().isBlank() && valida.validarSinEspacios(this.txtNuevoUsuario.getText())) {
             try {
                 Encriptador crypt = new Encriptador();
-                if (!crypt.decrypt(this.obrero.getUsuario()).equals(this.txtNuevoUsuario.getText())) {
+                if (!crypt.decrypt(this.Jefe.getUsuario()).equals(this.txtNuevoUsuario.getText())) {
                     try {
                         if (this.txtNuevoUsuario.getText().length() > 20) {
                             this.txtNuevoUsuario.setText(this.txtNuevoUsuario.getText().substring(0, 20));
                         }
-                        ObrerosDAO.editarUsuario(this.obrero.getId(), this.txtNuevoUsuario.getText());
+                        JefesDAO.editarUsuario(this.Jefe.getId(), this.txtNuevoUsuario.getText());
                         JOptionPane.showMessageDialog(null, "Se ha actualizado el usuario exitosamente.", "Actualización exitosa", JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
-                        new PanelObrero(ObrerosDAO.consultarObrero(this.obrero.getId())).setVisible(true);
+                        new PanelJefe(JefesDAO.consultarJefe(this.Jefe.getId())).setVisible(true);
                         this.dispose();
                     } catch (Exception ex) {
-                        Logger.getLogger(EditarContrasenaObrero.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(EditarContrasenaJefe.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 } else {
                     JOptionPane.showMessageDialog(null, "Error: El nuevo usuario no puede ser el mismo al ya existente. (Intente con otro)", "¡Error!", JOptionPane.ERROR_MESSAGE);
                 }
             } catch (Exception ex) {
-                Logger.getLogger(EditarUsuarioObrero.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(EditarUsuarioJefe.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
             JOptionPane.showMessageDialog(null, "Error: Ingrese un nuevo usuario. (Usuario en blanco o con espacios).", "¡Error!", JOptionPane.ERROR_MESSAGE);
@@ -219,7 +224,7 @@ public class EditarUsuarioObrero extends javax.swing.JFrame {
     }//GEN-LAST:event_btnActualizarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        new PanelObrero(ObrerosDAO.consultarObrero(this.obrero.getId())).setVisible(true);
+        new PanelJefe(JefesDAO.consultarJefe(this.Jefe.getId())).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
