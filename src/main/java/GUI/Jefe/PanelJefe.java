@@ -13,7 +13,11 @@ import GUI.Jefe.Jefes.ConsultarDeudores;
 import GUI.Jefe.Obras.IniciarObra;
 import GUI.Jefe.Obras.TerminarObra;
 import GUI.Jefe.Obreros.AgregarObrero;
+import GUI.Jefe.Obreros.PagarObreros;
+import GUI.Jefe.Permisos.ConsultarPermisos;
 import GUI.Jefe.Permisos.RegistrarPermiso;
+import GUI.Jefe.Planos.AsignarPlanos;
+import GUI.Jefe.Planos.ConsultarPlanos;
 import GUI.Jefe.Planos.RegistrarPlano;
 import Herramientas.Icono;
 import java.util.logging.Level;
@@ -64,13 +68,21 @@ public class PanelJefe extends javax.swing.JFrame {
         mniConsultarDeudores = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         mniAgregarObreroObra = new javax.swing.JMenuItem();
+        jSeparator8 = new javax.swing.JPopupMenu.Separator();
+        mniPagarObrero = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
         mniIniciarObra = new javax.swing.JMenuItem();
         jSeparator5 = new javax.swing.JPopupMenu.Separator();
         mniTerminarObra = new javax.swing.JMenuItem();
         jMenu5 = new javax.swing.JMenu();
+        mniConsultarPermisos = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
         mniRegistrarPermiso = new javax.swing.JMenuItem();
         jMenu6 = new javax.swing.JMenu();
+        mniAsignarPlanos = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
+        mniConsultarPlanos = new javax.swing.JMenuItem();
+        jSeparator7 = new javax.swing.JPopupMenu.Separator();
         mniRegistrarPlano = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         mniRegistrarFactura = new javax.swing.JMenuItem();
@@ -83,6 +95,7 @@ public class PanelJefe extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Panel Jefe");
+        setResizable(false);
 
         lblInsertarNombre.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblInsertarNombre.setText("nombre");
@@ -136,6 +149,16 @@ public class PanelJefe extends javax.swing.JFrame {
             }
         });
         jMenu3.add(mniAgregarObreroObra);
+        jMenu3.add(jSeparator8);
+
+        mniPagarObrero.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuDinero.png")); // NOI18N
+        mniPagarObrero.setText("Pagar Obrero Obra");
+        mniPagarObrero.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mniPagarObreroActionPerformed(evt);
+            }
+        });
+        jMenu3.add(mniPagarObrero);
 
         jMenuBar1.add(jMenu3);
 
@@ -164,6 +187,16 @@ public class PanelJefe extends javax.swing.JFrame {
 
         jMenu5.setText("Permisos");
 
+        mniConsultarPermisos.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuLupa.png")); // NOI18N
+        mniConsultarPermisos.setText("Consultar Permisos");
+        mniConsultarPermisos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mniConsultarPermisosActionPerformed(evt);
+            }
+        });
+        jMenu5.add(mniConsultarPermisos);
+        jMenu5.add(jSeparator1);
+
         mniRegistrarPermiso.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuRegistro.png")); // NOI18N
         mniRegistrarPermiso.setText("Registrar Permiso");
         mniRegistrarPermiso.addActionListener(new java.awt.event.ActionListener() {
@@ -176,6 +209,26 @@ public class PanelJefe extends javax.swing.JFrame {
         jMenuBar1.add(jMenu5);
 
         jMenu6.setText("Planos");
+
+        mniAsignarPlanos.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuInsercion.png")); // NOI18N
+        mniAsignarPlanos.setText("Asignar Planos");
+        mniAsignarPlanos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mniAsignarPlanosActionPerformed(evt);
+            }
+        });
+        jMenu6.add(mniAsignarPlanos);
+        jMenu6.add(jSeparator2);
+
+        mniConsultarPlanos.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuLupa.png")); // NOI18N
+        mniConsultarPlanos.setText("Consultar Planos");
+        mniConsultarPlanos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mniConsultarPlanosActionPerformed(evt);
+            }
+        });
+        jMenu6.add(mniConsultarPlanos);
+        jMenu6.add(jSeparator7);
 
         mniRegistrarPlano.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuRegistro.png")); // NOI18N
         mniRegistrarPlano.setText("Registrar Plano");
@@ -260,11 +313,11 @@ public class PanelJefe extends javax.swing.JFrame {
                                 .addComponent(lblInsertarApellidoPaterno)
                                 .addGap(7, 7, 7)
                                 .addComponent(lblInsertarApellidoMaterno)
-                                .addGap(38, 38, 38)
+                                .addGap(56, 56, 56)
                                 .addComponent(lblID)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(lblInsertarID)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 105, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 87, Short.MAX_VALUE)
                                 .addComponent(btnCerrarSesion1)
                                 .addGap(14, 14, 14))))
                     .addComponent(Separador1))
@@ -280,14 +333,15 @@ public class PanelJefe extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblInsertarNombre)
-                    .addComponent(lblInsertarApellidoPaterno)
-                    .addComponent(lblInsertarApellidoMaterno)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnCerrarSesion1)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(lblID)
-                        .addComponent(lblInsertarID)
-                        .addComponent(btnCerrarSesion1)))
+                        .addComponent(lblInsertarNombre)
+                        .addComponent(lblInsertarApellidoPaterno)
+                        .addComponent(lblInsertarApellidoMaterno)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblID)
+                            .addComponent(lblInsertarID))))
                 .addContainerGap(15, Short.MAX_VALUE))
         );
 
@@ -384,6 +438,38 @@ public class PanelJefe extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_mniPagarFacturaActionPerformed
 
+    private void mniConsultarPermisosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniConsultarPermisosActionPerformed
+        try {
+            new ConsultarPermisos(JefesDAO.consultarJefe(this.jefe.getId())).setVisible(true);
+            this.dispose();
+        } catch (Exception ex) {
+            Logger.getLogger(PanelJefe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_mniConsultarPermisosActionPerformed
+
+    private void mniConsultarPlanosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniConsultarPlanosActionPerformed
+        try {
+            new ConsultarPlanos(JefesDAO.consultarJefe(this.jefe.getId())).setVisible(true);
+            this.dispose();
+        } catch (Exception ex) {
+            Logger.getLogger(PanelJefe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_mniConsultarPlanosActionPerformed
+
+    private void mniAsignarPlanosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniAsignarPlanosActionPerformed
+        try {
+            new AsignarPlanos(JefesDAO.consultarJefe(this.jefe.getId())).setVisible(true);
+            this.dispose();
+        } catch (Exception ex) {
+            Logger.getLogger(PanelJefe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_mniAsignarPlanosActionPerformed
+
+    private void mniPagarObreroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniPagarObreroActionPerformed
+        new PagarObreros(JefesDAO.consultarJefe(this.jefe.getId())).setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_mniPagarObreroActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu MenuCuenta;
     private javax.swing.JSeparator Separador1;
@@ -396,10 +482,14 @@ public class PanelJefe extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenu jMenu6;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JPopupMenu.Separator jSeparator4;
     private javax.swing.JPopupMenu.Separator jSeparator5;
     private javax.swing.JPopupMenu.Separator jSeparator6;
+    private javax.swing.JPopupMenu.Separator jSeparator7;
+    private javax.swing.JPopupMenu.Separator jSeparator8;
     private javax.swing.JLabel lblID;
     private javax.swing.JLabel lblInsertarApellidoMaterno;
     private javax.swing.JLabel lblInsertarApellidoPaterno;
@@ -407,11 +497,15 @@ public class PanelJefe extends javax.swing.JFrame {
     private javax.swing.JLabel lblInsertarNombre;
     private javax.swing.JLabel lblTitulo;
     private javax.swing.JMenuItem mniAgregarObreroObra;
+    private javax.swing.JMenuItem mniAsignarPlanos;
     private javax.swing.JMenuItem mniCambiarContrasena;
     private javax.swing.JMenuItem mniCambiarUsuario;
     private javax.swing.JMenuItem mniConsultarDeudores;
+    private javax.swing.JMenuItem mniConsultarPermisos;
+    private javax.swing.JMenuItem mniConsultarPlanos;
     private javax.swing.JMenuItem mniIniciarObra;
     private javax.swing.JMenuItem mniPagarFactura;
+    private javax.swing.JMenuItem mniPagarObrero;
     private javax.swing.JMenuItem mniRegistrarFactura;
     private javax.swing.JMenuItem mniRegistrarPermiso;
     private javax.swing.JMenuItem mniRegistrarPlano;

@@ -4,9 +4,15 @@
 package Herramientas;
 
 // Importaciones
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableModel;
 
 /**
  * Esta clase permite encapsular herramientas útiles a la hora de querer
@@ -174,9 +180,28 @@ public class Validadores {
     }
 
     /**
-     * 
+     *
+     * @param textoConGuiones
+     * @return
+     */
+    public String recortarGuiones(String textoConGuiones) {
+        String textoSinGuiones = textoConGuiones.replaceAll("_", "");
+        return textoSinGuiones;
+    }
+
+    /**
+     *
+     * @param str
+     * @return
+     */
+    public String corregirPuntos(String str) {
+        return str.replaceAll("\\.+", ".");
+    }
+
+    /**
+     *
      * @param cadena
-     * @return 
+     * @return
      */
     public String obtenerNumeros(String cadena) {
         // Utiliza una expresión regular para eliminar todo lo que no sean números
@@ -216,5 +241,48 @@ public class Validadores {
      */
     public boolean validarFechas(Calendar fechaInicial, Calendar fechaFinal) {
         return fechaInicial.before(fechaFinal);
+    }
+
+    /**
+     *
+     * @param tabla
+     */
+    public void centrarTabla(JTable tabla) {
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+        rightRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+        TableModel tableModel = tabla.getModel();
+        for (int columnIndex = 0; columnIndex < tableModel.getColumnCount(); columnIndex++) {
+            tabla.getColumnModel().getColumn(columnIndex).setCellRenderer(rightRenderer);
+        }
+    }
+
+    public String corregirFlotante(String str) {
+        
+        // Se verifica que no sea solamente un punto 
+        if (str.equals(".")) { 
+            return "1.0";
+        }
+        
+        // Eliminar todos los espacios
+        str = str.replaceAll("\\s+", "");
+        
+        // Eliminar todas las comas
+        str = str.replaceAll(",", "");
+        
+        // Eliminar los signos +
+        str = str.replaceAll("[+-]", "");
+
+        // Reemplazar múltiples puntos por un solo punto
+        str = str.replaceAll("(\\.)\\1+", "$1");
+
+        // Si no hay ningún punto, insertar un ".0" al final
+        if (!str.contains(".")) {
+            str += ".0";
+        }
+
+        String comprueba = str;
+
+        // Validar que la cadena es un número flotante
+        return str;
     }
 }

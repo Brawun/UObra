@@ -19,7 +19,10 @@ import Herramientas.Insercion;
 import java.awt.event.KeyEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.EntityNotFoundException;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
 
 /**
  *
@@ -34,6 +37,8 @@ public class IniciarSesion extends javax.swing.JFrame {
      * Creates new form IniciarSesion
      */
     public IniciarSesion() {
+        UIManager.put("OptionPane.yesButtonText", "Aceptar");
+        UIManager.put("OptionPane.noButtonText", "Cancelar");
         initComponents();
         new Icono().insertarIcono(this);
         this.enter.validate();
@@ -96,11 +101,6 @@ public class IniciarSesion extends javax.swing.JFrame {
         chbVerContrasenia.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 chbVerContraseniaStateChanged(evt);
-            }
-        });
-        chbVerContrasenia.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                chbVerContraseniaActionPerformed(evt);
             }
         });
 
@@ -336,7 +336,6 @@ public class IniciarSesion extends javax.swing.JFrame {
             try {
                 if (this.txtContrasenia.getText().length() > 20) {
                     this.txtContrasenia.setText(this.txtContrasenia.getText().substring(0, 20));
-
                 }
                 if (this.txtContrasenia.getText().length() > 20) {
                     this.txtUsuario.setText(this.txtUsuario.getText().substring(0, 20));
@@ -344,12 +343,16 @@ public class IniciarSesion extends javax.swing.JFrame {
                 ObrerosDAO ObrerosDAO = new ObrerosDAO();
                 String usuario = this.txtUsuario.getText().trim();
                 String contrasena = new String(this.txtContrasenia.getPassword());
-                if (ObrerosDAO.verificarContrasenaUsuario(usuario, contrasena)) {
-                    Obreros obrero = ObrerosDAO.consultarObrerosUsuario(usuario);
-                    new PanelObrero(obrero).setVisible(true);
-                    this.dispose();
-                } else {
-                    JOptionPane.showMessageDialog(null, "Error: Usuario o contraseña de obrero incorrectas (Intente de nuevo).", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                try {
+                    if (ObrerosDAO.verificarContrasenaUsuario(usuario, contrasena)) {
+                        Obreros obrero = ObrerosDAO.consultarObrerosUsuario(usuario);
+                        new PanelObrero(obrero).setVisible(true);
+                        this.dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Error: Usuario o contraseña de obrero incorrectas (Intente de nuevo).", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (EntityNotFoundException e) {
+                    JOptionPane.showMessageDialog(null, "Error: Usuario o contraseña inexistentes en la base de datos (Registre una nueva cuenta).", "¡Error!", JOptionPane.ERROR_MESSAGE);
                 }
             } catch (Exception ex) {
                 Logger.getLogger(IniciarSesion.class.getName()).log(Level.SEVERE, null, ex);
@@ -358,7 +361,6 @@ public class IniciarSesion extends javax.swing.JFrame {
             try {
                 if (this.txtContrasenia.getText().length() > 20) {
                     this.txtContrasenia.setText(this.txtContrasenia.getText().substring(0, 20));
-
                 }
                 if (this.txtContrasenia.getText().length() > 20) {
                     this.txtUsuario.setText(this.txtUsuario.getText().substring(0, 20));
@@ -366,12 +368,16 @@ public class IniciarSesion extends javax.swing.JFrame {
                 JefesDAO JefesDAO = new JefesDAO();
                 String usuario = this.txtUsuario.getText().trim();
                 String contrasena = new String(this.txtContrasenia.getPassword());
-                if (JefesDAO.verificarContrasenaUsuario(usuario, contrasena)) {
-                    Jefes jefe = JefesDAO.consultarJefesUsuario(usuario);
-                    new PanelJefe(jefe).setVisible(true);
-                    this.dispose();
-                } else {
-                    JOptionPane.showMessageDialog(null, "Error: Usuario o contraseña de jefe incorrectas (Intente de nuevo).", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                try {
+                    if (JefesDAO.verificarContrasenaUsuario(usuario, contrasena)) {
+                        Jefes jefe = JefesDAO.consultarJefesUsuario(usuario);
+                        new PanelJefe(jefe).setVisible(true);
+                        this.dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Error: Usuario o contraseña de jefe incorrectas (Intente de nuevo).", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (EntityNotFoundException e) {
+                    JOptionPane.showMessageDialog(null, "Error: Usuario o contraseña inexistentes en la base de datos (Registre una nueva cuenta).", "¡Error!", JOptionPane.ERROR_MESSAGE);
                 }
             } catch (Exception ex) {
                 Logger.getLogger(IniciarSesion.class.getName()).log(Level.SEVERE, null, ex);
@@ -380,7 +386,6 @@ public class IniciarSesion extends javax.swing.JFrame {
             try {
                 if (this.txtContrasenia.getText().length() > 20) {
                     this.txtContrasenia.setText(this.txtContrasenia.getText().substring(0, 20));
-
                 }
                 if (this.txtContrasenia.getText().length() > 20) {
                     this.txtUsuario.setText(this.txtUsuario.getText().substring(0, 20));
@@ -388,12 +393,16 @@ public class IniciarSesion extends javax.swing.JFrame {
                 ClientesDAO ClientesDAO = new ClientesDAO();
                 String usuario = this.txtUsuario.getText().trim();
                 String contrasena = new String(this.txtContrasenia.getPassword());
-                if (ClientesDAO.verificarContrasenaUsuario(usuario, contrasena)) {
-                    Clientes cliente = ClientesDAO.consultarClientesUsuario(usuario);
-                    new PanelCliente(cliente).setVisible(true);
-                    this.dispose();
-                } else {
-                    JOptionPane.showMessageDialog(null, "Error: Usuario o contraseña de cliente incorrectas (Intente de nuevo).", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                try {
+                    if (ClientesDAO.verificarContrasenaUsuario(usuario, contrasena)) {
+                        Clientes cliente = ClientesDAO.consultarClientesUsuario(usuario);
+                        new PanelCliente(cliente).setVisible(true);
+                        this.dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Error: Usuario o contraseña de cliente incorrectas (Intente de nuevo).", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (EntityNotFoundException e) {
+                    JOptionPane.showMessageDialog(null, "Error: Usuario o contraseña inexistentes en la base de datos (Registre una nueva cuenta).", "¡Error!", JOptionPane.ERROR_MESSAGE);
                 }
             } catch (Exception ex) {
                 Logger.getLogger(IniciarSesion.class.getName()).log(Level.SEVERE, null, ex);
@@ -467,17 +476,35 @@ public class IniciarSesion extends javax.swing.JFrame {
         if (txtUsuario.getText().length() >= 20) {
             evt.consume();
         }
+        // Obtener el componente fuente del evento
+        JTextField textField = (JTextField) evt.getSource();
+
+        // Verificar si el evento es una operación de pegar
+        if (evt.isConsumed() || evt.getKeyChar() == KeyEvent.VK_V && evt.isControlDown()) {
+            // Si es una operación de pegar, cancelar el evento
+            evt.consume();
+
+            // Vaciar el contenido del campo de texto
+            textField.setText("");
+        }
     }//GEN-LAST:event_txtUsuarioKeyTyped
 
     private void txtContraseniaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtContraseniaKeyTyped
         if (txtContrasenia.getText().length() >= 20) {
             evt.consume();
         }
-    }//GEN-LAST:event_txtContraseniaKeyTyped
+        // Obtener el componente fuente del evento
+        JTextField textField = (JTextField) evt.getSource();
 
-    private void chbVerContraseniaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chbVerContraseniaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_chbVerContraseniaActionPerformed
+        // Verificar si el evento es una operación de pegar
+        if (evt.isConsumed() || evt.getKeyChar() == KeyEvent.VK_V && evt.isControlDown()) {
+            // Si es una operación de pegar, cancelar el evento
+            evt.consume();
+
+            // Vaciar el contenido del campo de texto
+            textField.setText("");
+        }
+    }//GEN-LAST:event_txtContraseniaKeyTyped
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuBar Menu;

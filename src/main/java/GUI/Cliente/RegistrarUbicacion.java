@@ -9,13 +9,12 @@ import DAOs.UbicacionesDAO;
 import Dominio.Clientes;
 import Dominio.Ubicaciones;
 import Enumeradores.TipoUbicacion;
-import Herramientas.Fecha;
 import Herramientas.Icono;
 import Herramientas.Validadores;
-import java.text.ParseException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
 
 /**
  *
@@ -27,13 +26,29 @@ public class RegistrarUbicacion extends javax.swing.JFrame {
     Clientes cliente = new Clientes();
     ClientesDAO ClientesDAO = new ClientesDAO();
     UbicacionesDAO UbicacionesDAO = new UbicacionesDAO();
+    Validadores valido = new Validadores();
 
     /**
      * Creates new form RegistrarUbicación
      */
     public RegistrarUbicacion(Clientes cliente) {
+        this.cliente = cliente;
+        UIManager.put("OptionPane.yesButtonText", "Aceptar");
+        UIManager.put("OptionPane.noButtonText", "Cancelar");
         initComponents();
         new Icono().insertarIcono(this);
+    }
+
+    public void corregirTamaños() {
+        if (this.txtDireccion.getText().length() > 150) {
+            this.txtDireccion.setText(this.txtDireccion.getText().substring(0, 150));
+        }
+        if (this.txtLargo.getText().length() > 5) {
+            this.txtLargo.setText(this.txtLargo.getText().substring(0, 6));
+        }
+        if (this.txtAncho.getText().length() > 5) {
+            this.txtAncho.setText(this.txtAncho.getText().substring(0, 6));
+        }
     }
 
     /**
@@ -270,68 +285,82 @@ public class RegistrarUbicacion extends javax.swing.JFrame {
         if (txtDireccion.getText().length() >= 150) {
             evt.consume();
         }
+        // Obtener el componente fuente del evento
+        JTextField textField = (JTextField) evt.getSource();
+
+        // Verificar si el evento es una operación de pegar
+        if (evt.isConsumed() || evt.getKeyChar() == KeyEvent.VK_V && evt.isControlDown()) {
+            // Si es una operación de pegar, cancelar el evento
+            evt.consume();
+
+            // Vaciar el contenido del campo de texto
+            textField.setText("");
+        }
     }//GEN-LAST:event_txtDireccionKeyTyped
 
     private void txtLargoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtLargoKeyTyped
-        if (txtLargo.getText().length() >= 6) {
+        if (txtLargo.getText().length() >= 5) {
             evt.consume();
         }
         char c = evt.getKeyChar();
         if (Character.isLetter(c)) {
             evt.consume();
+        } else if (c == '.' && txtLargo.getText().contains(".")) {
+            // Si ya hay un punto en el texto, no permitir otro
+            evt.consume();
+        }
+        // Obtener el componente fuente del evento
+        JTextField textField = (JTextField) evt.getSource();
+
+        // Verificar si el evento es una operación de pegar
+        if (evt.isConsumed() || evt.getKeyChar() == KeyEvent.VK_V && evt.isControlDown()) {
+            // Si es una operación de pegar, cancelar el evento
+            evt.consume();
+
+            // Vaciar el contenido del campo de texto
+            textField.setText("");
         }
     }//GEN-LAST:event_txtLargoKeyTyped
 
     private void txtAnchoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtAnchoKeyTyped
-        if (txtAncho.getText().length() >= 6) {
+        if (txtAncho.getText().length() >= 5) {
             evt.consume();
         }
         char c = evt.getKeyChar();
         if (Character.isLetter(c)) {
             evt.consume();
+        } else if (c == '.' && txtAncho.getText().contains(".")) {
+            // Si ya hay un punto en el texto, no permitir otro
+            evt.consume();
+        }
+        // Obtener el componente fuente del evento
+        JTextField textField = (JTextField) evt.getSource();
+
+        // Verificar si el evento es una operación de pegar
+        if (evt.isConsumed() || evt.getKeyChar() == KeyEvent.VK_V && evt.isControlDown()) {
+            // Si es una operación de pegar, cancelar el evento
+            evt.consume();
+
+            // Vaciar el contenido del campo de texto
+            textField.setText("");
         }
     }//GEN-LAST:event_txtAnchoKeyTyped
 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
+        corregirTamaños();
         if (!txtDireccion.getText().isBlank()) {
+            txtDireccion.setText(txtDireccion.getText().trim());
             if (!(cbxTipo.getSelectedItem() == "Elija uno...")) {
                 if (!txtLargo.getText().isBlank()) {
                     if (!txtAncho.getText().isBlank()) {
-                        Validadores valido = new Validadores();
-                        if (this.txtDireccion.getText().length() > 150) {
-                            this.txtDireccion.setText(this.txtDireccion.getText().substring(0, 150));
+                        // Se formatea largo y ancho
+                        txtLargo.setText(valido.corregirFlotante(txtLargo.getText()));
+                        txtAncho.setText(valido.corregirFlotante(txtAncho.getText()));
+                        if (Float.parseFloat(txtLargo.getText()) <= 1) {
+                            txtLargo.setText("1.0");
                         }
-                        if (this.txtLargo.getText().length() > 6) {
-                            this.txtLargo.setText(this.txtLargo.getText().substring(0, 6));
-                        }
-                        if (this.txtAncho.getText().length() > 6) {
-                            this.txtAncho.setText(this.txtAncho.getText().substring(0, 6));
-                        }
-                        // Se formatea largo
-                        this.txtLargo.setText(this.txtLargo.getText().trim());
-                        this.txtLargo.setText(valido.recortarComas(this.txtLargo.getText()));
-                        if (valido.validarSinEspacios(this.txtLargo.getText())) {
-                            this.txtLargo.setText(valido.recortarSignoMas(this.txtLargo.getText()));
-                            if (!valido.validarNumero(this.txtLargo.getText())) {
-                                JOptionPane.showMessageDialog(null, "Error: Ingrese números en el largo de ubicación. (No caracteres ni numeros negativos).", "¡Error!", JOptionPane.ERROR_MESSAGE);
-                            } else if (!valido.validarFlotante(this.txtLargo.getText())) {
-                                this.txtLargo.setText(this.txtLargo.getText().concat(".0"));
-                            }
-                        } else {
-                            JOptionPane.showMessageDialog(null, "Error: Ingrese un largo de ubicación válido. (Sin espacios).", "¡Error!", JOptionPane.ERROR_MESSAGE);
-                        }
-                        // Se formatea ancho
-                        this.txtAncho.setText(this.txtAncho.getText().trim());
-                        this.txtAncho.setText(valido.recortarComas(this.txtAncho.getText()));
-                        if (valido.validarSinEspacios(this.txtAncho.getText())) {
-                            this.txtAncho.setText(valido.recortarSignoMas(this.txtAncho.getText()));
-                            if (!valido.validarNumero(this.txtAncho.getText())) {
-                                JOptionPane.showMessageDialog(null, "Error: Ingrese números en el ancho de ubicación. (No caracteres ni numeros negativos).", "¡Error!", JOptionPane.ERROR_MESSAGE);
-                            } else if (!valido.validarFlotante(this.txtAncho.getText())) {
-                                this.txtAncho.setText(this.txtAncho.getText().concat(".0"));
-                            }
-                        } else {
-                            JOptionPane.showMessageDialog(null, "Error: Ingrese un ancho de ubicación válido. (Sin espacios).", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                        if (Float.parseFloat(txtAncho.getText()) <= 1) {
+                            txtAncho.setText("1.0");
                         }
                         // Se determina tipo de ubicación
                         TipoUbicacion tipo;
@@ -342,18 +371,34 @@ public class RegistrarUbicacion extends javax.swing.JFrame {
                         }
                         // Se crea el objeto ubicación a persistir
                         Ubicaciones ubicacion = new Ubicaciones(
-                                txtDireccion.getText(), 
-                                tipo, 
-                                Float.valueOf(txtLargo.getText()), 
-                                Float.valueOf(txtAncho.getText()), 
-                                cliente);
-                        Long id = UbicacionesDAO.registrarUbicacion(ubicacion);
-                        if (id != null) {
-                            Fecha fecha = new Fecha();
-                            JOptionPane.showMessageDialog(null, 
-                                    "Se creó exitosamente la ubicación con dirección \n"
-                                    + ubicacion.getDireccion() 
-                                    + "\n - ID: " + id + ". ☺", "Registro de ubicación exitoso", JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
+                                txtDireccion.getText(),
+                                tipo,
+                                Float.valueOf(txtLargo.getText()),
+                                Float.valueOf(txtAncho.getText()),
+                                this.cliente);
+                        Ubicaciones ubicacionRegistrada = UbicacionesDAO.registrarUbicacion(ubicacion);
+                        if (ubicacionRegistrada.getId() != null) {
+                            this.setVisible(false);
+                            int i = JOptionPane.showConfirmDialog(null,
+                                    "Se creó exitosamente la ubicación con..."
+                                    + "\n Dirección: " + ubicacionRegistrada.getDireccion()
+                                    + "\n Ancho: " + ubicacionRegistrada.getAncho() + " m"
+                                    + "\n Largo: " + ubicacionRegistrada.getLargo() + " m"
+                                    + "\n Área: " + ubicacionRegistrada.getArea() + " m²"
+                                    + "\n - ID Cliente: " + ubicacionRegistrada.getCliente().getId()
+                                    + "\n - ID: " + ubicacionRegistrada.getId()
+                                    + ". ☺\n"
+                                    + "\n ¿Desea registrar otra ubicación?", "Registro de ubicación exitoso", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
+                            if (i == JOptionPane.YES_OPTION) {
+                                this.txtDireccion.setText("");
+                                this.txtAncho.setText("");
+                                this.txtLargo.setText("");
+                                this.cbxTipo.setSelectedItem("Elija uno...");
+                                this.setVisible(true);
+                            } else {
+                                this.dispose();
+                                new PanelCliente(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
+                            }
                         } else {
                             JOptionPane.showMessageDialog(null, "Error interno: Ocurrió un errror al querer registrar la ubicación.", "¡Error interno!", JOptionPane.ERROR_MESSAGE);
                         }
@@ -364,12 +409,13 @@ public class RegistrarUbicacion extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null, "Error: Ingrese un largo de ubicación válido.", "¡Error!", JOptionPane.ERROR_MESSAGE);
                 }
             } else {
-                JOptionPane.showMessageDialog(null, "Error: Eliga un tipo de ubicación válida.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Error: Ingrese un tipo de ubicación válido.", "¡Error!", JOptionPane.ERROR_MESSAGE);
             }
         } else {
             JOptionPane.showMessageDialog(null, "Error: Ingrese una dirección de la ubicación a registrar.", "¡Error!", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnRegistrarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel ImagenMapa;

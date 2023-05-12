@@ -9,9 +9,11 @@ import Dominio.Clientes;
 import Herramientas.Encriptador;
 import Herramientas.Icono;
 import Herramientas.Validadores;
+import java.awt.event.KeyEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 
 /**
  *
@@ -34,6 +36,7 @@ public class EditarContrasenaCliente extends javax.swing.JFrame {
         initComponents();
         new Icono().insertarIcono(this);
         this.cliente = cliente;
+        this.txtNuevaContrasenia.setText("");
         this.lblInsertarContrasenia.setText(crypt.decrypt(cliente.getContrasena()));
         this.lblInsertarUsuario.setText(crypt.decrypt(cliente.getUsuario()));
     }
@@ -226,7 +229,7 @@ public class EditarContrasenaCliente extends javax.swing.JFrame {
                 Logger.getLogger(EditarContrasenaCliente.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            JOptionPane.showMessageDialog(null, "Error: Ingrese una nueva contraseña. (Contraseña en blanco)", "¡Error!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error: Ingrese una nueva contraseña. (Contraseña en blanco o con espacios en blanco)", "¡Error!", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnActualizarActionPerformed
 
@@ -246,6 +249,17 @@ public class EditarContrasenaCliente extends javax.swing.JFrame {
     private void txtNuevaContraseniaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNuevaContraseniaKeyTyped
         if (txtNuevaContrasenia.getText().length() >= 20) {
             evt.consume();
+        }
+        // Obtener el componente fuente del evento
+        JTextField textField = (JTextField) evt.getSource();
+
+        // Verificar si el evento es una operación de pegar
+        if (evt.isConsumed() || evt.getKeyChar() == KeyEvent.VK_V && evt.isControlDown()) {
+            // Si es una operación de pegar, cancelar el evento
+            evt.consume();
+
+            // Vaciar el contenido del campo de texto
+            textField.setText("");
         }
     }//GEN-LAST:event_txtNuevaContraseniaKeyTyped
 

@@ -11,10 +11,12 @@ import Dominio.Obreros;
 import Herramientas.Fecha;
 import Herramientas.Icono;
 import Herramientas.Validadores;
+import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -27,6 +29,7 @@ public class ConsultarObrasObrero extends javax.swing.JFrame {
     Obreros obrero = new Obreros();
     ObrerosDAO ObrerosDAO = new ObrerosDAO();
     ObrasObreroDAO ObrasObreroDAO = new ObrasObreroDAO();
+    Validadores valido = new Validadores();
 
     /**
      * Crea un nuevo frame ObrasObrero
@@ -38,9 +41,15 @@ public class ConsultarObrasObrero extends javax.swing.JFrame {
         new Icono().insertarIcono(this);
         this.obrero = obrero;
         this.txtDias.setEditable(true);
-        this.txtDias.setText("0");
+        this.txtDias.setText("1");
     }
-    
+
+    public void corregirTamaños() {
+        if (this.txtDias.getText().length() > 3) {
+            this.txtDias.setText(this.txtDias.getText().substring(0, 30));
+        }
+    }
+
     public void cargarTablaObrasObrero(Boolean activa, Integer fechas) throws Exception {
         List<ObrasObrero> listaObrasObrero;
         Fecha fecha = new Fecha();
@@ -76,6 +85,7 @@ public class ConsultarObrasObrero extends javax.swing.JFrame {
                 obrasObrero.getObra().getId()};
             modeloTablaObrasObrero.addRow(filaNueva);
         }
+        valido.centrarTabla(tblResultados);
     }
 
     /**
@@ -147,6 +157,7 @@ public class ConsultarObrasObrero extends javax.swing.JFrame {
             }
         });
         tblResultados.setRequestFocusEnabled(false);
+        tblResultados.getTableHeader().setReorderingAllowed(false);
         ScrollPanel.setViewportView(tblResultados);
 
         cbxEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elija uno...", "Indistinto", "Activa", "Inactiva" }));
@@ -379,43 +390,44 @@ public class ConsultarObrasObrero extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRegresarActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        corregirTamaños();
         try {
-            if (txtDias.getText().length() > 3) {
-                txtDias.setText(txtDias.getText().substring(0, 3));
-            }
-            Validadores valido = new Validadores();
             if (this.periodoInicio.getCalendar() != null && this.periodoFinal.getCalendar() != null) {
-                if (this.cbxAccion.getSelectedItem() != "Elija uno...") {
-                    if (this.cbxEstado.getSelectedItem() != "Elija uno...") {
-                        if (this.cbxEstado.getSelectedItem() == "Activa") {
-                            if (this.cbxAccion.getSelectedItem() == "Iniciado") {
-                                this.cargarTablaObrasObrero(true, 1);
-                            } else if (this.cbxAccion.getSelectedItem() == "Terminado") {
-                                this.cargarTablaObrasObrero(true, 0);
-                            }
-                        } else if (this.cbxEstado.getSelectedItem() == "Indistinto") {
-                            if (this.cbxAccion.getSelectedItem() == "Iniciado") {
-                                this.cargarTablaObrasObrero(null, 1);
-                            } else if (this.cbxAccion.getSelectedItem() == "Terminado") {
-                                this.cargarTablaObrasObrero(null, 0);
-                            }
-                        } else if (this.cbxEstado.getSelectedItem() == "Inactiva") {
-                            
-                            if (valido.validarEntero(this.txtDias.getText())) {
+                if (valido.validarFechas(this.periodoInicio.getCalendar(), this.periodoFinal.getCalendar())) {
+                    if (this.cbxAccion.getSelectedItem() != "Elija uno...") {
+                        if (this.cbxEstado.getSelectedItem() != "Elija uno...") {
+                            if (this.cbxEstado.getSelectedItem() == "Activa") {
                                 if (this.cbxAccion.getSelectedItem() == "Iniciado") {
-                                    this.cargarTablaObrasObrero(false, 1);
+                                    this.cargarTablaObrasObrero(true, 1);
                                 } else if (this.cbxAccion.getSelectedItem() == "Terminado") {
-                                    this.cargarTablaObrasObrero(false, 0);
+                                    this.cargarTablaObrasObrero(true, 0);
                                 }
-                            } else {
-                                JOptionPane.showMessageDialog(null, "Error: Ingrese días trabajados válidos. (Solamente números enteros)", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                            } else if (this.cbxEstado.getSelectedItem() == "Indistinto") {
+                                if (this.cbxAccion.getSelectedItem() == "Iniciado") {
+                                    this.cargarTablaObrasObrero(null, 1);
+                                } else if (this.cbxAccion.getSelectedItem() == "Terminado") {
+                                    this.cargarTablaObrasObrero(null, 0);
+                                }
+                            } else if (this.cbxEstado.getSelectedItem() == "Inactiva") {
+
+                                if (valido.validarEntero(this.txtDias.getText())) {
+                                    if (this.cbxAccion.getSelectedItem() == "Iniciado") {
+                                        this.cargarTablaObrasObrero(false, 1);
+                                    } else if (this.cbxAccion.getSelectedItem() == "Terminado") {
+                                        this.cargarTablaObrasObrero(false, 0);
+                                    }
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "Error: Ingrese días trabajados válidos. (Solamente números enteros)", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                                }
                             }
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Error: Elija un estado de relación obra - obrero válido para la búsqueda dinámica.", "¡Error!", JOptionPane.ERROR_MESSAGE);
                         }
                     } else {
-                        JOptionPane.showMessageDialog(null, "Error: Elija un estado de relación obra - obrero válido para la búsqueda dinámica.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Error: Elija un tipo de acción válido para la búsqueda dinámica.", "¡Error!", JOptionPane.ERROR_MESSAGE);
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "Error: Elija un tipo de acción válido para la búsqueda dinámica.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Error: La fecha inicial no puede ser después que la fecha final.", "¡Error!", JOptionPane.ERROR_MESSAGE);
                 }
             } else {
                 if (this.cbxAccion.getSelectedItem() != "Elija uno...") {
@@ -433,7 +445,7 @@ public class ConsultarObrasObrero extends javax.swing.JFrame {
                                 this.cargarTablaObrasObrero(null, 0);
                             }
                         } else if (this.cbxEstado.getSelectedItem() == "Inactiva") {
-                            
+
                             if (valido.validarEntero(this.txtDias.getText())) {
                                 if (this.cbxAccion.getSelectedItem() == "Iniciado") {
                                     this.cargarTablaObrasObrero(false, 1);
@@ -473,6 +485,17 @@ public class ConsultarObrasObrero extends javax.swing.JFrame {
         char c = evt.getKeyChar();
         if (Character.isLetter(c) || !Character.isDigit(c)) {
             evt.consume();
+        }
+        // Obtener el componente fuente del evento
+        JTextField textField = (JTextField) evt.getSource();
+
+        // Verificar si el evento es una operación de pegar
+        if (evt.isConsumed() || evt.getKeyChar() == KeyEvent.VK_V && evt.isControlDown()) {
+            // Si es una operación de pegar, cancelar el evento
+            evt.consume();
+
+            // Vaciar el contenido del campo de texto
+            textField.setText("");
         }
     }//GEN-LAST:event_txtDiasKeyTyped
 

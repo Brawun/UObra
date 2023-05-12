@@ -4,23 +4,23 @@
  */
 package GUI.Jefe.Planos;
 
-import DAOs.ClientesDAO;
 import DAOs.JefesDAO;
-import DAOs.PermisosDAO;
 import DAOs.PlanosDAO;
-import Dominio.Clientes;
 import Dominio.Jefes;
 import Dominio.Planos;
 import Enumeradores.Escala;
 import Enumeradores.TipoPlano;
-import GUI.Cliente.PanelCliente;
+import GUI.Jefe.PanelJefe;
 import Herramientas.Encriptador;
 import Herramientas.Fecha;
 import Herramientas.Icono;
 import Herramientas.Validadores;
+import java.awt.event.KeyEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
 
 /**
  *
@@ -30,9 +30,8 @@ public class RegistrarPlano extends javax.swing.JFrame {
 
     // Atributos
     Jefes jefe;
-    Clientes cliente = new Clientes();
     Fecha fecha = new Fecha();
-    ClientesDAO ClientesDAO = new ClientesDAO();
+    JefesDAO JefesDAO = new JefesDAO();
     PlanosDAO PlanosDAO = new PlanosDAO();
     Validadores valido = new Validadores();
     Encriptador crypt = new Encriptador();
@@ -42,6 +41,8 @@ public class RegistrarPlano extends javax.swing.JFrame {
      */
     public RegistrarPlano(Jefes jefe) {
         this.jefe = jefe;
+        UIManager.put("OptionPane.yesButtonText", "Aceptar");
+        UIManager.put("OptionPane.noButtonText", "Cancelar");
         initComponents();
         new Icono().insertarIcono(this);
         this.txtFolio.setText("######");
@@ -68,7 +69,7 @@ public class RegistrarPlano extends javax.swing.JFrame {
         cbxTipo = new javax.swing.JComboBox<>();
         Separador1 = new javax.swing.JSeparator();
         lblFechaRealizado = new javax.swing.JLabel();
-        lblTipoPermiso = new javax.swing.JLabel();
+        lblTipoPlano = new javax.swing.JLabel();
         lblFolio = new javax.swing.JLabel();
         lblFechaRealizacion = new javax.swing.JLabel();
         lblEscala = new javax.swing.JLabel();
@@ -109,6 +110,11 @@ public class RegistrarPlano extends javax.swing.JFrame {
         });
 
         txtFolio.setToolTipText("Max. 6 caracteres");
+        txtFolio.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtFolioFocusLost(evt);
+            }
+        });
         txtFolio.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txtFolioKeyTyped(evt);
@@ -125,9 +131,9 @@ public class RegistrarPlano extends javax.swing.JFrame {
         cbxTipo.setToolTipText("Elija un tipo de permiso");
         cbxTipo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        lblFechaRealizado.setText("Ingrese  una fecha de realización...");
+        lblFechaRealizado.setText("Ingrese una fecha de realización...");
 
-        lblTipoPermiso.setText("Elija un tipo de plano..");
+        lblTipoPlano.setText("Elija un tipo de plano..");
 
         lblFolio.setText("Folio del permiso....");
 
@@ -176,7 +182,7 @@ public class RegistrarPlano extends javax.swing.JFrame {
                                         .addComponent(lblFolio)
                                         .addComponent(lblFechaRealizado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(txtFolio)
-                                        .addComponent(lblTipoPermiso, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(lblTipoPlano, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(fechaRealizacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(cbxTipo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(cbxEscala, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
@@ -203,7 +209,7 @@ public class RegistrarPlano extends javax.swing.JFrame {
                     .addComponent(txtFolio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblDireccion))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblTipoPermiso)
+                .addComponent(lblTipoPlano)
                 .addGap(2, 2, 2)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbxTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -237,7 +243,7 @@ public class RegistrarPlano extends javax.swing.JFrame {
         int i = JOptionPane.showConfirmDialog(this, "¿Seguro que deseas cancelar el registro de plano? Los datos de registro no se guardarán", "Advertencia", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         if (i == JOptionPane.YES_OPTION) {
             this.dispose();
-            new PanelCliente(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
+            new PanelJefe(JefesDAO.consultarJefe(this.jefe.getId())).setVisible(true);
         } else {
             this.setVisible(true);
         }
@@ -257,7 +263,7 @@ public class RegistrarPlano extends javax.swing.JFrame {
                         } else if (this.cbxTipo.getSelectedItem() == "Eléctrico") {
                             tipo = TipoPlano.ELECTRICO;
                         } else if (this.cbxTipo.getSelectedItem() == "Desague") {
-                            tipo = TipoPlano.ELECTRICO;
+                            tipo = TipoPlano.DESAGUE;
                         } else {
                             tipo = TipoPlano.UBICACION;
                         }
@@ -283,14 +289,31 @@ public class RegistrarPlano extends javax.swing.JFrame {
                                 this.jefe);
                         Planos planoRegistrado = PlanosDAO.registrarPlano(plano);
                         if (planoRegistrado.getId() != null) {
-                            try {
-                                JOptionPane.showMessageDialog(null,
-                                        "Se realizó exitosamente el registro del plano de folio " + crypt.decrypt(planoRegistrado.getFolio())
-                                        + " con fecha de realización el " + fecha.formatoFecha(planoRegistrado.getFechaRealizacion())
-                                        + "\n - ID: " + planoRegistrado.getId() + ". ☺", "Registro de plano exitoso", JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
-                            } catch (Exception ex) {
-                                Logger.getLogger(RegistrarPlano.class.getName()).log(Level.SEVERE, null, ex);
+                           try {
+                            int i = JOptionPane.showConfirmDialog(null,
+                                    "Se realizó exitosamente el registro de plano con..."
+                                    + "\n Folio: " + crypt.decrypt(planoRegistrado.getFolio())
+                                    + "\n Tipo: " + planoRegistrado.getTipo().toString()
+                                    + "\n Escala: " + planoRegistrado.getEscala().toString()
+                                    + "\n Fecha de registro: " + fecha.formatoFecha(planoRegistrado.getFechaRegistro())
+                                    + "\n Fecha de realizacion: " + fecha.formatoFecha(planoRegistrado.getFechaRealizacion())
+                                    + "\n - ID Jefe: " + planoRegistrado.getJefe().getId()
+                                    + "\n - ID: " + planoRegistrado.getId()
+                                    + ". ☺\n"
+                                    + "\n ¿Desea registrar otro plano?", "Registro de plano exitoso", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
+                            if (i == JOptionPane.YES_OPTION) {
+                                this.txtFolio.setText("######");
+                                this.cbxEscala.setSelectedItem("Elija uno...");
+                                this.cbxTipo.setSelectedItem("Elija uno...");
+                                this.fechaRealizacion.setCalendar(null);
+                                this.setVisible(true);
+                            } else {
+                                this.dispose();
+                                new PanelJefe(JefesDAO.consultarJefe(this.jefe.getId())).setVisible(true);
                             }
+                        } catch (Exception ex) {
+                            Logger.getLogger(RegistrarPlano.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                         } else {
                             JOptionPane.showMessageDialog(null, "Error interno: Ocurrió un errror al querer registrar el plano.", "¡Error interno!", JOptionPane.ERROR_MESSAGE);
                         }
@@ -304,7 +327,7 @@ public class RegistrarPlano extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Error: Seleccione una escala válida.", "¡Error!", JOptionPane.ERROR_MESSAGE);
             }
         } else {
-            JOptionPane.showMessageDialog(null, "Error: Seleccione un tipo de permiso válido.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error: Seleccione un tipo de plano válido.", "¡Error!", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnRegistrarActionPerformed
 
@@ -316,7 +339,24 @@ public class RegistrarPlano extends javax.swing.JFrame {
         if (Character.isLetter(c) || !Character.isDigit(c)) {
             evt.consume();
         }
+        // Obtener el componente fuente del evento
+        JTextField textField = (JTextField) evt.getSource();
+
+        // Verificar si el evento es una operación de pegar
+        if (evt.isConsumed() || evt.getKeyChar() == KeyEvent.VK_V && evt.isControlDown()) {
+            // Si es una operación de pegar, cancelar el evento
+            evt.consume();
+
+            // Vaciar el contenido del campo de texto
+            textField.setText("");
+        }
     }//GEN-LAST:event_txtFolioKeyTyped
+
+    private void txtFolioFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtFolioFocusLost
+        if (txtFolio.getText().isBlank() || txtFolio.getText().length() < 6) {
+            txtFolio.setText("######");
+        }
+    }//GEN-LAST:event_txtFolioFocusLost
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSeparator Separador1;
@@ -334,7 +374,7 @@ public class RegistrarPlano extends javax.swing.JFrame {
     private javax.swing.JLabel lblFechaRealizado;
     private javax.swing.JLabel lblFolio;
     private javax.swing.JLabel lblTipo;
-    private javax.swing.JLabel lblTipoPermiso;
+    private javax.swing.JLabel lblTipoPlano;
     private javax.swing.JLabel lblTitulo;
     private javax.swing.JTextField txtFolio;
     // End of variables declaration//GEN-END:variables

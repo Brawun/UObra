@@ -12,10 +12,13 @@ import Enumeradores.EstadoObra;
 import Herramientas.Fecha;
 import Herramientas.Icono;
 import Herramientas.Validadores;
+import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -28,6 +31,7 @@ public class ConsultarObras extends javax.swing.JFrame {
     Clientes cliente = new Clientes();
     ClientesDAO ClientesDAO = new ClientesDAO();
     ObrasDAO ObrasDAO = new ObrasDAO();
+    Validadores valido = new Validadores();
 
     /**
      * Creates new form ConsultarObras
@@ -35,8 +39,15 @@ public class ConsultarObras extends javax.swing.JFrame {
     public ConsultarObras(Clientes cliente) {
         this.cliente = cliente;
         initComponents();
+        UIManager.put("OptionPane.yesButtonText", "Aceptar");
+        UIManager.put("OptionPane.noButtonText", "Cancelar");
         new Icono().insertarIcono(this);
-        this.txtCostoTotal.setText("0.0");
+        this.txtCostoTotal.setText("1000.0");
+        this.cbxAccion.setSelectedItem("Elija uno...");
+        this.cbxEconomia.setSelectedItem("Elija uno...");
+        this.cbxEstado.setSelectedItem("Elija uno...");
+        this.periodoFinal.setCalendar(null);
+        this.periodoInicio.setCalendar(null);
     }
 
     public void cargarTablaObras(Integer fechas) throws Exception {
@@ -116,6 +127,13 @@ public class ConsultarObras extends javax.swing.JFrame {
                 obras.getFechaFin() != null ? fecha.formatoFecha(obras.getFechaFin()) : "No aplica"};
             modeloTablaObras.addRow(filaNueva);
         }
+        valido.centrarTabla(tblResultados);
+    }
+
+    public void corregirTamaños() {
+        if (this.txtCostoTotal.getText().length() > 12) {
+            this.txtCostoTotal.setText(this.txtCostoTotal.getText().substring(0, 30));
+        }
     }
 
     /**
@@ -176,7 +194,7 @@ public class ConsultarObras extends javax.swing.JFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Long.class, java.lang.String.class, java.lang.String.class, java.lang.Float.class, java.lang.Float.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.Long.class, java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false, false, false, false, false
@@ -191,6 +209,7 @@ public class ConsultarObras extends javax.swing.JFrame {
             }
         });
         tblResultados.setRequestFocusEnabled(false);
+        tblResultados.getTableHeader().setReorderingAllowed(false);
         ScrollPanel.setViewportView(tblResultados);
 
         cbxEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elija uno...", "Indistinto", "En espera", "Desarrollo", "Teminada" }));
@@ -357,11 +376,11 @@ public class ConsultarObras extends javax.swing.JFrame {
                         .addComponent(lblResultado))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(21, 21, 21)
-                        .addComponent(ScrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 843, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(402, 402, 402)
-                        .addComponent(btnRegresar)))
+                        .addComponent(ScrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 843, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(20, 20, 20))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(btnRegresar)
+                .addGap(393, 393, 393))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -444,37 +463,25 @@ public class ConsultarObras extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRegresarActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        corregirTamaños();
         try {
-            Validadores valido = new Validadores();
             if (this.periodoFinal.getCalendar() != null && this.periodoInicio.getCalendar() != null) {
                 if (valido.validarFechas(this.periodoInicio.getCalendar(), this.periodoFinal.getCalendar())) {
                     if (this.cbxAccion.getSelectedItem() != "Elija uno...") {
                         if (this.cbxEstado.getSelectedItem() != "Elija uno...") {
                             if (this.cbxEconomia.getSelectedItem() != "Elija uno...") {
                                 // Se valida y formatea el campo de costo total
-                                if (this.txtCostoTotal.getText().isBlank()) {
-                                    this.txtCostoTotal.setText("0.0");
-                                } else {
-                                    this.txtCostoTotal.setText(this.txtCostoTotal.getText().trim());
-                                    this.txtCostoTotal.setText(valido.recortarComas(this.txtCostoTotal.getText()));
-                                    if (valido.validarSinEspacios(this.txtCostoTotal.getText())) {
-                                        this.txtCostoTotal.setText(valido.recortarSignoMas(this.txtCostoTotal.getText()));
-                                        if (!valido.validarNumero(this.txtCostoTotal.getText())) {
-                                            JOptionPane.showMessageDialog(null, "Error: Ingrese un número en el costo total. (No caracteres ni numeros negativos).", "¡Error!", JOptionPane.ERROR_MESSAGE);
-                                        } else if (!valido.validarFlotante(this.txtCostoTotal.getText())) {
-                                            this.txtCostoTotal.setText(this.txtCostoTotal.getText().concat(".0"));
-                                            // Se llama a la función que cargará la tabla
-                                            if (this.cbxAccion.getSelectedItem() == "Solicitada") {
-                                                this.cargarTablaObras(0);
-                                            } else if (this.cbxAccion.getSelectedItem() == "Iniciada") {
-                                                this.cargarTablaObras(1);
-                                            } else if (this.cbxAccion.getSelectedItem() == "Terminada") {
-                                                this.cargarTablaObras(2);
-                                            }
-                                        }
-                                    } else {
-                                        JOptionPane.showMessageDialog(null, "Error: Ingrese un costo total válido. (Sin espacios).", "¡Error!", JOptionPane.ERROR_MESSAGE);
-                                    }
+                                txtCostoTotal.setText(valido.corregirFlotante(txtCostoTotal.getText()));
+                                if (Float.parseFloat(txtCostoTotal.getText()) <= 999) {
+                                    txtCostoTotal.setText("1000.0");
+                                }
+                                // Se llama a la función que cargará la tabla
+                                if (this.cbxAccion.getSelectedItem() == "Solicitada") {
+                                    this.cargarTablaObras(0);
+                                } else if (this.cbxAccion.getSelectedItem() == "Iniciada") {
+                                    this.cargarTablaObras(1);
+                                } else if (this.cbxAccion.getSelectedItem() == "Terminada") {
+                                    this.cargarTablaObras(2);
                                 }
                             } else {
                                 JOptionPane.showMessageDialog(null, "Error: Elija un estado económico de obra válido para la búsqueda dinámica.", "¡Error!", JOptionPane.ERROR_MESSAGE);
@@ -493,29 +500,17 @@ public class ConsultarObras extends javax.swing.JFrame {
                     if (this.cbxEstado.getSelectedItem() != "Elija uno...") {
                         if (this.cbxEconomia.getSelectedItem() != "Elija uno...") {
                             // Se valida y formatea el campo de costo total
-                            if (this.txtCostoTotal.getText().isBlank()) {
-                                this.txtCostoTotal.setText("0.0");
-                            } else {
-                                this.txtCostoTotal.setText(this.txtCostoTotal.getText().trim());
-                                this.txtCostoTotal.setText(valido.recortarComas(this.txtCostoTotal.getText()));
-                                if (valido.validarSinEspacios(this.txtCostoTotal.getText())) {
-                                    this.txtCostoTotal.setText(valido.recortarSignoMas(this.txtCostoTotal.getText()));
-                                    if (!valido.validarNumero(this.txtCostoTotal.getText())) {
-                                        JOptionPane.showMessageDialog(null, "Error: Ingrese un número en el costo total. (No caracteres ni numeros negativos).", "¡Error!", JOptionPane.ERROR_MESSAGE);
-                                    } else if (!valido.validarFlotante(this.txtCostoTotal.getText())) {
-                                        this.txtCostoTotal.setText(this.txtCostoTotal.getText().concat(".0"));
-                                        // Se llama a la función que cargará la tabla
-                                        if (this.cbxAccion.getSelectedItem() == "Solicitada") {
-                                            this.cargarTablaObras(0);
-                                        } else if (this.cbxAccion.getSelectedItem() == "Iniciada") {
-                                            this.cargarTablaObras(1);
-                                        } else if (this.cbxAccion.getSelectedItem() == "Terminada") {
-                                            this.cargarTablaObras(2);
-                                        }
-                                    }
-                                } else {
-                                    JOptionPane.showMessageDialog(null, "Error: Ingrese un costo total válido. (Sin espacios).", "¡Error!", JOptionPane.ERROR_MESSAGE);
-                                }
+                            txtCostoTotal.setText(valido.corregirFlotante(txtCostoTotal.getText()));
+                            if (Float.parseFloat(txtCostoTotal.getText()) <= 999) {
+                                txtCostoTotal.setText("1000.0");
+                            }
+                            // Se llama a la función que cargará la tabla
+                            if (this.cbxAccion.getSelectedItem() == "Solicitada") {
+                                this.cargarTablaObras(0);
+                            } else if (this.cbxAccion.getSelectedItem() == "Iniciada") {
+                                this.cargarTablaObras(1);
+                            } else if (this.cbxAccion.getSelectedItem() == "Terminada") {
+                                this.cargarTablaObras(2);
                             }
                         } else {
                             JOptionPane.showMessageDialog(null, "Error: Elija un estado económico de obra válido para la búsqueda dinámica.", "¡Error!", JOptionPane.ERROR_MESSAGE);
@@ -539,6 +534,20 @@ public class ConsultarObras extends javax.swing.JFrame {
         char c = evt.getKeyChar();
         if (Character.isLetter(c)) {
             evt.consume();
+        } else if (c == '.' && txtCostoTotal.getText().contains(".")) {
+            // Si ya hay un punto en el texto, no permitir otro
+            evt.consume();
+        }
+        // Obtener el componente fuente del evento
+        JTextField textField = (JTextField) evt.getSource();
+
+        // Verificar si el evento es una operación de pegar
+        if (evt.isConsumed() || evt.getKeyChar() == KeyEvent.VK_V && evt.isControlDown()) {
+            // Si es una operación de pegar, cancelar el evento
+            evt.consume();
+
+            // Vaciar el contenido del campo de texto
+            textField.setText("");
         }
     }//GEN-LAST:event_txtCostoTotalKeyTyped
 

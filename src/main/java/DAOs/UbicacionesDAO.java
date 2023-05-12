@@ -4,9 +4,9 @@
 package DAOs;
 
 import Dominio.Clientes;
+import Dominio.Obras;
 import Dominio.Ubicaciones;
 import Enumeradores.TipoUbicacion;
-import Herramientas.Encriptador;
 import Herramientas.Fecha;
 import java.util.Calendar;
 import java.util.LinkedList;
@@ -16,6 +16,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -37,14 +38,14 @@ public class UbicacionesDAO {
     Fecha fecha = new Fecha();
 
     // Métodos de acceso
-    public Long registrarUbicacion(Ubicaciones ubicacion) {
+    public Ubicaciones registrarUbicacion(Ubicaciones ubicacion) {
         EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
         EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.persist(ubicacion);
         entityManager.getTransaction().commit();
         entityManager.close();
-        return ubicacion.getId();
+        return ubicacion;
     }
 
     public void ocuparUbicacion(Long id) {
@@ -278,7 +279,7 @@ public class UbicacionesDAO {
         }
 
         // Filtramos por escala de ubicacion si existe
-        if (tipo != null) {
+        if (disponible != null) {
             predicates.add(criteriaBuilder.equal(root.get("disponible"), disponible));
         }
 
@@ -298,7 +299,7 @@ public class UbicacionesDAO {
         }
 
         // Filtramos por area de ubicacion si existe
-        if (largo != null) {
+        if (area != null) {
             predicates.add(criteriaBuilder.equal(root.get("area"), area));
         }
 
@@ -317,6 +318,19 @@ public class UbicacionesDAO {
         entityManager.getTransaction().commit();
         entityManager.close();
         return ubicaciones;
+    }
+
+    public List<Ubicaciones> consultarUbicacionesDisponibles(Clientes cliente) {
+        TypedQuery<Ubicaciones> query;
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
+        query = entityManager.createQuery("SELECT u FROM Ubicaciones u WHERE u.disponible = true AND u.cliente.id = :cliente", Ubicaciones.class);
+        query.setParameter("cliente", cliente.getId());
+        List<Ubicaciones> obras = query.getResultList();
+        entityManager.getTransaction().commit();
+        entityManager.close();
+        return obras;
     }
 
     // Métodos drivers para búsqueda dinámica

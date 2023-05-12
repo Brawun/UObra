@@ -2,14 +2,16 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package GUI.Jefe.Jefes;
+package GUI.Jefe.Permisos;
 
 import DAOs.ClientesDAO;
 import DAOs.JefesDAO;
-import Dominio.Clientes;
+import DAOs.PermisosDAO;
 import Dominio.Jefes;
+import Dominio.Permisos;
 import GUI.Jefe.PanelJefe;
 import Herramientas.Encriptador;
+import Herramientas.Fecha;
 import Herramientas.Icono;
 import Herramientas.Validadores;
 import java.text.ParseException;
@@ -20,42 +22,39 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author 52644
  */
-public class ConsultarDeudores extends javax.swing.JFrame {
-    
+public class ConsultarPermisos extends javax.swing.JFrame {
+
     // Atributos
     Jefes jefe;
     Encriptador crypt = new Encriptador();
-    List<Clientes> listaClientes;
+    List<Permisos> listaPermisos;
+    Fecha fecha = new Fecha();
     JefesDAO JefesDAO = new JefesDAO();
-    ClientesDAO ClientesDAO = new ClientesDAO();
     Validadores valido = new Validadores();
-
-    /**
-     * consultar de forma rápida los Jefes que aún tienen adeudo pendiente 
-     * con nosotros y su número de teléfono para poder comunicarnos con ellos
-     * y realizar el cobro correspondiente.
-     */
+    PermisosDAO PermisosDAO = new PermisosDAO();
     
     /**
-     * Creates new form ConsultarJefes
+     * Creates new form ConsultarPermisos
      */
-    public ConsultarDeudores(Jefes jefe) throws Exception {
+    public ConsultarPermisos(Jefes jefe) throws Exception {
         this.jefe = jefe;
         initComponents();
         new Icono().insertarIcono(this);
-        cargarTablaDeudores();
+        cargarTablaPermisos();
     }
     
-    public void cargarTablaDeudores() throws ParseException, Exception {
-        listaClientes = ClientesDAO.consultarClientesDeudores((float) 0.1);
-        DefaultTableModel modeloTablaDeudores = (DefaultTableModel) this.tblResultados.getModel();
-        modeloTablaDeudores.setRowCount(0);
-        for (Clientes cliente : listaClientes) {
-            Object[] filaNueva = {cliente.getId(),
-                cliente.getNombre() + " " + cliente.getApellidoPaterno() + " " + cliente.getApellidoMaterno(),
-                crypt.decrypt(cliente.getTelefono()),
-                "$ " + cliente.getDeudaTotal() + " MXN"};
-            modeloTablaDeudores.addRow(filaNueva);
+    public void cargarTablaPermisos() throws ParseException, Exception {
+        listaPermisos = PermisosDAO.consultarTodosPermisosJefe(this.jefe);
+        DefaultTableModel modeloTablaPermisos = (DefaultTableModel) this.tblResultados.getModel();
+        modeloTablaPermisos.setRowCount(0);
+        for (Permisos permiso : listaPermisos) {
+            Object[] filaNueva = {
+                permiso.getId(),
+                crypt.decrypt(permiso.getFolio()),
+                permiso.getTipo().toString(),
+                fecha.formatoFecha(permiso.getFechaRegistro()),
+                fecha.formatoFecha(permiso.getFechaConcesion())};
+            modeloTablaPermisos.addRow(filaNueva);
         }
         valido.centrarTabla(tblResultados);
     } 
@@ -69,28 +68,20 @@ public class ConsultarDeudores extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btnRegresar = new javax.swing.JButton();
-        Separador1 = new javax.swing.JSeparator();
         lblPagos = new javax.swing.JLabel();
         ScrollPanel = new javax.swing.JScrollPane();
         tblResultados = new javax.swing.JTable();
         UObraLogoPeque = new javax.swing.JLabel();
         lblTitulo = new javax.swing.JLabel();
+        btnRegresar = new javax.swing.JButton();
+        Separador1 = new javax.swing.JSeparator();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        setTitle("Consultar Clientes Deudores");
+        setTitle("Consultar Permisos");
         setResizable(false);
 
-        btnRegresar.setText("Regresar");
-        btnRegresar.setToolTipText("Regresar a Panel Cliente");
-        btnRegresar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRegresarActionPerformed(evt);
-            }
-        });
-
         lblPagos.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lblPagos.setText("Clientes:");
+        lblPagos.setText("Permisos registrados:");
 
         ScrollPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
         ScrollPanel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -102,14 +93,14 @@ public class ConsultarDeudores extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Nombre completo", "Teléfono", "Deuda total"
+                "ID", "Folio", "Tipo", "Fecha Registro", "Fecha Concesión"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Long.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.Long.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -127,16 +118,20 @@ public class ConsultarDeudores extends javax.swing.JFrame {
         UObraLogoPeque.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\UObraPeque.png")); // NOI18N
 
         lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        lblTitulo.setText("Clientes Deudores");
+        lblTitulo.setText("Permisos");
+
+        btnRegresar.setText("Regresar");
+        btnRegresar.setToolTipText("Regresar a Panel Cliente");
+        btnRegresar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegresarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnRegresar)
-                .addGap(391, 391, 391))
             .addGroup(layout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -145,12 +140,16 @@ public class ConsultarDeudores extends javax.swing.JFrame {
                             .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 843, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblPagos)
                             .addComponent(ScrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 843, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(18, Short.MAX_VALUE))
+                        .addContainerGap(20, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lblTitulo)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(UObraLogoPeque)
                         .addGap(29, 29, 29))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnRegresar)
+                .addGap(400, 400, 400))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -167,7 +166,7 @@ public class ConsultarDeudores extends javax.swing.JFrame {
                 .addComponent(ScrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnRegresar)
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         pack();

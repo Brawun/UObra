@@ -17,11 +17,14 @@ import Enumeradores.MetodoPago;
 import Herramientas.Fecha;
 import Herramientas.Icono;
 import Herramientas.Validadores;
+import java.awt.event.KeyEvent;
 import java.text.ParseException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -38,6 +41,7 @@ public class RealizarPago extends javax.swing.JFrame {
     ObrerosDAO ObrerosDAO = new ObrerosDAO();
     PagosDAO PagosDAO = new PagosDAO();
     Validadores valido = new Validadores();
+    List<Obras> listaObras;
     Obras obra;
 
     /**
@@ -47,21 +51,33 @@ public class RealizarPago extends javax.swing.JFrame {
         this.cliente = cliente;
         this.obra = null;
         initComponents();
+        UIManager.put("OptionPane.yesButtonText", "Aceptar");
+        UIManager.put("OptionPane.noButtonText", "Cancelar");
         new Icono().insertarIcono(this);
-        this.txtCostoTotal.setText("0.0");
-        this.txtMonto.setText("0.0");
+        this.txtCostoTotal.setText("1000.0");
+        this.txtMonto.setText("100.0");
         List<Obreros> obreros = ObrerosDAO.consultarTodosObreros();
         for (Obreros obrero : obreros) {
             this.cbxObreros.addItem(
                     obrero.getNombre()
-                    + "" + obrero.getApellidoPaterno()
-                    + "" + obrero.getApellidoMaterno()
+                    + " " + obrero.getApellidoPaterno()
+                    + " " + obrero.getApellidoMaterno()
                     + " - ID: " + obrero.getId());
         }
         this.cbxObreros.setSelectedItem("Elija uno...");
+        this.cbxAccion.setSelectedItem("Elija uno...");
+        this.cbxEstado.setSelectedItem("Elija uno...");
+        this.cbxMetodoPago.setSelectedItem("Elija uno...");
+        this.lblInsertarDeuda.setText("");
+        this.lblInsertarFechaSolicitada.setText("");
+        this.lblInsertarID.setText("");
+        this.lblInsertarNombre.setText("");
         this.txtMonto.setEditable(false);
         this.cbxMetodoPago.setEnabled(false);
         this.cbxObreros.setEnabled(false);
+        tblResultados.clearSelection();
+        DefaultTableModel modeloTablaResultados = (DefaultTableModel) this.tblResultados.getModel();
+        modeloTablaResultados.setRowCount(0);
     }
 
     public int obtenerFila() {
@@ -77,26 +93,24 @@ public class RealizarPago extends javax.swing.JFrame {
         }
     }
 
+    public void corregirTamaños() {
+        if (this.txtCostoTotal.getText().length() > 12) {
+            this.txtCostoTotal.setText(this.txtCostoTotal.getText().substring(0, 12));
+        }
+        if (this.txtMonto.getText().length() > 12) {
+            this.txtMonto.setText(this.txtMonto.getText().substring(0, 12));
+        }
+    }
+
     public void cargarTablaObras(Integer fechas) throws Exception {
-        List<Obras> listaObras;
-        Fecha fecha = new Fecha();
         this.obra = null;
         EstadoObra estado;
         Float costo;
-        Boolean pagada;
         // Se asigna valor a costo
         if (this.txtCostoTotal.getText().equalsIgnoreCase("0.0")) {
             costo = null;
         } else {
             costo = Float.valueOf(this.txtCostoTotal.getText());
-        }
-        // Se asigna valor a estado económico 
-        if (this.cbxEconomia.getSelectedItem() == "Indistinto") {
-            pagada = null;
-        } else if (this.cbxEconomia.getSelectedItem() == "Pagadas") {
-            pagada = true;
-        } else {
-            pagada = false;
         }
         // Se asigna valor a estado de obra
         if (this.cbxEstado.getSelectedItem() == "Desarrollo") {
@@ -113,7 +127,7 @@ public class RealizarPago extends javax.swing.JFrame {
                         this.periodoFinal.getCalendar() != null // Si el usuario ingresó un periodo fin se ingresa en el campo
                         ? this.periodoFinal.getCalendar() : null,
                         estado, // Estado
-                        pagada, // Filtro de pagadas
+                        false, // Filtro de pagadas
                         costo, // Costo
                         this.cliente.getId()); // Cliente
             case 1 ->
@@ -123,7 +137,7 @@ public class RealizarPago extends javax.swing.JFrame {
                         this.periodoFinal.getCalendar() != null // Si el usuario ingresó un periodo fin se ingresa en el campo
                         ? this.periodoFinal.getCalendar() : null,
                         estado, // Estado
-                        pagada, // Filtro de pagadas
+                        false, // Filtro de pagadas
                         costo, // Costo
                         this.cliente.getId()); // Cliente
             default ->
@@ -133,7 +147,7 @@ public class RealizarPago extends javax.swing.JFrame {
                         this.periodoFinal.getCalendar() != null // Si el usuario ingresó un periodo fin se ingresa en el campo
                         ? this.periodoFinal.getCalendar() : null,
                         estado, // Estado
-                        pagada, // Filtro de pagadas
+                        false, // Filtro de pagadas
                         costo, // Costo
                         this.cliente.getId()); // Cliente
         }
@@ -151,6 +165,7 @@ public class RealizarPago extends javax.swing.JFrame {
                 obras.getFechaFin() != null ? fecha.formatoFecha(obras.getFechaFin()) : "No aplica"};
             modeloTablaObras.addRow(filaNueva);
         }
+        valido.centrarTabla(tblResultados);
     }
 
     /**
@@ -169,12 +184,9 @@ public class RealizarPago extends javax.swing.JFrame {
         Separador2 = new javax.swing.JSeparator();
         cbxEstado = new javax.swing.JComboBox<>();
         lblFechaFin = new javax.swing.JLabel();
-        cbxEconomia = new javax.swing.JComboBox<>();
         lblEstado = new javax.swing.JLabel();
         cbxAccion = new javax.swing.JComboBox<>();
-        lblDeuda = new javax.swing.JLabel();
         UObraLogoPeque = new javax.swing.JLabel();
-        lblEconomia = new javax.swing.JLabel();
         lblCosto = new javax.swing.JLabel();
         lbl$ = new javax.swing.JLabel();
         lblResultado = new javax.swing.JLabel();
@@ -239,10 +251,6 @@ public class RealizarPago extends javax.swing.JFrame {
         lblFechaFin.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblFechaFin.setText("Fecha fin:");
 
-        cbxEconomia.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elija uno...", "Indistinto", "Pagadas", "No pagadas" }));
-        cbxEconomia.setToolTipText("Elija una economía");
-        cbxEconomia.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-
         lblEstado.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblEstado.setText("Estado:");
 
@@ -250,12 +258,7 @@ public class RealizarPago extends javax.swing.JFrame {
         cbxAccion.setToolTipText("Elija una acción");
         cbxAccion.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        lblDeuda.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lblDeuda.setText("Deuda:");
-
         UObraLogoPeque.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\UObraPeque.png")); // NOI18N
-
-        lblEconomia.setText("Que económicamente estén...");
 
         lblCosto.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblCosto.setText("Costo:");
@@ -326,7 +329,7 @@ public class RealizarPago extends javax.swing.JFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Long.class, java.lang.String.class, java.lang.String.class, java.lang.Float.class, java.lang.Float.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.Long.class, java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false, false, false, false, false
@@ -341,6 +344,7 @@ public class RealizarPago extends javax.swing.JFrame {
             }
         });
         tblResultados.setRequestFocusEnabled(false);
+        tblResultados.getTableHeader().setReorderingAllowed(false);
         ScrollPanel.setViewportView(tblResultados);
 
         lblNombre.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -428,7 +432,7 @@ public class RealizarPago extends javax.swing.JFrame {
 
         lblMetodoPago.setText("Ingrese método de pago...");
 
-        cbxObreros.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elija uno...", "Efectivo", "Débito", "Crédito" }));
+        cbxObreros.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elija uno..." }));
         cbxObreros.setToolTipText("Elija un estado");
         cbxObreros.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
@@ -441,12 +445,6 @@ public class RealizarPago extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnRealizarPago)
-                .addGap(271, 271, 271)
-                .addComponent(btnRegresar)
-                .addGap(28, 28, 28))
             .addGroup(layout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -489,30 +487,28 @@ public class RealizarPago extends javax.swing.JFrame {
                                         .addComponent(periodoFinal, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGap(46, 46, 46)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblEstado)
-                                    .addComponent(lblDeuda)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGap(4, 4, 4)
-                                        .addComponent(lblCosto)))
-                                .addGap(10, 10, 10)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(2, 2, 2)
-                                        .addComponent(lblEnEstado))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(2, 2, 2)
-                                        .addComponent(cbxEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(lblEconomia)
-                                    .addComponent(lblConMinimo)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(7, 7, 7)
-                                        .addComponent(lbl$)
-                                        .addGap(6, 6, 6)
-                                        .addComponent(txtCostoTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(lblEstado)
                                         .addGap(12, 12, 12)
-                                        .addComponent(lblMXN))
-                                    .addComponent(btnBuscar)
-                                    .addComponent(cbxEconomia, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(lblEnEstado)
+                                            .addComponent(cbxEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(lblCosto)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGap(65, 65, 65)
+                                                .addComponent(btnBuscar))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGap(17, 17, 17)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(lblConMinimo)
+                                                    .addGroup(layout.createSequentialGroup()
+                                                        .addComponent(lbl$)
+                                                        .addGap(6, 6, 6)
+                                                        .addComponent(txtCostoTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addGap(12, 12, 12)
+                                                        .addComponent(lblMXN)))))))
                                 .addGap(26, 26, 26)
                                 .addComponent(Imagen))
                             .addComponent(Separador2, javax.swing.GroupLayout.PREFERRED_SIZE, 843, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -550,31 +546,40 @@ public class RealizarPago extends javax.swing.JFrame {
                                             .addGap(0, 0, Short.MAX_VALUE))))
                                 .addComponent(ScrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 843, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addContainerGap(19, Short.MAX_VALUE))))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(30, 30, 30)
-                .addComponent(lblCosto1)
-                .addGap(17, 17, 17)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblMontoPago)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lbl$2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtMonto, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addComponent(lblCosto1)
+                        .addGap(17, 17, 17)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblMontoPago)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lbl$2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtMonto, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(lblMXN2)))
                         .addGap(18, 18, 18)
-                        .addComponent(lblMXN2)))
-                .addGap(18, 18, 18)
-                .addComponent(lblMetodo)
-                .addGap(12, 12, 12)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblMetodoPago, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cbxMetodoPago, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(lblObrero)
-                .addGap(12, 12, 12)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblObreros, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cbxObreros, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(lblMetodo)
+                        .addGap(12, 12, 12)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lblMetodoPago, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cbxMetodoPago, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(lblObrero)
+                        .addGap(12, 12, 12)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblObreros)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE))
+                            .addComponent(cbxObreros, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnRealizarPago)
+                        .addGap(271, 271, 271)
+                        .addComponent(btnRegresar)))
+                .addGap(28, 28, 28))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -588,55 +593,55 @@ public class RealizarPago extends javax.swing.JFrame {
                 .addGap(6, 6, 6)
                 .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(Imagen, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(lblBusqueda)
-                        .addGap(6, 6, 6)
-                        .addComponent(lblQue)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(3, 3, 3)
-                                .addComponent(lblAccion))
-                            .addComponent(cbxAccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(15, 15, 15)
-                        .addComponent(lblEnUnPeriodo)
-                        .addGap(6, 6, 6)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblFechaInicio)
-                            .addComponent(periodoInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(34, 34, 34)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(6, 6, 6)
-                                .addComponent(lblFechaFin))
-                            .addComponent(periodoFinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(49, 49, 49)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblEstado)
-                            .addComponent(cbxEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(32, 32, 32)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblDeuda)
-                            .addComponent(cbxEconomia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(37, 37, 37)
-                        .addComponent(lblCosto))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(28, 28, 28)
-                        .addComponent(lblEnEstado)
-                        .addGap(37, 37, 37)
-                        .addComponent(lblEconomia)
-                        .addGap(40, 40, 40)
-                        .addComponent(lblConMinimo)
-                        .addGap(6, 6, 6)
+                                .addComponent(lblBusqueda)
+                                .addGap(6, 6, 6)
+                                .addComponent(lblQue)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(3, 3, 3)
+                                        .addComponent(lblAccion))
+                                    .addComponent(cbxAccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(15, 15, 15)
+                                .addComponent(lblEnUnPeriodo)
+                                .addGap(6, 6, 6)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblFechaInicio)
+                                    .addComponent(periodoInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(49, 49, 49)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(lblEstado)
+                                            .addComponent(cbxEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(28, 28, 28)
+                                        .addComponent(lblEnEstado)))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(25, 25, 25)
+                                        .addComponent(lblCosto))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(lblConMinimo)
+                                        .addGap(6, 6, 6)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(lbl$)
+                                            .addComponent(txtCostoTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(lblMXN))))))
+                        .addGap(26, 26, 26)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbl$)
-                            .addComponent(txtCostoTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblMXN))
-                        .addGap(18, 18, 18)
-                        .addComponent(btnBuscar))
-                    .addComponent(Imagen, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(12, 12, 12)
+                            .addComponent(btnBuscar)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addComponent(lblFechaFin))
+                            .addComponent(periodoFinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(14, 14, 14)
                 .addComponent(Separador2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(16, 16, 16)
                 .addComponent(lblResultado)
@@ -717,6 +722,7 @@ public class RealizarPago extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRegresarActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        corregirTamaños();
         try {
             this.cbxObreros.setSelectedItem("Elija uno...");
             this.txtMonto.setEditable(false);
@@ -726,34 +732,18 @@ public class RealizarPago extends javax.swing.JFrame {
                 if (valido.validarFechas(this.periodoInicio.getCalendar(), this.periodoFinal.getCalendar())) {
                     if (this.cbxAccion.getSelectedItem() != "Elija uno...") {
                         if (this.cbxEstado.getSelectedItem() != "Elija uno...") {
-                            if (this.cbxEconomia.getSelectedItem() != "Elija uno...") {
-                                // Se valida y formatea el campo de costo total
-                                if (this.txtCostoTotal.getText().isBlank()) {
-                                    this.txtCostoTotal.setText("0.0");
-                                } else {
-                                    this.txtCostoTotal.setText(this.txtCostoTotal.getText().trim());
-                                    this.txtCostoTotal.setText(valido.recortarComas(this.txtCostoTotal.getText()));
-                                    if (valido.validarSinEspacios(this.txtCostoTotal.getText())) {
-                                        this.txtCostoTotal.setText(valido.recortarSignoMas(this.txtCostoTotal.getText()));
-                                        if (!valido.validarNumero(this.txtCostoTotal.getText())) {
-                                            JOptionPane.showMessageDialog(null, "Error: Ingrese un número en el costo total. (No caracteres ni numeros negativos).", "¡Error!", JOptionPane.ERROR_MESSAGE);
-                                        } else if (!valido.validarFlotante(this.txtCostoTotal.getText())) {
-                                            this.txtCostoTotal.setText(this.txtCostoTotal.getText().concat(".0"));
-                                            // Se llama a la función que cargará la tabla
-                                            if (this.cbxAccion.getSelectedItem() == "Solicitada") {
-                                                this.cargarTablaObras(0);
-                                            } else if (this.cbxAccion.getSelectedItem() == "Iniciada") {
-                                                this.cargarTablaObras(1);
-                                            } else if (this.cbxAccion.getSelectedItem() == "Terminada") {
-                                                this.cargarTablaObras(2);
-                                            }
-                                        }
-                                    } else {
-                                        JOptionPane.showMessageDialog(null, "Error: Ingrese un costo total válido. (Sin espacios).", "¡Error!", JOptionPane.ERROR_MESSAGE);
-                                    }
-                                }
-                            } else {
-                                JOptionPane.showMessageDialog(null, "Error: Elija un estado económico de obra válido para la búsqueda dinámica.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                            // Se valida y formatea el campo de costo total
+                            txtCostoTotal.setText(valido.corregirFlotante(txtCostoTotal.getText()));
+                            if (Float.parseFloat(txtCostoTotal.getText()) <= 999) {
+                                txtCostoTotal.setText("1000.0");
+                            }
+                            // Se llama a la función que cargará la tabla
+                            if (this.cbxAccion.getSelectedItem() == "Solicitada") {
+                                this.cargarTablaObras(0);
+                            } else if (this.cbxAccion.getSelectedItem() == "Iniciada") {
+                                this.cargarTablaObras(1);
+                            } else if (this.cbxAccion.getSelectedItem() == "Terminada") {
+                                this.cargarTablaObras(2);
                             }
                         } else {
                             JOptionPane.showMessageDialog(null, "Error: Elija un estado de obra válido para la búsqueda dinámica.", "¡Error!", JOptionPane.ERROR_MESSAGE);
@@ -767,34 +757,18 @@ public class RealizarPago extends javax.swing.JFrame {
             } else {
                 if (this.cbxAccion.getSelectedItem() != "Elija uno...") {
                     if (this.cbxEstado.getSelectedItem() != "Elija uno...") {
-                        if (this.cbxEconomia.getSelectedItem() != "Elija uno...") {
-                            // Se valida y formatea el campo de costo total
-                            if (this.txtCostoTotal.getText().isBlank()) {
-                                this.txtCostoTotal.setText("0.0");
-                            } else {
-                                this.txtCostoTotal.setText(this.txtCostoTotal.getText().trim());
-                                this.txtCostoTotal.setText(valido.recortarComas(this.txtCostoTotal.getText()));
-                                if (valido.validarSinEspacios(this.txtCostoTotal.getText())) {
-                                    this.txtCostoTotal.setText(valido.recortarSignoMas(this.txtCostoTotal.getText()));
-                                    if (!valido.validarNumero(this.txtCostoTotal.getText())) {
-                                        JOptionPane.showMessageDialog(null, "Error: Ingrese un número en el costo total. (No caracteres ni numeros negativos).", "¡Error!", JOptionPane.ERROR_MESSAGE);
-                                    } else if (!valido.validarFlotante(this.txtCostoTotal.getText())) {
-                                        this.txtCostoTotal.setText(this.txtCostoTotal.getText().concat(".0"));
-                                        // Se llama a la función que cargará la tabla
-                                        if (this.cbxAccion.getSelectedItem() == "Solicitada") {
-                                            this.cargarTablaObras(0);
-                                        } else if (this.cbxAccion.getSelectedItem() == "Iniciada") {
-                                            this.cargarTablaObras(1);
-                                        } else if (this.cbxAccion.getSelectedItem() == "Terminada") {
-                                            this.cargarTablaObras(2);
-                                        }
-                                    }
-                                } else {
-                                    JOptionPane.showMessageDialog(null, "Error: Ingrese un costo total válido. (Sin espacios).", "¡Error!", JOptionPane.ERROR_MESSAGE);
-                                }
-                            }
-                        } else {
-                            JOptionPane.showMessageDialog(null, "Error: Elija un estado económico de obra válido para la búsqueda dinámica.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                        // Se valida y formatea el campo de costo total
+                        txtCostoTotal.setText(valido.corregirFlotante(txtCostoTotal.getText()));
+                        if (Float.parseFloat(txtCostoTotal.getText()) <= 999) {
+                            txtCostoTotal.setText("1000.0");
+                        }
+                        // Se llama a la función que cargará la tabla
+                        if (this.cbxAccion.getSelectedItem() == "Solicitada") {
+                            this.cargarTablaObras(0);
+                        } else if (this.cbxAccion.getSelectedItem() == "Iniciada") {
+                            this.cargarTablaObras(1);
+                        } else if (this.cbxAccion.getSelectedItem() == "Terminada") {
+                            this.cargarTablaObras(2);
                         }
                     } else {
                         JOptionPane.showMessageDialog(null, "Error: Elija un estado de obra válido para la búsqueda dinámica.", "¡Error!", JOptionPane.ERROR_MESSAGE);
@@ -828,58 +802,73 @@ public class RealizarPago extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAceptarSeleccionActionPerformed
 
     private void btnRealizarPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRealizarPagoActionPerformed
+        corregirTamaños();
         if (this.txtMonto.isEditable()) {
             if (this.obra != null) {
                 if (this.cbxMetodoPago.getSelectedItem() != "Elija uno...") {
                     if (this.cbxMetodoPago.getSelectedItem() == "Efectivo") {
                         if (this.cbxObreros.getSelectedItem() != "Elija uno...") {
                             // Se valida y formatea el campo de monto
-                            if (this.txtMonto.getText().isBlank()) {
-                                this.txtMonto.setText("0.0");
-                            } else {
-                                this.txtMonto.setText(this.txtMonto.getText().trim());
-                                this.txtMonto.setText(valido.recortarComas(this.txtMonto.getText()));
-                                if (valido.validarSinEspacios(this.txtMonto.getText())) {
-                                    this.txtMonto.setText(valido.recortarSignoMas(this.txtMonto.getText()));
-                                    if (!valido.validarNumero(this.txtMonto.getText())) {
-                                        JOptionPane.showMessageDialog(null, "Error: Ingrese un número en el costo total. (No caracteres ni numeros negativos).", "¡Error!", JOptionPane.ERROR_MESSAGE);
-                                    } else if (!valido.validarFlotante(this.txtMonto.getText())) {
-                                        try {
-                                            this.txtMonto.setText(this.txtMonto.getText().concat(".0"));
-                                            String obreroElegido = this.cbxObreros.getSelectedItem().toString();
-                                            String idElegido = obreroElegido.substring(obreroElegido.length(), 3);
-                                            idElegido = valido.obtenerNumeros(idElegido);
-                                            Long id = Long.valueOf(idElegido);
-                                            Obreros obrero = ObrerosDAO.consultarObrero(id);
-                                            Pagos pago = new Pagos(
-                                                    Float.valueOf(this.txtMonto.getText()),
-                                                    MetodoPago.EFECTIVO,
-                                                    obrero,
-                                                    this.obra,
-                                                    this.cliente);
-                                            Pagos pagoRegistrado = PagosDAO.registrarPago(pago);
-                                            if (pagoRegistrado != null) {
-                                                ObrerosDAO.agregarPagoObrero(id, pagoRegistrado);
-                                                ClientesDAO.agregarPagosCliente(this.cliente.getId(), pagoRegistrado);
-                                                ObrasDAO.agregarPagoObra(this.obra.getId(), pagoRegistrado);
-                                                JOptionPane.showMessageDialog(null,
-                                                        "Se realizó exitosamente el pago de monto $ " + pagoRegistrado.getMonto() + " MXN, perteneciente a la obra "
-                                                        + this.obra.getNombre() + " el " + fecha.formatoFecha(pagoRegistrado.getFecha())
-                                                        + "\n - ID: " + pagoRegistrado.getId() + ". ☺", "Realizacón de pago exitoso", JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
-                                            } else {
-                                                JOptionPane.showMessageDialog(null, "Error interno: Ocurrió un errror al querer realizar el pago.", "¡Error interno!", JOptionPane.ERROR_MESSAGE);
-                                            }
-                                        } catch (ParseException ex) {
-                                            Logger.getLogger(RealizarPago.class.getName()).log(Level.SEVERE, null, ex);
-                                        } catch (Exception ex) {
-                                            Logger.getLogger(RealizarPago.class.getName()).log(Level.SEVERE, null, ex);
-                                        }
+                            txtMonto.setText(valido.corregirFlotante(txtMonto.getText()));
+                            if (Float.parseFloat(txtMonto.getText()) <= 99) {
+                                txtMonto.setText("100.0");
+                            }
+                            try {
+                                String obreroElegido = this.cbxObreros.getSelectedItem().toString();
+                                String idElegido = obreroElegido.substring(obreroElegido.length(), 3);
+                                idElegido = valido.obtenerNumeros(idElegido);
+                                Long id = Long.valueOf(idElegido);
+                                Obreros obrero = ObrerosDAO.consultarObrero(id);
+                                Pagos pago = new Pagos(
+                                        Float.valueOf(this.txtMonto.getText()),
+                                        MetodoPago.EFECTIVO,
+                                        obrero,
+                                        this.obra,
+                                        this.cliente);
+                                Pagos pagoRegistrado = PagosDAO.registrarPago(pago);
+                                if (pagoRegistrado != null) {
+                                    ObrerosDAO.agregarPagoObrero(id, pagoRegistrado);
+                                    ClientesDAO.agregarPagosCliente(this.cliente.getId(), pagoRegistrado);
+                                    ObrasDAO.agregarPagoObra(this.obra.getId(), pagoRegistrado);
+                                    this.setVisible(false);
+                                    int i = JOptionPane.showConfirmDialog(null,
+                                            "Se realizó exitosamente el pago con..."
+                                            + "\n Monto: $ " + pagoRegistrado.getMonto() + " MXN"
+                                            + "\n Obra: " + this.obra.getNombre()
+                                            + "\n Fecha: " + fecha.formatoFecha(pagoRegistrado.getFecha())
+                                            + "\n Método de pago: " + pagoRegistrado.getMetodoPago().toString()
+                                            + "\n - ID Cliente: " + pagoRegistrado.getCliente().getId()
+                                            + "\n - ID Obra: " + pagoRegistrado.getObra().getId()
+                                            + "\n - ID Obrero: " + pagoRegistrado.getObrero() != null ? pagoRegistrado.getObrero().getId() : "No aplica (No se pagó en efectivo)"
+                                            + "\n - ID: " + pagoRegistrado.getId()
+                                            + ". ☺\n"
+                                            + "\n ¿Desea registrar otra ubicación?", "Registro de ubicación exitoso", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
+                                    if (i == JOptionPane.YES_OPTION) {
+                                        this.txtCostoTotal.setText("1000.0");
+                                        this.cbxObreros.setSelectedItem("Elija uno...");
+                                        this.cbxAccion.setSelectedItem("Elija uno...");
+                                        this.cbxEstado.setSelectedItem("Elija uno...");
+                                        this.cbxMetodoPago.setSelectedItem("Elija uno...");
+                                        this.lblInsertarDeuda.setText("");
+                                        this.lblInsertarFechaSolicitada.setText("");
+                                        this.lblInsertarID.setText("");
+                                        this.lblInsertarNombre.setText("");
+                                        this.txtMonto.setEditable(false);
+                                        this.cbxMetodoPago.setEnabled(false);
+                                        this.cbxObreros.setEnabled(false);
+                                        tblResultados.clearSelection();
+                                        this.setVisible(true);
                                     } else {
-                                        JOptionPane.showMessageDialog(null, "Error: Ingrese un monto válido. (Sin espacios).", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                                        this.dispose();
+                                        new PanelCliente(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
                                     }
                                 } else {
-                                    JOptionPane.showMessageDialog(null, "Error: Ingrese un monto válido. (Sin espacios).", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                                    JOptionPane.showMessageDialog(null, "Error interno: Ocurrió un errror al querer realizar el pago.", "¡Error interno!", JOptionPane.ERROR_MESSAGE);
                                 }
+                            } catch (ParseException ex) {
+                                Logger.getLogger(RealizarPago.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (Exception ex) {
+                                Logger.getLogger(RealizarPago.class.getName()).log(Level.SEVERE, null, ex);
                             }
                         } else {
                             JOptionPane.showMessageDialog(null, "Error: Seleccione un obrero válido que haya recibido el pago en efectivo.", "¡Error!", JOptionPane.ERROR_MESSAGE);
@@ -888,48 +877,65 @@ public class RealizarPago extends javax.swing.JFrame {
                         this.cbxObreros.setSelectedItem("No aplica");
                         this.cbxObreros.setEnabled(false);
                         // Se valida y formatea el campo de monto
-                        if (this.txtMonto.getText().isBlank()) {
-                            this.txtMonto.setText("0.0");
-                        } else {
-                            this.txtMonto.setText(this.txtMonto.getText().trim());
-                            this.txtMonto.setText(valido.recortarComas(this.txtMonto.getText()));
-                            if (valido.validarSinEspacios(this.txtMonto.getText())) {
-                                this.txtMonto.setText(valido.recortarSignoMas(this.txtMonto.getText()));
-                                if (!valido.validarNumero(this.txtMonto.getText())) {
-                                    JOptionPane.showMessageDialog(null, "Error: Ingrese un número en el costo total. (No caracteres ni numeros negativos).", "¡Error!", JOptionPane.ERROR_MESSAGE);
-                                } else if (!valido.validarFlotante(this.txtMonto.getText())) {
-                                    this.txtMonto.setText(this.txtMonto.getText().concat(".0"));
-                                    MetodoPago metodo;
-                                    if (cbxMetodoPago.getSelectedItem() == "Débito") {
-                                        metodo = MetodoPago.DEBITO;
-                                    } else {
-                                        metodo = MetodoPago.CREDITO;
-                                    }
-                                    Pagos pago = new Pagos(
-                                            Float.valueOf(this.txtMonto.getText()),
-                                            metodo,
-                                            this.obra,
-                                            this.cliente);
-                                    Pagos pagoRegistrado = PagosDAO.registrarPago(pago);
-                                    if (pagoRegistrado != null) {
-                                        try {
-                                            ClientesDAO.agregarPagosCliente(this.cliente.getId(), pagoRegistrado);
-                                            ObrasDAO.agregarPagoObra(this.obra.getId(), pagoRegistrado);
-                                            JOptionPane.showMessageDialog(null,
-                                                    "Se realizó exitosamente el pago de monto $ " + pagoRegistrado.getMonto() + " MXN, perteneciente a la obra "
-                                                    + this.obra.getNombre() + " el " + fecha.formatoFecha(pagoRegistrado.getFecha())
-                                                    + "\n - ID: " + pagoRegistrado.getId() + ". ☺", "Realizacón de pago exitoso", JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
-                                        } catch (Exception ex) {
-                                            Logger.getLogger(RealizarPago.class.getName()).log(Level.SEVERE, null, ex);
-                                        }
-                                    } else {
-                                        JOptionPane.showMessageDialog(null, "Error interno: Ocurrió un errror al querer realizar el pago.", "¡Error interno!", JOptionPane.ERROR_MESSAGE);
-                                    }
-                                }
-                            } else {
-                                JOptionPane.showMessageDialog(null, "Error: Ingrese un monto válido. (Sin espacios).", "¡Error!", JOptionPane.ERROR_MESSAGE);
-                            }
+                        txtMonto.setText(valido.corregirFlotante(txtMonto.getText()));
+                        if (Float.parseFloat(txtMonto.getText()) <= 99) {
+                            txtCostoTotal.setText("100.0");
                         }
+                        MetodoPago metodo;
+                        if (cbxMetodoPago.getSelectedItem() == "Débito") {
+                            metodo = MetodoPago.DEBITO;
+                        } else {
+                            metodo = MetodoPago.CREDITO;
+                        }
+                        Pagos pago = new Pagos(
+                                Float.valueOf(this.txtMonto.getText()),
+                                metodo,
+                                this.obra,
+                                this.cliente);
+                        Pagos pagoRegistrado = PagosDAO.registrarPago(pago);
+                        if (pagoRegistrado != null) {
+                            try {
+                                ClientesDAO.agregarPagosCliente(this.cliente.getId(), pagoRegistrado);
+                                ObrasDAO.agregarPagoObra(this.obra.getId(), pagoRegistrado);
+                                this.setVisible(false);
+                                int i = JOptionPane.showConfirmDialog(null,
+                                        "Se realizó exitosamente el pago con..."
+                                        + "\n Monto: $ " + pagoRegistrado.getMonto() + " MXN"
+                                        + "\n Obra: " + this.obra.getNombre()
+                                        + "\n Fecha: " + fecha.formatoFecha(pagoRegistrado.getFecha())
+                                        + "\n Método de pago: " + pagoRegistrado.getMetodoPago().toString()
+                                        + "\n - ID Cliente: " + pagoRegistrado.getCliente().getId()
+                                        + "\n - ID Obra: " + pagoRegistrado.getObra().getId()
+                                        + "\n - ID Obrero: " + pagoRegistrado.getObrero() != null ? pagoRegistrado.getObrero().getId() : "No aplica (No se pagó en efectivo)"
+                                        + "\n - ID: " + pagoRegistrado.getId()
+                                        + ". ☺\n"
+                                        + "\n ¿Desea registrar otra ubicación?", "Registro de ubicación exitoso", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
+                                if (i == JOptionPane.YES_OPTION) {
+                                    this.txtCostoTotal.setText("1000.0");
+                                    this.cbxObreros.setSelectedItem("Elija uno...");
+                                    this.cbxAccion.setSelectedItem("Elija uno...");
+                                    this.cbxEstado.setSelectedItem("Elija uno...");
+                                    this.cbxMetodoPago.setSelectedItem("Elija uno...");
+                                    this.lblInsertarDeuda.setText("");
+                                    this.lblInsertarFechaSolicitada.setText("");
+                                    this.lblInsertarID.setText("");
+                                    this.lblInsertarNombre.setText("");
+                                    this.txtMonto.setEditable(false);
+                                    this.cbxMetodoPago.setEnabled(false);
+                                    this.cbxObreros.setEnabled(false);
+                                    tblResultados.clearSelection();
+                                    this.setVisible(true);
+                                } else {
+                                    this.dispose();
+                                    new PanelCliente(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
+                                }
+                            } catch (Exception ex) {
+                                Logger.getLogger(RealizarPago.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Error interno: Ocurrió un errror al querer realizar el pago.", "¡Error interno!", JOptionPane.ERROR_MESSAGE);
+                        }
+
                     }
                 } else {
                     JOptionPane.showMessageDialog(null, "Error: Seleccione un método de pago válido.", "¡Error!", JOptionPane.ERROR_MESSAGE);
@@ -956,6 +962,20 @@ public class RealizarPago extends javax.swing.JFrame {
         char c = evt.getKeyChar();
         if (Character.isLetter(c)) {
             evt.consume();
+        } else if (c == '.' && txtCostoTotal.getText().contains(".")) {
+            // Si ya hay un punto en el texto, no permitir otro
+            evt.consume();
+        }
+        // Obtener el componente fuente del evento
+        JTextField textField = (JTextField) evt.getSource();
+
+        // Verificar si el evento es una operación de pegar
+        if (evt.isConsumed() || evt.getKeyChar() == KeyEvent.VK_V && evt.isControlDown()) {
+            // Si es una operación de pegar, cancelar el evento
+            evt.consume();
+
+            // Vaciar el contenido del campo de texto
+            textField.setText("");
         }
     }//GEN-LAST:event_txtCostoTotalKeyTyped
 
@@ -966,6 +986,20 @@ public class RealizarPago extends javax.swing.JFrame {
         char c = evt.getKeyChar();
         if (Character.isLetter(c)) {
             evt.consume();
+        } else if (c == '.' && txtMonto.getText().contains(".")) {
+            // Si ya hay un punto en el texto, no permitir otro
+            evt.consume();
+        }
+        // Obtener el componente fuente del evento
+        JTextField textField = (JTextField) evt.getSource();
+
+        // Verificar si el evento es una operación de pegar
+        if (evt.isConsumed() || evt.getKeyChar() == KeyEvent.VK_V && evt.isControlDown()) {
+            // Si es una operación de pegar, cancelar el evento
+            evt.consume();
+
+            // Vaciar el contenido del campo de texto
+            textField.setText("");
         }
     }//GEN-LAST:event_txtMontoKeyTyped
 
@@ -982,7 +1016,6 @@ public class RealizarPago extends javax.swing.JFrame {
     private javax.swing.JButton btnRealizarPago;
     private javax.swing.JButton btnRegresar;
     private javax.swing.JComboBox<String> cbxAccion;
-    private javax.swing.JComboBox<String> cbxEconomia;
     private javax.swing.JComboBox<String> cbxEstado;
     private javax.swing.JComboBox<String> cbxMetodoPago;
     private javax.swing.JComboBox<String> cbxObreros;
@@ -994,9 +1027,7 @@ public class RealizarPago extends javax.swing.JFrame {
     private javax.swing.JLabel lblConMinimo;
     private javax.swing.JLabel lblCosto;
     private javax.swing.JLabel lblCosto1;
-    private javax.swing.JLabel lblDeuda;
     private javax.swing.JLabel lblDireccion;
-    private javax.swing.JLabel lblEconomia;
     private javax.swing.JLabel lblEnEstado;
     private javax.swing.JLabel lblEnUnPeriodo;
     private javax.swing.JLabel lblEstado;

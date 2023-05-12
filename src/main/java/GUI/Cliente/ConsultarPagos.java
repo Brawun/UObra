@@ -10,6 +10,7 @@ import Dominio.Clientes;
 import Dominio.Pagos;
 import Herramientas.Fecha;
 import Herramientas.Icono;
+import Herramientas.Validadores;
 import java.text.ParseException;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
@@ -24,6 +25,7 @@ public class ConsultarPagos extends javax.swing.JFrame {
     Clientes cliente = new Clientes();
     ClientesDAO ClientesDAO = new ClientesDAO();
     PagosDAO PagosDAO = new PagosDAO();
+    Validadores valido = new Validadores();
 
     /**
      * Creates new form ConsultarPagos
@@ -33,6 +35,8 @@ public class ConsultarPagos extends javax.swing.JFrame {
         initComponents();
         new Icono().insertarIcono(this);
         cargarTablaPagos();
+        DefaultTableModel modeloTablaPagos = (DefaultTableModel) this.tblResultados.getModel();
+        modeloTablaPagos.setRowCount(0);
     }
     
     public void cargarTablaPagos() throws ParseException, Exception {
@@ -50,6 +54,7 @@ public class ConsultarPagos extends javax.swing.JFrame {
                 pagos.getObrero() != null ? pagos.getObrero().getId().toString() : "No aplica"};
             modeloTablaPagos.addRow(filaNueva);
         }
+        valido.centrarTabla(tblResultados);
     } 
 
     /**
@@ -87,7 +92,7 @@ public class ConsultarPagos extends javax.swing.JFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Long.class, java.lang.Float.class, java.lang.String.class, java.lang.String.class, java.lang.Long.class, java.lang.String.class
+                java.lang.Long.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.Long.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false, false
@@ -102,6 +107,7 @@ public class ConsultarPagos extends javax.swing.JFrame {
             }
         });
         tblResultados.setRequestFocusEnabled(false);
+        tblResultados.getTableHeader().setReorderingAllowed(false);
         ScrollPanel.setViewportView(tblResultados);
 
         btnRegresar.setText("Regresar");

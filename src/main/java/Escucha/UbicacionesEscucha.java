@@ -64,7 +64,7 @@ public class UbicacionesEscucha {
                 + " - Dirección: " + e.getDireccion()
                 + " - Ancho: " + e.getAncho() + " m"
                 + " - Largo: " + e.getLargo() + " m"
-                + " - Área: " + e.getArea() + " m^2"
+                + " - Área: " + e.getArea() + " m²"
                 + " - ID cliente: " + e.getCliente().getId()
                 + " - ID: " + e.getId()
                 + "\n");
@@ -98,7 +98,7 @@ public class UbicacionesEscucha {
                 + " - Dirección: " + e.getDireccion()
                 + " - Ancho: " + e.getAncho() + " m"
                 + " - Largo: " + e.getLargo() + " m"
-                + " - Área: " + e.getArea() + " m^2"
+                + " - Área: " + e.getArea() + " m²"
                 + " - ID cliente: " + e.getCliente().getId()
                 + " - ID: " + e.getId()
                 + "\n");

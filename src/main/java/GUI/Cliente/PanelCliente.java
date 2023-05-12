@@ -29,8 +29,6 @@ public class PanelCliente extends javax.swing.JFrame {
         this.cliente = cliente;
         initComponents();
         new Icono().insertarIcono(this);
-        // FUNCIÓN POR AGREGAR
-        this.mniAgregarUbicacionObra.setVisible(false);
         this.lblInsertarID.setText(this.cliente.getId().toString());
         this.lblInsertarNombre.setText(this.cliente.getNombre());
         this.lblInsertarApellidoPaterno.setText(this.cliente.getApellidoPaterno());
@@ -346,13 +344,13 @@ public class PanelCliente extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(lblInversion)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(lblDeuda)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(lblInsertarDeuda)
                                         .addComponent(lbl$2)
                                         .addComponent(lblMXN2)
-                                        .addComponent(btnCerrarSesion))))
+                                        .addComponent(btnCerrarSesion))
+                                    .addComponent(lblDeuda)))
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(lblInsertarInversion)
                                 .addComponent(lbl$1)
@@ -370,8 +368,12 @@ public class PanelCliente extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void mniSolicitarObraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniSolicitarObraActionPerformed
-        new SolicitarObra(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
-        this.dispose();
+        try {
+            new SolicitarObra(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
+            this.dispose();
+        } catch (Exception ex) {
+            Logger.getLogger(PanelCliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_mniSolicitarObraActionPerformed
 
     private void mniRegistrarUbicacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniRegistrarUbicacionActionPerformed

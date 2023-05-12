@@ -5,22 +5,24 @@
 package GUI.Jefe.Permisos;
 
 import DAOs.ClientesDAO;
-import DAOs.ObrasDAO;
-import DAOs.ObrerosDAO;
+import DAOs.JefesDAO;
 import DAOs.PermisosDAO;
 import Dominio.Clientes;
 import Dominio.Jefes;
-import Dominio.Obras;
 import Dominio.Permisos;
 import Enumeradores.TipoPermiso;
 import GUI.Cliente.PanelCliente;
+import GUI.Jefe.PanelJefe;
 import Herramientas.Encriptador;
 import Herramientas.Fecha;
 import Herramientas.Icono;
 import Herramientas.Validadores;
+import java.awt.event.KeyEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
 
 /**
  *
@@ -30,9 +32,8 @@ public class RegistrarPermiso extends javax.swing.JFrame {
 
     // Atributos
     Jefes jefe;
-    Clientes cliente = new Clientes();
     Fecha fecha = new Fecha();
-    ClientesDAO ClientesDAO = new ClientesDAO();
+    JefesDAO JefesDAO = new JefesDAO();
     PermisosDAO PermisosDAO = new PermisosDAO();
     Validadores valido = new Validadores();
     Encriptador crypt = new Encriptador();
@@ -42,6 +43,8 @@ public class RegistrarPermiso extends javax.swing.JFrame {
      */
     public RegistrarPermiso(Jefes jefe) {
         this.jefe = jefe;
+        UIManager.put("OptionPane.yesButtonText", "Aceptar");
+        UIManager.put("OptionPane.noButtonText", "Cancelar");
         initComponents();
         new Icono().insertarIcono(this);
         this.txtFolio.setText("######");
@@ -117,6 +120,11 @@ public class RegistrarPermiso extends javax.swing.JFrame {
         lblFechaConcesado.setText("Ingrese una fecha de concesión...");
 
         txtFolio.setToolTipText("Max. 6 caracteres");
+        txtFolio.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtFolioFocusLost(evt);
+            }
+        });
         txtFolio.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txtFolioKeyTyped(evt);
@@ -137,11 +145,6 @@ public class RegistrarPermiso extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(94, 94, 94)
-                        .addComponent(UObraLogoPeque))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(21, 21, 21)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -168,6 +171,12 @@ public class RegistrarPermiso extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(UObraLogoPeque)
+                .addGap(14, 14, 14))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -231,10 +240,25 @@ public class RegistrarPermiso extends javax.swing.JFrame {
                     Permisos permisoRegistrado = PermisosDAO.registrarPermiso(permiso);
                     if (permisoRegistrado.getId() != null) {
                         try {
-                            JOptionPane.showMessageDialog(null,
-                                    "Se realizó exitosamente el registro de permiso de folio " + crypt.decrypt(permisoRegistrado.getFolio())
-                                    + " con fecha de concesión el " + fecha.formatoFecha(permisoRegistrado.getFechaConcesion())
-                                    + "\n - ID: " + permisoRegistrado.getId() + ". ☺", "Registro de permiso exitoso", JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
+                            int i = JOptionPane.showConfirmDialog(null,
+                                    "Se realizó exitosamente el registro de permiso con..."
+                                    + "\n Folio: " + crypt.decrypt(permisoRegistrado.getFolio())
+                                    + "\n Tipo: " + permisoRegistrado.getTipo()
+                                    + "\n Fecha de registro: " + fecha.formatoFecha(permisoRegistrado.getFechaRegistro())
+                                    + "\n Fecha de concesión: " + fecha.formatoFecha(permisoRegistrado.getFechaConcesion())
+                                    + "\n - ID Jefe: " + permisoRegistrado.getJefe().getId()
+                                    + "\n - ID: " + permisoRegistrado.getId()
+                                    + ". ☺\n"
+                                    + "\n ¿Desea registrar otro permiso?", "Registro de permiso exitoso", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
+                            if (i == JOptionPane.YES_OPTION) {
+                                this.txtFolio.setText("######");
+                                this.cbxTipo.setSelectedItem("Elija uno...");
+                                this.fechaConcesion.setCalendar(null);
+                                this.setVisible(true);
+                            } else {
+                                this.dispose();
+                                new PanelJefe(JefesDAO.consultarJefe(this.jefe.getId())).setVisible(true);
+                            }
                         } catch (Exception ex) {
                             Logger.getLogger(RegistrarPermiso.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -257,7 +281,7 @@ public class RegistrarPermiso extends javax.swing.JFrame {
         int i = JOptionPane.showConfirmDialog(this, "¿Seguro que deseas cancelar el registro de permiso? Los datos de registro no se guardarán", "Advertencia", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         if (i == JOptionPane.YES_OPTION) {
             this.dispose();
-            new PanelCliente(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
+            new PanelJefe(JefesDAO.consultarJefe(this.jefe.getId())).setVisible(true);
         } else {
             this.setVisible(true);
         }
@@ -271,7 +295,24 @@ public class RegistrarPermiso extends javax.swing.JFrame {
         if (Character.isLetter(c) || !Character.isDigit(c)) {
             evt.consume();
         }
+        // Obtener el componente fuente del evento
+        JTextField textField = (JTextField) evt.getSource();
+
+        // Verificar si el evento es una operación de pegar
+        if (evt.isConsumed() || evt.getKeyChar() == KeyEvent.VK_V && evt.isControlDown()) {
+            // Si es una operación de pegar, cancelar el evento
+            evt.consume();
+
+            // Vaciar el contenido del campo de texto
+            textField.setText("");
+        }
     }//GEN-LAST:event_txtFolioKeyTyped
+
+    private void txtFolioFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtFolioFocusLost
+        if (txtFolio.getText().isBlank() || txtFolio.getText().length() < 6) {
+            txtFolio.setText("######");
+        }
+    }//GEN-LAST:event_txtFolioFocusLost
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

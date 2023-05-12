@@ -5,13 +5,13 @@
 package GUI.Cliente;
 
 import DAOs.ClientesDAO;
-import DAOs.ObrasDAO;
 import DAOs.UbicacionesDAO;
 import Dominio.Clientes;
 import Dominio.Obras;
 import Dominio.Ubicaciones;
 import Herramientas.Fecha;
 import Herramientas.Icono;
+import Herramientas.Validadores;
 import java.text.ParseException;
 import java.util.List;
 import java.util.logging.Level;
@@ -30,6 +30,7 @@ public class ConsultarUbicaciones extends javax.swing.JFrame {
     ClientesDAO ClientesDAO = new ClientesDAO();
     UbicacionesDAO UbicacionesDAO = new UbicacionesDAO();
     Fecha fecha = new Fecha();
+    Validadores valido = new Validadores();
     List<Ubicaciones> listaUbicaciones;
 
     /**
@@ -44,12 +45,18 @@ public class ConsultarUbicaciones extends javax.swing.JFrame {
         this.lblInsertarDireccion.setText("");
         this.lblInsertarFecha.setText("");
         this.lblInsertarID.setText("");
+        tblUbicaciones.clearSelection();
+        tblObras.clearSelection();
+        DefaultTableModel modeloTablaUbicaciones = (DefaultTableModel) this.tblUbicaciones.getModel();
+        modeloTablaUbicaciones.setRowCount(0);
+        DefaultTableModel modeloTablaPersonas = (DefaultTableModel) this.tblObras.getModel();
+        modeloTablaPersonas.setRowCount(0);
     }
 
     public void cargarTablaUbicaciones() throws Exception {
         listaUbicaciones = UbicacionesDAO.consultarUbicacionesCliente(this.cliente.getId());
-        DefaultTableModel modeloTablaPersonas = (DefaultTableModel) this.tblUbicaciones.getModel();
-        modeloTablaPersonas.setRowCount(0);
+        DefaultTableModel modeloTablaUbicaciones = (DefaultTableModel) this.tblUbicaciones.getModel();
+        modeloTablaUbicaciones.setRowCount(0);
         for (Ubicaciones ubicaciones : listaUbicaciones) {
             Object[] filaNueva = {ubicaciones.getId(),
                 ubicaciones.getDisponible() == true ? "Disponible" : "No disponible",
@@ -59,8 +66,9 @@ public class ConsultarUbicaciones extends javax.swing.JFrame {
                 fecha.formatoFecha(ubicaciones.getFechaRegistro()),
                 ubicaciones.getFechaOcupacion() != null ? fecha.formatoFecha(ubicaciones.getFechaOcupacion()) : "No aplica",
                 "| Seleccionar |"};
-            modeloTablaPersonas.addRow(filaNueva);
+            modeloTablaUbicaciones.addRow(filaNueva);
         }
+        valido.centrarTabla(tblUbicaciones);
     }
 
     public void cargarTablaObrasUbicacion(List<Obras> listaObras) throws ParseException {
@@ -78,12 +86,15 @@ public class ConsultarUbicaciones extends javax.swing.JFrame {
                 obras.getFechaFin() != null ? fecha.formatoFecha(obras.getFechaFin()) : "No aplica"};
             modeloTablaPersonas.addRow(filaNueva);
         }
+        valido.centrarTabla(tblObras);
     }
 
     public int obtenerFila() {
         try {
             int fila = tblUbicaciones.getSelectedRow();
             if (fila == -1) {
+                DefaultTableModel modeloTablaPersonas = (DefaultTableModel) this.tblObras.getModel();
+                modeloTablaPersonas.setRowCount(0);
                 JOptionPane.showMessageDialog(null, "Error: Seleccione una ubicación. (De la tabla 'Ubicaciones registradas').", "¡Error!", JOptionPane.ERROR_MESSAGE);
             }
             return fila;
@@ -144,7 +155,7 @@ public class ConsultarUbicaciones extends javax.swing.JFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Long.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Float.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.Long.class, java.lang.Object.class, java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false, false, false, false
@@ -159,6 +170,7 @@ public class ConsultarUbicaciones extends javax.swing.JFrame {
             }
         });
         tblUbicaciones.setRequestFocusEnabled(false);
+        tblUbicaciones.getTableHeader().setReorderingAllowed(false);
         ScrollPanel1.setViewportView(tblUbicaciones);
 
         ScrollPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
@@ -175,7 +187,7 @@ public class ConsultarUbicaciones extends javax.swing.JFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Long.class, java.lang.String.class, java.lang.String.class, java.lang.Float.class, java.lang.Float.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.Long.class, java.lang.String.class, java.lang.Object.class, java.lang.Float.class, java.lang.Float.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false, false, false, false, false
@@ -190,6 +202,7 @@ public class ConsultarUbicaciones extends javax.swing.JFrame {
             }
         });
         tblObras.setRequestFocusEnabled(false);
+        tblObras.getTableHeader().setReorderingAllowed(false);
         ScrollPanel2.setViewportView(tblObras);
 
         btnRegresar.setText("Regresar");
@@ -274,16 +287,13 @@ public class ConsultarUbicaciones extends javax.swing.JFrame {
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(6, 6, 6)
                                         .addComponent(lblUbicacionSeleccionada)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                             .addGroup(layout.createSequentialGroup()
                                                 .addGap(65, 65, 65)
                                                 .addComponent(lblArea))
                                             .addComponent(lblIDObra, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(lblFechaRegistrada, javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                                .addGap(40, 40, 40)
-                                                .addComponent(lblDireccion)))
+                                            .addComponent(lblDireccion, javax.swing.GroupLayout.Alignment.TRAILING))
                                         .addGap(18, 18, 18)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(lblInsertarFecha)
@@ -368,18 +378,24 @@ public class ConsultarUbicaciones extends javax.swing.JFrame {
             int fila = obtenerFila();
             if (fila != -1) {
                 Ubicaciones ubicacion = UbicacionesDAO.consultarUbicacion((Long) tblUbicaciones.getValueAt(fila, 0));
-                this.lblInsertarArea.setText(ubicacion.getArea().toString() + " m²");
-                this.lblInsertarDireccion.setText(ubicacion.getDireccion());
-                this.lblInsertarFecha.setText(fecha.formatoFecha(ubicacion.getFechaRegistro()));
-                this.lblInsertarID.setText(ubicacion.getId().toString());
                 if (!ubicacion.getObras().isEmpty()) {
                     this.cargarTablaObrasUbicacion(ubicacion.getObras());
+                    this.lblInsertarArea.setText(ubicacion.getArea().toString() + " m²");
+                    this.lblInsertarDireccion.setText(ubicacion.getDireccion());
+                    this.lblInsertarFecha.setText(fecha.formatoFecha(ubicacion.getFechaRegistro()));
+                    this.lblInsertarID.setText(ubicacion.getId().toString());
+                    tblUbicaciones.clearSelection();
+                    tblObras.clearSelection();
                 } else {
+                    DefaultTableModel modeloTablaPersonas = (DefaultTableModel) this.tblObras.getModel();
+                    modeloTablaPersonas.setRowCount(0);
                     JOptionPane.showMessageDialog(null, "Error, seleccione a una ubicación válida. (La ubicación no tiene obras asignadas)");
                     this.lblInsertarArea.setText("");
                     this.lblInsertarDireccion.setText("");
                     this.lblInsertarFecha.setText("");
                     this.lblInsertarID.setText("");
+                    tblUbicaciones.clearSelection();
+                    tblObras.clearSelection();
                 }
             }
         } catch (Exception e) {

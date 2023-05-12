@@ -4,18 +4,20 @@
  */
 package GUI.Jefe.Facturas;
 
-import DAOs.ClientesDAO;
 import DAOs.FacturasDAO;
-import Dominio.Clientes;
+import DAOs.JefesDAO;
 import Dominio.Facturas;
 import Dominio.Jefes;
-import GUI.Cliente.PanelCliente;
+import GUI.Jefe.PanelJefe;
 import GUI.Jefe.Permisos.RegistrarPermiso;
 import Herramientas.Icono;
 import Herramientas.Validadores;
+import java.awt.event.KeyEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
 
 /**
  *
@@ -25,8 +27,7 @@ public class RegistrarFactura extends javax.swing.JFrame {
 
     // Atributos
     Jefes jefe;
-    Clientes cliente = new Clientes();
-    ClientesDAO ClientesDAO = new ClientesDAO();
+    JefesDAO JefesDAO = new JefesDAO();
     FacturasDAO FacturasDAO = new FacturasDAO();
     Validadores valido = new Validadores();
 
@@ -35,6 +36,8 @@ public class RegistrarFactura extends javax.swing.JFrame {
      */
     public RegistrarFactura(Jefes jefe) {
         this.jefe = jefe;
+        UIManager.put("OptionPane.yesButtonText", "Aceptar");
+        UIManager.put("OptionPane.noButtonText", "Cancelar");
         initComponents();
         new Icono().insertarIcono(this);
         this.txtMonto.setText("0.0");
@@ -207,10 +210,10 @@ public class RegistrarFactura extends javax.swing.JFrame {
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         this.setVisible(false);
-        int i = JOptionPane.showConfirmDialog(this, "¿Seguro que deseas cancelar el registro de permiso? Los datos de registro no se guardarán", "Advertencia", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        int i = JOptionPane.showConfirmDialog(this, "¿Seguro que deseas cancelar el registro de factura? Los datos de registro no se guardarán", "Advertencia", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         if (i == JOptionPane.YES_OPTION) {
             this.dispose();
-            new PanelCliente(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
+            new PanelJefe(JefesDAO.consultarJefe(this.jefe.getId())).setVisible(true);
         } else {
             this.setVisible(true);
         }
@@ -273,6 +276,20 @@ public class RegistrarFactura extends javax.swing.JFrame {
         char c = evt.getKeyChar();
         if (Character.isLetter(c)) {
             evt.consume();
+        } else if (c == '.' && txtMonto.getText().contains(".")) {
+            // Si ya hay un punto en el texto, no permitir otro
+            evt.consume();
+        }
+        // Obtener el componente fuente del evento
+        JTextField textField = (JTextField) evt.getSource();
+
+        // Verificar si el evento es una operación de pegar
+        if (evt.isConsumed() || evt.getKeyChar() == KeyEvent.VK_V && evt.isControlDown()) {
+            // Si es una operación de pegar, cancelar el evento
+            evt.consume();
+
+            // Vaciar el contenido del campo de texto
+            textField.setText("");
         }
     }//GEN-LAST:event_txtMontoKeyTyped
 

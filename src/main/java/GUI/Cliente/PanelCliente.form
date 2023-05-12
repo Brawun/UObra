@@ -317,14 +317,14 @@
                           <Group type="102" attributes="0">
                               <Component id="lblInversion" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="lblDeuda" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Group type="103" alignment="3" groupAlignment="3" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                                       <Component id="lblInsertarDeuda" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="lbl$2" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="lblMXN2" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="btnCerrarSesion" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
+                                  <Component id="lblDeuda" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <Group type="103" groupAlignment="3" attributes="0">

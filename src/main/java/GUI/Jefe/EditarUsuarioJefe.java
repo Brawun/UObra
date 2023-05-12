@@ -10,9 +10,11 @@ import Dominio.Jefes;
 import Herramientas.Encriptador;
 import Herramientas.Icono;
 import Herramientas.Validadores;
+import java.awt.event.KeyEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 
 /**
  *
@@ -35,6 +37,7 @@ public class EditarUsuarioJefe extends javax.swing.JFrame {
         initComponents();
         new Icono().insertarIcono(this);
         this.Jefe = Jefe;
+        this.txtNuevoUsuario.setText("");
         this.lblInsertarContrasenia.setText(crypt.decrypt(Jefe.getContrasena()));
         this.lblInsertarUsuario.setText(crypt.decrypt(Jefe.getUsuario()));
     }
@@ -231,6 +234,17 @@ public class EditarUsuarioJefe extends javax.swing.JFrame {
     private void txtNuevoUsuarioKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNuevoUsuarioKeyTyped
         if (txtNuevoUsuario.getText().length() >= 20) {
             evt.consume();
+        }
+        // Obtener el componente fuente del evento
+        JTextField textField = (JTextField) evt.getSource();
+
+        // Verificar si el evento es una operación de pegar
+        if (evt.isConsumed() || evt.getKeyChar() == KeyEvent.VK_V && evt.isControlDown()) {
+            // Si es una operación de pegar, cancelar el evento
+            evt.consume();
+
+            // Vaciar el contenido del campo de texto
+            textField.setText("");
         }
     }//GEN-LAST:event_txtNuevoUsuarioKeyTyped
 

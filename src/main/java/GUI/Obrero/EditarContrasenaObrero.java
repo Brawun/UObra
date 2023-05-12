@@ -9,9 +9,11 @@ import Dominio.Obreros;
 import Herramientas.Encriptador;
 import Herramientas.Icono;
 import Herramientas.Validadores;
+import java.awt.event.KeyEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 
 /**
  *
@@ -34,6 +36,7 @@ public class EditarContrasenaObrero extends javax.swing.JFrame {
         initComponents();
         new Icono().insertarIcono(this);
         this.obrero = obrero;
+        this.txtNuevaContrasenia.setText("");
         this.lblInsertarContrasenia.setText(crypt.decrypt(obrero.getContrasena()));
         this.lblInsertarUsuario.setText(crypt.decrypt(obrero.getUsuario()));
     }
@@ -258,6 +261,17 @@ public class EditarContrasenaObrero extends javax.swing.JFrame {
     private void txtNuevaContraseniaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNuevaContraseniaKeyTyped
         if (txtNuevaContrasenia.getText().length() >= 20) {
             evt.consume();
+        }
+        // Obtener el componente fuente del evento
+        JTextField textField = (JTextField) evt.getSource();
+
+        // Verificar si el evento es una operación de pegar
+        if (evt.isConsumed() || evt.getKeyChar() == KeyEvent.VK_V && evt.isControlDown()) {
+            // Si es una operación de pegar, cancelar el evento
+            evt.consume();
+
+            // Vaciar el contenido del campo de texto
+            textField.setText("");
         }
     }//GEN-LAST:event_txtNuevaContraseniaKeyTyped
 

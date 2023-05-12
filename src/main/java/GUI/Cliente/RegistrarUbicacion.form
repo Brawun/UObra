@@ -142,7 +142,6 @@
                           <Component id="lblAncho" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="lblMetros2" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="12" max="-2" attributes="0"/>
                   </Group>
                   <Component id="ImagenMapa" alignment="0" min="-2" pref="154" max="-2" attributes="0"/>
               </Group>

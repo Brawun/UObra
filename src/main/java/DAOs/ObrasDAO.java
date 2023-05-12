@@ -49,14 +49,14 @@ public class ObrasDAO {
     UbicacionesDAO UbicacionesDAO = new UbicacionesDAO();
 
     // Métodos de acceso
-    public Long registrarObra(Obras obra) {
+    public Obras registrarObra(Obras obra) {
         EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
         EntityManager entityManager = managerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.persist(obra);
         entityManager.getTransaction().commit();
         entityManager.close();
-        return obra.getId();
+        return obra;
     }
 
     public void eliminarObra(Long id) {
@@ -494,11 +494,11 @@ public class ObrasDAO {
             Obras obra = consultarObra(id);
             // Se agrega el plano a la obra en particular
             obra.getUbicaciones().add(ubicacion);
-            // Se actualiza el estado de ubicacion a ocupada en casa de que sea 
-            // un solar
-            if (ubicacion.getTipo().equals(TipoUbicacion.SOLAR)) {
-                UbicacionesDAO.ocuparUbicacion(idUbicacion);
-            }
+//            // Se actualiza el estado de ubicacion a ocupada en casa de que sea 
+//            // un solar
+//            if (ubicacion.getTipo().equals(TipoUbicacion.SOLAR)) {
+//                UbicacionesDAO.ocuparUbicacion(idUbicacion);
+//            } 
             // Se actualiza la obra
             entityManager.merge(obra);
             entityManager.getTransaction().commit();
@@ -664,7 +664,7 @@ public class ObrasDAO {
                 && clienteId != null) { // Búsqueda por inicio, fin, estado, pagada, costo, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.costoTotal >= :costoTotal "
                     + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
@@ -688,7 +688,7 @@ public class ObrasDAO {
                 && clienteId == null) { // Búsqueda por inicio, fin, estado, pagada, costo
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.costoTotal >= :costoTotal "
                     + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -709,7 +709,7 @@ public class ObrasDAO {
                 && clienteId != null) { // Búsqueda por inicio, fin, estado, pagada, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -750,7 +750,7 @@ public class ObrasDAO {
                 && costoTotal != null
                 && clienteId != null) { // Búsqueda por inicio, fin, pagada, costo, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.costoTotal >= :costoTotal "
                     + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
@@ -772,7 +772,7 @@ public class ObrasDAO {
                 && clienteId != null) { // Búsqueda por inicio, estado, pagada, costo, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.costoTotal >= :costoTotal "
                     + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
@@ -795,7 +795,7 @@ public class ObrasDAO {
                 && clienteId != null) { // Búsqueda por fin, estado, pagada, costo, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.costoTotal >= :costoTotal "
                     + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
@@ -819,7 +819,7 @@ public class ObrasDAO {
                 && clienteId == null) { // Búsqueda por inicio, fin, estado, pagada
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
             query.setParameter("periodoInicio", periodoInicio);
@@ -875,7 +875,7 @@ public class ObrasDAO {
                 && costoTotal != null
                 && clienteId == null) { // Búsqueda por inicio, fin, pagada, costo
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.costoTotal >= :costoTotal "
                     + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -894,7 +894,7 @@ public class ObrasDAO {
                 && costoTotal == null
                 && clienteId != null) { // Búsqueda por inicio, fin, pagada, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -933,7 +933,7 @@ public class ObrasDAO {
                 && clienteId == null) { // Búsqueda por inicio, estado, pagada, costo
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.costoTotal >= :costoTotal "
                     + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -954,7 +954,7 @@ public class ObrasDAO {
                 && clienteId != null) { // Búsqueda por inicio, estado, pagada, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -995,7 +995,7 @@ public class ObrasDAO {
                 && costoTotal != null
                 && clienteId != null) { // Búsqueda por inicio, pagada, costo, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.costoTotal >= :costoTotal "
                     + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
@@ -1017,7 +1017,7 @@ public class ObrasDAO {
                 && clienteId == null) { // Búsqueda por fin, estado, pagada, costo
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.costoTotal >= :costoTotal "
                     + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -1038,7 +1038,7 @@ public class ObrasDAO {
                 && clienteId != null) { // Búsqueda por fin, estado, pagada, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -1079,7 +1079,7 @@ public class ObrasDAO {
                 && costoTotal != null
                 && clienteId != null) { // Búsqueda por fin, pagada, costo, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.costoTotal >= :costoTotal "
                     + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
@@ -1101,7 +1101,7 @@ public class ObrasDAO {
                 && clienteId != null) { // Búsqueda por estado, pagada, costo, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.costoTotal >= :costoTotal";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -1138,7 +1138,7 @@ public class ObrasDAO {
                 && costoTotal == null
                 && clienteId == null) { // Búsqueda por inicio, fin, pagada
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
             query.setParameter("periodoInicio", periodoInicio);
@@ -1190,7 +1190,7 @@ public class ObrasDAO {
                 && clienteId == null) { // Búsqueda por inicio, estado, pagada
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
             query.setParameter("periodoInicio", periodoInicio);
@@ -1246,7 +1246,7 @@ public class ObrasDAO {
                 && costoTotal != null
                 && clienteId == null) { // Búsqueda por inicio, pagada, costo
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.costoTotal >= :costoTotal "
                     + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -1265,7 +1265,7 @@ public class ObrasDAO {
                 && costoTotal == null
                 && clienteId != null) { // Búsqueda por inicio, pagada, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -1304,7 +1304,7 @@ public class ObrasDAO {
                 && clienteId == null) { // Búsqueda por fin, estado, pagada
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
             query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
@@ -1360,7 +1360,7 @@ public class ObrasDAO {
                 && costoTotal != null
                 && clienteId == null) { // Búsqueda por fin, pagada, costo
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.costoTotal >= :costoTotal "
                     + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -1379,7 +1379,7 @@ public class ObrasDAO {
                 && costoTotal == null
                 && clienteId != null) { // Búsqueda por fin, pagada, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -1418,7 +1418,7 @@ public class ObrasDAO {
                 && clienteId == null) { // Búsqueda por estado, pagada, costo
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.costoTotal >= :costoTotal";
             query = entityManager.createQuery(jpql, Obras.class);
             query.setParameter("estado", estado);
@@ -1436,7 +1436,7 @@ public class ObrasDAO {
                 && clienteId != null) { // Búsqueda por estado, pagada, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId";
             query = entityManager.createQuery(jpql, Obras.class);
             query.setParameter("estado", estado);
@@ -1471,7 +1471,7 @@ public class ObrasDAO {
                 && costoTotal != null
                 && clienteId != null) { // Búsqueda por pagada, costo, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.costoTotal >= :costoTotal";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -1522,7 +1522,7 @@ public class ObrasDAO {
                 && costoTotal == null
                 && clienteId == null) { // Búsqueda por inicio, pagada
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
             query.setParameter("periodoInicio", periodoInicio);
@@ -1590,7 +1590,7 @@ public class ObrasDAO {
                 && costoTotal == null
                 && clienteId == null) { // Búsqueda por fin, pagada
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.fechaInicio BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
             query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
@@ -1642,7 +1642,7 @@ public class ObrasDAO {
                 && clienteId == null) { // Búsqueda por estado, pagada
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada";
+                    + "AND o.estaPagada = :estaPagada";
             query = entityManager.createQuery(jpql, Obras.class);
             query.setParameter("estado", estado);
             query.setParameter("estaPagada", estaPagada);
@@ -1689,7 +1689,7 @@ public class ObrasDAO {
                 && costoTotal != null
                 && clienteId == null) { // Búsqueda por pagada, costo
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.costoTotal >= :costoTotal";
             query = entityManager.createQuery(jpql, Obras.class);
             query.setParameter("estaPagada", estaPagada);
@@ -1705,7 +1705,7 @@ public class ObrasDAO {
                 && costoTotal == null
                 && clienteId != null) { // Búsqueda por pagada, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId";
             query = entityManager.createQuery(jpql, Obras.class);
             query.setParameter("estaPagada", estaPagada);
@@ -1782,7 +1782,7 @@ public class ObrasDAO {
                 && costoTotal == null
                 && clienteId == null) { // Búsqueda por pagada
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada";
+                    + "o.estaPagada = :estaPagada";
             query = entityManager.createQuery(jpql, Obras.class);
             query.setParameter("estaPagada", estaPagada);
             List<Obras> obras = query.getResultList();
@@ -1852,7 +1852,7 @@ public class ObrasDAO {
                 && clienteId != null) { // Búsqueda por inicio, fin, estado, pagada, costo, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.costoTotal >= :costoTotal "
                     + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
@@ -1876,7 +1876,7 @@ public class ObrasDAO {
                 && clienteId == null) { // Búsqueda por inicio, fin, estado, pagada, costo
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.costoTotal >= :costoTotal "
                     + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -1897,7 +1897,7 @@ public class ObrasDAO {
                 && clienteId != null) { // Búsqueda por inicio, fin, estado, pagada, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -1938,7 +1938,7 @@ public class ObrasDAO {
                 && costoTotal != null
                 && clienteId != null) { // Búsqueda por inicio, fin, pagada, costo, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.costoTotal >= :costoTotal "
                     + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
@@ -1960,7 +1960,7 @@ public class ObrasDAO {
                 && clienteId != null) { // Búsqueda por inicio, estado, pagada, costo, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.costoTotal >= :costoTotal "
                     + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
@@ -1983,7 +1983,7 @@ public class ObrasDAO {
                 && clienteId != null) { // Búsqueda por fin, estado, pagada, costo, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.costoTotal >= :costoTotal "
                     + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
@@ -2007,7 +2007,7 @@ public class ObrasDAO {
                 && clienteId == null) { // Búsqueda por inicio, fin, estado, pagada
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
             query.setParameter("periodoInicio", periodoInicio);
@@ -2063,7 +2063,7 @@ public class ObrasDAO {
                 && costoTotal != null
                 && clienteId == null) { // Búsqueda por inicio, fin, pagada, costo
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.costoTotal >= :costoTotal "
                     + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -2082,7 +2082,7 @@ public class ObrasDAO {
                 && costoTotal == null
                 && clienteId != null) { // Búsqueda por inicio, fin, pagada, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -2121,7 +2121,7 @@ public class ObrasDAO {
                 && clienteId == null) { // Búsqueda por inicio, estado, pagada, costo
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.costoTotal >= :costoTotal "
                     + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -2142,7 +2142,7 @@ public class ObrasDAO {
                 && clienteId != null) { // Búsqueda por inicio, estado, pagada, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -2183,7 +2183,7 @@ public class ObrasDAO {
                 && costoTotal != null
                 && clienteId != null) { // Búsqueda por inicio, pagada, costo, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.costoTotal >= :costoTotal "
                     + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
@@ -2205,7 +2205,7 @@ public class ObrasDAO {
                 && clienteId == null) { // Búsqueda por fin, estado, pagada, costo
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.costoTotal >= :costoTotal "
                     + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -2226,7 +2226,7 @@ public class ObrasDAO {
                 && clienteId != null) { // Búsqueda por fin, estado, pagada, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -2267,7 +2267,7 @@ public class ObrasDAO {
                 && costoTotal != null
                 && clienteId != null) { // Búsqueda por fin, pagada, costo, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.costoTotal >= :costoTotal "
                     + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
@@ -2289,7 +2289,7 @@ public class ObrasDAO {
                 && clienteId != null) { // Búsqueda por estado, pagada, costo, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.costoTotal >= :costoTotal";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -2326,7 +2326,7 @@ public class ObrasDAO {
                 && costoTotal == null
                 && clienteId == null) { // Búsqueda por inicio, fin, pagada
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
             query.setParameter("periodoInicio", periodoInicio);
@@ -2378,7 +2378,7 @@ public class ObrasDAO {
                 && clienteId == null) { // Búsqueda por inicio, estado, pagada
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
             query.setParameter("periodoInicio", periodoInicio);
@@ -2434,7 +2434,7 @@ public class ObrasDAO {
                 && costoTotal != null
                 && clienteId == null) { // Búsqueda por inicio, pagada, costo
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.costoTotal >= :costoTotal "
                     + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -2453,7 +2453,7 @@ public class ObrasDAO {
                 && costoTotal == null
                 && clienteId != null) { // Búsqueda por inicio, pagada, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -2492,7 +2492,7 @@ public class ObrasDAO {
                 && clienteId == null) { // Búsqueda por fin, estado, pagada
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
             query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
@@ -2548,7 +2548,7 @@ public class ObrasDAO {
                 && costoTotal != null
                 && clienteId == null) { // Búsqueda por fin, pagada, costo
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.costoTotal >= :costoTotal "
                     + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -2567,7 +2567,7 @@ public class ObrasDAO {
                 && costoTotal == null
                 && clienteId != null) { // Búsqueda por fin, pagada, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -2606,7 +2606,7 @@ public class ObrasDAO {
                 && clienteId == null) { // Búsqueda por estado, pagada, costo
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.costoTotal >= :costoTotal";
             query = entityManager.createQuery(jpql, Obras.class);
             query.setParameter("estado", estado);
@@ -2624,7 +2624,7 @@ public class ObrasDAO {
                 && clienteId != null) { // Búsqueda por estado, pagada, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId";
             query = entityManager.createQuery(jpql, Obras.class);
             query.setParameter("estado", estado);
@@ -2659,7 +2659,7 @@ public class ObrasDAO {
                 && costoTotal != null
                 && clienteId != null) { // Búsqueda por pagada, costo, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.costoTotal >= :costoTotal";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -2710,7 +2710,7 @@ public class ObrasDAO {
                 && costoTotal == null
                 && clienteId == null) { // Búsqueda por inicio, pagada
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
             query.setParameter("periodoInicio", periodoInicio);
@@ -2778,7 +2778,7 @@ public class ObrasDAO {
                 && costoTotal == null
                 && clienteId == null) { // Búsqueda por fin, pagada
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.fechaSolicitada BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
             query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
@@ -2830,7 +2830,7 @@ public class ObrasDAO {
                 && clienteId == null) { // Búsqueda por estado, pagada
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada";
+                    + "AND o.estaPagada = :estaPagada";
             query = entityManager.createQuery(jpql, Obras.class);
             query.setParameter("estado", estado);
             query.setParameter("estaPagada", estaPagada);
@@ -2877,7 +2877,7 @@ public class ObrasDAO {
                 && costoTotal != null
                 && clienteId == null) { // Búsqueda por pagada, costo
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.costoTotal >= :costoTotal";
             query = entityManager.createQuery(jpql, Obras.class);
             query.setParameter("estaPagada", estaPagada);
@@ -2893,7 +2893,7 @@ public class ObrasDAO {
                 && costoTotal == null
                 && clienteId != null) { // Búsqueda por pagada, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId";
             query = entityManager.createQuery(jpql, Obras.class);
             query.setParameter("estaPagada", estaPagada);
@@ -2970,7 +2970,7 @@ public class ObrasDAO {
                 && costoTotal == null
                 && clienteId == null) { // Búsqueda por pagada
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada";
+                    + "o.estaPagada = :estaPagada";
             query = entityManager.createQuery(jpql, Obras.class);
             query.setParameter("estaPagada", estaPagada);
             List<Obras> obras = query.getResultList();
@@ -3040,7 +3040,7 @@ public class ObrasDAO {
                 && clienteId != null) { // Búsqueda por inicio, fin, estado, pagada, costo, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.costoTotal >= :costoTotal "
                     + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
@@ -3064,7 +3064,7 @@ public class ObrasDAO {
                 && clienteId == null) { // Búsqueda por inicio, fin, estado, pagada, costo
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.costoTotal >= :costoTotal "
                     + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -3085,7 +3085,7 @@ public class ObrasDAO {
                 && clienteId != null) { // Búsqueda por inicio, fin, estado, pagada, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -3126,7 +3126,7 @@ public class ObrasDAO {
                 && costoTotal != null
                 && clienteId != null) { // Búsqueda por inicio, fin, pagada, costo, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.costoTotal >= :costoTotal "
                     + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
@@ -3148,7 +3148,7 @@ public class ObrasDAO {
                 && clienteId != null) { // Búsqueda por inicio, estado, pagada, costo, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.costoTotal >= :costoTotal "
                     + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
@@ -3171,7 +3171,7 @@ public class ObrasDAO {
                 && clienteId != null) { // Búsqueda por fin, estado, pagada, costo, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.costoTotal >= :costoTotal "
                     + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
@@ -3195,7 +3195,7 @@ public class ObrasDAO {
                 && clienteId == null) { // Búsqueda por inicio, fin, estado, pagada
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
             query.setParameter("periodoInicio", periodoInicio);
@@ -3251,7 +3251,7 @@ public class ObrasDAO {
                 && costoTotal != null
                 && clienteId == null) { // Búsqueda por inicio, fin, pagada, costo
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.costoTotal >= :costoTotal "
                     + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -3270,7 +3270,7 @@ public class ObrasDAO {
                 && costoTotal == null
                 && clienteId != null) { // Búsqueda por inicio, fin, pagada, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -3309,7 +3309,7 @@ public class ObrasDAO {
                 && clienteId == null) { // Búsqueda por inicio, estado, pagada, costo
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.costoTotal >= :costoTotal "
                     + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -3330,7 +3330,7 @@ public class ObrasDAO {
                 && clienteId != null) { // Búsqueda por inicio, estado, pagada, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -3371,7 +3371,7 @@ public class ObrasDAO {
                 && costoTotal != null
                 && clienteId != null) { // Búsqueda por inicio, pagada, costo, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.costoTotal >= :costoTotal "
                     + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
@@ -3393,7 +3393,7 @@ public class ObrasDAO {
                 && clienteId == null) { // Búsqueda por fin, estado, pagada, costo
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.costoTotal >= :costoTotal "
                     + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -3414,7 +3414,7 @@ public class ObrasDAO {
                 && clienteId != null) { // Búsqueda por fin, estado, pagada, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -3455,7 +3455,7 @@ public class ObrasDAO {
                 && costoTotal != null
                 && clienteId != null) { // Búsqueda por fin, pagada, costo, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.costoTotal >= :costoTotal "
                     + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
@@ -3477,7 +3477,7 @@ public class ObrasDAO {
                 && clienteId != null) { // Búsqueda por estado, pagada, costo, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.costoTotal >= :costoTotal";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -3514,7 +3514,7 @@ public class ObrasDAO {
                 && costoTotal == null
                 && clienteId == null) { // Búsqueda por inicio, fin, pagada
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
             query.setParameter("periodoInicio", periodoInicio);
@@ -3566,7 +3566,7 @@ public class ObrasDAO {
                 && clienteId == null) { // Búsqueda por inicio, estado, pagada
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
             query.setParameter("periodoInicio", periodoInicio);
@@ -3622,7 +3622,7 @@ public class ObrasDAO {
                 && costoTotal != null
                 && clienteId == null) { // Búsqueda por inicio, pagada, costo
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.costoTotal >= :costoTotal "
                     + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -3641,7 +3641,7 @@ public class ObrasDAO {
                 && costoTotal == null
                 && clienteId != null) { // Búsqueda por inicio, pagada, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -3680,7 +3680,7 @@ public class ObrasDAO {
                 && clienteId == null) { // Búsqueda por fin, estado, pagada
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
             query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
@@ -3736,7 +3736,7 @@ public class ObrasDAO {
                 && costoTotal != null
                 && clienteId == null) { // Búsqueda por fin, pagada, costo
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.costoTotal >= :costoTotal "
                     + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -3755,7 +3755,7 @@ public class ObrasDAO {
                 && costoTotal == null
                 && clienteId != null) { // Búsqueda por fin, pagada, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -3794,7 +3794,7 @@ public class ObrasDAO {
                 && clienteId == null) { // Búsqueda por estado, pagada, costo
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.costoTotal >= :costoTotal";
             query = entityManager.createQuery(jpql, Obras.class);
             query.setParameter("estado", estado);
@@ -3812,7 +3812,7 @@ public class ObrasDAO {
                 && clienteId != null) { // Búsqueda por estado, pagada, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada "
+                    + "AND o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId";
             query = entityManager.createQuery(jpql, Obras.class);
             query.setParameter("estado", estado);
@@ -3847,7 +3847,7 @@ public class ObrasDAO {
                 && costoTotal != null
                 && clienteId != null) { // Búsqueda por pagada, costo, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId "
                     + "AND o.costoTotal >= :costoTotal";
             query = entityManager.createQuery(jpql, Obras.class);
@@ -3898,7 +3898,7 @@ public class ObrasDAO {
                 && costoTotal == null
                 && clienteId == null) { // Búsqueda por inicio, pagada
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
             query.setParameter("periodoInicio", periodoInicio);
@@ -3966,7 +3966,7 @@ public class ObrasDAO {
                 && costoTotal == null
                 && clienteId == null) { // Búsqueda por fin, pagada
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.fechaFin BETWEEN :periodoInicio AND :periodoFin";
             query = entityManager.createQuery(jpql, Obras.class);
             query.setParameter("periodoInicio", new GregorianCalendar(1600, Calendar.JANUARY, 1));
@@ -4018,7 +4018,7 @@ public class ObrasDAO {
                 && clienteId == null) { // Búsqueda por estado, pagada
             String jpql = "SELECT o FROM Obras o WHERE "
                     + "o.estado = :estado "
-                    + "AND o.estaPagada = :pagada";
+                    + "AND o.estaPagada = :estaPagada";
             query = entityManager.createQuery(jpql, Obras.class);
             query.setParameter("estado", estado);
             query.setParameter("estaPagada", estaPagada);
@@ -4065,7 +4065,7 @@ public class ObrasDAO {
                 && costoTotal != null
                 && clienteId == null) { // Búsqueda por pagada, costo
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.costoTotal >= :costoTotal";
             query = entityManager.createQuery(jpql, Obras.class);
             query.setParameter("estaPagada", estaPagada);
@@ -4081,7 +4081,7 @@ public class ObrasDAO {
                 && costoTotal == null
                 && clienteId != null) { // Búsqueda por pagada, cliente
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada "
+                    + "o.estaPagada = :estaPagada "
                     + "AND o.cliente.id = :clienteId";
             query = entityManager.createQuery(jpql, Obras.class);
             query.setParameter("estaPagada", estaPagada);
@@ -4158,7 +4158,7 @@ public class ObrasDAO {
                 && costoTotal == null
                 && clienteId == null) { // Búsqueda por pagada
             String jpql = "SELECT o FROM Obras o WHERE "
-                    + "o.estaPagada = :pagada";
+                    + "o.estaPagada = :estaPagada";
             query = entityManager.createQuery(jpql, Obras.class);
             query.setParameter("estaPagada", estaPagada);
             List<Obras> obras = query.getResultList();

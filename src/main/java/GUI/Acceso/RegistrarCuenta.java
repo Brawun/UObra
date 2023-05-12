@@ -12,9 +12,12 @@ import Dominio.Jefes;
 import Dominio.Obreros;
 import Herramientas.Icono;
 import Herramientas.Validadores;
+import java.awt.event.KeyEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
 
 /**
  *
@@ -33,6 +36,8 @@ public class RegistrarCuenta extends javax.swing.JFrame {
      */
     public RegistrarCuenta() {
         initComponents();
+        UIManager.put("OptionPane.yesButtonText", "Aceptar");
+        UIManager.put("OptionPane.noButtonText", "Cancelar");
         new Icono().insertarIcono(this);
         this.cbxTipoUsuario.setSelectedItem("Elija uno...");
         this.txtNombre.setText("");
@@ -152,6 +157,11 @@ public class RegistrarCuenta extends javax.swing.JFrame {
 
         txtTelefono.setToolTipText("Max. 14 caracteres");
         txtTelefono.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        txtTelefono.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtTelefonoFocusLost(evt);
+            }
+        });
         txtTelefono.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txtTelefonoKeyTyped(evt);
@@ -340,9 +350,9 @@ public class RegistrarCuenta extends javax.swing.JFrame {
                                                 this.txtTelefono.setText(this.txtTelefono.getText().substring(0, 14));
                                             }
                                             // Se registra un obrero con los datos ingresados y con el salario mínimo, el cual puede ser posteriormente editado por un obrero
-                                            Long id = ObrerosDAO.registrarObrero(new Obreros(this.txtNombre.getText(), this.txtApellidoPaterno.getText(), this.txtApellidoMaterno.getText(), this.txtTelefono.getText(), this.txtContrasenia.getText(), this.txtUsuario.getText(), (float) 200.0));
-                                            if (id != null) {
-                                                JOptionPane.showMessageDialog(null, "Se creó exitosamente la cuenta del obrero " + this.txtNombre.getText() + " " + this.txtApellidoPaterno.getText() + " " + this.txtApellidoMaterno.getText() + " - ID: " + id + ". ☺", "Registro de obrero exitoso", JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
+                                            Obreros obrero = ObrerosDAO.registrarObrero(new Obreros(this.txtNombre.getText(), this.txtApellidoPaterno.getText(), this.txtApellidoMaterno.getText(), this.txtTelefono.getText(), this.txtContrasenia.getText(), this.txtUsuario.getText(), (float) 200.0));
+                                            if (obrero.getId() != null) {
+                                                JOptionPane.showMessageDialog(null, "Se creó exitosamente la cuenta del obrero " + this.txtNombre.getText() + " " + this.txtApellidoPaterno.getText() + " " + this.txtApellidoMaterno.getText() + " - ID: " + obrero.getId() + ". ☺", "Registro de obrero exitoso", JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
                                             } else {
                                                 JOptionPane.showMessageDialog(null, "Error interno: Ocurrió un errror al querer registrar la cuenta de obrero.", "¡Error interno!", JOptionPane.ERROR_MESSAGE);
                                             }
@@ -400,9 +410,9 @@ public class RegistrarCuenta extends javax.swing.JFrame {
                                                 this.txtTelefono.setText(this.txtTelefono.getText().substring(0, 14));
                                             }
                                             // Se registra un jefe con los datos ingresados y con el salario mínimo, el cual puede ser posteriormente editado por un jefe
-                                            Long id = JefesDAO.registrarJefe(new Jefes(this.txtNombre.getText(), this.txtApellidoPaterno.getText(), this.txtApellidoMaterno.getText(), this.txtTelefono.getText(), this.txtContrasenia.getText(), this.txtUsuario.getText()));
-                                            if (id != null) {
-                                                JOptionPane.showMessageDialog(null, "Se creó exitosamente la cuenta del jefe " + this.txtNombre.getText() + " " + this.txtApellidoPaterno.getText() + " " + this.txtApellidoMaterno.getText() + " - ID: " + id + ". ☺", "Registro de jefe exitoso", JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
+                                            Jefes jefe = JefesDAO.registrarJefe(new Jefes(this.txtNombre.getText(), this.txtApellidoPaterno.getText(), this.txtApellidoMaterno.getText(), this.txtTelefono.getText(), this.txtContrasenia.getText(), this.txtUsuario.getText()));
+                                            if (jefe.getId() != null) {
+                                                JOptionPane.showMessageDialog(null, "Se creó exitosamente la cuenta del jefe " + this.txtNombre.getText() + " " + this.txtApellidoPaterno.getText() + " " + this.txtApellidoMaterno.getText() + " - ID: " + jefe.getId() + ". ☺", "Registro de jefe exitoso", JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
                                             } else {
                                                 JOptionPane.showMessageDialog(null, "Error interno: Ocurrió un errror al querer registrar la cuenta de jefe.", "¡Error interno!", JOptionPane.ERROR_MESSAGE);
                                             }
@@ -460,9 +470,9 @@ public class RegistrarCuenta extends javax.swing.JFrame {
                                                 this.txtTelefono.setText(this.txtTelefono.getText().substring(0, 14));
                                             }
                                             // Se registra un cliente con los datos ingresados y con el salario mínimo, el cual puede ser posteriormente editado por un cliente
-                                            Long id = ClientesDAO.registrarCliente(new Clientes(this.txtNombre.getText(), this.txtApellidoPaterno.getText(), this.txtApellidoMaterno.getText(), this.txtTelefono.getText(), this.txtContrasenia.getText(), this.txtUsuario.getText()));
-                                            if (id != null) {
-                                                JOptionPane.showMessageDialog(null, "Se creó exitosamente la cuenta del cliente " + this.txtNombre.getText() + " " + this.txtApellidoPaterno.getText() + " " + this.txtApellidoMaterno.getText() + " - ID: " + id + ". ☺", "Registro de cliente exitoso", JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
+                                            Clientes cliente = ClientesDAO.registrarCliente(new Clientes(this.txtNombre.getText(), this.txtApellidoPaterno.getText(), this.txtApellidoMaterno.getText(), this.txtTelefono.getText(), this.txtContrasenia.getText(), this.txtUsuario.getText()));
+                                            if (cliente.getId() != null) {
+                                                JOptionPane.showMessageDialog(null, "Se creó exitosamente la cuenta del cliente " + this.txtNombre.getText() + " " + this.txtApellidoPaterno.getText() + " " + this.txtApellidoMaterno.getText() + " - ID: " + cliente.getId() + ". ☺", "Registro de cliente exitoso", JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
                                             } else {
                                                 JOptionPane.showMessageDialog(null, "Error interno: Ocurrió un errror al querer registrar la cuenta de cliente.", "¡Error interno!", JOptionPane.ERROR_MESSAGE);
                                             }
@@ -502,6 +512,30 @@ public class RegistrarCuenta extends javax.swing.JFrame {
         char c = evt.getKeyChar();
         if (Character.isLetter(c)) {
             evt.consume();
+        } else if (c == '-' && txtTelefono.getText().contains("-")) {
+            // Si ya hay un punto en el texto, no permitir otro
+            evt.consume();
+        } else if (c == ')' && txtTelefono.getText().contains(")")) {
+            // Si ya hay un punto en el texto, no permitir otro
+            evt.consume();
+        } else if (c == '(' && txtTelefono.getText().contains("(")) {
+            // Si ya hay un punto en el texto, no permitir otro
+            evt.consume();
+        } else if (c == ' ' && txtTelefono.getText().contains(" ")) {
+            // Si ya hay un punto en el texto, no permitir otro
+            evt.consume();
+        }
+        
+        // Obtener el componente fuente del evento
+        JTextField textField = (JTextField) evt.getSource();
+
+        // Verificar si el evento es una operación de pegar
+        if (evt.isConsumed() || evt.getKeyChar() == KeyEvent.VK_V && evt.isControlDown()) {
+            // Si es una operación de pegar, cancelar el evento
+            evt.consume();
+
+            // Vaciar el contenido del campo de texto
+            textField.setText("");
         }
     }//GEN-LAST:event_txtTelefonoKeyTyped
 
@@ -509,11 +543,33 @@ public class RegistrarCuenta extends javax.swing.JFrame {
         if (txtUsuario.getText().length() >= 20) {
             evt.consume();
         }
+        // Obtener el componente fuente del evento
+        JTextField textField = (JTextField) evt.getSource();
+
+        // Verificar si el evento es una operación de pegar
+        if (evt.isConsumed() || evt.getKeyChar() == KeyEvent.VK_V && evt.isControlDown()) {
+            // Si es una operación de pegar, cancelar el evento
+            evt.consume();
+
+            // Vaciar el contenido del campo de texto
+            textField.setText("");
+        }
     }//GEN-LAST:event_txtUsuarioKeyTyped
 
     private void txtContraseniaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtContraseniaKeyTyped
         if (txtContrasenia.getText().length() >= 20) {
             evt.consume();
+        }
+        // Obtener el componente fuente del evento
+        JTextField textField = (JTextField) evt.getSource();
+
+        // Verificar si el evento es una operación de pegar
+        if (evt.isConsumed() || evt.getKeyChar() == KeyEvent.VK_V && evt.isControlDown()) {
+            // Si es una operación de pegar, cancelar el evento
+            evt.consume();
+
+            // Vaciar el contenido del campo de texto
+            textField.setText("");
         }
     }//GEN-LAST:event_txtContraseniaKeyTyped
 
@@ -525,6 +581,17 @@ public class RegistrarCuenta extends javax.swing.JFrame {
         if (!Character.isLetter(c)) {
             evt.consume();
         }
+        // Obtener el componente fuente del evento
+        JTextField textField = (JTextField) evt.getSource();
+
+        // Verificar si el evento es una operación de pegar
+        if (evt.isConsumed() || evt.getKeyChar() == KeyEvent.VK_V && evt.isControlDown()) {
+            // Si es una operación de pegar, cancelar el evento
+            evt.consume();
+
+            // Vaciar el contenido del campo de texto
+            textField.setText("");
+        }
     }//GEN-LAST:event_txtNombreKeyTyped
 
     private void txtApellidoPaternoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtApellidoPaternoKeyTyped
@@ -534,6 +601,17 @@ public class RegistrarCuenta extends javax.swing.JFrame {
         char c = evt.getKeyChar();
         if (!Character.isLetter(c)) {
             evt.consume();
+        }
+        // Obtener el componente fuente del evento
+        JTextField textField = (JTextField) evt.getSource();
+
+        // Verificar si el evento es una operación de pegar
+        if (evt.isConsumed() || evt.getKeyChar() == KeyEvent.VK_V && evt.isControlDown()) {
+            // Si es una operación de pegar, cancelar el evento
+            evt.consume();
+
+            // Vaciar el contenido del campo de texto
+            textField.setText("");
         }
     }//GEN-LAST:event_txtApellidoPaternoKeyTyped
 
@@ -545,7 +623,24 @@ public class RegistrarCuenta extends javax.swing.JFrame {
         if (!Character.isLetter(c)) {
             evt.consume();
         }
+        // Obtener el componente fuente del evento
+        JTextField textField = (JTextField) evt.getSource();
+
+        // Verificar si el evento es una operación de pegar
+        if (evt.isConsumed() || evt.getKeyChar() == KeyEvent.VK_V && evt.isControlDown()) {
+            // Si es una operación de pegar, cancelar el evento
+            evt.consume();
+
+            // Vaciar el contenido del campo de texto
+            textField.setText("");
+        }
     }//GEN-LAST:event_txtApellidoMaternoKeyTyped
+
+    private void txtTelefonoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTelefonoFocusLost
+        if (txtTelefono.getText().isBlank()) {
+            txtTelefono.setText("(###) ###-####");
+        }
+    }//GEN-LAST:event_txtTelefonoFocusLost
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel UObraLogoPeque;

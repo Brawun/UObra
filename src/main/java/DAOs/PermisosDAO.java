@@ -297,7 +297,11 @@ public class PermisosDAO {
         return consultarPermisosRegistro(null, null, null, jefesDAO.consultarJefe(id));
     }
 
-    public List<Permisos> consultarTodosPagos() throws Exception {
+    public List<Permisos> consultarTodosPermisosJefe(Jefes jefe) throws Exception {
+        return consultarPermisosRegistro(null, null, null, jefe);
+    }
+    
+    public List<Permisos> consultarTodosPermisos() throws Exception {
         return consultarPermisosRegistro(null, null, null, null);
     }
 }

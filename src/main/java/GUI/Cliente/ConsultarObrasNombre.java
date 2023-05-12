@@ -11,9 +11,12 @@ import Dominio.Obras;
 import Enumeradores.EstadoObra;
 import Herramientas.Fecha;
 import Herramientas.Icono;
+import Herramientas.Validadores;
+import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -26,6 +29,7 @@ public class ConsultarObrasNombre extends javax.swing.JFrame {
     Clientes cliente = new Clientes();
     ClientesDAO ClientesDAO = new ClientesDAO();
     ObrasDAO ObrasDAO = new ObrasDAO();
+    Validadores valido = new Validadores();
 
     /**
      * Creates new form ConsultarObrasNombre
@@ -34,6 +38,7 @@ public class ConsultarObrasNombre extends javax.swing.JFrame {
         this.cliente = cliente;
         initComponents();
         new Icono().insertarIcono(this);
+        this.txtNombre.setText("");
     }
 
     public void cargarTablaObras() throws Exception {
@@ -54,6 +59,7 @@ public class ConsultarObrasNombre extends javax.swing.JFrame {
                 obras.getFechaFin() != null ? fecha.formatoFecha(obras.getFechaFin()) : "No aplica"};
             modeloTablaObras.addRow(filaNueva);
         }
+        valido.centrarTabla(tblResultados);
     }
 
     /**
@@ -98,7 +104,7 @@ public class ConsultarObrasNombre extends javax.swing.JFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Long.class, java.lang.String.class, java.lang.String.class, java.lang.Float.class, java.lang.Float.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.Long.class, java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false, false, false, false, false
@@ -113,6 +119,7 @@ public class ConsultarObrasNombre extends javax.swing.JFrame {
             }
         });
         tblResultados.setRequestFocusEnabled(false);
+        tblResultados.getTableHeader().setReorderingAllowed(false);
         ScrollPanel.setViewportView(tblResultados);
 
         txtNombre.setToolTipText("Ingrese un nombre de obra a buscar");
@@ -267,6 +274,17 @@ public class ConsultarObrasNombre extends javax.swing.JFrame {
     private void txtNombreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreKeyTyped
         if (txtNombre.getText().length() >= 100) {
             evt.consume();
+        }
+        // Obtener el componente fuente del evento
+        JTextField textField = (JTextField) evt.getSource();
+
+        // Verificar si el evento es una operación de pegar
+        if (evt.isConsumed() || evt.getKeyChar() == KeyEvent.VK_V && evt.isControlDown()) {
+            // Si es una operación de pegar, cancelar el evento
+            evt.consume();
+
+            // Vaciar el contenido del campo de texto
+            textField.setText("");
         }
     }//GEN-LAST:event_txtNombreKeyTyped
 

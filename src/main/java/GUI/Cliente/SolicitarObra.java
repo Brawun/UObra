@@ -10,13 +10,20 @@ import DAOs.UbicacionesDAO;
 import Dominio.Clientes;
 import Dominio.Obras;
 import Dominio.Ubicaciones;
+import Enumeradores.TipoUbicacion;
 import Herramientas.Fecha;
 import Herramientas.Icono;
 import Herramientas.Validadores;
+import java.awt.event.KeyEvent;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -32,27 +39,35 @@ public class SolicitarObra extends javax.swing.JFrame {
     ClientesDAO ClientesDAO = new ClientesDAO();
     UbicacionesDAO UbicacionesDAO = new UbicacionesDAO();
     Fecha fecha = new Fecha();
+    Validadores valido = new Validadores();
     List<Ubicaciones> listaUbicaciones;
-    List<Ubicaciones> ubicaciones;
 
     /**
      * Creates new form SolicitarObra
      */
-    public SolicitarObra(Clientes cliente) {
+    public SolicitarObra(Clientes cliente) throws Exception {
         initComponents();
+        UIManager.put("OptionPane.yesButtonText", "Aceptar");
+        UIManager.put("OptionPane.noButtonText", "Cancelar");
         this.cliente = cliente;
         this.ubicacion = null;
         new Icono().insertarIcono(this);
+        cargarTablaUbicaciones();
         this.lblInsertarArea.setText("");
         this.lblInsertarDireccion.setText("");
         this.lblInsertarFecha.setText("");
         this.lblInsertarID.setText("");
-        this.txtInversion.setText("0.0");
-        this.txtNombre.setText("Mi obra");
+        this.txtInversion.setText("1000.0");
+        this.txtNombre.setText("");
+        this.chxOcupar.setEnabled(false);
+        this.chxOcupar.setSelected(false);
+        tblUbicaciones.clearSelection();
+        DefaultTableModel modeloTablaUbicaciones = (DefaultTableModel) this.tblUbicaciones.getModel();
+        modeloTablaUbicaciones.setRowCount(0);
     }
 
     public void cargarTablaUbicaciones() throws Exception {
-        listaUbicaciones = UbicacionesDAO.consultarUbicacionesCliente(this.cliente.getId());
+        listaUbicaciones = UbicacionesDAO.consultarUbicacionesDisponibles(cliente);
         DefaultTableModel modeloTablaPersonas = (DefaultTableModel) this.tblUbicaciones.getModel();
         modeloTablaPersonas.setRowCount(0);
         for (Ubicaciones ubicaciones : listaUbicaciones) {
@@ -66,6 +81,7 @@ public class SolicitarObra extends javax.swing.JFrame {
                 "| Seleccionar |"};
             modeloTablaPersonas.addRow(filaNueva);
         }
+        valido.centrarTabla(tblUbicaciones);
     }
 
     public int obtenerFila() {
@@ -78,6 +94,15 @@ public class SolicitarObra extends javax.swing.JFrame {
         } catch (Exception e) {
             Logger.getLogger(ConsultarUbicaciones.class.getName()).log(Level.SEVERE, null, e);
             return -1;
+        }
+    }
+
+    public void corregirTamaños() {
+        if (this.txtNombre.getText().length() > 30) {
+            this.txtNombre.setText(this.txtNombre.getText().substring(0, 30));
+        }
+        if (this.txtInversion.getText().length() > 12) {
+            this.txtInversion.setText(this.txtInversion.getText().substring(0, 12));
         }
     }
 
@@ -115,6 +140,7 @@ public class SolicitarObra extends javax.swing.JFrame {
         lblInsertarFecha = new javax.swing.JLabel();
         lblInstrucción = new javax.swing.JLabel();
         lblUbicacionSeleccionada = new javax.swing.JLabel();
+        chxOcupar = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Solicitar Obra");
@@ -134,7 +160,7 @@ public class SolicitarObra extends javax.swing.JFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Long.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Float.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.Long.class, java.lang.Object.class, java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false, false, false, false
@@ -149,6 +175,7 @@ public class SolicitarObra extends javax.swing.JFrame {
             }
         });
         tblUbicaciones.setRequestFocusEnabled(false);
+        tblUbicaciones.getTableHeader().setReorderingAllowed(false);
         ScrollPanel.setViewportView(tblUbicaciones);
 
         txtNombre.setToolTipText("Max. 30 caracteres");
@@ -179,6 +206,11 @@ public class SolicitarObra extends javax.swing.JFrame {
         btnCancelar.setText("Cancelar");
         btnCancelar.setToolTipText("Cancelar solictud de obra");
         btnCancelar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
         btnAceptarSeleccion.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnAceptarSeleccion.setText("Aceptar selección");
@@ -234,6 +266,8 @@ public class SolicitarObra extends javax.swing.JFrame {
 
         lblUbicacionSeleccionada.setText("Ubicación seleccionada:");
 
+        chxOcupar.setText("Ocupar ubicación");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -262,8 +296,10 @@ public class SolicitarObra extends javax.swing.JFrame {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lblInstrucción)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(lblUbicacionSeleccionada)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(lblUbicacionSeleccionada)
+                                            .addComponent(chxOcupar, javax.swing.GroupLayout.Alignment.TRAILING))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                             .addComponent(lblArea)
                                             .addComponent(lblIDObra, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -281,7 +317,7 @@ public class SolicitarObra extends javax.swing.JFrame {
                                                 .addComponent(lblDireccion)
                                                 .addGap(18, 18, 18)
                                                 .addComponent(lblInsertarDireccion)))))))
-                        .addContainerGap(12, Short.MAX_VALUE))
+                        .addContainerGap(18, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lblUbicaciones)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -339,19 +375,20 @@ public class SolicitarObra extends javax.swing.JFrame {
                             .addComponent(lblInsertarArea, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblArea)
                             .addComponent(lblDireccion)
-                            .addComponent(lblInsertarDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(lblInsertarDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(chxOcupar))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lblUbicaciones)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(16, 16, 16)
                         .addComponent(ScrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(btnAceptarSeleccion))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnSolicitar)
                     .addComponent(btnCancelar))
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         pack();
@@ -365,6 +402,20 @@ public class SolicitarObra extends javax.swing.JFrame {
         char c = evt.getKeyChar();
         if (Character.isLetter(c)) {
             evt.consume();
+        } else if (c == '.' && txtInversion.getText().contains(".")) {
+            // Si ya hay un punto en el texto, no permitir otro
+            evt.consume();
+        }
+        // Obtener el componente fuente del evento
+        JTextField textField = (JTextField) evt.getSource();
+
+        // Verificar si el evento es una operación de pegar
+        if (evt.isConsumed() || evt.getKeyChar() == KeyEvent.VK_V && evt.isControlDown()) {
+            // Si es una operación de pegar, cancelar el evento
+            evt.consume();
+
+            // Vaciar el contenido del campo de texto
+            textField.setText("");
         }
     }//GEN-LAST:event_txtInversionKeyTyped
 
@@ -373,6 +424,13 @@ public class SolicitarObra extends javax.swing.JFrame {
             int fila = obtenerFila();
             if (fila != -1) {
                 this.ubicacion = UbicacionesDAO.consultarUbicacion((Long) tblUbicaciones.getValueAt(fila, 0));
+                if (this.ubicacion.getTipo().equals(TipoUbicacion.SOLAR)) {
+                    this.chxOcupar.setEnabled(false);
+                    this.chxOcupar.setSelected(true);
+                } else {
+                    this.chxOcupar.setEnabled(true);
+                    this.chxOcupar.setSelected(false);
+                }
                 this.lblInsertarArea.setText(ubicacion.getArea().toString() + " m²");
                 this.lblInsertarDireccion.setText(ubicacion.getDireccion());
                 this.lblInsertarFecha.setText(fecha.formatoFecha(ubicacion.getFechaRegistro()));
@@ -384,44 +442,58 @@ public class SolicitarObra extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAceptarSeleccionActionPerformed
 
     private void btnSolicitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSolicitarActionPerformed
+        corregirTamaños();
         if (!txtNombre.getText().isBlank()) {
+            this.txtNombre.setText(this.txtNombre.getText().trim());
             if (!txtInversion.getText().isBlank()) {
                 if (this.ubicacion != null) {
-                    Validadores valido = new Validadores();
-                    if (this.txtNombre.getText().length() > 30) {
-                        this.txtNombre.setText(this.txtNombre.getText().substring(0, 30));
-                    }
-                    if (this.txtInversion.getText().length() > 12) {
-                        this.txtInversion.setText(this.txtInversion.getText().substring(0, 12));
-                    }
-                    this.txtNombre.setText(this.txtNombre.getText().trim());
                     // Se formatea inversion
-                    this.txtInversion.setText(this.txtInversion.getText().trim());
-                    this.txtInversion.setText(valido.recortarComas(this.txtInversion.getText()));
-                    if (valido.validarSinEspacios(this.txtInversion.getText())) {
-                        this.txtInversion.setText(valido.recortarSignoMas(this.txtInversion.getText()));
-                        if (!valido.validarNumero(this.txtInversion.getText())) {
-                            JOptionPane.showMessageDialog(null, "Error: Ingrese números en el largo de ubicación. (No caracteres ni numeros negativos).", "¡Error!", JOptionPane.ERROR_MESSAGE);
-                        } else if (!valido.validarFlotante(this.txtInversion.getText())) {
-                            this.txtInversion.setText(this.txtInversion.getText().concat(".0"));
-                        }
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Error: Ingrese una inversión válida. (Sin espacios).", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                    txtInversion.setText(valido.corregirFlotante(txtInversion.getText()));
+                    if (Float.parseFloat(txtInversion.getText()) <= 999) {
+                        txtInversion.setText("1000.0");
                     }
                     // Se crea el objeto obra a persistir
-                    ubicaciones.add(this.ubicacion);
+                    List<Ubicaciones> ubicaciones = new ArrayList<>(Arrays.asList(this.ubicacion));
                     Obras obra = new Obras(
                             Float.valueOf(txtInversion.getText()),
                             txtNombre.getText(),
                             this.cliente,
                             ubicaciones);
-                    Long id = ObrasDAO.registrarObra(obra);
-                    if (id != null) {
-                        Fecha fecha = new Fecha();
-                        JOptionPane.showMessageDialog(null,
-                                "Se solicitó exitosamente la obra con nombre \n"
-                                + obra.getNombre() + " con una inversión inicial de $" + obra.getInversion() + " MXN"
-                                + "\n - ID: " + id + ". ☺", "Registro de ubicación exitoso", JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
+                    Obras obraRegistrada = ObrasDAO.registrarObra(obra);
+                    if (obraRegistrada.getId() != null) {
+                        try {
+                            if (this.chxOcupar.isSelected()) {
+                                UbicacionesDAO.ocuparUbicacion(this.ubicacion.getId());
+                            }
+                            this.setVisible(false);
+                            int i = JOptionPane.showConfirmDialog(null,
+                                    "Se solicitó exitosamente la obra con..."
+                                    + "\n Nombre: " + obra.getNombre()
+                                    + "\n Inversión inicial: $ " + obra.getInversion() + " MXN"
+                                    + "\n Fecha solicitud: " + fecha.formatoFecha(obra.getFechaSolicitada())
+                                    + "\n - ID Cliente: " + obra.getCliente().getId()
+                                    + "\n - ID Ubicación: " + this.ubicacion.getId()
+                                    + "\n - ID Obra: " + obraRegistrada.getId()
+                                    + ". ☺\n"
+                                    + "\n ¿Desea solicitar otra obra?", "Solicitud de obra exitoso", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
+                            if (i == JOptionPane.YES_OPTION) {
+                                this.txtInversion.setText("");
+                                this.txtNombre.setText("");
+                                this.lblInsertarArea.setText("");
+                                this.lblInsertarDireccion.setText("");
+                                this.lblInsertarFecha.setText("");
+                                this.lblInsertarID.setText("");
+                                tblUbicaciones.clearSelection();
+                                DefaultTableModel modeloTablaUbicaciones = (DefaultTableModel) this.tblUbicaciones.getModel();
+                                modeloTablaUbicaciones.setRowCount(0);
+                                this.setVisible(true);
+                            } else {
+                                this.dispose();
+                                new PanelCliente(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
+                            }
+                        } catch (ParseException ex) {
+                            Logger.getLogger(SolicitarObra.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     } else {
                         JOptionPane.showMessageDialog(null, "Error interno: Ocurrió un errror al querer solicitar la obra.", "¡Error interno!", JOptionPane.ERROR_MESSAGE);
                     }
@@ -440,8 +512,29 @@ public class SolicitarObra extends javax.swing.JFrame {
         if (txtNombre.getText().length() >= 30) {
             evt.consume();
         }
+        // Obtener el componente fuente del evento
+        JTextField textField = (JTextField) evt.getSource();
+
+        // Verificar si el evento es una operación de pegar
+        if (evt.isConsumed() || evt.getKeyChar() == KeyEvent.VK_V && evt.isControlDown()) {
+            // Si es una operación de pegar, cancelar el evento
+            evt.consume();
+
+            // Vaciar el contenido del campo de texto
+            textField.setText("");
+        }
     }//GEN-LAST:event_txtNombreKeyTyped
 
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        this.setVisible(false);
+        int i = JOptionPane.showConfirmDialog(this, "¿Seguro que deseas cancelar la solicitud de obra? Los datos de solicitud no se guardarán", "Advertencia", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        if (i == JOptionPane.YES_OPTION) {
+            this.dispose();
+            new PanelCliente(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
+        } else {
+            this.setVisible(true);
+        }
+    }//GEN-LAST:event_btnCancelarActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane ScrollPanel;
@@ -450,6 +543,7 @@ public class SolicitarObra extends javax.swing.JFrame {
     private javax.swing.JButton btnAceptarSeleccion;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnSolicitar;
+    private javax.swing.JCheckBox chxOcupar;
     private javax.swing.JLabel lbl$;
     private javax.swing.JLabel lblArea;
     private javax.swing.JLabel lblDireccion;

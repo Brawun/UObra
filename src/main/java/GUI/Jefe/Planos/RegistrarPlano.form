@@ -57,7 +57,7 @@
                                       <Component id="lblFolio" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="lblFechaRealizado" alignment="0" max="32767" attributes="0"/>
                                       <Component id="txtFolio" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="lblTipoPermiso" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="lblTipoPlano" alignment="0" max="32767" attributes="0"/>
                                       <Component id="fechaRealizacion" alignment="0" max="32767" attributes="0"/>
                                       <Component id="cbxTipo" alignment="0" max="32767" attributes="0"/>
                                       <Component id="cbxEscala" max="32767" attributes="0"/>
@@ -95,7 +95,7 @@
                   <Component id="lblDireccion" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="lblTipoPermiso" min="-2" max="-2" attributes="0"/>
+              <Component id="lblTipoPlano" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="cbxTipo" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -188,6 +188,7 @@
         <Property name="toolTipText" type="java.lang.String" value="Max. 6 caracteres"/>
       </Properties>
       <Events>
+        <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtFolioFocusLost"/>
         <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtFolioKeyTyped"/>
       </Events>
     </Component>
@@ -231,10 +232,10 @@
     </Component>
     <Component class="javax.swing.JLabel" name="lblFechaRealizado">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Ingrese  una fecha de realizaci&#xf3;n..."/>
+        <Property name="text" type="java.lang.String" value="Ingrese una fecha de realizaci&#xf3;n..."/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="lblTipoPermiso">
+    <Component class="javax.swing.JLabel" name="lblTipoPlano">
       <Properties>
         <Property name="text" type="java.lang.String" value="Elija un tipo de plano.."/>
       </Properties>

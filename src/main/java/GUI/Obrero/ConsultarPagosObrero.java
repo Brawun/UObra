@@ -12,11 +12,11 @@ import Enumeradores.MetodoPago;
 import Herramientas.Fecha;
 import Herramientas.Icono;
 import Herramientas.Validadores;
+import java.awt.event.KeyEvent;
 import java.text.ParseException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -28,6 +28,7 @@ public class ConsultarPagosObrero extends javax.swing.JFrame {
     // Atributos
     Obreros obrero = new Obreros();
     ObrerosDAO ObrerosDAO = new ObrerosDAO();
+    Validadores valido = new Validadores();
 
     /**
      * Crea un nuevo frame PagosObrero
@@ -38,7 +39,9 @@ public class ConsultarPagosObrero extends javax.swing.JFrame {
         this.obrero = obrero;
         initComponents();
         new Icono().insertarIcono(this);
-        this.txtMonto.setText("0.0");
+        DefaultTableModel modeloTablaPagos = (DefaultTableModel) this.tblPagos.getModel();
+        modeloTablaPagos.setRowCount(0);
+        this.txtMonto.setText("200.0");
     }
 
     public void cargarTablaPagos() throws ParseException {
@@ -59,6 +62,13 @@ public class ConsultarPagosObrero extends javax.swing.JFrame {
                 fecha.formatoFecha(pagos.getFecha()),
                 pagos.getObra().getId()};
             modeloTablaPagos.addRow(filaNueva);
+        }
+        valido.centrarTabla(tblPagos);
+    }
+    
+    public void corregirTamaños() {
+        if (this.txtMonto.getText().length() > 8) {
+            this.txtMonto.setText(this.txtMonto.getText().substring(0, 30));
         }
     }
 
@@ -112,7 +122,7 @@ public class ConsultarPagosObrero extends javax.swing.JFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Long.class, java.lang.Float.class, java.lang.String.class, java.lang.Long.class
+                java.lang.Long.class, java.lang.String.class, java.lang.String.class, java.lang.Long.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false
@@ -127,6 +137,7 @@ public class ConsultarPagosObrero extends javax.swing.JFrame {
             }
         });
         tblPagos.setRequestFocusEnabled(false);
+        tblPagos.getTableHeader().setReorderingAllowed(false);
         ScrollPanel.setViewportView(tblPagos);
 
         periodoInicio.setToolTipText("Periodo inicio");
@@ -214,42 +225,35 @@ public class ConsultarPagosObrero extends javax.swing.JFrame {
                                 .addComponent(lblTitulo)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(UObraLogoPeque))
-                            .addComponent(ScrollPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 495, Short.MAX_VALUE)
+                            .addComponent(ScrollPanel)
+                            .addComponent(lblResultado, javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGap(8, 8, 8)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(lblResultado, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                        .addGap(8, 8, 8)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                                .addGap(14, 14, 14)
-                                                .addComponent(lblFechaFin)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(periodoFinal, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(lblFechaInicio)
-                                                .addGap(18, 18, 18)
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                    .addComponent(periodoInicio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                    .addComponent(lblEnUnPeriodo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addGap(65, 65, 65)
-                                                .addComponent(lblConMinimo))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addGap(21, 21, 21)
-                                                .addComponent(lblMonto)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(lbl$)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                    .addComponent(btnBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                    .addComponent(txtMonto, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(lblMXN)
-                                                .addGap(32, 32, 32)
-                                                .addComponent(ImagenDinero)))))
-                                .addGap(0, 0, Short.MAX_VALUE)))
+                                    .addComponent(lblFechaInicio)
+                                    .addComponent(lblFechaFin))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(periodoFinal, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblEnUnPeriodo)
+                                    .addComponent(periodoInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(65, 65, 65)
+                                        .addComponent(lblConMinimo))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                                        .addComponent(lblMonto)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lbl$)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(btnBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(txtMonto, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lblMXN)
+                                        .addGap(18, 21, Short.MAX_VALUE)
+                                        .addComponent(ImagenDinero)))))
                         .addGap(21, 21, 21))))
         );
         layout.setVerticalGroup(
@@ -273,7 +277,7 @@ public class ConsultarPagosObrero extends javax.swing.JFrame {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lblFechaInicio)
                                     .addComponent(periodoInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 21, Short.MAX_VALUE)
+                                .addGap(18, 18, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(lblFechaFin)
                                     .addComponent(periodoFinal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -313,55 +317,47 @@ public class ConsultarPagosObrero extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRegresarActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        Validadores valido = new Validadores();
+        corregirTamaños();
         if (this.periodoInicio.getCalendar() != null && this.periodoFinal.getCalendar() != null) {
             if (valido.validarFechas(this.periodoInicio.getCalendar(), this.periodoFinal.getCalendar())) {
-                if (this.txtMonto.getText().isBlank()) {
-                    this.txtMonto.setText("0.0");
-                } else {
-                    this.txtMonto.setText(this.txtMonto.getText().trim());
-                    this.txtMonto.setText(valido.recortarComas(this.txtMonto.getText()));
-                    if (valido.validarSinEspacios(this.txtMonto.getText())) {
-                        this.txtMonto.setText(valido.recortarSignoMas(this.txtMonto.getText()));
-                        if (!valido.validarNumero(this.txtMonto.getText())) {
-                            JOptionPane.showMessageDialog(null, "Error: Ingrese un número en el monto. (No caracteres ni numeros negativos).", "¡Error!", JOptionPane.ERROR_MESSAGE);
-                        } else if (!valido.validarFlotante(this.txtMonto.getText())) {
-                            this.txtMonto.setText(this.txtMonto.getText().concat(".0"));
-                        }
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Error: Ingrese un monto válido. (Sin espacios).", "¡Error!", JOptionPane.ERROR_MESSAGE);
-                    }
+                // Se formatea monto
+                txtMonto.setText(valido.corregirFlotante(txtMonto.getText()));
+                if (Float.parseFloat(txtMonto.getText()) <= 1) {
+                    txtMonto.setText("1.0");
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Error: La fecha inicial no puede ser después que la fecha final.", "¡Error!", JOptionPane.ERROR_MESSAGE);
             }
         } else {
-            if (this.txtMonto.getText().isBlank()) {
-                this.txtMonto.setText("0.0");
-            } else {
-                this.txtMonto.setText(this.txtMonto.getText().trim());
-                this.txtMonto.setText(valido.recortarComas(this.txtMonto.getText()));
-                if (valido.validarSinEspacios(this.txtMonto.getText())) {
-                    this.txtMonto.setText(valido.recortarSignoMas(this.txtMonto.getText()));
-                    if (!valido.validarNumero(this.txtMonto.getText())) {
-                        JOptionPane.showMessageDialog(null, "Error: Ingrese un número en el monto. (No caracteres ni numeros negativos).", "¡Error!", JOptionPane.ERROR_MESSAGE);
-                    } else if (!valido.validarFlotante(this.txtMonto.getText())) {
-                        this.txtMonto.setText(this.txtMonto.getText().concat(".0"));
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(null, "Error: Ingrese un monto válido. (Sin espacios).", "¡Error!", JOptionPane.ERROR_MESSAGE);
-                }
+            // Se formatea monto
+            txtMonto.setText(valido.corregirFlotante(txtMonto.getText()));
+            if (Float.parseFloat(txtMonto.getText()) <= 1) {
+                txtMonto.setText("1.0");
             }
         }
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void txtMontoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMontoKeyTyped
-        if (txtMonto.getText().length() >= 12) {
+        if (txtMonto.getText().length() >= 8) {
             evt.consume();
         }
         char c = evt.getKeyChar();
         if (Character.isLetter(c)) {
             evt.consume();
+        } else if (c == '.' && txtMonto.getText().contains(".")) {
+            // Si ya hay un punto en el texto, no permitir otro
+            evt.consume();
+        }
+        // Obtener el componente fuente del evento
+        JTextField textField = (JTextField) evt.getSource();
+
+        // Verificar si el evento es una operación de pegar
+        if (evt.isConsumed() || evt.getKeyChar() == KeyEvent.VK_V && evt.isControlDown()) {
+            // Si es una operación de pegar, cancelar el evento
+            evt.consume();
+
+            // Vaciar el contenido del campo de texto
+            textField.setText("");
         }
     }//GEN-LAST:event_txtMontoKeyTyped
 

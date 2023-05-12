@@ -4,18 +4,18 @@
  */
 package GUI.Jefe.Facturas;
 
-import DAOs.ClientesDAO;
 import DAOs.FacturasDAO;
-import Dominio.Clientes;
+import DAOs.JefesDAO;
 import Dominio.Facturas;
 import Dominio.Jefes;
 import Enumeradores.EstadoFactura;
 import Enumeradores.MetodoPago;
-import GUI.Cliente.PanelCliente;
+import GUI.Jefe.PanelJefe;
 import Herramientas.Icono;
 import Herramientas.Validadores;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 
 /**
  *
@@ -25,8 +25,7 @@ public class PagarFactura extends javax.swing.JFrame {
 
     // Atributos
     Jefes jefe;
-    Clientes cliente = new Clientes();
-    ClientesDAO ClientesDAO = new ClientesDAO();
+    JefesDAO JefesDAO = new JefesDAO();
     FacturasDAO FacturasDAO = new FacturasDAO();
     Validadores valido = new Validadores();
 
@@ -35,6 +34,8 @@ public class PagarFactura extends javax.swing.JFrame {
      */
     public PagarFactura(Jefes jefe) throws Exception {
         this.jefe = jefe;
+        UIManager.put("OptionPane.yesButtonText", "Aceptar");
+        UIManager.put("OptionPane.noButtonText", "Cancelar");
         initComponents();
         new Icono().insertarIcono(this);
         List<Facturas> facturas = FacturasDAO.consultarFacturasFechaCreada(null, null, EstadoFactura.PENDIENTE, MetodoPago.NO_APLICA, null, this.jefe.getId());
@@ -190,10 +191,10 @@ public class PagarFactura extends javax.swing.JFrame {
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         this.setVisible(false);
-        int i = JOptionPane.showConfirmDialog(this, "¿Seguro que deseas cancelar el registro de permiso? Los datos de registro no se guardarán", "Advertencia", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        int i = JOptionPane.showConfirmDialog(this, "¿Seguro que desea cancelar el pago de factura? Los datos de pago no se guardarán", "Advertencia", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         if (i == JOptionPane.YES_OPTION) {
             this.dispose();
-            new PanelCliente(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
+            new PanelJefe(JefesDAO.consultarJefe(this.jefe.getId())).setVisible(true);
         } else {
             this.setVisible(true);
         }

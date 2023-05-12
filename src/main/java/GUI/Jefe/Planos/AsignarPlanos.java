@@ -2,20 +2,17 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package GUI.Jefe.Obreros;
+package GUI.Jefe.Planos;
 
-import DAOs.ClientesDAO;
-import DAOs.FacturasDAO;
 import DAOs.JefesDAO;
 import DAOs.ObrasDAO;
-import DAOs.ObrerosDAO;
-import Dominio.Clientes;
+import DAOs.PlanosDAO;
 import Dominio.Jefes;
 import Dominio.Obras;
-import Dominio.ObrasObrero;
-import Dominio.Obreros;
+import Dominio.Planos;
 import Enumeradores.EstadoObra;
 import GUI.Jefe.PanelJefe;
+import Herramientas.Encriptador;
 import Herramientas.Icono;
 import Herramientas.Validadores;
 import java.util.List;
@@ -26,19 +23,20 @@ import javax.swing.UIManager;
  *
  * @author 52644
  */
-public class AgregarObrero extends javax.swing.JFrame {
+public class AsignarPlanos extends javax.swing.JFrame {
 
     // Atributos
     Jefes jefe;
     ObrasDAO ObrasDAO = new ObrasDAO();
     JefesDAO JefesDAO = new JefesDAO();
-    ObrerosDAO ObrerosDAO = new ObrerosDAO();
+    PlanosDAO PlanosDAO = new PlanosDAO();
+    Encriptador crypt = new Encriptador();
     Validadores valido = new Validadores();
-
+    
     /**
-     * Creates new form AgregarObrero
+     * Creates new form AsignarPlanos
      */
-    public AgregarObrero(Jefes jefe) throws Exception {
+    public AsignarPlanos(Jefes jefe) throws Exception {
         this.jefe = jefe;
         UIManager.put("OptionPane.yesButtonText", "Aceptar");
         UIManager.put("OptionPane.noButtonText", "Cancelar");
@@ -51,13 +49,12 @@ public class AgregarObrero extends javax.swing.JFrame {
                     + " - ID Cliente: " + obra.getCliente().getId()
                     + " - ID: " + obra.getId());
         }
-        List<Obreros> obreros = ObrerosDAO.consultarTodosObreros();
-        for (Obreros obrero : obreros) {
-            this.cbxObrero.addItem(
-                    obrero.getNombre()
-                    + " " + obrero.getApellidoPaterno()
-                    + " " + obrero.getApellidoMaterno()
-                    + " - ID: " + obrero.getId());
+        List<Planos> obreros = PlanosDAO.consultarPlanosJefe(this.jefe.getId());
+        for (Planos plano : obreros) {
+            this.cbxPlano.addItem(
+                    crypt.decrypt(plano.getFolio())
+                    + " - ID Jefe: " + plano.getJefe().getId()
+                    + " - ID: " + plano.getId());
         }
     }
 
@@ -70,7 +67,7 @@ public class AgregarObrero extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        cbxObrero = new javax.swing.JComboBox<>();
+        cbxPlano = new javax.swing.JComboBox<>();
         btnAgregar = new javax.swing.JButton();
         lblElijaMetodo = new javax.swing.JLabel();
         UObraLogoPeque = new javax.swing.JLabel();
@@ -87,9 +84,9 @@ public class AgregarObrero extends javax.swing.JFrame {
         setTitle("Agregar Obrero");
         setResizable(false);
 
-        cbxObrero.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elija uno..." }));
-        cbxObrero.setToolTipText("Elija un tipo de permiso");
-        cbxObrero.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        cbxPlano.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elija uno..." }));
+        cbxPlano.setToolTipText("Elija un tipo de permiso");
+        cbxPlano.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         btnAgregar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnAgregar.setText("Agregar");
@@ -101,12 +98,12 @@ public class AgregarObrero extends javax.swing.JFrame {
             }
         });
 
-        lblElijaMetodo.setText("Elija un obrero...");
+        lblElijaMetodo.setText("Elija un plano...");
 
         UObraLogoPeque.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\UObraPeque.png")); // NOI18N
 
         lblMetodoPago.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lblMetodoPago.setText("Obrero:");
+        lblMetodoPago.setText("Plano:");
 
         lblBusqueda.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblBusqueda.setText("Registro:");
@@ -130,7 +127,7 @@ public class AgregarObrero extends javax.swing.JFrame {
         cbxObra.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        lblTitulo.setText("Agregar Obrero");
+        lblTitulo.setText("Asingar Plano");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -143,33 +140,34 @@ public class AgregarObrero extends javax.swing.JFrame {
                 .addComponent(btnCancelar)
                 .addGap(17, 17, 17))
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(lblBusqueda))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(94, 94, 94)
-                        .addComponent(UObraLogoPeque))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(47, 47, 47)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblMetodoPago)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblElijaMetodo)
-                                    .addComponent(cbxObrero, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblFactura)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblElijaFactura)
-                                    .addComponent(cbxObra, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                        .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 338, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(21, 21, 21)
+                            .addComponent(lblBusqueda))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(18, 18, 18)
+                            .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(94, 94, 94)
+                            .addComponent(UObraLogoPeque))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(47, 47, 47)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(lblMetodoPago)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(lblElijaMetodo)
+                                        .addComponent(cbxPlano, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(lblFactura)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(lblElijaFactura)
+                                        .addComponent(cbxObra, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -193,13 +191,13 @@ public class AgregarObrero extends javax.swing.JFrame {
                 .addComponent(lblElijaMetodo)
                 .addGap(2, 2, 2)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cbxObrero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbxPlano, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblMetodoPago))
                 .addGap(21, 21, 21)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCancelar)
                     .addComponent(btnAgregar))
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         pack();
@@ -208,39 +206,38 @@ public class AgregarObrero extends javax.swing.JFrame {
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         if (this.cbxObra.getSelectedItem() != "Elija una...") {
-            if (this.cbxObrero.getSelectedItem() != "Elija uno...") {
-                // Obrero
-                String ObreroElegido = this.cbxObrero.getSelectedItem().toString();
-                String idElegido = ObreroElegido.substring(ObreroElegido.length(), 3);
+            if (this.cbxPlano.getSelectedItem() != "Elija uno...") {
+                // Plano
+                String PlanoElegido = this.cbxPlano.getSelectedItem().toString();
+                String idElegido = PlanoElegido.substring(PlanoElegido.length(), 3);
                 idElegido = valido.obtenerNumeros(idElegido);
                 Long id = Long.valueOf(idElegido);
-                Obreros obrero = ObrerosDAO.consultarObrero(id);
+                Planos plano = PlanosDAO.consultarPlano(id);
                 // Obra
                 String ObraElegida = this.cbxObra.getSelectedItem().toString();
                 String idElegida = ObraElegida.substring(ObraElegida.length(), 3);
                 idElegida = valido.obtenerNumeros(idElegida);
                 Long ida = Long.valueOf(idElegida);
                 Obras obra = ObrasDAO.consultarObra(ida);
-                List<ObrasObrero> obrasO = obra.getObreros();
-                for (ObrasObrero obrasObrero : obrasO) {
-                    if (obrasObrero.getObrero().equals(obrero)) {
-                        JOptionPane.showMessageDialog(null, "Error: El obrero ya se encuentra participando en la obra.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                List<Planos> planosO = obra.getPlanos();
+                for (Planos planos : planosO) {
+                    if (planos.getId().equals(plano.getId())) {
+                        JOptionPane.showMessageDialog(null, "Error: El plano ya se encuentra en uso en la presente obra.", "¡Error!", JOptionPane.ERROR_MESSAGE);
                         this.dispose();
                     }
                 }
-                ObrasObrero obreroObra = new ObrasObrero(obrero, obra);
-                ObrasDAO.asingarObreroObra(ida, id);
+                ObrasDAO.agregarPlanoObra(ida, id);
             } else {
-                JOptionPane.showMessageDialog(null, "Error: Seleccione un obrero válido.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Error: Seleccione un plano válido.", "¡Error!", JOptionPane.ERROR_MESSAGE);
             }
         } else {
-            JOptionPane.showMessageDialog(null, "Error: Seleccione una obra válida.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error: Seleccione una plano válido.", "¡Error!", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         this.setVisible(false);
-        int i = JOptionPane.showConfirmDialog(this, "¿Seguro que deseas cancelar la agregación de obrero? Los datos de agregación no se guardarán", "Advertencia", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        int i = JOptionPane.showConfirmDialog(this, "¿Seguro que deseas cancelar la asignación de plano? Los datos de asignación no se guardarán", "Advertencia", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         if (i == JOptionPane.YES_OPTION) {
             this.dispose();
             new PanelJefe(JefesDAO.consultarJefe(this.jefe.getId())).setVisible(true);
@@ -249,14 +246,14 @@ public class AgregarObrero extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnCancelarActionPerformed
 
-
+   
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSeparator Separador1;
     private javax.swing.JLabel UObraLogoPeque;
     private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JComboBox<String> cbxObra;
-    private javax.swing.JComboBox<String> cbxObrero;
+    private javax.swing.JComboBox<String> cbxPlano;
     private javax.swing.JLabel lblBusqueda;
     private javax.swing.JLabel lblElijaFactura;
     private javax.swing.JLabel lblElijaMetodo;
