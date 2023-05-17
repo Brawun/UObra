@@ -22,6 +22,7 @@ import Herramientas.Icono;
 import Herramientas.Validadores;
 import java.awt.event.KeyEvent;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -90,8 +91,8 @@ public class IniciarObra extends javax.swing.JFrame {
         this.cbxObrero1.setEnabled(false);
         this.cbxObrero2.setSelectedItem("Elija uno...");
         this.cbxObrero2.setEnabled(false);
-        this.cbxObrero2.setSelectedItem("Elija uno...");
-        this.cbxObrero2.setEnabled(false);
+        this.cbxObrero3.setSelectedItem("Elija uno...");
+        this.cbxObrero3.setEnabled(false);
     }
 
     public void cargarTablaObras() throws Exception {
@@ -336,46 +337,6 @@ public class IniciarObra extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(lblTitulo)
-                        .addGap(719, 719, 719)
-                        .addComponent(UObraLogoPeque))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 887, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(lblResultado))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(ScrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 887, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(27, 27, 27)
-                        .addComponent(lblUbicacionSeleccionada)
-                        .addGap(18, 18, 18)
-                        .addComponent(lblIDObra)
-                        .addGap(18, 18, 18)
-                        .addComponent(lblInsertarID)
-                        .addGap(18, 18, 18)
-                        .addComponent(lblFechaSolicitada)
-                        .addGap(18, 18, 18)
-                        .addComponent(lblInsertarFechaSolicitada)
-                        .addGap(45, 45, 45)
-                        .addComponent(lblNombre)
-                        .addGap(18, 18, 18)
-                        .addComponent(lblInsertarNombre)
-                        .addGap(33, 33, 33)
-                        .addComponent(lblDireccion)
-                        .addGap(18, 18, 18)
-                        .addComponent(lbl$1)
-                        .addGap(6, 6, 6)
-                        .addComponent(lblInsertarDeuda)
-                        .addGap(52, 52, 52)
-                        .addComponent(lblMXN1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(Separador3, javax.swing.GroupLayout.PREFERRED_SIZE, 887, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(27, 27, 27)
@@ -415,14 +376,51 @@ public class IniciarObra extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(30, 30, 30)
                                 .addComponent(btnRegresar)))
-                        .addComponent(lblMXN2)))
+                        .addComponent(lblMXN2))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblTitulo)
+                                .addGap(719, 719, 719)
+                                .addComponent(UObraLogoPeque))
+                            .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 887, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblResultado)
+                            .addComponent(Separador3, javax.swing.GroupLayout.PREFERRED_SIZE, 887, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(6, 6, 6)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(lblUbicacionSeleccionada)
+                                            .addGap(18, 18, 18)
+                                            .addComponent(lblIDObra)
+                                            .addGap(18, 18, 18)
+                                            .addComponent(lblInsertarID)
+                                            .addGap(18, 18, 18)
+                                            .addComponent(lblFechaSolicitada)
+                                            .addGap(18, 18, 18)
+                                            .addComponent(lblInsertarFechaSolicitada)
+                                            .addGap(45, 45, 45)
+                                            .addComponent(lblNombre)
+                                            .addGap(18, 18, 18)
+                                            .addComponent(lblInsertarNombre)
+                                            .addGap(33, 33, 33)
+                                            .addComponent(lblDireccion)
+                                            .addGap(18, 18, 18)
+                                            .addComponent(lbl$1)
+                                            .addGap(6, 6, 6)
+                                            .addComponent(lblInsertarDeuda)
+                                            .addGap(30, 30, 30)
+                                            .addComponent(lblMXN1)
+                                            .addGap(20, 20, 20))
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(lblInstrucción)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(btnAceptarSeleccion)
+                                            .addGap(18, 18, 18))))
+                                .addComponent(ScrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 887, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(27, 27, 27)
-                .addComponent(lblInstrucción)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnAceptarSeleccion)
-                .addGap(26, 26, 26))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -437,7 +435,7 @@ public class IniciarObra extends javax.swing.JFrame {
                 .addComponent(lblResultado)
                 .addGap(12, 12, 12)
                 .addComponent(ScrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(21, 21, 21)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblInstrucción, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnAceptarSeleccion))
@@ -448,8 +446,9 @@ public class IniciarObra extends javax.swing.JFrame {
                     .addComponent(lblInsertarFechaSolicitada, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblInsertarNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbl$1)
-                    .addComponent(lblInsertarDeuda, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblMXN1)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lblInsertarDeuda, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblMXN1))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(3, 3, 3)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -457,7 +456,7 @@ public class IniciarObra extends javax.swing.JFrame {
                             .addComponent(lblFechaSolicitada)
                             .addComponent(lblNombre)
                             .addComponent(lblDireccion))))
-                .addGap(12, 12, 12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(Separador3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(5, 5, 5)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -499,7 +498,8 @@ public class IniciarObra extends javax.swing.JFrame {
                         .addComponent(btnRegresar))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(23, 23, 23)
-                        .addComponent(lblMXN2))))
+                        .addComponent(lblMXN2)))
+                .addGap(22, 22, 22))
         );
 
         pack();
@@ -511,11 +511,24 @@ public class IniciarObra extends javax.swing.JFrame {
             if (this.obra != null) {
                 if (this.cbxPermisos.getSelectedItem() != "Elija uno...") {
                     if (this.cbxObrero1.getSelectedItem() != "Elija uno..."
-                            || this.cbxObrero2.getSelectedItem() != "Elija uno..."
-                            || this.cbxObrero3.getSelectedItem() != "Elija uno...") {
-                        if (this.cbxObrero1.getSelectedItem() != this.cbxObrero2.getSelectedItem()
-                                || this.cbxObrero1.getSelectedItem() != this.cbxObrero3.getSelectedItem()
-                                || this.cbxObrero2.getSelectedItem() != this.cbxObrero3.getSelectedItem()) {
+                            && this.cbxObrero2.getSelectedItem() != "Elija uno..."
+                            && this.cbxObrero3.getSelectedItem() != "Elija uno...") {
+                            // Obrero #1
+                            String o1 = this.cbxObrero1.getSelectedItem().toString();
+                            String idObrero1 = o1.substring(o1.length() - 3, o1.length());
+                            idObrero1 = valido.obtenerNumeros(idObrero1);
+                            Long idO1 = Long.valueOf(idObrero1);
+                            // Obrero #2
+                            String o2 = this.cbxObrero2.getSelectedItem().toString();
+                            String idObrero2 = o2.substring(o2.length() - 3, o2.length());
+                            idObrero2 = valido.obtenerNumeros(idObrero2);
+                            Long idO2 = Long.valueOf(idObrero2);
+                            // Obrero #3
+                            String o3 = this.cbxObrero3.getSelectedItem().toString();
+                            String idObrero3 = o3.substring(o3.length() - 3, o3.length());
+                            idObrero3 = valido.obtenerNumeros(idObrero3);
+                            Long idO3 = Long.valueOf(idObrero3);
+                        if (!Objects.equals(idO1, idO2) && !Objects.equals(idO1, idO3) && !Objects.equals(idO2, idO3)) {
                             // Se valida y formatea el campo de costo arranque
                             txtCostoArranque.setText(valido.corregirFlotante(txtCostoArranque.getText()));
                             if (Float.parseFloat(txtCostoArranque.getText()) <= 99) {
@@ -523,25 +536,10 @@ public class IniciarObra extends javax.swing.JFrame {
                             }
                             // Permiso
                             String permisoElegido = this.cbxPermisos.getSelectedItem().toString();
-                            String idElegido = permisoElegido.substring(permisoElegido.length(), 3);
+                            String idElegido = permisoElegido.substring(permisoElegido.length() - 3, permisoElegido.length());
                             idElegido = valido.obtenerNumeros(idElegido);
                             Long id = Long.valueOf(idElegido);
                             Permisos permiso = PermisosDAO.consultarPermiso(id);
-                            // Obrero #1
-                            String o1 = this.cbxObrero1.getSelectedItem().toString();
-                            String idObrero1 = o1.substring(o1.length(), 3);
-                            idObrero1 = valido.obtenerNumeros(idObrero1);
-                            Long idO1 = Long.valueOf(idObrero1);
-                            // Obrero #2
-                            String o2 = this.cbxObrero2.getSelectedItem().toString();
-                            String idObrero2 = o2.substring(o2.length(), 3);
-                            idObrero2 = valido.obtenerNumeros(idObrero2);
-                            Long idO2 = Long.valueOf(idObrero2);
-                            // Obrero #3
-                            String o3 = this.cbxObrero3.getSelectedItem().toString();
-                            String idObrero3 = o3.substring(o3.length(), 3);
-                            idObrero3 = valido.obtenerNumeros(idObrero3);
-                            Long idO3 = Long.valueOf(idObrero3);
                             if (permiso != null) {
                                 try {
                                     ObrasDAO.agregarPermisoObra(this.obra.getId(), id);
@@ -561,7 +559,7 @@ public class IniciarObra extends javax.swing.JFrame {
                                                 + "\n - ID Cliente: " + this.obra.getCliente().getId()
                                                 + "\n - ID Obra: " + this.obra.getId()
                                                 + ". ☺\n"
-                                                + "\n ¿Desea registrar iniciar otra obra?", "Inicio de obra exitoso", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
+                                                + "\n ¿Desea iniciar otra obra?", "Inicio de obra exitoso", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
                                     } catch (Exception ex) {
                                         Logger.getLogger(IniciarObra.class.getName()).log(Level.SEVERE, null, ex);
                                     }
@@ -592,16 +590,16 @@ public class IniciarObra extends javax.swing.JFrame {
                             JOptionPane.showMessageDialog(null, "Error: Seleccione a tres obreros diferentes. (Ninguno repetido)", "¡Error!", JOptionPane.ERROR_MESSAGE);
                         }
                     } else {
-                        JOptionPane.showMessageDialog(null, "Error: Seleccione a tres obreros diferentes. (Ninguno repetido)", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Error: Seleccione a tres obreros diferentes. (No deje inguno sin escoger)", "¡Error!", JOptionPane.ERROR_MESSAGE);
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "Error: Seleccione los tres obreros. (No deje ninguno sin escoger)", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Error: Seleccione un permiso válido de iniciación.", "¡Error!", JOptionPane.ERROR_MESSAGE);
                 }
             } else {
-                JOptionPane.showMessageDialog(null, "Error: Seleccione un permiso válido de iniciación.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Error: La obra seleccionada es nula.", "¡Error!", JOptionPane.ERROR_MESSAGE);
             }
         } else {
-            JOptionPane.showMessageDialog(null, "Error: Seleccione un método de pago válido.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error: Seleccione una obra a la cual se le registrará el pago.", "¡Error!", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnIniciarObraActionPerformed
 
@@ -631,8 +629,8 @@ public class IniciarObra extends javax.swing.JFrame {
                 this.cbxObrero1.setEnabled(true);
                 this.cbxObrero2.setSelectedItem("Elija uno...");
                 this.cbxObrero2.setEnabled(true);
-                this.cbxObrero2.setSelectedItem("Elija uno...");
-                this.cbxObrero2.setEnabled(true);
+                this.cbxObrero3.setSelectedItem("Elija uno...");
+                this.cbxObrero3.setEnabled(true);
             }
         } catch (Exception e) {
             Logger.getLogger(IniciarObra.class.getName()).log(Level.SEVERE, null, e);

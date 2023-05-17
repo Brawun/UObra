@@ -14,6 +14,8 @@ import GUI.Jefe.PanelJefe;
 import Herramientas.Icono;
 import Herramientas.Validadores;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
@@ -42,6 +44,7 @@ public class PagarFactura extends javax.swing.JFrame {
         for (Facturas factura : facturas) {
             this.cbxUnaFactura.addItem(
                     "Factura: " + factura.getDescripcion()
+                    + "| Monto: $" + factura.getMonto() + " MXN"
                     + " - ID: " + factura.getId());
         }
     }
@@ -121,72 +124,81 @@ public class PagarFactura extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnPagar)
-                .addGap(42, 42, 42)
-                .addComponent(btnCancelar)
-                .addGap(23, 23, 23))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(59, 59, 59)
-                        .addComponent(lblFactura)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblElijaFactura)
-                            .addComponent(cbxUnaFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(lblBusqueda))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(lblMetodoPago)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblElijaMetodo)
-                            .addComponent(cbxMetodoPago, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(94, 94, 94)
                         .addComponent(UObraLogoPeque))
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(6, 6, 6)
+                        .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addComponent(lblBusqueda))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(116, 116, 116)
+                        .addComponent(lblElijaFactura))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(119, 119, 119)
+                        .addComponent(lblElijaMetodo))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(162, 162, 162)
+                        .addComponent(btnPagar)
+                        .addGap(42, 42, 42)
+                        .addComponent(btnCancelar))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblFactura)
+                                .addGap(12, 12, 12)
+                                .addComponent(cbxUnaFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblMetodoPago)
+                                .addGap(12, 12, 12)
+                                .addComponent(cbxMetodoPago, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(15, 15, 15)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblTitulo)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(lblTitulo))
                     .addComponent(UObraLogoPeque))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(6, 6, 6)
+                .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12)
                 .addComponent(lblBusqueda)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(6, 6, 6)
                 .addComponent(lblElijaFactura)
                 .addGap(2, 2, 2)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cbxUnaFactura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblFactura))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(lblFactura))
+                    .addComponent(cbxUnaFactura, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(lblElijaMetodo)
                 .addGap(2, 2, 2)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cbxMetodoPago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblMetodoPago))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(lblMetodoPago))
+                    .addComponent(cbxMetodoPago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(21, 21, 21)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnCancelar)
-                    .addComponent(btnPagar))
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnPagar)
+                    .addComponent(btnCancelar))
+                .addGap(21, 21, 21))
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
@@ -213,16 +225,45 @@ public class PagarFactura extends javax.swing.JFrame {
                 }
                 // Factura
                 String facturaElegida = this.cbxUnaFactura.getSelectedItem().toString();
-                String idElegido = facturaElegida.substring(facturaElegida.length(), 3);
+                String idElegido = facturaElegida.substring(facturaElegida.length() - 3, facturaElegida.length());
                 idElegido = valido.obtenerNumeros(idElegido);
                 Long id = Long.valueOf(idElegido);
                 Facturas factura = FacturasDAO.consultarFactura(id);
                 if (factura != null) {
                     FacturasDAO.pagarFactura(id, metodo);
-                    JOptionPane.showMessageDialog(null,
-                            "Se realizó exitosamente el la paga de la factura " + factura.getDescripcion()
-                            + " con un monto de $ " + factura.getMonto() + " MXN"
-                            + "\n - ID: " + factura.getId() + ". ☺", "Pago de factura exitoso", JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
+                    int i = 0;
+                    try {
+                        this.setVisible(false);
+                        i = JOptionPane.showConfirmDialog(null,
+                                "Se realizó exitosamente el registro de factura con..."
+                                + "\n Monto: $ " + factura.getMonto() + " MXN "
+                                + "\n Descripción: " + factura.getDescripcion()
+                                + "\n - ID: " + factura.getId()
+                                + "\n - ID Jefe: " + factura.getJefe().getId()
+                                + ". ☺\n"
+                                + "\n ¿Desea pagar otra factura?", "Pago de factura exitoso", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
+                    } catch (Exception ex) {
+                        Logger.getLogger(PagarFactura.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    if (i == JOptionPane.YES_OPTION) {
+                        try {
+                            this.cbxUnaFactura.setSelectedItem("Elija una...");
+                            this.cbxMetodoPago.setSelectedItem("Elija uno...");
+                            List<Facturas> facturas = FacturasDAO.consultarFacturasFechaCreada(null, null, EstadoFactura.PENDIENTE, MetodoPago.NO_APLICA, null, this.jefe.getId());
+                            for (Facturas factura2 : facturas) {
+                                this.cbxUnaFactura.addItem(
+                                        "Factura: " + factura2.getDescripcion()
+                                        + "| Monto: $" + factura2.getMonto() + " MXN"
+                                        + " - ID: " + factura2.getId());
+                            }
+                            this.setVisible(true);
+                        } catch (Exception ex) {
+                            Logger.getLogger(PagarFactura.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    } else {
+                        this.dispose();
+                        new PanelJefe(JefesDAO.consultarJefe(this.jefe.getId())).setVisible(true);
+                    }
                 } else {
                     JOptionPane.showMessageDialog(null, "Error interno: Ocurrió un errror al querer pagar la factura.", "¡Error interno!", JOptionPane.ERROR_MESSAGE);
                 }

@@ -41,6 +41,7 @@ public class PanelJefe extends javax.swing.JFrame {
     public PanelJefe(Jefes jefe) {
         this.jefe = jefe;
         initComponents();
+        this.mniPagarObrero.setVisible(false);
         new Icono().insertarIcono(this);
     }
 

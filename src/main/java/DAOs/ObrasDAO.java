@@ -97,7 +97,7 @@ public class ObrasDAO {
             entityManager.getTransaction().begin();
             Obras obra = consultarObra(id);
             // Se verifica si la obra en particular tiene permiso de iniciación
-            if (PermisosDAO.verificarPermisoIniciacion(obra)) {
+//            if (PermisosDAO.verificarPermisoIniciacion(obra)) {
                 obra.setEstado(EstadoObra.DESARROLLO);
                 obra.setFechaInicio(fecha.fechaAhora());
                 // Se le suma la deuda a cliente al iniciar la obra
@@ -107,10 +107,10 @@ public class ObrasDAO {
                 entityManager.getTransaction().commit();
                 entityManager.close();
                 return true;
-            }
-            return false;
+//            }
+//            
         } else {
-            throw new EntityNotFoundException("No se puede encontrar la obra con ID: " + id);
+            return false;
         }
     }
 

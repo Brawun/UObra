@@ -4,13 +4,11 @@
  */
 package GUI.Jefe.Obras;
 
-import DAOs.ClientesDAO;
 import DAOs.JefesDAO;
 import DAOs.ObrasDAO;
 import DAOs.ObrasObreroDAO;
 import DAOs.ObrerosDAO;
 import DAOs.PermisosDAO;
-import Dominio.Clientes;
 import Dominio.Jefes;
 import Dominio.Obras;
 import Dominio.ObrasObrero;
@@ -37,14 +35,14 @@ public class TerminarObra extends javax.swing.JFrame {
 
     // Atributos
     Jefes jefe;
-    Clientes cliente = new Clientes();
     Fecha fecha = new Fecha();
-    ObrasDAO ObrasDAO = new ObrasDAO();
-    ObrasObreroDAO ObrasObreroDAO = new ObrasObreroDAO();
     JefesDAO JefesDAO = new JefesDAO();
+    ObrasDAO ObrasDAO = new ObrasDAO();
     PermisosDAO PermisosDAO = new PermisosDAO();
+    ObrasObreroDAO ObrasObreroDAO = new ObrasObreroDAO();
     Validadores valido = new Validadores();
     Encriptador crypt = new Encriptador();
+    List<Obras> listaObras;
     Obras obra;
 
     /**
@@ -56,75 +54,23 @@ public class TerminarObra extends javax.swing.JFrame {
         UIManager.put("OptionPane.yesButtonText", "Aceptar");
         UIManager.put("OptionPane.noButtonText", "Cancelar");
         initComponents();
+        cargarTablaObras();
         new Icono().insertarIcono(this);
-        this.cbxPermisos.setEnabled(false);
-        this.lblCosto.setText("0.0");
         List<Permisos> permisos = PermisosDAO.consultarPermisosConcesion(null, null, TipoPermiso.FINALIZACION, this.jefe);
         for (Permisos permiso : permisos) {
             this.cbxPermisos.addItem(
                     "Folio: " + crypt.decrypt(permiso.getFolio())
                     + " - ID: " + permiso.getId());
         }
+        this.cbxPermisos.setEnabled(false);
         this.cbxPermisos.setSelectedItem("Elija uno...");
         this.cbxPermisos.setEnabled(false);
     }
 
-    public void cargarTablaObras(Integer fechas) throws Exception {
-        List<Obras> listaObras;
-        Fecha fecha = new Fecha();
+    public void cargarTablaObras() throws Exception {
         this.obra = null;
-        EstadoObra estado;
-        Float costo;
-        Boolean pagada;
-        // Se asigna valor a costo
-        if (this.txtCostoTotal.getText().equalsIgnoreCase("0.0")) {
-            costo = null;
-        } else {
-            costo = Float.valueOf(this.txtCostoTotal.getText());
-        }
-        // Se asigna valor a estado económico 
-        if (this.cbxEconomia.getSelectedItem() == "Indistinto") {
-            pagada = null;
-        } else if (this.cbxEconomia.getSelectedItem() == "Pagadas") {
-            pagada = true;
-        } else {
-            pagada = false;
-        }
-        // Se asigna valor a estado de obra
-        estado = EstadoObra.DESARROLLO;
-        // 0 buscar por fecha solicitada, 1 buscar por fecha inicio, 2 buscar por fecha fin
-        switch (fechas) {
-            case 0 ->
-                listaObras = ObrasDAO.consultarObrasFechaSolicitada(// Se busca por acción FIN
-                        this.periodoInicio.getCalendar() != null // Si el usuario ingresó un periodo inicio se ingresa en el campo
-                        ? this.periodoInicio.getCalendar() : null,
-                        this.periodoFinal.getCalendar() != null // Si el usuario ingresó un periodo fin se ingresa en el campo
-                        ? this.periodoFinal.getCalendar() : null,
-                        estado, // Estado
-                        pagada, // Filtro de pagadas
-                        costo, // Costo
-                        this.cliente.getId()); // Cliente
-            case 1 ->
-                listaObras = ObrasDAO.consultarObrasFechaInicio( // Se busca por acción FIN
-                        this.periodoInicio.getCalendar() != null // Si el usuario ingresó un periodo inicio se ingresa en el campo
-                        ? this.periodoInicio.getCalendar() : null,
-                        this.periodoFinal.getCalendar() != null // Si el usuario ingresó un periodo fin se ingresa en el campo
-                        ? this.periodoFinal.getCalendar() : null,
-                        estado, // Estado
-                        pagada, // Filtro de pagadas
-                        costo, // Costo
-                        this.cliente.getId()); // Cliente
-            default ->
-                listaObras = ObrasDAO.consultarObrasFechaFin(// Se busca por acción FIN
-                        this.periodoInicio.getCalendar() != null // Si el usuario ingresó un periodo inicio se ingresa en el campo
-                        ? this.periodoInicio.getCalendar() : null,
-                        this.periodoFinal.getCalendar() != null // Si el usuario ingresó un periodo fin se ingresa en el campo
-                        ? this.periodoFinal.getCalendar() : null,
-                        estado, // Estado
-                        pagada, // Filtro de pagadas
-                        costo, // Costo
-                        this.cliente.getId()); // Cliente
-        }
+        EstadoObra estado = EstadoObra.DESARROLLO;
+        listaObras = ObrasDAO.consultarObrasConEstado(estado); // Cliente
         DefaultTableModel modeloTablaObras = (DefaultTableModel) this.tblResultados.getModel();
         modeloTablaObras.setRowCount(0);
         for (Obras obras : listaObras) {
@@ -136,9 +82,11 @@ public class TerminarObra extends javax.swing.JFrame {
                 obras.getEstaPagada() == true ? "Pagada" : "No pagada",
                 fecha.formatoFecha(obras.getFechaSolicitada()),
                 obras.getFechaInicio() != null ? fecha.formatoFecha(obras.getFechaInicio()) : "No aplica",
-                obras.getFechaFin() != null ? fecha.formatoFecha(obras.getFechaFin()) : "No aplica"};
+                obras.getFechaFin() != null ? fecha.formatoFecha(obras.getFechaFin()) : "No aplica",
+                "| Seleccionar |"};
             modeloTablaObras.addRow(filaNueva);
         }
+        valido.centrarTabla(tblResultados);
     }
 
     public int obtenerFila() {
@@ -442,7 +390,7 @@ public class TerminarObra extends javax.swing.JFrame {
                 if (this.cbxPermisos.getSelectedItem() != "Elija uno...") {
                     // Permiso
                     String permisoElegido = this.cbxPermisos.getSelectedItem().toString();
-                    String idElegido = permisoElegido.substring(permisoElegido.length(), 3);
+                    String idElegido = permisoElegido.substring(permisoElegido.length() - 3, permisoElegido.length());
                     idElegido = valido.obtenerNumeros(idElegido);
                     Long id = Long.valueOf(idElegido);
                     Permisos permiso = PermisosDAO.consultarPermiso(id);
@@ -451,13 +399,39 @@ public class TerminarObra extends javax.swing.JFrame {
                             ObrasDAO.agregarPermisoObra(this.obra.getId(), id);
                             ObrasDAO.terminarObra(id);
                             for (ObrasObrero obrasObrero : this.obra.getObreros()) {
-//                                ObrasObreroDAO.desactivarObrasObrero(obrasObrero.getId());
-                                  ObrasObreroDAO.desactivarYPagarObrasObrero(obrasObrero.getId());
+                                ObrasObreroDAO.desactivarYPagarObrasObrero(obrasObrero.getId());
                             }
-                            JOptionPane.showMessageDialog(null,
-                                    "Se realizó exitosamente el fin de la obra " + this.obra.getNombre()
-                                    + " con el permiso de finalización de folio " + crypt.decrypt(permiso.getFolio())
-                                    + "\n - ID Obra: " + this.obra.getId() + ". ☺", "Fin de obra exitoso", JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
+                            this.setVisible(false);
+                            int i = 0;
+                            try {
+                                i = JOptionPane.showConfirmDialog(null,
+                                        "Se realizó exitosamente el fin de la obra con..."
+                                        + "\n Nombre: " + this.obra.getNombre()
+                                        + "\n Costo total: $ " + this.obra.getCostoTotal() + " MXN"
+                                        + "\n Folio permiso de iniciación:  " + crypt.decrypt(permiso.getFolio())
+                                        + "\n - ID Jefe: " + this.obra.getJefe().getId()
+                                        + "\n - ID Cliente: " + this.obra.getCliente().getId()
+                                        + "\n - ID Obra: " + this.obra.getId()
+                                        + ". ☺\n"
+                                        + "\n ¿Desea terminar otra obra?", "Terminación de obra exitoso", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
+                            } catch (Exception ex) {
+                                Logger.getLogger(IniciarObra.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            if (i == JOptionPane.YES_OPTION) {
+                                this.cbxPermisos.setSelectedItem("Elija uno...");
+                                this.lblInsertarDeuda.setText("");
+                                this.lblInsertarFechaSolicitada.setText("");
+                                this.lblInsertarID.setText("");
+                                this.lblInsertarNombre.setText("");
+                                this.cbxPermisos.setEnabled(false);
+                                this.cbxPermisos.setEnabled(false);
+                                tblResultados.clearSelection();
+                                cargarTablaObras();
+                                this.setVisible(true);
+                            } else {
+                                this.dispose();
+                                new PanelJefe(JefesDAO.consultarJefe(this.jefe.getId())).setVisible(true);
+                            }
                         } catch (Exception ex) {
                             Logger.getLogger(TerminarObra.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -465,7 +439,7 @@ public class TerminarObra extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(null, "Error interno: Ocurrió un errror al querer realizar el pago.", "¡Error interno!", JOptionPane.ERROR_MESSAGE);
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "Error: Seleccione un permiso válido de iniciación.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Error: Seleccione un permiso válido de finalización.", "¡Error!", JOptionPane.ERROR_MESSAGE);
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Error: Seleccione una obra cual finalizar.", "¡Error!", JOptionPane.ERROR_MESSAGE);

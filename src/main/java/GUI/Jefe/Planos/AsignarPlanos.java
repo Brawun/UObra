@@ -81,7 +81,7 @@ public class AsignarPlanos extends javax.swing.JFrame {
         lblTitulo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        setTitle("Agregar Obrero");
+        setTitle("Asignar Plano");
         setResizable(false);
 
         cbxPlano.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elija uno..." }));

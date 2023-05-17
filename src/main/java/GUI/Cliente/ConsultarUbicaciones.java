@@ -40,7 +40,6 @@ public class ConsultarUbicaciones extends javax.swing.JFrame {
         this.cliente = cliente;
         initComponents();
         new Icono().insertarIcono(this);
-        cargarTablaUbicaciones();
         this.lblInsertarArea.setText("");
         this.lblInsertarDireccion.setText("");
         this.lblInsertarFecha.setText("");
@@ -51,6 +50,7 @@ public class ConsultarUbicaciones extends javax.swing.JFrame {
         modeloTablaUbicaciones.setRowCount(0);
         DefaultTableModel modeloTablaPersonas = (DefaultTableModel) this.tblObras.getModel();
         modeloTablaPersonas.setRowCount(0);
+        cargarTablaUbicaciones();
     }
 
     public void cargarTablaUbicaciones() throws Exception {

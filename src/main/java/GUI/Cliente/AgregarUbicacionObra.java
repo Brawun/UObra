@@ -77,10 +77,6 @@ public class AgregarUbicacionObra extends javax.swing.JFrame {
         chxOcupar.setEnabled(false);
         tblObras.clearSelection();
         tblUbicaciones.clearSelection();
-        DefaultTableModel modeloTablaObras = (DefaultTableModel) this.tblObras.getModel();
-        modeloTablaObras.setRowCount(0);
-        DefaultTableModel modeloTablaPersonas = (DefaultTableModel) this.tblUbicaciones.getModel();
-        modeloTablaPersonas.setRowCount(0);
     }
 
     public int obtenerFilaObra() {

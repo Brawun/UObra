@@ -52,7 +52,6 @@ public class SolicitarObra extends javax.swing.JFrame {
         this.cliente = cliente;
         this.ubicacion = null;
         new Icono().insertarIcono(this);
-        cargarTablaUbicaciones();
         this.lblInsertarArea.setText("");
         this.lblInsertarDireccion.setText("");
         this.lblInsertarFecha.setText("");
@@ -64,6 +63,7 @@ public class SolicitarObra extends javax.swing.JFrame {
         tblUbicaciones.clearSelection();
         DefaultTableModel modeloTablaUbicaciones = (DefaultTableModel) this.tblUbicaciones.getModel();
         modeloTablaUbicaciones.setRowCount(0);
+        cargarTablaUbicaciones();
     }
 
     public void cargarTablaUbicaciones() throws Exception {

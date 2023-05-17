@@ -224,37 +224,39 @@ public class RegistrarFactura extends javax.swing.JFrame {
             if (this.txtDescripcion.getText().length() > 100) {
                 this.txtDescripcion.setText(this.txtDescripcion.getText().substring(0, 100));
             }
-            if (this.txtMonto.getText().isBlank()) {
-                this.txtMonto.setText("0.0");
-            } else {
-                this.txtMonto.setText(this.txtMonto.getText().trim());
-                this.txtMonto.setText(valido.recortarComas(this.txtMonto.getText()));
-                if (valido.validarSinEspacios(this.txtMonto.getText())) {
-                    this.txtMonto.setText(valido.recortarSignoMas(this.txtMonto.getText()));
-                    if (!valido.validarNumero(this.txtMonto.getText())) {
-                        JOptionPane.showMessageDialog(null, "Error: Ingrese un número en el monto. (No caracteres ni numeros negativos).", "¡Error!", JOptionPane.ERROR_MESSAGE);
-                    } else if (!valido.validarFlotante(this.txtMonto.getText())) {
-                        this.txtMonto.setText(this.txtMonto.getText().concat(".0"));
-                        Facturas factura = new Facturas(
-                                Float.valueOf(txtMonto.getText()),
-                                txtDescripcion.getText(),
-                                this.jefe);
-                        Facturas facturaRegistrada = FacturasDAO.registrarFactura(factura);
-                        if (facturaRegistrada.getId() != null) {
-                            try {
-                                JOptionPane.showMessageDialog(null,
-                                        "Se realizó exitosamente el registro de factura con un monto de $ " + facturaRegistrada.getMonto()
-                                        + " MXN con descripción " + facturaRegistrada.getDescripcion()
-                                        + "\n - ID: " + facturaRegistrada.getId() + ". ☺", "Registro de factura exitoso", JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
-                            } catch (Exception ex) {
-                                Logger.getLogger(RegistrarPermiso.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                        } else {
-                            JOptionPane.showMessageDialog(null, "Error interno: Ocurrió un errror al querer registrar la factura.", "¡Error interno!", JOptionPane.ERROR_MESSAGE);
-                        }
-                    }
+            // Se valida y formatea el campo de monto
+            txtMonto.setText(valido.corregirFlotante(txtMonto.getText()));
+            if (Float.parseFloat(txtMonto.getText()) <= 99) {
+                txtMonto.setText("100.0");
+            }
+
+            Facturas factura = new Facturas(
+                    Float.valueOf(txtMonto.getText()),
+                    txtDescripcion.getText(),
+                    this.jefe);
+            Facturas facturaRegistrada = FacturasDAO.registrarFactura(factura);
+            if (facturaRegistrada.getId() != null) {
+                int i = 0;
+                try {
+                    this.setVisible(false);
+                    i = JOptionPane.showConfirmDialog(null,
+                            "Se realizó exitosamente el registro de factura con..."
+                            + "\n Monto: $ " + facturaRegistrada.getMonto() + " MXN "
+                            + "\n Descripción: " + facturaRegistrada.getDescripcion()
+                            + "\n - ID: " + facturaRegistrada.getId()
+                            + "\n - ID Jefe: " + facturaRegistrada.getJefe().getId()
+                            + ". ☺\n"
+                            + "\n ¿Desea registrar otra factura?", "Registro de factura exitoso", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
+                } catch (Exception ex) {
+                    Logger.getLogger(RegistrarFactura.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                if (i == JOptionPane.YES_OPTION) {
+                    this.txtMonto.setText("100.0");
+                    this.txtDescripcion.setText("");
+                    this.setVisible(true);
                 } else {
-                    JOptionPane.showMessageDialog(null, "Error: Ingrese un monto válido. (Sin espacios).", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                    this.dispose();
+                    new PanelJefe(JefesDAO.consultarJefe(this.jefe.getId())).setVisible(true);
                 }
             }
         } else {
@@ -266,11 +268,21 @@ public class RegistrarFactura extends javax.swing.JFrame {
         if (txtDescripcion.getText().length() >= 100) {
             evt.consume();
         }
-        char c = evt.getKeyChar();
+        // Obtener el componente fuente del evento
+        JTextField textField = (JTextField) evt.getSource();
+
+        // Verificar si el evento es una operación de pegar
+        if (evt.isConsumed() || evt.getKeyChar() == KeyEvent.VK_V && evt.isControlDown()) {
+            // Si es una operación de pegar, cancelar el evento
+            evt.consume();
+
+            // Vaciar el contenido del campo de texto
+            textField.setText("");
+        }
     }//GEN-LAST:event_txtDescripcionKeyTyped
 
     private void txtMontoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMontoKeyTyped
-        if (txtMonto.getText().length() >= 12) {
+        if (txtMonto.getText().length() >= 6) {
             evt.consume();
         }
         char c = evt.getKeyChar();
