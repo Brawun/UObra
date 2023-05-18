@@ -41,7 +41,7 @@ public class ObrasObreroDAO {
     }
 
     public void eliminarObrasObrero(Long id) {
-        if (verificarObrasObrero(id)) {
+        if (verificarObrasObrero(id)  != null) {
             EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
             EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
@@ -55,7 +55,7 @@ public class ObrasObreroDAO {
     }
 
     public void desactivarObrasObrero(Long id) {
-        if (verificarObrasObrero(id)) {
+        if (verificarObrasObrero(id)  != null) {
             EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
             EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
@@ -76,7 +76,7 @@ public class ObrasObreroDAO {
     }
 
     public void pagarObrasObrero(Long id) {
-        if (verificarObrasObrero(id)) {
+        if (verificarObrasObrero(id) != null) {
             EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
             EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
@@ -96,7 +96,7 @@ public class ObrasObreroDAO {
     }
 
     public void desactivarYPagarObrasObrero(Long id) {
-        if (verificarObrasObrero(id)) {
+        if (verificarObrasObrero(id) != null) {
             EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
             EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
@@ -108,11 +108,15 @@ public class ObrasObreroDAO {
             obrasObrero.setFechaFin(fecha.fechaAhora());
             // Contabilizar días trabajados e insertarlos
             Integer diferenciaDias = fecha.calcularDiferenciaDias(obrasObrero.getFechaInicio(), obrasObrero.getFechaFin());
-            obrasObrero.setDiasTrabajados(obrasObrero.getDiasTrabajados() + diferenciaDias);
+            Long idObrero = obrasObrero.getObrero().getId();
+            if (diferenciaDias == 0) {
+                obrasObrero.setDiasTrabajados(obrasObrero.getDiasTrabajados() + 1);
+            } else {
+                obrasObrero.setDiasTrabajados(obrasObrero.getDiasTrabajados() + diferenciaDias);
+            }
             // Sumar a por pagar en obrero en la relación a obra, según su sueldo 
             // diario actual y sus días trabajados, calculados según la fecha de
             // inicio y fecha fin de relación obras - obrero
-            Long idObrero = obrasObrero.getObrero().getId();
             obrerosDAO.sumarDiasTrabajadosObrero(idObrero, obrasObrero.getDiasTrabajados());
             entityManager.merge(obrasObrero);
             entityManager.getTransaction().commit();
@@ -123,7 +127,7 @@ public class ObrasObreroDAO {
     }
 
     public void activarObrasObrero(Long id) {
-        if (verificarObrasObrero(id)) {
+        if (verificarObrasObrero(id) != null) {
             EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
             EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
@@ -142,7 +146,7 @@ public class ObrasObreroDAO {
     }
 
     public void sumarDiasTrabajadosObrasObrero(Long id, Integer dias) {
-        if (verificarObrasObrero(id)) {
+        if (verificarObrasObrero(id) != null) {
             EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
             EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
@@ -157,7 +161,7 @@ public class ObrasObreroDAO {
     }
 
     public void restarDiasTrabajadosObrasObrero(Long id, Integer dias) {
-        if (verificarObrasObrero(id)) {
+        if (verificarObrasObrero(id) != null) {
             EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
             EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
@@ -181,23 +185,31 @@ public class ObrasObreroDAO {
         }
     }
 
-    // Métodos de consulta 
-    public Boolean verificarObrasObrero(Long id) {
+    // Métodos de consulta
+    public ObrasObrero verificarObrasObrero(Long id) {
         EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
-        EntityManager entityManager = managerFactory.createEntityManager();
-        entityManager.getTransaction().begin();
-        ObrasObrero obrasObrero = entityManager.find(ObrasObrero.class, id);
-        entityManager.getTransaction().commit();
-        entityManager.close();
-        return obrasObrero != null;
+            EntityManager entityManager = managerFactory.createEntityManager();
+            entityManager.getTransaction().begin();
+            TypedQuery<ObrasObrero> query;
+            String jpql = "SELECT o FROM ObrasObrero o WHERE o.id = :id";
+            query = entityManager.createQuery(jpql, ObrasObrero.class);
+            query.setParameter("id", id);
+            ObrasObrero obrasObrero = query.getSingleResult();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return obrasObrero;
     }
 
     public ObrasObrero consultarObrasObrero(Long id) {
-        if (verificarObrasObrero(id)) {
+        if (verificarObrasObrero(id) != null) {
             EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
             EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
-            ObrasObrero obrasObrero = entityManager.find(ObrasObrero.class, id);
+            TypedQuery<ObrasObrero> query;
+            String jpql = "SELECT o FROM ObrasObrero o WHERE o.id = :id";
+            query = entityManager.createQuery(jpql, ObrasObrero.class);
+            query.setParameter("id", id);
+            ObrasObrero obrasObrero = query.getSingleResult();
             entityManager.getTransaction().commit();
             entityManager.close();
             return obrasObrero;

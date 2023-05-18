@@ -396,8 +396,8 @@ public class TerminarObra extends javax.swing.JFrame {
                     Permisos permiso = PermisosDAO.consultarPermiso(id);
                     if (permiso != null) {
                         try {
+                            ObrasDAO.terminarObra(this.obra.getId());
                             ObrasDAO.agregarPermisoObra(this.obra.getId(), id);
-                            ObrasDAO.terminarObra(id);
                             for (ObrasObrero obrasObrero : this.obra.getObreros()) {
                                 ObrasObreroDAO.desactivarYPagarObrasObrero(obrasObrero.getId());
                             }

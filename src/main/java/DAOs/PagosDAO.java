@@ -15,6 +15,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -135,9 +136,18 @@ public class PagosDAO {
     }
 
     // Métodos drivers para búsqueda dinámica
-    public List<Pagos> consultarPagosCliente(Long id) throws Exception {
-        ClientesDAO clientesDAO = new ClientesDAO();
-        return consultarPagos(null, null, null, null, null, null, clientesDAO.consultarCliente(id));
+    public List<Pagos> consultarPagosCliente(Long clienteId) throws Exception {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
+        TypedQuery<Pagos> query;
+        String jpql = "SELECT p FROM Pagos p WHERE p.cliente.id = :clienteId";
+        query = entityManager.createQuery(jpql, Pagos.class);
+        query.setParameter("clienteId", clienteId);
+        List<Pagos> pagos = query.getResultList();
+        entityManager.getTransaction().commit();
+        entityManager.close();
+        return pagos;
     }
 
     public List<Pagos> consultarTodosPagos() throws Exception {

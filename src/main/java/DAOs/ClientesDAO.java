@@ -154,7 +154,7 @@ public class ClientesDAO {
             throw new EntityNotFoundException("No se puede encontrar el cliente con usuario: " + usuario);
         }
     }
-    
+
     public void editarContrasena(Long id, String nuevaContrasena) throws Exception {
         EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
         EntityManager entityManager = managerFactory.createEntityManager();
@@ -170,7 +170,7 @@ public class ClientesDAO {
             throw new EntityNotFoundException("No se puede encontrar el cliente con ID: " + id);
         }
     }
-    
+
     public void editarUsuario(Long id, String nuevoUsuario) throws Exception {
         EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
         EntityManager entityManager = managerFactory.createEntityManager();
@@ -213,7 +213,7 @@ public class ClientesDAO {
             throw new EntityNotFoundException("No se puede encontrar el cliente con ID: " + id);
         }
     }
-    
+
     public void sumarInversionTotalCliente(Long id, Float monto) {
         if (verificarCliente(id)) {
             EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
@@ -387,6 +387,15 @@ public class ClientesDAO {
     }
 
     public List<Clientes> consultarTodosClientes() throws Exception {
-        return consultarClientes(null, null);
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
+        TypedQuery<Clientes> query;
+        String jpql = "SELECT c FROM Clientes c";
+        query = entityManager.createQuery(jpql, Clientes.class);
+        List<Clientes> clientes = query.getResultList();
+        entityManager.getTransaction().commit();
+        entityManager.close();
+        return clientes;
     }
 }

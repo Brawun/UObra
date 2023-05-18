@@ -36,6 +36,7 @@ import javax.persistence.TemporalType;
 public class Permisos implements Serializable {
 
     @Id
+    @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

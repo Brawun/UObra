@@ -4,13 +4,13 @@
  */
 package GUI.Jefe;
 
-import GUI.Jefe.*;
 import DAOs.JefesDAO;
 import Dominio.Jefes;
 import Herramientas.Encriptador;
 import Herramientas.Icono;
 import Herramientas.Validadores;
 import java.awt.event.KeyEvent;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -198,31 +198,40 @@ public class EditarUsuarioJefe extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
-        Validadores valida = new Validadores();
-        this.txtNuevoUsuario.setText(this.txtNuevoUsuario.getText().trim());
-        if (!this.txtNuevoUsuario.getText().isBlank() && valida.validarSinEspacios(this.txtNuevoUsuario.getText())) {
-            try {
-                Encriptador crypt = new Encriptador();
-                if (!crypt.decrypt(this.Jefe.getUsuario()).equals(this.txtNuevoUsuario.getText())) {
-                    try {
-                        if (this.txtNuevoUsuario.getText().length() > 20) {
-                            this.txtNuevoUsuario.setText(this.txtNuevoUsuario.getText().substring(0, 20));
+        try {
+            Validadores valida = new Validadores();
+            this.txtNuevoUsuario.setText(this.txtNuevoUsuario.getText().trim());
+            if (!this.txtNuevoUsuario.getText().isBlank() && valida.validarSinEspacios(this.txtNuevoUsuario.getText())) {
+                try {
+                    Encriptador crypt = new Encriptador();
+                    if (!crypt.decrypt(this.Jefe.getUsuario()).equals(this.txtNuevoUsuario.getText())) {
+                        try {
+                            if (this.txtNuevoUsuario.getText().length() > 20) {
+                                this.txtNuevoUsuario.setText(this.txtNuevoUsuario.getText().substring(0, 20));
+                            }
+                            JefesDAO.editarUsuario(this.Jefe.getId(), this.txtNuevoUsuario.getText());
+                            JOptionPane.showMessageDialog(null, "Se ha actualizado el usuario exitosamente.", "Actualización exitosa", JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
+                            new PanelJefe(JefesDAO.consultarJefe(this.Jefe.getId())).setVisible(true);
+                            this.dispose();
+                        } catch (Exception ex) {
+                            Logger.getLogger(EditarContrasenaJefe.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                        JefesDAO.editarUsuario(this.Jefe.getId(), this.txtNuevoUsuario.getText());
-                        JOptionPane.showMessageDialog(null, "Se ha actualizado el usuario exitosamente.", "Actualización exitosa", JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
-                        new PanelJefe(JefesDAO.consultarJefe(this.Jefe.getId())).setVisible(true);
-                        this.dispose();
-                    } catch (Exception ex) {
-                        Logger.getLogger(EditarContrasenaJefe.class.getName()).log(Level.SEVERE, null, ex);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Error: El nuevo usuario no puede ser el mismo al ya existente. (Intente con otro)", "¡Error!", JOptionPane.ERROR_MESSAGE);
                     }
-                } else {
-                    JOptionPane.showMessageDialog(null, "Error: El nuevo usuario no puede ser el mismo al ya existente. (Intente con otro)", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                } catch (Exception ex) {
+                    Logger.getLogger(EditarUsuarioJefe.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            } catch (Exception ex) {
-                Logger.getLogger(EditarUsuarioJefe.class.getName()).log(Level.SEVERE, null, ex);
+            } else {
+                JOptionPane.showMessageDialog(null, "Error: Ingrese un nuevo usuario. (Usuario en blanco o con espacios).", "¡Error!", JOptionPane.ERROR_MESSAGE);
             }
-        } else {
-            JOptionPane.showMessageDialog(null, "Error: Ingrese un nuevo usuario. (Usuario en blanco o con espacios).", "¡Error!", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            if (e.getCause() != null && e.getCause().getCause() instanceof SQLIntegrityConstraintViolationException) {
+                JOptionPane.showMessageDialog(null, "Error: Usuario ya existente en la base de datos, ingrese uno diferente.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                this.txtNuevoUsuario.setText("");
+            } else {
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, e);
+            }
         }
     }//GEN-LAST:event_btnActualizarActionPerformed
 

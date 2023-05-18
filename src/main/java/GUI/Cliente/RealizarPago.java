@@ -803,19 +803,23 @@ public class RealizarPago extends javax.swing.JFrame {
 
     private void btnRealizarPagoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRealizarPagoActionPerformed
         corregirTamaños();
+        if (this.cbxMetodoPago.getSelectedItem() != "Efectivo") {
+            this.cbxObreros.setSelectedItem("No aplica");
+            this.cbxObreros.setEnabled(false);
+        }
         if (this.txtMonto.isEditable()) {
             if (this.obra != null) {
                 if (this.cbxMetodoPago.getSelectedItem() != "Elija uno...") {
+                    // Se valida y formatea el campo de monto
+                    txtMonto.setText(valido.corregirFlotante(txtMonto.getText()));
+                    if (Float.parseFloat(txtMonto.getText()) <= 99) {
+                        txtMonto.setText("100.0");
+                    }
                     if (this.cbxMetodoPago.getSelectedItem() == "Efectivo") {
                         if (this.cbxObreros.getSelectedItem() != "Elija uno...") {
-                            // Se valida y formatea el campo de monto
-                            txtMonto.setText(valido.corregirFlotante(txtMonto.getText()));
-                            if (Float.parseFloat(txtMonto.getText()) <= 99) {
-                                txtMonto.setText("100.0");
-                            }
                             try {
                                 String obreroElegido = this.cbxObreros.getSelectedItem().toString();
-                                String idElegido = obreroElegido.substring(obreroElegido.length(), 3);
+                                String idElegido = obreroElegido.substring(obreroElegido.length() - 3, obreroElegido.length());
                                 idElegido = valido.obtenerNumeros(idElegido);
                                 Long id = Long.valueOf(idElegido);
                                 Obreros obrero = ObrerosDAO.consultarObrero(id);
@@ -829,6 +833,8 @@ public class RealizarPago extends javax.swing.JFrame {
                                 if (pagoRegistrado != null) {
                                     ObrerosDAO.agregarPagoObrero(id, pagoRegistrado);
                                     ClientesDAO.agregarPagosCliente(this.cliente.getId(), pagoRegistrado);
+                                    ClientesDAO.sumarInversionTotalCliente(this.cliente.getId(), Float.valueOf(this.txtMonto.getText()));
+                                    ClientesDAO.restarDeudaCliente(this.cliente.getId(), Float.valueOf(this.txtMonto.getText()));
                                     ObrasDAO.agregarPagoObra(this.obra.getId(), pagoRegistrado);
                                     this.setVisible(false);
                                     int i = JOptionPane.showConfirmDialog(null,
@@ -842,22 +848,10 @@ public class RealizarPago extends javax.swing.JFrame {
                                             + "\n - ID Obrero: " + pagoRegistrado.getObrero() != null ? pagoRegistrado.getObrero().getId() : "No aplica (No se pagó en efectivo)"
                                             + "\n - ID: " + pagoRegistrado.getId()
                                             + ". ☺\n"
-                                            + "\n ¿Desea registrar otra ubicación?", "Registro de ubicación exitoso", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
+                                            + "\n ¿Desea registrar otra ubicación?", "Realización de pago exitoso", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
                                     if (i == JOptionPane.YES_OPTION) {
-                                        this.txtCostoTotal.setText("1000.0");
-                                        this.cbxObreros.setSelectedItem("Elija uno...");
-                                        this.cbxAccion.setSelectedItem("Elija uno...");
-                                        this.cbxEstado.setSelectedItem("Elija uno...");
-                                        this.cbxMetodoPago.setSelectedItem("Elija uno...");
-                                        this.lblInsertarDeuda.setText("");
-                                        this.lblInsertarFechaSolicitada.setText("");
-                                        this.lblInsertarID.setText("");
-                                        this.lblInsertarNombre.setText("");
-                                        this.txtMonto.setEditable(false);
-                                        this.cbxMetodoPago.setEnabled(false);
-                                        this.cbxObreros.setEnabled(false);
-                                        tblResultados.clearSelection();
-                                        this.setVisible(true);
+                                        this.dispose();
+                                        new RealizarPago(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
                                     } else {
                                         this.dispose();
                                         new PanelCliente(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
@@ -874,13 +868,6 @@ public class RealizarPago extends javax.swing.JFrame {
                             JOptionPane.showMessageDialog(null, "Error: Seleccione un obrero válido que haya recibido el pago en efectivo.", "¡Error!", JOptionPane.ERROR_MESSAGE);
                         }
                     } else {
-                        this.cbxObreros.setSelectedItem("No aplica");
-                        this.cbxObreros.setEnabled(false);
-                        // Se valida y formatea el campo de monto
-                        txtMonto.setText(valido.corregirFlotante(txtMonto.getText()));
-                        if (Float.parseFloat(txtMonto.getText()) <= 99) {
-                            txtCostoTotal.setText("100.0");
-                        }
                         MetodoPago metodo;
                         if (cbxMetodoPago.getSelectedItem() == "Débito") {
                             metodo = MetodoPago.DEBITO;
@@ -896,39 +883,29 @@ public class RealizarPago extends javax.swing.JFrame {
                         if (pagoRegistrado != null) {
                             try {
                                 ClientesDAO.agregarPagosCliente(this.cliente.getId(), pagoRegistrado);
+                                ClientesDAO.sumarInversionTotalCliente(this.cliente.getId(), Float.valueOf(this.txtMonto.getText()));
+                                    ClientesDAO.restarDeudaCliente(this.cliente.getId(), Float.valueOf(this.txtMonto.getText()));
                                 ObrasDAO.agregarPagoObra(this.obra.getId(), pagoRegistrado);
                                 this.setVisible(false);
                                 int i = JOptionPane.showConfirmDialog(null,
-                                        "Se realizó exitosamente el pago con..."
-                                        + "\n Monto: $ " + pagoRegistrado.getMonto() + " MXN"
-                                        + "\n Obra: " + this.obra.getNombre()
-                                        + "\n Fecha: " + fecha.formatoFecha(pagoRegistrado.getFecha())
-                                        + "\n Método de pago: " + pagoRegistrado.getMetodoPago().toString()
-                                        + "\n - ID Cliente: " + pagoRegistrado.getCliente().getId()
-                                        + "\n - ID Obra: " + pagoRegistrado.getObra().getId()
-                                        + "\n - ID Obrero: " + pagoRegistrado.getObrero() != null ? pagoRegistrado.getObrero().getId() : "No aplica (No se pagó en efectivo)"
-                                        + "\n - ID: " + pagoRegistrado.getId()
-                                        + ". ☺\n"
-                                        + "\n ¿Desea registrar otra ubicación?", "Registro de ubicación exitoso", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
-                                if (i == JOptionPane.YES_OPTION) {
-                                    this.txtCostoTotal.setText("1000.0");
-                                    this.cbxObreros.setSelectedItem("Elija uno...");
-                                    this.cbxAccion.setSelectedItem("Elija uno...");
-                                    this.cbxEstado.setSelectedItem("Elija uno...");
-                                    this.cbxMetodoPago.setSelectedItem("Elija uno...");
-                                    this.lblInsertarDeuda.setText("");
-                                    this.lblInsertarFechaSolicitada.setText("");
-                                    this.lblInsertarID.setText("");
-                                    this.lblInsertarNombre.setText("");
-                                    this.txtMonto.setEditable(false);
-                                    this.cbxMetodoPago.setEnabled(false);
-                                    this.cbxObreros.setEnabled(false);
-                                    tblResultados.clearSelection();
-                                    this.setVisible(true);
-                                } else {
-                                    this.dispose();
-                                    new PanelCliente(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
-                                }
+                                            "Se realizó exitosamente el pago con..."
+                                            + "\n Monto: $ " + pagoRegistrado.getMonto() + " MXN"
+                                            + "\n Obra: " + this.obra.getNombre()
+                                            + "\n Fecha: " + fecha.formatoFecha(pagoRegistrado.getFecha())
+                                            + "\n Método de pago: " + pagoRegistrado.getMetodoPago().toString()
+                                            + "\n - ID Cliente: " + pagoRegistrado.getCliente().getId()
+                                            + "\n - ID Obra: " + pagoRegistrado.getObra().getId()
+                                            + "\n - ID Obrero: " + pagoRegistrado.getObrero() != null ? pagoRegistrado.getObrero().getId() : "No aplica (No se pagó en efectivo)"
+                                            + "\n - ID: " + pagoRegistrado.getId()
+                                            + ". ☺\n"
+                                            + "\n ¿Desea registrar otra ubicación?", "Realización de pago exitoso", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
+                                    if (i == JOptionPane.YES_OPTION) {
+                                        this.dispose();
+                                        new RealizarPago(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
+                                    } else {
+                                        this.dispose();
+                                        new PanelCliente(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
+                                    }
                             } catch (Exception ex) {
                                 Logger.getLogger(RealizarPago.class.getName()).log(Level.SEVERE, null, ex);
                             }

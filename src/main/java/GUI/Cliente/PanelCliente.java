@@ -48,7 +48,6 @@ public class PanelCliente extends javax.swing.JFrame {
 
         btnCerrarSesion = new javax.swing.JButton();
         Separador1 = new javax.swing.JSeparator();
-        lblInsertarApellidoMaterno = new javax.swing.JLabel();
         lblInsertarID = new javax.swing.JLabel();
         lblInsertarInversion = new javax.swing.JLabel();
         lblTitulo = new javax.swing.JLabel();
@@ -57,12 +56,13 @@ public class PanelCliente extends javax.swing.JFrame {
         lblID = new javax.swing.JLabel();
         lbl$1 = new javax.swing.JLabel();
         lblMXN1 = new javax.swing.JLabel();
-        lblInsertarNombre = new javax.swing.JLabel();
-        lblInsertarApellidoPaterno = new javax.swing.JLabel();
         lblInsertarDeuda = new javax.swing.JLabel();
         lblDeuda = new javax.swing.JLabel();
         lbl$2 = new javax.swing.JLabel();
         lblMXN2 = new javax.swing.JLabel();
+        lblInsertarNombre = new javax.swing.JLabel();
+        lblInsertarApellidoPaterno = new javax.swing.JLabel();
+        lblInsertarApellidoMaterno = new javax.swing.JLabel();
         Menu = new javax.swing.JMenuBar();
         MenuObras = new javax.swing.JMenu();
         mniConsultarObras = new javax.swing.JMenuItem();
@@ -100,9 +100,6 @@ public class PanelCliente extends javax.swing.JFrame {
             }
         });
 
-        lblInsertarApellidoMaterno.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        lblInsertarApellidoMaterno.setText("materno");
-
         lblInsertarID.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblInsertarID.setText("id");
 
@@ -110,7 +107,7 @@ public class PanelCliente extends javax.swing.JFrame {
         lblInsertarInversion.setText("inversion");
 
         lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        lblTitulo.setText("Panel Obrero");
+        lblTitulo.setText("Panel Cliente");
 
         UObraLogoPeque.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\UObraPeque.png")); // NOI18N
 
@@ -126,12 +123,6 @@ public class PanelCliente extends javax.swing.JFrame {
         lblMXN1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblMXN1.setText("MXN");
 
-        lblInsertarNombre.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        lblInsertarNombre.setText("nombre");
-
-        lblInsertarApellidoPaterno.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        lblInsertarApellidoPaterno.setText("paterno");
-
         lblInsertarDeuda.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblInsertarDeuda.setText("deuda");
 
@@ -143,6 +134,15 @@ public class PanelCliente extends javax.swing.JFrame {
 
         lblMXN2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         lblMXN2.setText("MXN");
+
+        lblInsertarNombre.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblInsertarNombre.setText("nombre");
+
+        lblInsertarApellidoPaterno.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblInsertarApellidoPaterno.setText("paterno");
+
+        lblInsertarApellidoMaterno.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblInsertarApellidoMaterno.setText("materno");
 
         MenuObras.setText("Obras");
         MenuObras.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -286,38 +286,38 @@ public class PanelCliente extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblInsertarNombre)
-                                .addGap(6, 6, 6)
-                                .addComponent(lblInsertarApellidoPaterno))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(lblInversion)
-                                .addComponent(lblDeuda)))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(7, 7, 7)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(lblInversion)
+                                    .addComponent(lblDeuda))
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblInsertarApellidoMaterno)
                                     .addGroup(layout.createSequentialGroup()
+                                        .addGap(10, 10, 10)
                                         .addComponent(lbl$1)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(lblInsertarInversion, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(lblMXN1))))
+                                        .addComponent(lblMXN1))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(9, 9, 9)
+                                        .addComponent(lbl$2)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lblInsertarDeuda, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lblMXN2)))
+                                .addGap(56, 56, 56)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addComponent(lblID)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(lblInsertarID))
+                                    .addComponent(btnCerrarSesion, javax.swing.GroupLayout.Alignment.TRAILING)))
                             .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblInsertarNombre)
                                 .addGap(6, 6, 6)
-                                .addComponent(lbl$2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblInsertarDeuda, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblMXN2)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(lblID)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(lblInsertarID))
-                            .addComponent(btnCerrarSesion, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addGap(24, 24, 24))))
+                                .addComponent(lblInsertarApellidoPaterno)
+                                .addGap(7, 7, 7)
+                                .addComponent(lblInsertarApellidoMaterno)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
             .addGroup(layout.createSequentialGroup()
                 .addGap(14, 14, 14)
                 .addComponent(Separador1)
@@ -335,11 +335,12 @@ public class PanelCliente extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lblInsertarNombre)
                             .addComponent(lblInsertarApellidoPaterno)
                             .addComponent(lblInsertarApellidoMaterno))
-                        .addGap(15, 15, 15)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(lblInversion)

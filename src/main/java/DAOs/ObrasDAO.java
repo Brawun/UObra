@@ -328,7 +328,7 @@ public class ObrasDAO {
             EntityManager entityManager = managerFactory.createEntityManager();
             entityManager.getTransaction().begin();
             Obras obra = consultarObra(id);
-            obra.setJefe(JefesDAO.consultarJefe(id));
+            obra.setJefe(JefesDAO.consultarJefe(IdJefe));
             entityManager.merge(obra);
             entityManager.getTransaction().commit();
             entityManager.close();
@@ -4230,6 +4230,20 @@ public class ObrasDAO {
     public List<Obras> consultarObrasConEstado(EstadoObra estado) throws Exception {
         return this.consultarObrasFechaInicio(null, null, estado, null, null, null);
     }
+    
+    public List<Obras> consultarObrasConEstadoJefe(EstadoObra estado, Long jefeId) throws Exception {
+TypedQuery<Obras> query;
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
+        String jpql = "SELECT o FROM Obras o WHERE o.estado = :estado AND o.jefe.id = :jefeId";
+        query = entityManager.createQuery(jpql, Obras.class);
+        query.setParameter("estado", estado);
+        query.setParameter("jefeId", jefeId);
+        List<Obras> obras = query.getResultList();
+        entityManager.getTransaction().commit();
+        entityManager.close();
+        return obras;    }
 
     public List<Obras> consultarObrasConCostoMayorIgualA(Float monto) throws Exception {
         return this.consultarObrasFechaInicio(null, null, null, null, monto, null);

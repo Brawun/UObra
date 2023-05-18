@@ -8,8 +8,17 @@ import DAOs.JefesDAO;
 import DAOs.ObrasDAO;
 import DAOs.ObrerosDAO;
 import Dominio.Jefes;
+import Dominio.Obreros;
+import GUI.Jefe.PanelJefe;
+import Herramientas.Encriptador;
 import Herramientas.Icono;
 import Herramientas.Validadores;
+import java.awt.event.KeyEvent;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.UIManager;
 
 /**
@@ -24,16 +33,27 @@ public class PagarObreros extends javax.swing.JFrame {
     JefesDAO JefesDAO = new JefesDAO();
     ObrerosDAO ObrerosDAO = new ObrerosDAO();
     Validadores valido = new Validadores();
-    
+    Encriptador crypt = new Encriptador();
+
     /**
      * Creates new form PagarObreros
      */
-    public PagarObreros(Jefes jefe) {
+    public PagarObreros(Jefes jefe) throws Exception {
         this.jefe = jefe;
         UIManager.put("OptionPane.yesButtonText", "Aceptar");
         UIManager.put("OptionPane.noButtonText", "Cancelar");
         initComponents();
         new Icono().insertarIcono(this);
+        List<Obreros> obreros = ObrerosDAO.consultarObrerosConPorPagar((float) 1);
+        for (Obreros obrero : obreros) {
+            this.cbxObrero.addItem(
+                    obrero.getNombre()
+                    + " " + obrero.getApellidoPaterno()
+                    + " " + obrero.getApellidoMaterno()
+                    + " - Sueldo diario: $ " + obrero.getPorPagar() + " MXN"
+                    + " - Por pagar: $ " + obrero.getPorPagar() + " MXN"
+                    + " - ID: " + obrero.getId());
+        }
     }
 
     /**
@@ -45,25 +65,264 @@ public class PagarObreros extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        Separador1 = new javax.swing.JSeparator();
+        cbxObrero = new javax.swing.JComboBox<>();
+        lblTitulo = new javax.swing.JLabel();
+        btnPagar = new javax.swing.JButton();
+        lblElijaMetodo = new javax.swing.JLabel();
+        UObraLogoPeque = new javax.swing.JLabel();
+        lblMetodoPago = new javax.swing.JLabel();
+        lblBusqueda = new javax.swing.JLabel();
+        btnCancelar = new javax.swing.JButton();
+        txtMonto = new javax.swing.JTextField();
+        lblMonto = new javax.swing.JLabel();
+        lblConMinimo = new javax.swing.JLabel();
+        lbl$ = new javax.swing.JLabel();
+        lblMXN = new javax.swing.JLabel();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Pagar Obreros");
         setResizable(false);
+
+        cbxObrero.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Elija uno..." }));
+        cbxObrero.setToolTipText("Elija un tipo de permiso");
+        cbxObrero.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblTitulo.setText("Pagar Obrero");
+
+        btnPagar.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnPagar.setText("Pagar");
+        btnPagar.setToolTipText("Agregar Obrero");
+        btnPagar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnPagar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPagarActionPerformed(evt);
+            }
+        });
+
+        lblElijaMetodo.setText("Elija un obrero...");
+
+        UObraLogoPeque.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\UObraPeque.png")); // NOI18N
+
+        lblMetodoPago.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblMetodoPago.setText("Obrero:");
+
+        lblBusqueda.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblBusqueda.setText("Obreros:");
+
+        btnCancelar.setText("Cancelar");
+        btnCancelar.setToolTipText("Cancelar agregar obrero");
+        btnCancelar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
+
+        txtMonto.setToolTipText("Ingrese números decimales");
+        txtMonto.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        txtMonto.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtMontoKeyTyped(evt);
+            }
+        });
+
+        lblMonto.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblMonto.setText("Monto:");
+
+        lblConMinimo.setText("Pagar un monto de...");
+
+        lbl$.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lbl$.setText("$");
+
+        lblMXN.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblMXN.setText("MXN");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 470, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(21, 21, 21)
+                            .addComponent(lblBusqueda))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(46, 46, 46)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(btnPagar)
+                                    .addGap(130, 130, 130)
+                                    .addComponent(btnCancelar))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(54, 54, 54)
+                                        .addComponent(lblElijaMetodo))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(lblMonto)
+                                        .addGap(18, 18, 18)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(lblConMinimo)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(lbl$)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(txtMonto, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(lblMXN))))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(lblMetodoPago)
+                                        .addGap(12, 12, 12)
+                                        .addComponent(cbxObrero, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
+                .addContainerGap(16, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(UObraLogoPeque)
+                .addGap(28, 28, 28))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(lblTitulo))
+                    .addComponent(UObraLogoPeque))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12)
+                .addComponent(lblBusqueda)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblElijaMetodo)
+                .addGap(2, 2, 2)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(lblMetodoPago))
+                    .addComponent(cbxObrero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(lblConMinimo)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblMonto)
+                    .addComponent(txtMonto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl$)
+                    .addComponent(lblMXN))
+                .addGap(17, 17, 17)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnCancelar)
+                    .addComponent(btnPagar))
+                .addGap(19, 19, 19))
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnPagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPagarActionPerformed
+        if (this.cbxObrero.getSelectedItem() != "Elija uno...") {
+            // Obrero
+            String ObreroElegido = this.cbxObrero.getSelectedItem().toString();
+            String idElegido = ObreroElegido.substring(ObreroElegido.length() - 3, ObreroElegido.length());
+            idElegido = valido.obtenerNumeros(idElegido);
+            Long id = Long.valueOf(idElegido);
+            Obreros obrero = ObrerosDAO.consultarObrero(id);
+            // Se formatea monto 
+            txtMonto.setText(valido.corregirFlotante(txtMonto.getText()));
+            if (Float.parseFloat(txtMonto.getText()) <= 10) {
+                txtMonto.setText("10.0");
+            }
+            if (Float.valueOf(this.txtMonto.getText()) < obrero.getPorPagar()) {
+                ObrerosDAO.sumarPagado(id, Float.valueOf(this.txtMonto.getText()));
+                int i = 0;
+                try {
+                    i = JOptionPane.showConfirmDialog(null,
+                            "Se realizó exitosamente la asignación del obrero a la obra..."
+                            + "\n Nombre obrero: " + obrero.getNombre() + " " + obrero.getApellidoPaterno() + " " + obrero.getApellidoMaterno()
+                            + "\n Teléfono: " + crypt.decrypt(obrero.getTelefono())
+                            + "\n Sueldo diario: $ " + obrero.getSueldoDiario() + " MXN"
+                            + "\n Pagado: $ " + obrero.getPagado() + " MXN"
+                            + "\n Por pagar: $ " + obrero.getPorPagar() + " MXN"
+                            + "\n - ID Jefe: " + this.jefe.getId()
+                            + "\n - ID Obrero: " + obrero.getId()
+                            + ". ☺\n"
+                            + "\n ¿Desea pagar otro obrero?", "Pago de obrero exitoso", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
+                } catch (Exception ex) {
+                    Logger.getLogger(PagarObreros.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                if (i == JOptionPane.YES_OPTION) {
+                    try {
+                        this.dispose();
+                        new PagarObreros(JefesDAO.consultarJefe(this.jefe.getId())).setVisible(true);
+                    } catch (Exception ex) {
+                        Logger.getLogger(PagarObreros.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else {
+                    this.dispose();
+                    new PanelJefe(JefesDAO.consultarJefe(this.jefe.getId())).setVisible(true);
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Error: No puede pagar más de lo que se le debe al obrero.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Error: Seleccione un obrero válido.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnPagarActionPerformed
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        this.setVisible(false);
+        int i = JOptionPane.showConfirmDialog(this, "¿Seguro que deseas cancelar la agregación de obrero? Los datos de agregación no se guardarán", "Advertencia", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        if (i == JOptionPane.YES_OPTION) {
+            this.dispose();
+            new PanelJefe(JefesDAO.consultarJefe(this.jefe.getId())).setVisible(true);
+        } else {
+            this.setVisible(true);
+        }
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void txtMontoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMontoKeyTyped
+        if (txtMonto.getText().length() >= 6) {
+            evt.consume();
+        }
+        char c = evt.getKeyChar();
+        if (Character.isLetter(c)) {
+            evt.consume();
+        } else if (c == '.' && txtMonto.getText().contains(".")) {
+            // Si ya hay un punto en el texto, no permitir otro
+            evt.consume();
+        }
+        // Obtener el componente fuente del evento
+        JTextField textField = (JTextField) evt.getSource();
+
+        // Verificar si el evento es una operación de pegar
+        if (evt.isConsumed() || evt.getKeyChar() == KeyEvent.VK_V && evt.isControlDown()) {
+            // Si es una operación de pegar, cancelar el evento
+            evt.consume();
+
+            // Vaciar el contenido del campo de texto
+            textField.setText("");
+        }
+    }//GEN-LAST:event_txtMontoKeyTyped
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JSeparator Separador1;
+    private javax.swing.JLabel UObraLogoPeque;
+    private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnPagar;
+    private javax.swing.JComboBox<String> cbxObrero;
+    private javax.swing.JLabel lbl$;
+    private javax.swing.JLabel lblBusqueda;
+    private javax.swing.JLabel lblConMinimo;
+    private javax.swing.JLabel lblElijaMetodo;
+    private javax.swing.JLabel lblMXN;
+    private javax.swing.JLabel lblMetodoPago;
+    private javax.swing.JLabel lblMonto;
+    private javax.swing.JLabel lblTitulo;
+    private javax.swing.JTextField txtMonto;
     // End of variables declaration//GEN-END:variables
 }

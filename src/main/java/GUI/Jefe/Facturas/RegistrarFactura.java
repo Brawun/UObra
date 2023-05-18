@@ -40,7 +40,7 @@ public class RegistrarFactura extends javax.swing.JFrame {
         UIManager.put("OptionPane.noButtonText", "Cancelar");
         initComponents();
         new Icono().insertarIcono(this);
-        this.txtMonto.setText("0.0");
+        this.txtMonto.setText("100.0");
     }
 
     /**

@@ -2,17 +2,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package GUI.Jefe.Planos;
+package GUI.Jefe.Obreros;
 
-import DAOs.ClientesDAO;
 import DAOs.JefesDAO;
-import DAOs.PlanosDAO;
-import DAOs.PlanosDAO;
+import DAOs.ObrerosDAO;
 import Dominio.Jefes;
-import Dominio.Planos;
+import Dominio.Obreros;
 import GUI.Jefe.PanelJefe;
 import Herramientas.Encriptador;
-import Herramientas.Fecha;
 import Herramientas.Icono;
 import Herramientas.Validadores;
 import java.text.ParseException;
@@ -23,43 +20,42 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author 52644
  */
-public class ConsultarPlanos extends javax.swing.JFrame {
-
+public class ConsultarObreros extends javax.swing.JFrame {
+    
     // Atributos
     Jefes jefe;
+    List<Obreros> listaObreros;
     Encriptador crypt = new Encriptador();
-    List<Planos> listaPlanos;
-    Fecha fecha = new Fecha();
     JefesDAO JefesDAO = new JefesDAO();
+    ObrerosDAO ObrerosDAO = new ObrerosDAO();
     Validadores valido = new Validadores();
-    PlanosDAO PlanosDAO = new PlanosDAO();
-    
+
     /**
-     * Creates new form ConsultarPlanos
+     * Creates new form ConsultarObreros
      */
-    public ConsultarPlanos(Jefes jefe) throws Exception {
+    public ConsultarObreros(Jefes jefe) throws Exception {
         this.jefe = jefe;
         initComponents();
         new Icono().insertarIcono(this);
-        cargarTablaPlano();
+        cargarTablaObreros();
     }
     
-    public void cargarTablaPlano() throws ParseException, Exception {
-        listaPlanos = PlanosDAO.consultarPlanosJefe(this.jefe.getId());
-        DefaultTableModel modeloTablaPlanos = (DefaultTableModel) this.tblResultados.getModel();
-        modeloTablaPlanos.setRowCount(0);
-        for (Planos plano : listaPlanos) {
-            Object[] filaNueva = {
-                plano.getId(),
-                crypt.decrypt(plano.getFolio()),
-                plano.getEscala().toString(),
-                plano.getTipo().toString(),
-                fecha.formatoFecha(plano.getFechaRegistro()),
-                fecha.formatoFecha(plano.getFechaRealizacion())};
-            modeloTablaPlanos.addRow(filaNueva);
+    public void cargarTablaObreros() throws ParseException, Exception {
+        listaObreros = ObrerosDAO.consultarTodosObreros();
+        DefaultTableModel modeloTablaDeudores = (DefaultTableModel) this.tblResultados.getModel();
+        modeloTablaDeudores.setRowCount(0);
+        for (Obreros obrero : listaObreros) {
+            Object[] filaNueva = {obrero.getId(),
+                obrero.getNombre() + " " + obrero.getApellidoPaterno() + " " + obrero.getApellidoMaterno(),
+                crypt.decrypt(obrero.getTelefono()),
+                "$ " + obrero.getSueldoDiario() + " MXN",
+                obrero.getDiasTrabajados() + " dias",
+                "$ " + obrero.getPorPagar() + " MXN",
+                "$ " + obrero.getPagado() + " MXN"};
+            modeloTablaDeudores.addRow(filaNueva);
         }
         valido.centrarTabla(tblResultados);
-    } 
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -70,20 +66,32 @@ public class ConsultarPlanos extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        UObraLogoPeque = new javax.swing.JLabel();
+        lblTitulo = new javax.swing.JLabel();
+        btnRegresar1 = new javax.swing.JButton();
         Separador1 = new javax.swing.JSeparator();
         lblPagos = new javax.swing.JLabel();
         ScrollPanel = new javax.swing.JScrollPane();
         tblResultados = new javax.swing.JTable();
-        UObraLogoPeque = new javax.swing.JLabel();
-        lblTitulo = new javax.swing.JLabel();
-        btnRegresar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        setTitle("Consultar Planos");
-        setResizable(false);
+        setTitle("Consultar Obreros");
+
+        UObraLogoPeque.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\UObraPeque.png")); // NOI18N
+
+        lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblTitulo.setText("Obreros");
+
+        btnRegresar1.setText("Regresar");
+        btnRegresar1.setToolTipText("Regresar a Panel Cliente");
+        btnRegresar1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegresar1ActionPerformed(evt);
+            }
+        });
 
         lblPagos.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lblPagos.setText("Permisos registrados:");
+        lblPagos.setText("Obreros:");
 
         ScrollPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
         ScrollPanel.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -95,14 +103,14 @@ public class ConsultarPlanos extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Folio", "Escala", "Tipo", "Fecha Registro", "Fecha Concesión"
+                "ID", "Nombre completo", "Teléfono", "Sueldo diario", "Dias trabajados", "Por pagar", "Pagado"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Long.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.Long.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -117,41 +125,30 @@ public class ConsultarPlanos extends javax.swing.JFrame {
         tblResultados.getTableHeader().setReorderingAllowed(false);
         ScrollPanel.setViewportView(tblResultados);
 
-        UObraLogoPeque.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\UObraPeque.png")); // NOI18N
-
-        lblTitulo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        lblTitulo.setText("Permisos");
-
-        btnRegresar.setText("Regresar");
-        btnRegresar.setToolTipText("Regresar a Panel Cliente");
-        btnRegresar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRegresarActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnRegresar1)
+                .addGap(383, 383, 383))
             .addGroup(layout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(ScrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 843, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 843, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblPagos)
-                            .addComponent(ScrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 843, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(14, Short.MAX_VALUE))
+                            .addComponent(lblPagos))
+                        .addContainerGap(19, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lblTitulo)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(UObraLogoPeque)
                         .addGap(29, 29, 29))))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnRegresar)
-                .addGap(400, 400, 400))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -164,27 +161,29 @@ public class ConsultarPlanos extends javax.swing.JFrame {
                 .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(6, 6, 6)
                 .addComponent(lblPagos)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(ScrollPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnRegresar)
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addGap(24, 24, 24)
+                .addComponent(btnRegresar1)
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
+    private void btnRegresar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresar1ActionPerformed
         new PanelJefe(JefesDAO.consultarJefe(this.jefe.getId())).setVisible(true);
         this.dispose();
-    }//GEN-LAST:event_btnRegresarActionPerformed
+    }//GEN-LAST:event_btnRegresar1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane ScrollPanel;
     private javax.swing.JSeparator Separador1;
     private javax.swing.JLabel UObraLogoPeque;
     private javax.swing.JButton btnRegresar;
+    private javax.swing.JButton btnRegresar1;
     private javax.swing.JLabel lblPagos;
     private javax.swing.JLabel lblTitulo;
     private javax.swing.JTable tblResultados;

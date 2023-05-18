@@ -61,8 +61,6 @@ public class SolicitarObra extends javax.swing.JFrame {
         this.chxOcupar.setEnabled(false);
         this.chxOcupar.setSelected(false);
         tblUbicaciones.clearSelection();
-        DefaultTableModel modeloTablaUbicaciones = (DefaultTableModel) this.tblUbicaciones.getModel();
-        modeloTablaUbicaciones.setRowCount(0);
         cargarTablaUbicaciones();
     }
 
@@ -477,21 +475,22 @@ public class SolicitarObra extends javax.swing.JFrame {
                                     + ". ☺\n"
                                     + "\n ¿Desea solicitar otra obra?", "Solicitud de obra exitoso", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
                             if (i == JOptionPane.YES_OPTION) {
-                                this.txtInversion.setText("");
+                                this.txtInversion.setText("1000.0");
                                 this.txtNombre.setText("");
                                 this.lblInsertarArea.setText("");
                                 this.lblInsertarDireccion.setText("");
                                 this.lblInsertarFecha.setText("");
                                 this.lblInsertarID.setText("");
                                 tblUbicaciones.clearSelection();
-                                DefaultTableModel modeloTablaUbicaciones = (DefaultTableModel) this.tblUbicaciones.getModel();
-                                modeloTablaUbicaciones.setRowCount(0);
                                 this.setVisible(true);
+                                cargarTablaUbicaciones();
                             } else {
                                 this.dispose();
                                 new PanelCliente(ClientesDAO.consultarCliente(this.cliente.getId())).setVisible(true);
                             }
                         } catch (ParseException ex) {
+                            Logger.getLogger(SolicitarObra.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (Exception ex) {
                             Logger.getLogger(SolicitarObra.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     } else {

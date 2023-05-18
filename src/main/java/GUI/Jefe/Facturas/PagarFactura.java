@@ -44,7 +44,7 @@ public class PagarFactura extends javax.swing.JFrame {
         for (Facturas factura : facturas) {
             this.cbxUnaFactura.addItem(
                     "Factura: " + factura.getDescripcion()
-                    + "| Monto: $" + factura.getMonto() + " MXN"
+                    + " - Monto: $" + factura.getMonto() + " MXN"
                     + " - ID: " + factura.getId());
         }
     }
@@ -129,11 +129,11 @@ public class PagarFactura extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(94, 94, 94)
+                        .addGap(195, 195, 195)
                         .addComponent(UObraLogoPeque))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(6, 6, 6)
-                        .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 457, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(21, 21, 21)
                         .addComponent(lblBusqueda))
@@ -141,25 +141,24 @@ public class PagarFactura extends javax.swing.JFrame {
                         .addGap(116, 116, 116)
                         .addComponent(lblElijaFactura))
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(59, 59, 59)
+                        .addComponent(lblFactura)
+                        .addGap(12, 12, 12)
+                        .addComponent(cbxUnaFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
                         .addGap(119, 119, 119)
                         .addComponent(lblElijaMetodo))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(lblMetodoPago)
+                        .addGap(12, 12, 12)
+                        .addComponent(cbxMetodoPago, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(162, 162, 162)
                         .addComponent(btnPagar)
                         .addGap(42, 42, 42)
-                        .addComponent(btnCancelar))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblFactura)
-                                .addGap(12, 12, 12)
-                                .addComponent(cbxUnaFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblMetodoPago)
-                                .addGap(12, 12, 12)
-                                .addComponent(cbxMetodoPago, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(btnCancelar)))
+                .addGap(14, 14, 14))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -194,7 +193,7 @@ public class PagarFactura extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnPagar)
                     .addComponent(btnCancelar))
-                .addGap(21, 21, 21))
+                .addGap(20, 20, 20))
         );
 
         pack();
@@ -247,13 +246,17 @@ public class PagarFactura extends javax.swing.JFrame {
                     }
                     if (i == JOptionPane.YES_OPTION) {
                         try {
+                            this.cbxUnaFactura.removeAllItems();
+                            this.cbxUnaFactura.addItem("Elija una...");
                             this.cbxUnaFactura.setSelectedItem("Elija una...");
+                            this.cbxMetodoPago.removeAllItems();
+                            this.cbxMetodoPago.addItem("Elija uno...");
                             this.cbxMetodoPago.setSelectedItem("Elija uno...");
                             List<Facturas> facturas = FacturasDAO.consultarFacturasFechaCreada(null, null, EstadoFactura.PENDIENTE, MetodoPago.NO_APLICA, null, this.jefe.getId());
                             for (Facturas factura2 : facturas) {
                                 this.cbxUnaFactura.addItem(
                                         "Factura: " + factura2.getDescripcion()
-                                        + "| Monto: $" + factura2.getMonto() + " MXN"
+                                        + " - Monto: $" + factura2.getMonto() + " MXN"
                                         + " - ID: " + factura2.getId());
                             }
                             this.setVisible(true);

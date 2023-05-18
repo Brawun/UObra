@@ -242,7 +242,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="lblFolio">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Folio del permiso...."/>
+        <Property name="text" type="java.lang.String" value="Folio del plano...."/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="lblFechaRealizacion">

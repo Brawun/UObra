@@ -152,7 +152,7 @@ public class ObrerosDAO {
             return false;
         }
     }
-    
+
     public void editarContrasena(Long id, String nuevaContrasena) throws Exception {
         EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
         EntityManager entityManager = managerFactory.createEntityManager();
@@ -168,7 +168,7 @@ public class ObrerosDAO {
             throw new EntityNotFoundException("No se puede encontrar el obrero con ID: " + id);
         }
     }
-    
+
     public void editarUsuario(Long id, String nuevoUsuario) throws Exception {
         EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
         EntityManager entityManager = managerFactory.createEntityManager();
@@ -195,7 +195,7 @@ public class ObrerosDAO {
         entityManager.close();
         return obrero;
     }
-    
+
     public void agregarPagoObrero(Long id, Pagos pago) {
         EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
         EntityManager entityManager = managerFactory.createEntityManager();
@@ -210,7 +210,7 @@ public class ObrerosDAO {
             throw new EntityNotFoundException("No se puede encontrar el obrero con ID: " + id);
         }
     }
-    
+
     public void eliminarPagoObrero(Long id, Pagos pago) {
         EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
         EntityManager entityManager = managerFactory.createEntityManager();
@@ -224,7 +224,7 @@ public class ObrerosDAO {
         } else {
             throw new EntityNotFoundException("No se puede encontrar el obrero con ID: " + id);
         }
-    } 
+    }
 
     public void eliminarObrero(Long id) {
         EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
@@ -447,6 +447,19 @@ public class ObrerosDAO {
     // Métodos drivers para búsqueda dinámica
     public List<Obreros> consultarObrerosConDiasTrabajadosMínimo(Integer diasTrabajados) throws Exception {
         return consultarObreros(diasTrabajados, null);
+    }
+
+    public List<Obreros> consultarObrerosConPorPagar(Float porPagar) throws Exception {
+        EntityManagerFactory managerFactory = Persistence.createEntityManagerFactory("Pruebas_UObra");
+        EntityManager entityManager = managerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
+        TypedQuery<Obreros> query;
+        String jpql = "SELECT o FROM Obreros o WHERE o.porPagar >= :porPagar";
+        query = entityManager.createQuery(jpql, Obreros.class);
+        List<Obreros> obreros = query.getResultList();
+        entityManager.getTransaction().commit();
+        entityManager.close();
+        return obreros;
     }
 
     public List<Obreros> consultarObrerosConSueldoMínimo(Float sueldoDiario) throws Exception {

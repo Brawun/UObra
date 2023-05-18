@@ -542,11 +542,11 @@ public class IniciarObra extends javax.swing.JFrame {
                             Permisos permiso = PermisosDAO.consultarPermiso(id);
                             if (permiso != null) {
                                 try {
+                                    ObrasDAO.sumarCostoArranqueObra(this.obra.getId(), Float.valueOf(this.txtCostoArranque.getText()));
+                                    ObrasDAO.iniciarObra(this.obra.getId());
+                                    ObrasDAO.asignarJefeObra(this.obra.getId(), this.jefe.getId());
+                                    ObrasDAO.asingarTresObrerosObra(this.obra.getId(), idO1, idO2, idO3);
                                     ObrasDAO.agregarPermisoObra(this.obra.getId(), id);
-                                    ObrasDAO.asignarJefeObra(id, this.jefe.getId());
-                                    ObrasDAO.asingarTresObrerosObra(id, idO1, idO2, idO3);
-                                    ObrasDAO.sumarCostoArranqueObra(id, Float.valueOf(this.txtCostoArranque.getText()));
-                                    ObrasDAO.iniciarObra(id);
                                     this.setVisible(false);
                                     int i = 0;
                                     try {
@@ -555,7 +555,7 @@ public class IniciarObra extends javax.swing.JFrame {
                                                 + "\n Nombre: " + this.obra.getNombre()
                                                 + "\n Costo total: $ " + this.obra.getCostoTotal() + " MXN"
                                                 + "\n Folio permiso de iniciación:  " + crypt.decrypt(permiso.getFolio())
-                                                + "\n - ID Jefe: " + this.obra.getJefe().getId()
+                                                + "\n - ID Jefe: " + this.jefe.getId()
                                                 + "\n - ID Cliente: " + this.obra.getCliente().getId()
                                                 + "\n - ID Obra: " + this.obra.getId()
                                                 + ". ☺\n"
@@ -564,7 +564,7 @@ public class IniciarObra extends javax.swing.JFrame {
                                         Logger.getLogger(IniciarObra.class.getName()).log(Level.SEVERE, null, ex);
                                     }
                                     if (i == JOptionPane.YES_OPTION) {
-                                        this.txtCostoArranque.setText("100.0");
+                                        this.txtCostoArranque.setText("10000.0");
                                         this.cbxObrero1.setSelectedItem("Elija uno...");
                                         this.cbxObrero2.setSelectedItem("Elija uno...");
                                         this.cbxObrero3.setSelectedItem("Elija uno...");

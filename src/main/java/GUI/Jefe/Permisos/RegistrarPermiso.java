@@ -4,20 +4,18 @@
  */
 package GUI.Jefe.Permisos;
 
-import DAOs.ClientesDAO;
 import DAOs.JefesDAO;
 import DAOs.PermisosDAO;
-import Dominio.Clientes;
 import Dominio.Jefes;
 import Dominio.Permisos;
 import Enumeradores.TipoPermiso;
-import GUI.Cliente.PanelCliente;
 import GUI.Jefe.PanelJefe;
 import Herramientas.Encriptador;
 import Herramientas.Fecha;
 import Herramientas.Icono;
 import Herramientas.Validadores;
 import java.awt.event.KeyEvent;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -220,59 +218,68 @@ public class RegistrarPermiso extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
-        if (this.cbxTipo.getSelectedItem() != "Elija uno...") {
-            if (this.fechaConcesion.getCalendar() != null) {
-                if (valido.validarFechas(this.fechaConcesion.getCalendar(), fecha.fechaAhora())) {
-                    if (this.txtFolio.getText().length() > 6) {
-                        this.txtFolio.setText(this.txtFolio.getText().substring(0, 6));
-                    }
-                    TipoPermiso tipo;
-                    if (this.cbxTipo.getSelectedItem() == "Iniciación") {
-                        tipo = TipoPermiso.INICIACION;
-                    } else {
-                        tipo = TipoPermiso.FINALIZACION;
-                    }
-                    Permisos permiso = new Permisos(
-                            txtFolio.getText(),
-                            tipo,
-                            fechaConcesion.getCalendar(),
-                            this.jefe);
-                    Permisos permisoRegistrado = PermisosDAO.registrarPermiso(permiso);
-                    if (permisoRegistrado.getId() != null) {
-                        try {
-                            int i = JOptionPane.showConfirmDialog(null,
-                                    "Se realizó exitosamente el registro de permiso con..."
-                                    + "\n Folio: " + crypt.decrypt(permisoRegistrado.getFolio())
-                                    + "\n Tipo: " + permisoRegistrado.getTipo()
-                                    + "\n Fecha de registro: " + fecha.formatoFecha(permisoRegistrado.getFechaRegistro())
-                                    + "\n Fecha de concesión: " + fecha.formatoFecha(permisoRegistrado.getFechaConcesion())
-                                    + "\n - ID Jefe: " + permisoRegistrado.getJefe().getId()
-                                    + "\n - ID: " + permisoRegistrado.getId()
-                                    + ". ☺\n"
-                                    + "\n ¿Desea registrar otro permiso?", "Registro de permiso exitoso", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
-                            if (i == JOptionPane.YES_OPTION) {
-                                this.txtFolio.setText("######");
-                                this.cbxTipo.setSelectedItem("Elija uno...");
-                                this.fechaConcesion.setCalendar(null);
-                                this.setVisible(true);
-                            } else {
-                                this.dispose();
-                                new PanelJefe(JefesDAO.consultarJefe(this.jefe.getId())).setVisible(true);
+        try {
+            if (this.cbxTipo.getSelectedItem() != "Elija uno...") {
+                if (this.fechaConcesion.getCalendar() != null) {
+                    if (valido.validarFechas(this.fechaConcesion.getCalendar(), fecha.fechaAhora())) {
+                        if (this.txtFolio.getText().length() > 6) {
+                            this.txtFolio.setText(this.txtFolio.getText().substring(0, 6));
+                        }
+                        TipoPermiso tipo;
+                        if (this.cbxTipo.getSelectedItem() == "Iniciación") {
+                            tipo = TipoPermiso.INICIACION;
+                        } else {
+                            tipo = TipoPermiso.FINALIZACION;
+                        }
+                        Permisos permiso = new Permisos(
+                                txtFolio.getText(),
+                                tipo,
+                                fechaConcesion.getCalendar(),
+                                this.jefe);
+                        Permisos permisoRegistrado = PermisosDAO.registrarPermiso(permiso);
+                        if (permisoRegistrado.getId() != null) {
+                            try {
+                                int i = JOptionPane.showConfirmDialog(null,
+                                        "Se realizó exitosamente el registro de permiso con..."
+                                        + "\n Folio: " + crypt.decrypt(permisoRegistrado.getFolio())
+                                        + "\n Tipo: " + permisoRegistrado.getTipo()
+                                        + "\n Fecha de registro: " + fecha.formatoFecha(permisoRegistrado.getFechaRegistro())
+                                        + "\n Fecha de concesión: " + fecha.formatoFecha(permisoRegistrado.getFechaConcesion())
+                                        + "\n - ID Jefe: " + permisoRegistrado.getJefe().getId()
+                                        + "\n - ID: " + permisoRegistrado.getId()
+                                        + ". ☺\n"
+                                        + "\n ¿Desea registrar otro permiso?", "Registro de permiso exitoso", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
+                                if (i == JOptionPane.YES_OPTION) {
+                                    this.txtFolio.setText("######");
+                                    this.cbxTipo.setSelectedItem("Elija uno...");
+                                    this.fechaConcesion.setCalendar(null);
+                                    this.setVisible(true);
+                                } else {
+                                    this.dispose();
+                                    new PanelJefe(JefesDAO.consultarJefe(this.jefe.getId())).setVisible(true);
+                                }
+                            } catch (Exception ex) {
+                                Logger.getLogger(RegistrarPermiso.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                        } catch (Exception ex) {
-                            Logger.getLogger(RegistrarPermiso.class.getName()).log(Level.SEVERE, null, ex);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Error interno: Ocurrió un errror al querer registrar el permiso.", "¡Error interno!", JOptionPane.ERROR_MESSAGE);
                         }
                     } else {
-                        JOptionPane.showMessageDialog(null, "Error interno: Ocurrió un errror al querer registrar el permiso.", "¡Error interno!", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Error: La fecha de concesión no puede ser después que la fecha actual.", "¡Error!", JOptionPane.ERROR_MESSAGE);
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "Error: La fecha de concesión no puede ser después que la fecha actual.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Error: Ingrese una fecha de concesión.", "¡Error!", JOptionPane.ERROR_MESSAGE);
                 }
             } else {
-                JOptionPane.showMessageDialog(null, "Error: Ingrese una fecha de concesión.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Error: Seleccione un tipo de permiso válido.", "¡Error!", JOptionPane.ERROR_MESSAGE);
             }
-        } else {
-            JOptionPane.showMessageDialog(null, "Error: Seleccione un tipo de permiso válido.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            if (e.getCause() != null && e.getCause().getCause() instanceof SQLIntegrityConstraintViolationException) {
+                JOptionPane.showMessageDialog(null, "Error: Folio ya existente en la base de datos, ingrese uno diferente.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                this.txtFolio.setText("######");
+            } else {
+                Logger.getLogger(RegistrarPermiso.class.getName()).log(Level.SEVERE, null, e);
+            }
         }
     }//GEN-LAST:event_btnRegistrarActionPerformed
 

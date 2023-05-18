@@ -13,6 +13,7 @@ import Dominio.Obreros;
 import Herramientas.Icono;
 import Herramientas.Validadores;
 import java.awt.event.KeyEvent;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -320,187 +321,196 @@ public class RegistrarCuenta extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
-        if (this.cbxTipoUsuario.getSelectedItem() == "Elija uno...") {
-            JOptionPane.showMessageDialog(null, "Error: Elija un tipo de usuario válido para registro de cuenta.", "¡Error!", JOptionPane.ERROR_MESSAGE);
-        } else if (this.cbxTipoUsuario.getSelectedItem() == "Obrero") {
-            if (valida.validarNombre(this.txtNombre.getText()) && !this.txtNombre.getText().isBlank()) {
-                if (valida.validarNombre(this.txtApellidoPaterno.getText()) && !this.txtApellidoPaterno.getText().isBlank()) {
-                    if (valida.validarNombre(this.txtApellidoMaterno.getText()) && !this.txtApellidoMaterno.getText().isBlank()) {
-                        if (valida.validarSinEspacios(this.txtUsuario.getText()) && !this.txtUsuario.getText().isBlank()) {
-                            try {
-                                if (!ObrerosDAO.verificarUsuarioObrero(this.txtUsuario.getText())) {
-                                    if (valida.validarSinEspacios(this.txtContrasenia.getText()) && !this.txtContrasenia.getText().isBlank()) {
-                                        if (valida.validarTelefono(this.txtTelefono.getText()) && !this.txtTelefono.getText().isBlank()) {
-                                            if (this.txtContrasenia.getText().length() > 20) {
-                                                this.txtContrasenia.setText(this.txtContrasenia.getText().substring(0, 20));
-                                            }
-                                            if (this.txtUsuario.getText().length() > 20) {
-                                                this.txtUsuario.setText(this.txtUsuario.getText().substring(0, 20));
-                                            }
-                                            if (this.txtNombre.getText().length() > 50) {
-                                                this.txtNombre.setText(this.txtNombre.getText().substring(0, 50));
-                                            }
-                                            if (this.txtApellidoMaterno.getText().length() > 50) {
-                                                this.txtApellidoMaterno.setText(this.txtApellidoMaterno.getText().substring(0, 50));
-                                            }
-                                            if (this.txtApellidoPaterno.getText().length() > 50) {
-                                                this.txtApellidoPaterno.setText(this.txtApellidoPaterno.getText().substring(0, 50));
-                                            }
-                                            if (this.txtTelefono.getText().length() > 14) {
-                                                this.txtTelefono.setText(this.txtTelefono.getText().substring(0, 14));
-                                            }
-                                            // Se registra un obrero con los datos ingresados y con el salario mínimo, el cual puede ser posteriormente editado por un obrero
-                                            Obreros obrero = ObrerosDAO.registrarObrero(new Obreros(this.txtNombre.getText(), this.txtApellidoPaterno.getText(), this.txtApellidoMaterno.getText(), this.txtTelefono.getText(), this.txtContrasenia.getText(), this.txtUsuario.getText(), (float) 200.0));
-                                            if (obrero.getId() != null) {
-                                                JOptionPane.showMessageDialog(null, "Se creó exitosamente la cuenta del obrero " + this.txtNombre.getText() + " " + this.txtApellidoPaterno.getText() + " " + this.txtApellidoMaterno.getText() + " - ID: " + obrero.getId() + ". ☺", "Registro de obrero exitoso", JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
+        try {
+            if (this.cbxTipoUsuario.getSelectedItem() == "Elija uno...") {
+                JOptionPane.showMessageDialog(null, "Error: Elija un tipo de usuario válido para registro de cuenta.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+            } else if (this.cbxTipoUsuario.getSelectedItem() == "Obrero") {
+                if (valida.validarNombre(this.txtNombre.getText()) && !this.txtNombre.getText().isBlank()) {
+                    if (valida.validarNombre(this.txtApellidoPaterno.getText()) && !this.txtApellidoPaterno.getText().isBlank()) {
+                        if (valida.validarNombre(this.txtApellidoMaterno.getText()) && !this.txtApellidoMaterno.getText().isBlank()) {
+                            if (valida.validarSinEspacios(this.txtUsuario.getText()) && !this.txtUsuario.getText().isBlank()) {
+                                try {
+                                    if (!ObrerosDAO.verificarUsuarioObrero(this.txtUsuario.getText())) {
+                                        if (valida.validarSinEspacios(this.txtContrasenia.getText()) && !this.txtContrasenia.getText().isBlank()) {
+                                            if (valida.validarTelefono(this.txtTelefono.getText()) && !this.txtTelefono.getText().isBlank()) {
+                                                if (this.txtContrasenia.getText().length() > 20) {
+                                                    this.txtContrasenia.setText(this.txtContrasenia.getText().substring(0, 20));
+                                                }
+                                                if (this.txtUsuario.getText().length() > 20) {
+                                                    this.txtUsuario.setText(this.txtUsuario.getText().substring(0, 20));
+                                                }
+                                                if (this.txtNombre.getText().length() > 50) {
+                                                    this.txtNombre.setText(this.txtNombre.getText().substring(0, 50));
+                                                }
+                                                if (this.txtApellidoMaterno.getText().length() > 50) {
+                                                    this.txtApellidoMaterno.setText(this.txtApellidoMaterno.getText().substring(0, 50));
+                                                }
+                                                if (this.txtApellidoPaterno.getText().length() > 50) {
+                                                    this.txtApellidoPaterno.setText(this.txtApellidoPaterno.getText().substring(0, 50));
+                                                }
+                                                if (this.txtTelefono.getText().length() > 14) {
+                                                    this.txtTelefono.setText(this.txtTelefono.getText().substring(0, 14));
+                                                }
+                                                // Se registra un obrero con los datos ingresados y con el salario mínimo, el cual puede ser posteriormente editado por un obrero
+                                                Obreros obrero = ObrerosDAO.registrarObrero(new Obreros(this.txtNombre.getText(), this.txtApellidoPaterno.getText(), this.txtApellidoMaterno.getText(), this.txtTelefono.getText(), this.txtContrasenia.getText(), this.txtUsuario.getText(), (float) 200.0));
+                                                if (obrero.getId() != null) {
+                                                    JOptionPane.showMessageDialog(null, "Se creó exitosamente la cuenta del obrero " + this.txtNombre.getText() + " " + this.txtApellidoPaterno.getText() + " " + this.txtApellidoMaterno.getText() + " - ID: " + obrero.getId() + ". ☺", "Registro de obrero exitoso", JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
+                                                } else {
+                                                    JOptionPane.showMessageDialog(null, "Error interno: Ocurrió un errror al querer registrar la cuenta de obrero.", "¡Error interno!", JOptionPane.ERROR_MESSAGE);
+                                                }
+                                                this.dispose();
+                                                new IniciarSesion().setVisible(true);
                                             } else {
-                                                JOptionPane.showMessageDialog(null, "Error interno: Ocurrió un errror al querer registrar la cuenta de obrero.", "¡Error interno!", JOptionPane.ERROR_MESSAGE);
+                                                JOptionPane.showMessageDialog(null, "Error: Capture un número de teléfono válido. (Solamente números, siguiendo el formato especificado)", "¡Error!", JOptionPane.ERROR_MESSAGE);
                                             }
-                                            this.dispose();
-                                            new IniciarSesion().setVisible(true);
                                         } else {
-                                            JOptionPane.showMessageDialog(null, "Error: Capture un número de teléfono válido. (Solamente números, siguiendo el formato especificado)", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                                            JOptionPane.showMessageDialog(null, "Error: Llene correctamente el campo de contraseña. (No deje espacios en blanco)", "¡Error!", JOptionPane.ERROR_MESSAGE);
                                         }
                                     } else {
-                                        JOptionPane.showMessageDialog(null, "Error: Llene correctamente el campo de contraseña. (No deje espacios en blanco)", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                                        JOptionPane.showMessageDialog(null, "Error: Elija un usuario distinto. (Usuario ya existente)", "¡Error!", JOptionPane.ERROR_MESSAGE);
                                     }
-                                } else {
-                                    JOptionPane.showMessageDialog(null, "Error: Elija un usuario distinto. (Usuario ya existente)", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                                } catch (Exception ex) {
+                                    Logger.getLogger(RegistrarCuenta.class.getName()).log(Level.SEVERE, null, ex);
                                 }
-                            } catch (Exception ex) {
-                                Logger.getLogger(RegistrarCuenta.class.getName()).log(Level.SEVERE, null, ex);
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Error: Ingrese un usuario sin espacios en blanco. (Usuario con espacios en blanco)", "¡Error!", JOptionPane.ERROR_MESSAGE);
                             }
                         } else {
-                            JOptionPane.showMessageDialog(null, "Error: Ingrese un usuario sin espacios en blanco. (Usuario con espacios en blanco)", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(null, "Error: Elija un apellido materno válido. (No incluye números ni símbolos)", "¡Error!", JOptionPane.ERROR_MESSAGE);
                         }
                     } else {
-                        JOptionPane.showMessageDialog(null, "Error: Elija un apellido materno válido. (No incluye números ni símbolos)", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Error: Elija un apellido paterno válido. (No incluye números ni símbolos)", "¡Error!", JOptionPane.ERROR_MESSAGE);
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "Error: Elija un apellido paterno válido. (No incluye números ni símbolos)", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Error: Elija un nombre(s) válidos. (No incluyen números ni símbolos)", "¡Error!", JOptionPane.ERROR_MESSAGE);
                 }
-            } else {
-                JOptionPane.showMessageDialog(null, "Error: Elija un nombre(s) válidos. (No incluyen números ni símbolos)", "¡Error!", JOptionPane.ERROR_MESSAGE);
+            } else if (this.cbxTipoUsuario.getSelectedItem() == "Jefe") {
+                if (valida.validarNombre(this.txtNombre.getText()) && !this.txtNombre.getText().isBlank()) {
+                    if (valida.validarNombre(this.txtApellidoPaterno.getText()) && !this.txtApellidoPaterno.getText().isBlank()) {
+                        if (valida.validarNombre(this.txtApellidoMaterno.getText()) && !this.txtApellidoMaterno.getText().isBlank()) {
+                            if (valida.validarSinEspacios(this.txtUsuario.getText()) && !this.txtUsuario.getText().isBlank()) {
+                                try {
+                                    if (!JefesDAO.verificarUsuarioJefe(this.txtUsuario.getText())) {
+                                        if (valida.validarSinEspacios(this.txtContrasenia.getText()) && !this.txtContrasenia.getText().isBlank()) {
+                                            if (valida.validarTelefono(this.txtTelefono.getText()) && !this.txtTelefono.getText().isBlank()) {
+                                                if (this.txtContrasenia.getText().length() > 20) {
+                                                    this.txtContrasenia.setText(this.txtContrasenia.getText().substring(0, 20));
+                                                }
+                                                if (this.txtUsuario.getText().length() > 20) {
+                                                    this.txtUsuario.setText(this.txtUsuario.getText().substring(0, 20));
+                                                }
+                                                if (this.txtNombre.getText().length() > 50) {
+                                                    this.txtNombre.setText(this.txtNombre.getText().substring(0, 50));
+                                                }
+                                                if (this.txtApellidoMaterno.getText().length() > 50) {
+                                                    this.txtApellidoMaterno.setText(this.txtApellidoMaterno.getText().substring(0, 50));
+                                                }
+                                                if (this.txtApellidoPaterno.getText().length() > 50) {
+                                                    this.txtApellidoPaterno.setText(this.txtApellidoPaterno.getText().substring(0, 50));
+                                                }
+                                                if (this.txtTelefono.getText().length() > 14) {
+                                                    this.txtTelefono.setText(this.txtTelefono.getText().substring(0, 14));
+                                                }
+                                                // Se registra un jefe con los datos ingresados y con el salario mínimo, el cual puede ser posteriormente editado por un jefe
+                                                Jefes jefe = JefesDAO.registrarJefe(new Jefes(this.txtNombre.getText(), this.txtApellidoPaterno.getText(), this.txtApellidoMaterno.getText(), this.txtTelefono.getText(), this.txtContrasenia.getText(), this.txtUsuario.getText()));
+                                                if (jefe.getId() != null) {
+                                                    JOptionPane.showMessageDialog(null, "Se creó exitosamente la cuenta del jefe " + this.txtNombre.getText() + " " + this.txtApellidoPaterno.getText() + " " + this.txtApellidoMaterno.getText() + " - ID: " + jefe.getId() + ". ☺", "Registro de jefe exitoso", JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
+                                                } else {
+                                                    JOptionPane.showMessageDialog(null, "Error interno: Ocurrió un errror al querer registrar la cuenta de jefe.", "¡Error interno!", JOptionPane.ERROR_MESSAGE);
+                                                }
+                                                this.dispose();
+                                                new IniciarSesion().setVisible(true);
+                                            } else {
+                                                JOptionPane.showMessageDialog(null, "Error: Capture un número de teléfono válido. (Solamente números, siguiendo el formato especificado)", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                                            }
+                                        } else {
+                                            JOptionPane.showMessageDialog(null, "Error: Llene correctamente el campo de contraseña. (No deje espacios en blanco)", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                                        }
+                                    } else {
+                                        JOptionPane.showMessageDialog(null, "Error: Elija un usuario distinto. (Usuario ya existente)", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                                    }
+                                } catch (Exception ex) {
+                                    Logger.getLogger(RegistrarCuenta.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Error: Ingrese un usuario sin espacios en blanco. (Usuario con espacios en blanco)", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Error: Elija un apellido materno válido. (No incluye números ni símbolos)", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Error: Elija un apellido paterno válido. (No incluye números ni símbolos)", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Error: Elija un nombre(s) válidos. (No incluyen números ni símbolos)", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                }
+            } else if (this.cbxTipoUsuario.getSelectedItem() == "Cliente") {
+                if (valida.validarNombre(this.txtNombre.getText()) && !this.txtNombre.getText().isBlank()) {
+                    if (valida.validarNombre(this.txtApellidoPaterno.getText()) && !this.txtApellidoPaterno.getText().isBlank()) {
+                        if (valida.validarNombre(this.txtApellidoMaterno.getText()) && !this.txtApellidoMaterno.getText().isBlank()) {
+                            if (valida.validarSinEspacios(this.txtUsuario.getText()) && !this.txtUsuario.getText().isBlank()) {
+                                try {
+                                    if (!ClientesDAO.verificarUsuarioCliente(this.txtUsuario.getText())) {
+                                        if (valida.validarSinEspacios(this.txtContrasenia.getText()) && !this.txtContrasenia.getText().isBlank()) {
+                                            if (valida.validarTelefono(this.txtTelefono.getText()) && !this.txtTelefono.getText().isBlank()) {
+                                                if (this.txtContrasenia.getText().length() > 20) {
+                                                    this.txtContrasenia.setText(this.txtContrasenia.getText().substring(0, 20));
+                                                }
+                                                if (this.txtUsuario.getText().length() > 20) {
+                                                    this.txtUsuario.setText(this.txtUsuario.getText().substring(0, 20));
+                                                }
+                                                if (this.txtNombre.getText().length() > 50) {
+                                                    this.txtNombre.setText(this.txtNombre.getText().substring(0, 50));
+                                                }
+                                                if (this.txtApellidoMaterno.getText().length() > 50) {
+                                                    this.txtApellidoMaterno.setText(this.txtApellidoMaterno.getText().substring(0, 50));
+                                                }
+                                                if (this.txtApellidoPaterno.getText().length() > 50) {
+                                                    this.txtApellidoPaterno.setText(this.txtApellidoPaterno.getText().substring(0, 50));
+                                                }
+                                                if (this.txtTelefono.getText().length() > 14) {
+                                                    this.txtTelefono.setText(this.txtTelefono.getText().substring(0, 14));
+                                                }
+                                                // Se registra un cliente con los datos ingresados y con el salario mínimo, el cual puede ser posteriormente editado por un cliente
+                                                Clientes cliente = ClientesDAO.registrarCliente(new Clientes(this.txtNombre.getText(), this.txtApellidoPaterno.getText(), this.txtApellidoMaterno.getText(), this.txtTelefono.getText(), this.txtContrasenia.getText(), this.txtUsuario.getText()));
+                                                if (cliente.getId() != null) {
+                                                    JOptionPane.showMessageDialog(null, "Se creó exitosamente la cuenta del cliente " + this.txtNombre.getText() + " " + this.txtApellidoPaterno.getText() + " " + this.txtApellidoMaterno.getText() + " - ID: " + cliente.getId() + ". ☺", "Registro de cliente exitoso", JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
+                                                } else {
+                                                    JOptionPane.showMessageDialog(null, "Error interno: Ocurrió un errror al querer registrar la cuenta de cliente.", "¡Error interno!", JOptionPane.ERROR_MESSAGE);
+                                                }
+                                                this.dispose();
+                                                new IniciarSesion().setVisible(true);
+                                            } else {
+                                                JOptionPane.showMessageDialog(null, "Error: Capture un número de teléfono válido. (Solamente números, siguiendo el formato especificado)", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                                            }
+                                        } else {
+                                            JOptionPane.showMessageDialog(null, "Error: Llene correctamente el campo de contraseña. (No deje espacios en blanco)", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                                        }
+                                    } else {
+                                        JOptionPane.showMessageDialog(null, "Error: Elija un usuario distinto. (Usuario ya existente)", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                                    }
+                                } catch (Exception ex) {
+                                    Logger.getLogger(RegistrarCuenta.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Error: Ingrese un usuario sin espacios en blanco. (Usuario con espacios en blanco)", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Error: Elija un apellido materno válido. (No incluye números ni símbolos)", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Error: Elija un apellido paterno válido. (No incluye números ni símbolos)", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Error: Elija un nombre(s) válidos. (No incluyen números ni símbolos)", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                }
             }
-        } else if (this.cbxTipoUsuario.getSelectedItem() == "Jefe") {
-            if (valida.validarNombre(this.txtNombre.getText()) && !this.txtNombre.getText().isBlank()) {
-                if (valida.validarNombre(this.txtApellidoPaterno.getText()) && !this.txtApellidoPaterno.getText().isBlank()) {
-                    if (valida.validarNombre(this.txtApellidoMaterno.getText()) && !this.txtApellidoMaterno.getText().isBlank()) {
-                        if (valida.validarSinEspacios(this.txtUsuario.getText()) && !this.txtUsuario.getText().isBlank()) {
-                            try {
-                                if (!JefesDAO.verificarUsuarioJefe(this.txtUsuario.getText())) {
-                                    if (valida.validarSinEspacios(this.txtContrasenia.getText()) && !this.txtContrasenia.getText().isBlank()) {
-                                        if (valida.validarTelefono(this.txtTelefono.getText()) && !this.txtTelefono.getText().isBlank()) {
-                                            if (this.txtContrasenia.getText().length() > 20) {
-                                                this.txtContrasenia.setText(this.txtContrasenia.getText().substring(0, 20));
-                                            }
-                                            if (this.txtUsuario.getText().length() > 20) {
-                                                this.txtUsuario.setText(this.txtUsuario.getText().substring(0, 20));
-                                            }
-                                            if (this.txtNombre.getText().length() > 50) {
-                                                this.txtNombre.setText(this.txtNombre.getText().substring(0, 50));
-                                            }
-                                            if (this.txtApellidoMaterno.getText().length() > 50) {
-                                                this.txtApellidoMaterno.setText(this.txtApellidoMaterno.getText().substring(0, 50));
-                                            }
-                                            if (this.txtApellidoPaterno.getText().length() > 50) {
-                                                this.txtApellidoPaterno.setText(this.txtApellidoPaterno.getText().substring(0, 50));
-                                            }
-                                            if (this.txtTelefono.getText().length() > 14) {
-                                                this.txtTelefono.setText(this.txtTelefono.getText().substring(0, 14));
-                                            }
-                                            // Se registra un jefe con los datos ingresados y con el salario mínimo, el cual puede ser posteriormente editado por un jefe
-                                            Jefes jefe = JefesDAO.registrarJefe(new Jefes(this.txtNombre.getText(), this.txtApellidoPaterno.getText(), this.txtApellidoMaterno.getText(), this.txtTelefono.getText(), this.txtContrasenia.getText(), this.txtUsuario.getText()));
-                                            if (jefe.getId() != null) {
-                                                JOptionPane.showMessageDialog(null, "Se creó exitosamente la cuenta del jefe " + this.txtNombre.getText() + " " + this.txtApellidoPaterno.getText() + " " + this.txtApellidoMaterno.getText() + " - ID: " + jefe.getId() + ". ☺", "Registro de jefe exitoso", JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
-                                            } else {
-                                                JOptionPane.showMessageDialog(null, "Error interno: Ocurrió un errror al querer registrar la cuenta de jefe.", "¡Error interno!", JOptionPane.ERROR_MESSAGE);
-                                            }
-                                            this.dispose();
-                                            new IniciarSesion().setVisible(true);
-                                        } else {
-                                            JOptionPane.showMessageDialog(null, "Error: Capture un número de teléfono válido. (Solamente números, siguiendo el formato especificado)", "¡Error!", JOptionPane.ERROR_MESSAGE);
-                                        }
-                                    } else {
-                                        JOptionPane.showMessageDialog(null, "Error: Llene correctamente el campo de contraseña. (No deje espacios en blanco)", "¡Error!", JOptionPane.ERROR_MESSAGE);
-                                    }
-                                } else {
-                                    JOptionPane.showMessageDialog(null, "Error: Elija un usuario distinto. (Usuario ya existente)", "¡Error!", JOptionPane.ERROR_MESSAGE);
-                                }
-                            } catch (Exception ex) {
-                                Logger.getLogger(RegistrarCuenta.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                        } else {
-                            JOptionPane.showMessageDialog(null, "Error: Ingrese un usuario sin espacios en blanco. (Usuario con espacios en blanco)", "¡Error!", JOptionPane.ERROR_MESSAGE);
-                        }
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Error: Elija un apellido materno válido. (No incluye números ni símbolos)", "¡Error!", JOptionPane.ERROR_MESSAGE);
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(null, "Error: Elija un apellido paterno válido. (No incluye números ni símbolos)", "¡Error!", JOptionPane.ERROR_MESSAGE);
-                }
+        } catch (Exception e) {
+            if (e.getCause() != null && e.getCause().getCause() instanceof SQLIntegrityConstraintViolationException) {
+                JOptionPane.showMessageDialog(null, "Error: Usuario ya existente en la base de datos, ingrese uno diferente.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                this.txtUsuario.setText("");
             } else {
-                JOptionPane.showMessageDialog(null, "Error: Elija un nombre(s) válidos. (No incluyen números ni símbolos)", "¡Error!", JOptionPane.ERROR_MESSAGE);
-            }
-        } else if (this.cbxTipoUsuario.getSelectedItem() == "Cliente") {
-            if (valida.validarNombre(this.txtNombre.getText()) && !this.txtNombre.getText().isBlank()) {
-                if (valida.validarNombre(this.txtApellidoPaterno.getText()) && !this.txtApellidoPaterno.getText().isBlank()) {
-                    if (valida.validarNombre(this.txtApellidoMaterno.getText()) && !this.txtApellidoMaterno.getText().isBlank()) {
-                        if (valida.validarSinEspacios(this.txtUsuario.getText()) && !this.txtUsuario.getText().isBlank()) {
-                            try {
-                                if (!ClientesDAO.verificarUsuarioCliente(this.txtUsuario.getText())) {
-                                    if (valida.validarSinEspacios(this.txtContrasenia.getText()) && !this.txtContrasenia.getText().isBlank()) {
-                                        if (valida.validarTelefono(this.txtTelefono.getText()) && !this.txtTelefono.getText().isBlank()) {
-                                            if (this.txtContrasenia.getText().length() > 20) {
-                                                this.txtContrasenia.setText(this.txtContrasenia.getText().substring(0, 20));
-                                            }
-                                            if (this.txtUsuario.getText().length() > 20) {
-                                                this.txtUsuario.setText(this.txtUsuario.getText().substring(0, 20));
-                                            }
-                                            if (this.txtNombre.getText().length() > 50) {
-                                                this.txtNombre.setText(this.txtNombre.getText().substring(0, 50));
-                                            }
-                                            if (this.txtApellidoMaterno.getText().length() > 50) {
-                                                this.txtApellidoMaterno.setText(this.txtApellidoMaterno.getText().substring(0, 50));
-                                            }
-                                            if (this.txtApellidoPaterno.getText().length() > 50) {
-                                                this.txtApellidoPaterno.setText(this.txtApellidoPaterno.getText().substring(0, 50));
-                                            }
-                                            if (this.txtTelefono.getText().length() > 14) {
-                                                this.txtTelefono.setText(this.txtTelefono.getText().substring(0, 14));
-                                            }
-                                            // Se registra un cliente con los datos ingresados y con el salario mínimo, el cual puede ser posteriormente editado por un cliente
-                                            Clientes cliente = ClientesDAO.registrarCliente(new Clientes(this.txtNombre.getText(), this.txtApellidoPaterno.getText(), this.txtApellidoMaterno.getText(), this.txtTelefono.getText(), this.txtContrasenia.getText(), this.txtUsuario.getText()));
-                                            if (cliente.getId() != null) {
-                                                JOptionPane.showMessageDialog(null, "Se creó exitosamente la cuenta del cliente " + this.txtNombre.getText() + " " + this.txtApellidoPaterno.getText() + " " + this.txtApellidoMaterno.getText() + " - ID: " + cliente.getId() + ". ☺", "Registro de cliente exitoso", JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
-                                            } else {
-                                                JOptionPane.showMessageDialog(null, "Error interno: Ocurrió un errror al querer registrar la cuenta de cliente.", "¡Error interno!", JOptionPane.ERROR_MESSAGE);
-                                            }
-                                            this.dispose();
-                                            new IniciarSesion().setVisible(true);
-                                        } else {
-                                            JOptionPane.showMessageDialog(null, "Error: Capture un número de teléfono válido. (Solamente números, siguiendo el formato especificado)", "¡Error!", JOptionPane.ERROR_MESSAGE);
-                                        }
-                                    } else {
-                                        JOptionPane.showMessageDialog(null, "Error: Llene correctamente el campo de contraseña. (No deje espacios en blanco)", "¡Error!", JOptionPane.ERROR_MESSAGE);
-                                    }
-                                } else {
-                                    JOptionPane.showMessageDialog(null, "Error: Elija un usuario distinto. (Usuario ya existente)", "¡Error!", JOptionPane.ERROR_MESSAGE);
-                                }
-                            } catch (Exception ex) {
-                                Logger.getLogger(RegistrarCuenta.class.getName()).log(Level.SEVERE, null, ex);
-                            }
-                        } else {
-                            JOptionPane.showMessageDialog(null, "Error: Ingrese un usuario sin espacios en blanco. (Usuario con espacios en blanco)", "¡Error!", JOptionPane.ERROR_MESSAGE);
-                        }
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Error: Elija un apellido materno válido. (No incluye números ni símbolos)", "¡Error!", JOptionPane.ERROR_MESSAGE);
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(null, "Error: Elija un apellido paterno válido. (No incluye números ni símbolos)", "¡Error!", JOptionPane.ERROR_MESSAGE);
-                }
-            } else {
-                JOptionPane.showMessageDialog(null, "Error: Elija un nombre(s) válidos. (No incluyen números ni símbolos)", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, e);
             }
         }
     }//GEN-LAST:event_btnRegistrarActionPerformed
@@ -525,7 +535,7 @@ public class RegistrarCuenta extends javax.swing.JFrame {
             // Si ya hay un punto en el texto, no permitir otro
             evt.consume();
         }
-        
+
         // Obtener el componente fuente del evento
         JTextField textField = (JTextField) evt.getSource();
 

@@ -16,6 +16,7 @@ import Herramientas.Fecha;
 import Herramientas.Icono;
 import Herramientas.Validadores;
 import java.awt.event.KeyEvent;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -135,7 +136,7 @@ public class RegistrarPlano extends javax.swing.JFrame {
 
         lblTipoPlano.setText("Elija un tipo de plano..");
 
-        lblFolio.setText("Folio del permiso....");
+        lblFolio.setText("Folio del plano....");
 
         lblFechaRealizacion.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblFechaRealizacion.setText("Fecha realización:");
@@ -250,84 +251,93 @@ public class RegistrarPlano extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
-        if (this.cbxTipo.getSelectedItem() != "Elija uno...") {
-            if (this.cbxEscala.getSelectedItem() != "Elija uno...") {
-                if (this.fechaRealizacion.getCalendar() != null) {
-                    if (valido.validarFechas(this.fechaRealizacion.getCalendar(), fecha.fechaAhora())) {
-                        if (this.txtFolio.getText().length() > 6) {
-                            this.txtFolio.setText(this.txtFolio.getText().substring(0, 6));
-                        }
-                        TipoPlano tipo;
-                        if (this.cbxTipo.getSelectedItem() == "Ejecución") {
-                            tipo = TipoPlano.EJECUCION;
-                        } else if (this.cbxTipo.getSelectedItem() == "Eléctrico") {
-                            tipo = TipoPlano.ELECTRICO;
-                        } else if (this.cbxTipo.getSelectedItem() == "Desague") {
-                            tipo = TipoPlano.DESAGUE;
-                        } else {
-                            tipo = TipoPlano.UBICACION;
-                        }
-                        Escala escala;
-                        if (this.cbxEscala.getSelectedItem() == "1:100") {
-                            escala = Escala.UNO_100;
-                        } else if (this.cbxEscala.getSelectedItem() == "1:500") {
-                            escala = Escala.UNO_500;
-                        } else if (this.cbxEscala.getSelectedItem() == "1:1000") {
-                            escala = Escala.UNO_1000;
-                        } else if (this.cbxEscala.getSelectedItem() == "1:2000") {
-                            escala = Escala.UNO_2000;
-                        } else if (this.cbxEscala.getSelectedItem() == "1:2500") {
-                            escala = Escala.UNO_2500;
-                        } else {
-                            escala = Escala.UNO_5000;
-                        }
-                        Planos plano = new Planos(
-                                txtFolio.getText(), 
-                                tipo, 
-                                escala, 
-                                fechaRealizacion.getCalendar(), 
-                                this.jefe);
-                        Planos planoRegistrado = PlanosDAO.registrarPlano(plano);
-                        if (planoRegistrado.getId() != null) {
-                           try {
-                            int i = JOptionPane.showConfirmDialog(null,
-                                    "Se realizó exitosamente el registro de plano con..."
-                                    + "\n Folio: " + crypt.decrypt(planoRegistrado.getFolio())
-                                    + "\n Tipo: " + planoRegistrado.getTipo().toString()
-                                    + "\n Escala: " + planoRegistrado.getEscala().toString()
-                                    + "\n Fecha de registro: " + fecha.formatoFecha(planoRegistrado.getFechaRegistro())
-                                    + "\n Fecha de realizacion: " + fecha.formatoFecha(planoRegistrado.getFechaRealizacion())
-                                    + "\n - ID Jefe: " + planoRegistrado.getJefe().getId()
-                                    + "\n - ID: " + planoRegistrado.getId()
-                                    + ". ☺\n"
-                                    + "\n ¿Desea registrar otro plano?", "Registro de plano exitoso", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
-                            if (i == JOptionPane.YES_OPTION) {
-                                this.txtFolio.setText("######");
-                                this.cbxEscala.setSelectedItem("Elija uno...");
-                                this.cbxTipo.setSelectedItem("Elija uno...");
-                                this.fechaRealizacion.setCalendar(null);
-                                this.setVisible(true);
-                            } else {
-                                this.dispose();
-                                new PanelJefe(JefesDAO.consultarJefe(this.jefe.getId())).setVisible(true);
+        try {
+            if (this.cbxTipo.getSelectedItem() != "Elija uno...") {
+                if (this.cbxEscala.getSelectedItem() != "Elija uno...") {
+                    if (this.fechaRealizacion.getCalendar() != null) {
+                        if (valido.validarFechas(this.fechaRealizacion.getCalendar(), fecha.fechaAhora())) {
+                            if (this.txtFolio.getText().length() > 6) {
+                                this.txtFolio.setText(this.txtFolio.getText().substring(0, 6));
                             }
-                        } catch (Exception ex) {
-                            Logger.getLogger(RegistrarPlano.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+                            TipoPlano tipo;
+                            if (this.cbxTipo.getSelectedItem() == "Ejecución") {
+                                tipo = TipoPlano.EJECUCION;
+                            } else if (this.cbxTipo.getSelectedItem() == "Eléctrico") {
+                                tipo = TipoPlano.ELECTRICO;
+                            } else if (this.cbxTipo.getSelectedItem() == "Desague") {
+                                tipo = TipoPlano.DESAGUE;
+                            } else {
+                                tipo = TipoPlano.UBICACION;
+                            }
+                            Escala escala;
+                            if (this.cbxEscala.getSelectedItem() == "1:100") {
+                                escala = Escala.UNO_100;
+                            } else if (this.cbxEscala.getSelectedItem() == "1:500") {
+                                escala = Escala.UNO_500;
+                            } else if (this.cbxEscala.getSelectedItem() == "1:1000") {
+                                escala = Escala.UNO_1000;
+                            } else if (this.cbxEscala.getSelectedItem() == "1:2000") {
+                                escala = Escala.UNO_2000;
+                            } else if (this.cbxEscala.getSelectedItem() == "1:2500") {
+                                escala = Escala.UNO_2500;
+                            } else {
+                                escala = Escala.UNO_5000;
+                            }
+                            Planos plano = new Planos(
+                                    txtFolio.getText(),
+                                    tipo,
+                                    escala,
+                                    fechaRealizacion.getCalendar(),
+                                    this.jefe);
+                            Planos planoRegistrado = PlanosDAO.registrarPlano(plano);
+                            if (planoRegistrado.getId() != null) {
+                                try {
+                                    int i = JOptionPane.showConfirmDialog(null,
+                                            "Se realizó exitosamente el registro de plano con..."
+                                            + "\n Folio: " + crypt.decrypt(planoRegistrado.getFolio())
+                                            + "\n Tipo: " + planoRegistrado.getTipo().toString()
+                                            + "\n Escala: " + planoRegistrado.getEscala().toString()
+                                            + "\n Fecha de registro: " + fecha.formatoFecha(planoRegistrado.getFechaRegistro())
+                                            + "\n Fecha de realizacion: " + fecha.formatoFecha(planoRegistrado.getFechaRealizacion())
+                                            + "\n - ID Jefe: " + planoRegistrado.getJefe().getId()
+                                            + "\n - ID: " + planoRegistrado.getId()
+                                            + ". ☺\n"
+                                            + "\n ¿Desea registrar otro plano?", "Registro de plano exitoso", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
+                                    if (i == JOptionPane.YES_OPTION) {
+                                        this.txtFolio.setText("######");
+                                        this.cbxEscala.setSelectedItem("Elija uno...");
+                                        this.cbxTipo.setSelectedItem("Elija uno...");
+                                        this.fechaRealizacion.setCalendar(null);
+                                        this.setVisible(true);
+                                    } else {
+                                        this.dispose();
+                                        new PanelJefe(JefesDAO.consultarJefe(this.jefe.getId())).setVisible(true);
+                                    }
+                                } catch (Exception ex) {
+                                    Logger.getLogger(RegistrarPlano.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Error interno: Ocurrió un errror al querer registrar el plano.", "¡Error interno!", JOptionPane.ERROR_MESSAGE);
+                            }
                         } else {
-                            JOptionPane.showMessageDialog(null, "Error interno: Ocurrió un errror al querer registrar el plano.", "¡Error interno!", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(null, "Error: La fecha de realización no puede ser después que la fecha actual.", "¡Error!", JOptionPane.ERROR_MESSAGE);
                         }
                     } else {
-                        JOptionPane.showMessageDialog(null, "Error: La fecha de realización no puede ser después que la fecha actual.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Error: Ingrese una fecha de realización.", "¡Error!", JOptionPane.ERROR_MESSAGE);
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "Error: Ingrese una fecha de realización.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Error: Seleccione una escala válida.", "¡Error!", JOptionPane.ERROR_MESSAGE);
                 }
             } else {
-                JOptionPane.showMessageDialog(null, "Error: Seleccione una escala válida.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Error: Seleccione un tipo de plano válido.", "¡Error!", JOptionPane.ERROR_MESSAGE);
             }
-        } else {
-            JOptionPane.showMessageDialog(null, "Error: Seleccione un tipo de plano válido.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            if (e.getCause() != null && e.getCause().getCause() instanceof SQLIntegrityConstraintViolationException) {
+                JOptionPane.showMessageDialog(null, "Error: Folio ya existente en la base de datos, ingrese uno diferente.", "¡Error!", JOptionPane.ERROR_MESSAGE);
+                this.txtFolio.setText("######");
+            } else {
+                Logger.getLogger(RegistrarPlano.class.getName()).log(Level.SEVERE, null, e);
+            }
         }
     }//GEN-LAST:event_btnRegistrarActionPerformed
 

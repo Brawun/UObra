@@ -53,21 +53,12 @@ public class PagosEscucha {
      */
     @PostPersist
     public void guardarPagos(Pagos e) throws ParseException {
-//        // Si el pago se hizo en efectivo se relaciona con un obrero
-//        if (e.getMetodoPago() == MetodoPago.EFECTIVO) {
-//            new ObrerosDAO().consultarObrero(e.getObrero().id).getPagos().add(e);
-//        }
-//        // Se agrega el pago a obra
-//        new ObrasDAO().consultarObra(e.getObra().getId()).getPagos().add(e);
-//        // Se actualiza la deuda de cliente restando el monto del pago asignado
-//        new ClientesDAO().restarDeudaCliente(e.getCliente().getId(), e.getMonto());
-//        // Se imprime en consola
         System.out.println("\n" + " + Se agregó la entidad pago: "
                 + " - Fecha: " + new Fecha().formatoFecha(e.getFecha())
                 + " - Monto: $ " + e.getMonto() + " MXN"
                 + " - ID cliente: " + e.getCliente().getId()
                 + " - ID obra: " + e.getObra().getId()
-                + " - ID obrero: " + e.getObrero().getId() != null ? e.getObrero().getId() : "No aplica"
+                + " - ID obrero: " + e.getObrero() != null ? e.getObrero().getId() : "No aplica"
                 + " - ID: " + e.getId()
                 + "\n");
     }

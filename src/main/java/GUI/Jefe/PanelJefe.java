@@ -7,12 +7,16 @@ package GUI.Jefe;
 import DAOs.JefesDAO;
 import Dominio.Jefes;
 import GUI.Acceso.IniciarSesion;
+import GUI.Cliente.ConsultarObras;
+import GUI.Jefe.Clientes.ConsultarClientes;
+import GUI.Jefe.Facturas.ConsultarFacturas;
 import GUI.Jefe.Facturas.PagarFactura;
 import GUI.Jefe.Facturas.RegistrarFactura;
 import GUI.Jefe.Jefes.ConsultarDeudores;
 import GUI.Jefe.Obras.IniciarObra;
 import GUI.Jefe.Obras.TerminarObra;
 import GUI.Jefe.Obreros.AgregarObrero;
+import GUI.Jefe.Obreros.ConsultarObreros;
 import GUI.Jefe.Obreros.PagarObreros;
 import GUI.Jefe.Permisos.ConsultarPermisos;
 import GUI.Jefe.Permisos.RegistrarPermiso;
@@ -43,6 +47,10 @@ public class PanelJefe extends javax.swing.JFrame {
         initComponents();
         this.mniPagarObrero.setVisible(false);
         new Icono().insertarIcono(this);
+        this.lblInsertarID.setText(this.jefe.getId().toString());
+        this.lblInsertarNombre.setText(this.jefe.getNombre());
+        this.lblInsertarApellidoPaterno.setText(this.jefe.getApellidoPaterno());
+        this.lblInsertarApellidoMaterno.setText(this.jefe.getApellidoMaterno());
     }
 
     /**
@@ -66,8 +74,12 @@ public class PanelJefe extends javax.swing.JFrame {
         btnCerrarSesion1 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
+        mniConsultarClientes = new javax.swing.JMenuItem();
+        jSeparator11 = new javax.swing.JPopupMenu.Separator();
         mniConsultarDeudores = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
+        mniConsultarObreros = new javax.swing.JMenuItem();
+        jSeparator12 = new javax.swing.JPopupMenu.Separator();
         mniAgregarObreroObra = new javax.swing.JMenuItem();
         jSeparator8 = new javax.swing.JPopupMenu.Separator();
         mniPagarObrero = new javax.swing.JMenuItem();
@@ -80,12 +92,14 @@ public class PanelJefe extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         mniRegistrarPermiso = new javax.swing.JMenuItem();
         jMenu6 = new javax.swing.JMenu();
-        mniAsignarPlanos = new javax.swing.JMenuItem();
-        jSeparator2 = new javax.swing.JPopupMenu.Separator();
         mniConsultarPlanos = new javax.swing.JMenuItem();
-        jSeparator7 = new javax.swing.JPopupMenu.Separator();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
         mniRegistrarPlano = new javax.swing.JMenuItem();
+        jSeparator7 = new javax.swing.JPopupMenu.Separator();
+        mniAsignarPlanos = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
+        mniConsultarFacturas = new javax.swing.JMenuItem();
+        jSeparator9 = new javax.swing.JPopupMenu.Separator();
         mniRegistrarFactura = new javax.swing.JMenuItem();
         jSeparator6 = new javax.swing.JPopupMenu.Separator();
         mniPagarFactura = new javax.swing.JMenuItem();
@@ -129,6 +143,16 @@ public class PanelJefe extends javax.swing.JFrame {
 
         jMenu1.setText("Clientes");
 
+        mniConsultarClientes.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuLupa.png")); // NOI18N
+        mniConsultarClientes.setText("Consultar Clientes");
+        mniConsultarClientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mniConsultarClientesActionPerformed(evt);
+            }
+        });
+        jMenu1.add(mniConsultarClientes);
+        jMenu1.add(jSeparator11);
+
         mniConsultarDeudores.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuLupa.png")); // NOI18N
         mniConsultarDeudores.setText("Consultar Deudores");
         mniConsultarDeudores.addActionListener(new java.awt.event.ActionListener() {
@@ -141,6 +165,16 @@ public class PanelJefe extends javax.swing.JFrame {
         jMenuBar1.add(jMenu1);
 
         jMenu3.setText("Obreros");
+
+        mniConsultarObreros.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuLupa.png")); // NOI18N
+        mniConsultarObreros.setText("Consultar Obreros");
+        mniConsultarObreros.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mniConsultarObrerosActionPerformed(evt);
+            }
+        });
+        jMenu3.add(mniConsultarObreros);
+        jMenu3.add(jSeparator12);
 
         mniAgregarObreroObra.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuCasco.png")); // NOI18N
         mniAgregarObreroObra.setText("Agregar Obrero Obra");
@@ -211,16 +245,6 @@ public class PanelJefe extends javax.swing.JFrame {
 
         jMenu6.setText("Planos");
 
-        mniAsignarPlanos.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuInsercion.png")); // NOI18N
-        mniAsignarPlanos.setText("Asignar Planos");
-        mniAsignarPlanos.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mniAsignarPlanosActionPerformed(evt);
-            }
-        });
-        jMenu6.add(mniAsignarPlanos);
-        jMenu6.add(jSeparator2);
-
         mniConsultarPlanos.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuLupa.png")); // NOI18N
         mniConsultarPlanos.setText("Consultar Planos");
         mniConsultarPlanos.addActionListener(new java.awt.event.ActionListener() {
@@ -229,7 +253,7 @@ public class PanelJefe extends javax.swing.JFrame {
             }
         });
         jMenu6.add(mniConsultarPlanos);
-        jMenu6.add(jSeparator7);
+        jMenu6.add(jSeparator2);
 
         mniRegistrarPlano.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuRegistro.png")); // NOI18N
         mniRegistrarPlano.setText("Registrar Plano");
@@ -239,10 +263,30 @@ public class PanelJefe extends javax.swing.JFrame {
             }
         });
         jMenu6.add(mniRegistrarPlano);
+        jMenu6.add(jSeparator7);
+
+        mniAsignarPlanos.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuInsercion.png")); // NOI18N
+        mniAsignarPlanos.setText("Asignar Planos");
+        mniAsignarPlanos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mniAsignarPlanosActionPerformed(evt);
+            }
+        });
+        jMenu6.add(mniAsignarPlanos);
 
         jMenuBar1.add(jMenu6);
 
         jMenu2.setText("Facturas");
+
+        mniConsultarFacturas.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuLupa.png")); // NOI18N
+        mniConsultarFacturas.setText("Consultar Facturas");
+        mniConsultarFacturas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mniConsultarFacturasActionPerformed(evt);
+            }
+        });
+        jMenu2.add(mniConsultarFacturas);
+        jMenu2.add(jSeparator9);
 
         mniRegistrarFactura.setIcon(new javax.swing.ImageIcon("D:\\Documentos\\Word\\ITSON\\3er-4to Semestre\\4°\\Pruebas de Software\\UObra\\src\\main\\java\\Multimedia\\MenuRegistro.png")); // NOI18N
         mniRegistrarFactura.setText("Registrar Factura");
@@ -337,12 +381,12 @@ public class PanelJefe extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnCerrarSesion1)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lblID)
+                        .addComponent(lblInsertarID))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(lblInsertarNombre)
                         .addComponent(lblInsertarApellidoPaterno)
-                        .addComponent(lblInsertarApellidoMaterno)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblID)
-                            .addComponent(lblInsertarID))))
+                        .addComponent(lblInsertarApellidoMaterno)))
                 .addContainerGap(15, Short.MAX_VALUE))
         );
 
@@ -467,9 +511,40 @@ public class PanelJefe extends javax.swing.JFrame {
     }//GEN-LAST:event_mniAsignarPlanosActionPerformed
 
     private void mniPagarObreroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniPagarObreroActionPerformed
-        new PagarObreros(JefesDAO.consultarJefe(this.jefe.getId())).setVisible(true);
-        this.dispose();
+        try {
+            new PagarObreros(JefesDAO.consultarJefe(this.jefe.getId())).setVisible(true);
+            this.dispose();
+        } catch (Exception ex) {
+            Logger.getLogger(PanelJefe.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_mniPagarObreroActionPerformed
+
+    private void mniConsultarFacturasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniConsultarFacturasActionPerformed
+        try {
+            new ConsultarFacturas(JefesDAO.consultarJefe(this.jefe.getId())).setVisible(true);
+            this.dispose();
+        } catch (Exception ex) {
+            Logger.getLogger(PanelJefe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_mniConsultarFacturasActionPerformed
+
+    private void mniConsultarObrerosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniConsultarObrerosActionPerformed
+        try {
+            new ConsultarObreros(JefesDAO.consultarJefe(this.jefe.getId())).setVisible(true);
+            this.dispose();
+        } catch (Exception ex) {
+            Logger.getLogger(PanelJefe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_mniConsultarObrerosActionPerformed
+
+    private void mniConsultarClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mniConsultarClientesActionPerformed
+        try {
+            new ConsultarClientes(JefesDAO.consultarJefe(this.jefe.getId())).setVisible(true);
+            this.dispose();
+        } catch (Exception ex) {
+            Logger.getLogger(PanelJefe.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_mniConsultarClientesActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu MenuCuenta;
@@ -484,6 +559,8 @@ public class PanelJefe extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu6;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator11;
+    private javax.swing.JPopupMenu.Separator jSeparator12;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JPopupMenu.Separator jSeparator4;
@@ -491,6 +568,7 @@ public class PanelJefe extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator6;
     private javax.swing.JPopupMenu.Separator jSeparator7;
     private javax.swing.JPopupMenu.Separator jSeparator8;
+    private javax.swing.JPopupMenu.Separator jSeparator9;
     private javax.swing.JLabel lblID;
     private javax.swing.JLabel lblInsertarApellidoMaterno;
     private javax.swing.JLabel lblInsertarApellidoPaterno;
@@ -501,7 +579,10 @@ public class PanelJefe extends javax.swing.JFrame {
     private javax.swing.JMenuItem mniAsignarPlanos;
     private javax.swing.JMenuItem mniCambiarContrasena;
     private javax.swing.JMenuItem mniCambiarUsuario;
+    private javax.swing.JMenuItem mniConsultarClientes;
     private javax.swing.JMenuItem mniConsultarDeudores;
+    private javax.swing.JMenuItem mniConsultarFacturas;
+    private javax.swing.JMenuItem mniConsultarObreros;
     private javax.swing.JMenuItem mniConsultarPermisos;
     private javax.swing.JMenuItem mniConsultarPlanos;
     private javax.swing.JMenuItem mniIniciarObra;

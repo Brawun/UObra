@@ -4,21 +4,21 @@
  */
 package GUI.Jefe.Obreros;
 
-import DAOs.ClientesDAO;
-import DAOs.FacturasDAO;
 import DAOs.JefesDAO;
 import DAOs.ObrasDAO;
 import DAOs.ObrerosDAO;
-import Dominio.Clientes;
 import Dominio.Jefes;
 import Dominio.Obras;
 import Dominio.ObrasObrero;
 import Dominio.Obreros;
 import Enumeradores.EstadoObra;
 import GUI.Jefe.PanelJefe;
+import Herramientas.Encriptador;
 import Herramientas.Icono;
 import Herramientas.Validadores;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
@@ -34,6 +34,7 @@ public class AgregarObrero extends javax.swing.JFrame {
     JefesDAO JefesDAO = new JefesDAO();
     ObrerosDAO ObrerosDAO = new ObrerosDAO();
     Validadores valido = new Validadores();
+    Encriptador crypt = new Encriptador();
 
     /**
      * Creates new form AgregarObrero
@@ -44,10 +45,10 @@ public class AgregarObrero extends javax.swing.JFrame {
         UIManager.put("OptionPane.noButtonText", "Cancelar");
         initComponents();
         new Icono().insertarIcono(this);
-        List<Obras> obras = ObrasDAO.consultarObrasFechaInicio(null, null, EstadoObra.DESARROLLO, null, null, this.jefe.getId());
+        List<Obras> obras = ObrasDAO.consultarObrasConEstadoJefe(EstadoObra.DESARROLLO, this.jefe.getId());
         for (Obras obra : obras) {
             this.cbxObra.addItem(
-                    obra.getNombre()
+                    "Obra: " + obra.getNombre()
                     + " - ID Cliente: " + obra.getCliente().getId()
                     + " - ID: " + obra.getId());
         }
@@ -136,70 +137,76 @@ public class AgregarObrero extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnAgregar)
-                .addGap(48, 48, 48)
-                .addComponent(btnCancelar)
-                .addGap(17, 17, 17))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(147, 147, 147)
+                        .addComponent(UObraLogoPeque))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 403, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(21, 21, 21)
                         .addComponent(lblBusqueda))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(94, 94, 94)
-                        .addComponent(UObraLogoPeque))
+                        .addGap(101, 101, 101)
+                        .addComponent(lblElijaFactura))
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 363, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(59, 59, 59)
+                        .addComponent(lblFactura)
+                        .addGap(12, 12, 12)
+                        .addComponent(cbxObra, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(101, 101, 101)
+                        .addComponent(lblElijaMetodo))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(47, 47, 47)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblMetodoPago)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblElijaMetodo)
-                                    .addComponent(cbxObrero, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblFactura)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblElijaFactura)
-                                    .addComponent(cbxObra, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(lblMetodoPago)
+                        .addGap(12, 12, 12)
+                        .addComponent(cbxObrero, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(209, 209, 209)
+                        .addComponent(btnAgregar)
+                        .addGap(48, 48, 48)
+                        .addComponent(btnCancelar)))
+                .addGap(15, 15, 15))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(15, 15, 15)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblTitulo)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(lblTitulo))
                     .addComponent(UObraLogoPeque))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(6, 6, 6)
+                .addComponent(Separador1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12)
                 .addComponent(lblBusqueda)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(6, 6, 6)
                 .addComponent(lblElijaFactura)
                 .addGap(2, 2, 2)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cbxObra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblFactura))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(lblFactura))
+                    .addComponent(cbxObra, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(lblElijaMetodo)
                 .addGap(2, 2, 2)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cbxObrero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblMetodoPago))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(lblMetodoPago))
+                    .addComponent(cbxObrero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(21, 21, 21)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnCancelar)
-                    .addComponent(btnAgregar))
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnAgregar)
+                    .addComponent(btnCancelar))
+                .addGap(19, 19, 19))
         );
 
         pack();
@@ -211,13 +218,13 @@ public class AgregarObrero extends javax.swing.JFrame {
             if (this.cbxObrero.getSelectedItem() != "Elija uno...") {
                 // Obrero
                 String ObreroElegido = this.cbxObrero.getSelectedItem().toString();
-                String idElegido = ObreroElegido.substring(ObreroElegido.length(), 3);
+                String idElegido = ObreroElegido.substring(ObreroElegido.length() - 3, ObreroElegido.length());
                 idElegido = valido.obtenerNumeros(idElegido);
                 Long id = Long.valueOf(idElegido);
                 Obreros obrero = ObrerosDAO.consultarObrero(id);
                 // Obra
                 String ObraElegida = this.cbxObra.getSelectedItem().toString();
-                String idElegida = ObraElegida.substring(ObraElegida.length(), 3);
+                String idElegida = ObraElegida.substring(ObraElegida.length() - 3, ObraElegida.length());
                 idElegida = valido.obtenerNumeros(idElegida);
                 Long ida = Long.valueOf(idElegida);
                 Obras obra = ObrasDAO.consultarObra(ida);
@@ -225,11 +232,44 @@ public class AgregarObrero extends javax.swing.JFrame {
                 for (ObrasObrero obrasObrero : obrasO) {
                     if (obrasObrero.getObrero().equals(obrero)) {
                         JOptionPane.showMessageDialog(null, "Error: El obrero ya se encuentra participando en la obra.", "¡Error!", JOptionPane.ERROR_MESSAGE);
-                        this.dispose();
+                        try {
+                            this.dispose();
+                            new AgregarObrero(JefesDAO.consultarJefe(this.jefe.getId())).setVisible(true);
+                        } catch (Exception ex) {
+                            Logger.getLogger(PanelJefe.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
                 }
-                ObrasObrero obreroObra = new ObrasObrero(obrero, obra);
                 ObrasDAO.asingarObreroObra(ida, id);
+                int i = 0;
+                try {
+                    i = JOptionPane.showConfirmDialog(null,
+                            "Se realizó exitosamente la asignación del obrero a la obra..."
+                            + "\n Nombre obrero: " + obrero.getNombre() + " " + obrero.getApellidoPaterno() + " " + obrero.getApellidoMaterno()
+                            + "\n Teléfono: " + crypt.decrypt(obrero.getTelefono())
+                            + "\n Sueldo diario: $ " + obrero.getSueldoDiario() + " MXN"
+                            + "\n\n Nombre obra: " + obra.getNombre()
+                            + "\n Costo total: $ " + obra.getCostoTotal() + " MXN"
+                            + "\n - ID Jefe: " + this.jefe.getId()
+                            + "\n - ID Obrero: " + obrero.getId()
+                            + "\n - ID Cliente: " + obra.getCliente().getId()
+                            + "\n - ID Obra: " + obra.getId()
+                            + ". ☺\n"
+                            + "\n ¿Desea agregar otro obrero?", "Agregación de obrero exitosa", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, new Icono().obtenerIcono());
+                } catch (Exception ex) {
+                    Logger.getLogger(AgregarObrero.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                if (i == JOptionPane.YES_OPTION) {
+                    try {
+                        this.dispose();
+                        new AgregarObrero(JefesDAO.consultarJefe(this.jefe.getId())).setVisible(true);
+                    } catch (Exception ex) {
+                        Logger.getLogger(AgregarObrero.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else {
+                    this.dispose();
+                    new PanelJefe(JefesDAO.consultarJefe(this.jefe.getId())).setVisible(true);
+                }
             } else {
                 JOptionPane.showMessageDialog(null, "Error: Seleccione un obrero válido.", "¡Error!", JOptionPane.ERROR_MESSAGE);
             }
